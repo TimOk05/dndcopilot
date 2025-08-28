@@ -153,31 +153,46 @@ class GoogleAuth {
 // Обработка запросов
 $googleAuth = new GoogleAuth();
 
-if (isset($_GET['code'])) {
+// Проверяем настройки Google OAuth
+if (empty(GOOGLE_CLIENT_ID) || empty(GOOGLE_CLIENT_SECRET)) {
+    $error = 'Google OAuth не настроен. Обратитесь к администратору.';
+    logMessage('Google OAuth not configured', 'ERROR', ['client_id' => !empty(GOOGLE_CLIENT_ID), 'client_secret' => !empty(GOOGLE_CLIENT_SECRET)]);
+} elseif (isset($_GET['code'])) {
     // Получаем код авторизации от Google
     $code = $_GET['code'];
     
     try {
+        logMessage('Google OAuth code received', 'INFO', ['code_length' => strlen($code)]);
+        
         // Обмениваем код на токен
         $tokenData = $googleAuth->getAccessToken($code);
         
         if (isset($tokenData['access_token'])) {
+            logMessage('Google OAuth token received successfully', 'INFO');
+            
             // Получаем информацию о пользователе
             $userInfo = $googleAuth->getUserInfo($tokenData['access_token']);
             
             if ($userInfo && isset($userInfo['email'])) {
+                logMessage('Google user info received', 'INFO', ['email' => $userInfo['email']]);
+                
                 // Проверяем существование пользователя
                 $userCheck = $googleAuth->checkUserExists($userInfo);
                 
                 if ($userCheck['exists']) {
+                    logMessage('Existing user found, logging in', 'INFO', ['email' => $userInfo['email']]);
+                    
                     // Пользователь существует - автоматически входим
                     if ($googleAuth->loginExistingUser($userCheck['user'])) {
                         header('Location: index.php?welcome=1');
                         exit;
                     } else {
                         $error = 'Ошибка входа в систему';
+                        logMessage('Failed to login existing user', 'ERROR', ['email' => $userInfo['email']]);
                     }
                 } else {
+                    logMessage('New user, redirecting to registration', 'INFO', ['email' => $userInfo['email']]);
+                    
                     // Пользователь не существует - перенаправляем на форму с предзаполненными данными
                     $_SESSION['google_user_data'] = $userInfo;
                     header('Location: google-complete-registration.php');
@@ -185,18 +200,24 @@ if (isset($_GET['code'])) {
                 }
             } else {
                 $error = 'Не удалось получить информацию о пользователе';
+                logMessage('Failed to get user info from Google', 'ERROR', ['token_data' => $tokenData]);
             }
         } else {
-            $error = 'Ошибка получения токена доступа';
+            $error = 'Ошибка получения токена доступа: ' . ($tokenData['error'] ?? 'Неизвестная ошибка');
+            logMessage('Failed to get access token', 'ERROR', ['token_data' => $tokenData]);
         }
     } catch (Exception $e) {
         $error = 'Ошибка: ' . $e->getMessage();
+        logMessage('Google OAuth exception', 'ERROR', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
     }
 } elseif (isset($_GET['error'])) {
     $error = 'Ошибка авторизации: ' . $_GET['error'];
+    logMessage('Google OAuth error from Google', 'ERROR', ['error' => $_GET['error']]);
 } else {
     // Перенаправляем на Google для авторизации
-    header('Location: ' . $googleAuth->getAuthUrl());
+    $authUrl = $googleAuth->getAuthUrl();
+    logMessage('Redirecting to Google OAuth', 'INFO', ['auth_url' => $authUrl]);
+    header('Location: ' . $authUrl);
     exit;
 }
 
