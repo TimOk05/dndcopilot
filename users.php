@@ -239,11 +239,11 @@ function registerUser($username, $password, $email) {
     
     // Проверяем, не существует ли уже пользователь с таким username или email
     foreach ($users as $user) {
-        if (isset($user['username']) && hash_equals($user['username'], $username)) {
+        if (isset($user['username']) && $user['username'] === $username) {
             recordRegistrationAttempt($ip, false);
             return ['success' => false, 'message' => 'Пользователь с таким именем уже существует'];
         }
-        if (isset($user['email']) && hash_equals($user['email'], $email)) {
+        if (isset($user['email']) && $user['email'] === $email) {
             recordRegistrationAttempt($ip, false);
             return ['success' => false, 'message' => 'Пользователь с таким email уже существует'];
         }
@@ -292,7 +292,7 @@ function authenticateUser($username, $password) {
     // Ищем пользователя по email или username
     $user = null;
     foreach ($users as $u) {
-        if (hash_equals($u['email'], $username) || hash_equals($u['username'], $username)) {
+        if ($u['email'] === $username || $u['username'] === $username) {
             $user = $u;
             break;
         }
