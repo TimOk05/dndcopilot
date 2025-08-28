@@ -188,8 +188,7 @@
             gap: var(--spacing-xs);
         }
         
-        .theme-toggle,
-        .desktop-toggle {
+        .theme-toggle {
             background: none;
             border: 2px solid var(--border-primary);
             border-radius: var(--border-radius);
@@ -200,8 +199,7 @@
             transition: all 0.3s ease;
         }
         
-        .theme-toggle:hover,
-        .desktop-toggle:hover {
+        .theme-toggle:hover {
             background: var(--accent-primary);
             color: var(--bg-secondary);
         }
@@ -555,7 +553,7 @@
         <div class="logo">DnD Copilot</div>
         <div class="header-controls">
             <button class="theme-toggle" onclick="cycleTheme()">🎨</button>
-            <button class="desktop-toggle" onclick="switchToDesktop()" title="Переключиться на десктопную версию">🖥️</button>
+
         </div>
     </header>
 
@@ -1272,17 +1270,7 @@
             }
         });
         
-        // Переключение на десктопную версию
-        function switchToDesktop() {
-            // Сохраняем предпочтение в localStorage
-            localStorage.setItem('dnd_preferred_version', 'desktop');
-            
-            // Показываем подтверждение
-            if (confirm('Переключиться на десктопную версию? Вы всегда можете вернуться к мобильной версии.')) {
-                // Перенаправляем на десктопную версию с параметром принудительного выбора
-                window.location.href = 'index.php?force_desktop=1';
-            }
-        }
+
         
         // Haptic feedback для мобильных устройств
         if ('vibrate' in navigator) {

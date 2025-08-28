@@ -2228,32 +2228,6 @@
             transform: scale(1.1) rotate(5deg);
             box-shadow: 0 6px 20px var(--shadow-secondary), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
-        /* Кнопка мобильной версии */
-        
-        .mobile-btn {
-            background: linear-gradient(135deg, var(--accent-info), var(--accent-primary));
-            color: #f8f4e8;
-            border: 3px solid var(--border-primary);
-            border-radius: 50%;
-            width: 55px;
-            height: 55px;
-            cursor: pointer;
-            font-size: 1.3em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px var(--shadow-primary), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            position: absolute;
-            top: 20px;
-            right: 90px;
-            z-index: 100;
-        }
-        
-        .mobile-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px var(--shadow-primary), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
         /* Стили для элементов верхней части уже определены выше в системной структуре */
         /* ===== СТИЛИ ДЛЯ ГЕНЕРАТОРОВ ===== */
         /* Генератор персонажей */
@@ -4208,6 +4182,54 @@
             box-shadow: 0 4px 12px var(--shadow-secondary);
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
         }
+        /* Стили для tooltip */
+        
+        .tooltip {
+            position: relative;
+        }
+        
+        .tooltip::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: var(--z-tooltip);
+            border: 2px solid var(--border-primary);
+            box-shadow: 0 4px 12px var(--shadow-primary);
+            margin-bottom: 8px;
+        }
+        
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--border-primary);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: var(--z-tooltip);
+            margin-bottom: 2px;
+        }
+        
+        .tooltip:hover::before,
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
         /* ===== СТИЛИ ДЛЯ КНОПОК ===== */
         /* Переключатель темы */
         
@@ -4347,9 +4369,7 @@
                 </div>
             </div>
 
-            <button id="mobile-toggle" class="mobile-btn" title="Переключиться на мобильную версию" onclick="switchToMobile()">
-                📱
-            </button>
+
         </div>
         <h1 class="animate-slide-up">DnD Copilot</h1>
         <div class="fast-bar animate-fade-in">
@@ -4640,18 +4660,6 @@
                     console.error('Ошибка очистки чата:', error);
                     alert('Ошибка соединения с сервером');
                 });
-        }
-
-        // Переключение на мобильную версию
-        function switchToMobile() {
-            // Сохраняем предпочтение в localStorage
-            localStorage.setItem('dnd_preferred_version', 'mobile');
-
-            // Показываем подтверждение
-            if (confirm('Переключиться на мобильную версию? Вы всегда можете вернуться к десктопной версии.')) {
-                // Перенаправляем на мобильную версию
-                window.location.href = 'mobile.html';
-            }
         }
     </script>
 </body>

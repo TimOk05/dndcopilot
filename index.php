@@ -27,18 +27,10 @@ if (!isLoggedIn()) {
     exit;
 }
 
-// Если это мобильное устройство и пользователь не выбрал десктопную версию явно
-if (isMobileDevice() && !isset($_GET['force_desktop']) && !isset($_SESSION['prefer_desktop'])) {
-    // Проверяем, есть ли сохраненный выбор в сессии
-    if (!isset($_SESSION['preferred_version'])) {
-        // Если нет сохраненного выбора, перенаправляем на мобильную версию
-        header('Location: mobile.html');
-        exit;
-    } elseif ($_SESSION['preferred_version'] === 'mobile') {
-        // Если пользователь ранее выбрал мобильную версию
-        header('Location: mobile.html');
-        exit;
-    }
+// Если это мобильное устройство, перенаправляем на мобильную версию
+if (isMobileDevice()) {
+    header('Location: mobile.html');
+    exit;
 }
 
 // Получаем имя текущего пользователя
