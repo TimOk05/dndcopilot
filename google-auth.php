@@ -74,47 +74,58 @@ class GoogleAuth {
     }
     
     /**
-     * Создание или вход пользователя через Google
+     * Проверка существования пользователя
      */
-    public function authenticateUser($googleUser) {
+    public function checkUserExists($googleUser) {
         $users = loadUsers();
         $email = $googleUser['email'];
         $googleId = $googleUser['id'];
         
-        // Ищем пользователя по email
-        $user = null;
-        foreach ($users as $u) {
-            if (isset($u['google_id']) && $u['google_id'] === $googleId) {
-                $user = $u;
-                break;
+        // Ищем пользователя по email или google_id
+        foreach ($users as $user) {
+            if (isset($user['google_id']) && $user['google_id'] === $googleId) {
+                return ['exists' => true, 'user' => $user, 'type' => 'google_id'];
             }
-            if (isset($u['email']) && $u['email'] === $email) {
-                $user = $u;
-                break;
+            if (isset($user['email']) && $user['email'] === $email) {
+                return ['exists' => true, 'user' => $user, 'type' => 'email'];
             }
         }
         
-        if (!$user) {
-            // Создаем нового пользователя
-            $newUser = [
-                'id' => uniqid(),
-                'username' => $googleUser['name'] ?? $email,
-                'email' => $email,
-                'google_id' => $googleId,
-                'role' => 'user',
-                'created_at' => date('Y-m-d H:i:s'),
-                'is_active' => true,
-                'login_count' => 0,
-                'auth_method' => 'google'
-            ];
-            
-            $users[] = $newUser;
-            saveUsers($users);
-            
-            $user = $newUser;
-            logActivity('user_registered_google', $email, $_SERVER['REMOTE_ADDR'] ?? 'unknown', true);
-        }
+        return ['exists' => false, 'user' => null, 'type' => null];
+    }
+    
+    /**
+     * Создание нового пользователя через Google
+     */
+    public function createUserFromGoogle($googleUser) {
+        $users = loadUsers();
+        $email = $googleUser['email'];
+        $googleId = $googleUser['id'];
         
+        $newUser = [
+            'id' => uniqid(),
+            'username' => $googleUser['name'] ?? $email,
+            'email' => $email,
+            'google_id' => $googleId,
+            'role' => 'user',
+            'created_at' => date('Y-m-d H:i:s'),
+            'is_active' => true,
+            'login_count' => 0,
+            'auth_method' => 'google'
+        ];
+        
+        $users[] = $newUser;
+        saveUsers($users);
+        
+        logActivity('user_registered_google', $email, $_SERVER['REMOTE_ADDR'] ?? 'unknown', true);
+        
+        return $newUser;
+    }
+    
+    /**
+     * Автоматический вход существующего пользователя
+     */
+    public function loginExistingUser($user) {
         // Устанавливаем сессию
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
@@ -123,22 +134,19 @@ class GoogleAuth {
         $_SESSION['auth_method'] = 'google';
         
         // Обновляем данные пользователя
-        $user['last_login'] = date('Y-m-d H:i:s');
-        $user['login_count'] = ($user['login_count'] ?? 0) + 1;
-        
-        // Обновляем пользователя в массиве
+        $users = loadUsers();
         foreach ($users as &$u) {
             if ($u['id'] === $user['id']) {
-                $u = $user;
+                $u['last_login'] = date('Y-m-d H:i:s');
+                $u['login_count'] = ($u['login_count'] ?? 0) + 1;
                 break;
             }
         }
-        
         saveUsers($users);
         
-        logActivity('login_success_google', $email, $_SERVER['REMOTE_ADDR'] ?? 'unknown', true);
+        logActivity('login_success_google', $user['email'], $_SERVER['REMOTE_ADDR'] ?? 'unknown', true);
         
-        return ['success' => true, 'user' => $user];
+        return true;
     }
 }
 
@@ -158,15 +166,22 @@ if (isset($_GET['code'])) {
             $userInfo = $googleAuth->getUserInfo($tokenData['access_token']);
             
             if ($userInfo && isset($userInfo['email'])) {
-                // Аутентифицируем пользователя
-                $result = $googleAuth->authenticateUser($userInfo);
+                // Проверяем существование пользователя
+                $userCheck = $googleAuth->checkUserExists($userInfo);
                 
-                if ($result['success']) {
-                    // Перенаправляем на главную страницу
-                    header('Location: index.php?welcome=1');
-                    exit;
+                if ($userCheck['exists']) {
+                    // Пользователь существует - автоматически входим
+                    if ($googleAuth->loginExistingUser($userCheck['user'])) {
+                        header('Location: index.php?welcome=1');
+                        exit;
+                    } else {
+                        $error = 'Ошибка входа в систему';
+                    }
                 } else {
-                    $error = 'Ошибка аутентификации';
+                    // Пользователь не существует - перенаправляем на форму с предзаполненными данными
+                    $_SESSION['google_user_data'] = $userInfo;
+                    header('Location: google-complete-registration.php');
+                    exit;
                 }
             } else {
                 $error = 'Не удалось получить информацию о пользователе';
