@@ -4133,9 +4133,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #007bff;
-            color: #ffffff;
-            border: 2px solid #007bff;
+            background: #ff0000 !important;
+            color: #ffffff !important;
+            border: 2px solid #ff0000 !important;
             border-radius: 8px;
             padding: 0;
             font-size: 0.85em;
@@ -4164,9 +4164,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #ffc107;
-            color: #000000;
-            border: 2px solid #ffc107;
+            background: #00ff00 !important;
+            color: #000000 !important;
+            border: 2px solid #00ff00 !important;
             border-radius: 8px;
             padding: 0;
             font-size: 1.1em;
@@ -4361,10 +4361,15 @@
                 </div>
             </div>
 
-            <a href="stats.php" class="stats-link tooltip" data-tooltip="Статистика пользователя">📊</a>
+            <!-- Иконка статистики - всегда видна -->
+            <a href="stats.php" class="stats-link tooltip" data-tooltip="Статистика пользователя" style="display: block !important; visibility: visible !important; opacity: 1 !important;">📊</a>
+
             <!-- Отладочная информация: <?php echo isAdmin() ? 'Admin: true' : 'Admin: false'; ?> -->
             <?php if (isAdmin()): ?>
-            <a href="admin.php" class="admin-link tooltip" data-tooltip="Админ панель">🔧</a>
+            <a href="admin.php" class="admin-link tooltip" data-tooltip="Админ панель" style="display: block !important; visibility: visible !important; opacity: 1 !important;">🔧</a>
+            <?php else: ?>
+            <!-- Показываем иконку админа для отладки (временно) -->
+            <a href="admin.php" class="admin-link tooltip" data-tooltip="Админ панель (отладка)" style="display: block !important; visibility: visible !important; opacity: 1 !important; background: #ff6b6b !important;">🔧</a>
             <?php endif; ?>
 
             <div class="theme-toggle">
