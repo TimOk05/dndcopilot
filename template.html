@@ -4127,12 +4127,17 @@
         .stats-link {
             position: absolute;
             top: 0;
-            right: 85px;
+            right: 90px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: var(--accent-info);
             color: #f8f4e8;
             border: 2px solid var(--accent-info);
             border-radius: 8px;
-            padding: 6px 10px;
+            padding: 0;
             font-size: 0.85em;
             font-family: inherit;
             cursor: pointer;
@@ -4143,18 +4148,24 @@
             white-space: nowrap;
             font-weight: 600;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            z-index: 10001;
         }
         /* Иконка администратора (справа от статистики) */
         
         .admin-link {
             position: absolute;
             top: 0;
-            right: 145px;
+            right: 140px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: var(--accent-warning);
             color: #f8f4e8;
             border: 2px solid var(--accent-warning);
             border-radius: 8px;
-            padding: 8px 12px;
+            padding: 0;
             font-size: 1.1em;
             font-family: inherit;
             cursor: pointer;
@@ -4164,6 +4175,7 @@
             display: inline-block;
             font-weight: 600;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            z-index: 10001;
         }
         /* Hover эффекты для иконок */
         
@@ -4204,10 +4216,15 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
-            z-index: var(--z-tooltip);
+            z-index: 10002;
             border: 2px solid var(--border-primary);
             box-shadow: 0 4px 12px var(--shadow-primary);
             margin-bottom: 8px;
+        }
+        
+        .tooltip:hover::before {
+            opacity: 1;
+            visibility: visible;
         }
         
         .tooltip::after {
@@ -4221,7 +4238,7 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
-            z-index: var(--z-tooltip);
+            z-index: 10002;
             margin-bottom: 2px;
         }
         
