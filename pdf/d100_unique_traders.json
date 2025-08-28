@@ -1,0 +1,5596 @@
+{
+  "version": "1.0.1",
+  "generated_at": "2025-08-18T19:14:59.084419Z",
+  "schema": {
+    "npc": {
+      "id": "string",
+      "name": "string",
+      "epithet": "string",
+      "genre": "fantasy|scifi|modern",
+      "role": "villain|civilian|ally",
+      "quote": "string",
+      "appearance": "string",
+      "roleplay_tips": "string",
+      "personality": "string",
+      "motivation": "string",
+      "biography": "string",
+      "traits": "string[]",
+      "author_initials": "string",
+      "occupation_id": "string|null",
+      "occupation_free": "string|null",
+      "source": {
+        "title": "string",
+        "file": "string",
+        "page": "number|null"
+      },
+      "meta": {
+        "hooks": "string[]",
+        "safety_notes": "string[]",
+        "prompt_hint": "string"
+      }
+    },
+    "occupation": {
+      "id": "string",
+      "name_ru": "string",
+      "aliases_ru": "string[]|null",
+      "categories": "string[]",
+      "tags": "string[]",
+      "era": "string[]",
+      "source": {
+        "title": "string",
+        "file": "string"
+      }
+    },
+    "name": {
+      "id": "string",
+      "name_ru": "string",
+      "meaning_ru": "string|null",
+      "race": "enum",
+      "gender": "enum",
+      "themes": "string[]",
+      "class_hints": "string[]",
+      "culture_hint": "string|null",
+      "source": {
+        "title": "string",
+        "file": "string",
+        "page": "number|null"
+      }
+    },
+    "traveler": {
+      "id": "string",
+      "ref": "1..100",
+      "description_ru": "string",
+      "tags": "string[]"
+    }
+  },
+  "enums": {
+    "genres": [
+      "fantasy",
+      "scifi",
+      "modern"
+    ],
+    "roles": [
+      "villain",
+      "civilian",
+      "ally"
+    ],
+    "occupation_categories": [
+      "architecture_construction",
+      "outcasts_unemployed",
+      "business_trade",
+      "faith_religion",
+      "military_security",
+      "health",
+      "arts",
+      "magic_arts",
+      "education_science",
+      "government_authority",
+      "crime",
+      "hospitality_services_menial",
+      "craft",
+      "communication",
+      "agriculture_forestry_livestock",
+      "transport"
+    ],
+    "races": [
+      "human",
+      "elf",
+      "half-elf",
+      "drow",
+      "dwarf",
+      "orc",
+      "half-orc",
+      "tiefling",
+      "gnome",
+      "halfling",
+      "dragonborn",
+      "goliath",
+      "tabaxi",
+      "yuan-ti",
+      "aasimar",
+      "lizardfolk",
+      "aarakocra",
+      "goblin",
+      "kenku",
+      "other"
+    ],
+    "genders": [
+      "male",
+      "female",
+      "unisex"
+    ]
+  },
+  "data": {
+    "npcs": [],
+    "occupations": [
+      {
+        "id": "arhitektor",
+        "name_ru": "Архитектор",
+        "aliases_ru": [
+          "зодчий"
+        ],
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zemlemer",
+        "name_ru": "Землемер",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kamenotes",
+        "name_ru": "Каменотёс",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kamenschik5-kirpichnik",
+        "name_ru": "Каменщик5. Кирпичник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "krovelschik",
+        "name_ru": "Кровельщик",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "malyar",
+        "name_ru": "Маляр",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "oblicovschik9-plotnik",
+        "name_ru": "Облицовщик9. Плотник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "stroitel",
+        "name_ru": "Строитель",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ukladchik",
+        "name_ru": "Укладчик",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "shtukatur",
+        "name_ru": "Штукатур",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "avantyurist",
+        "name_ru": "Авантюрист",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "azartnyy-igrok",
+        "name_ru": "Азартный игрок",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "anahoret",
+        "name_ru": "Анахорет",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "beglyy-rab",
+        "name_ru": "Беглый раб",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "bezhenec",
+        "name_ru": "Беженец",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "besprizornik",
+        "name_ru": "Беспризорник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "brodyaga",
+        "name_ru": "Бродяга",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "buntar",
+        "name_ru": "Бунтарь",
+        "aliases_ru": [
+          "политик"
+        ],
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "byvshiyprestupnik",
+        "name_ru": "Бывшийпреступник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "gorodskoysumasshedshiy23-dalniyputeshestvennik",
+        "name_ru": "Городскойсумасшедший23. Дальнийпутешественник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "dezertir",
+        "name_ru": "Дезертир",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "dikar",
+        "name_ru": "Дикарь",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "domohozyayka",
+        "name_ru": "Домохозяйка",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "eretik",
+        "name_ru": "Еретик",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "izgnannik",
+        "name_ru": "Изгнанник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "issledovatelpodzemeliy",
+        "name_ru": "Исследовательподземелий",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "narodnyy-geroy",
+        "name_ru": "Народный герой",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "nischiy32-opalnyydvoryanin",
+        "name_ru": "Нищий32. Опальныйдворянин",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ohotnik-zagolovami",
+        "name_ru": "Охотник заголовами",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ohotnik-namonstrov",
+        "name_ru": "Охотник намонстров",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "piligrim",
+        "name_ru": "Пилигрим",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "skvatter",
+        "name_ru": "Скваттер",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "skitalec",
+        "name_ru": "Скиталец",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "spletnik",
+        "name_ru": "Сплетник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "shutbiznes-i-torgovlyavera-i-religiya",
+        "name_ru": "ШутБИЗНЕС И ТОРГОВЛЯВЕРА И РЕЛИГИЯ",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "aktuariy",
+        "name_ru": "Актуарий",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "aukcionist",
+        "name_ru": "Аукционист",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "bakaleyschik",
+        "name_ru": "Бакалейщик",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "bankir",
+        "name_ru": "Банкир",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "banschik",
+        "name_ru": "Банщик",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "bindyuzhnik",
+        "name_ru": "Биндюжник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "buhgalter",
+        "name_ru": "Бухгалтер",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vladelecpublichnogo-doma",
+        "name_ru": "Владелецпубличного дома",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "generalnyypodryadchik49-gildmaster",
+        "name_ru": "Генеральныйподрядчик49. Гильдмастер",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zemleustroitel",
+        "name_ru": "Землеустроитель",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kollekcioner",
+        "name_ru": "Коллекционер",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "korobeynik",
+        "name_ru": "Коробейник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kupec",
+        "name_ru": "Купец",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "maklak",
+        "name_ru": "Маклак",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "markitant",
+        "name_ru": "Маркитант",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ofenya",
+        "name_ru": "Офеня",
+        "aliases_ru": [
+          "ходебщик"
+        ],
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ocenschik",
+        "name_ru": "Оценщик",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "plantator",
+        "name_ru": "Плантатор",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "predprinimatel60-probirschik",
+        "name_ru": "Предприниматель60. Пробирщик",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "rostovschik",
+        "name_ru": "Ростовщик",
+        "aliases_ru": [
+          "меняла"
+        ],
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "rybotorgovec",
+        "name_ru": "Рыботорговец",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "svechnoy-fabrikant",
+        "name_ru": "Свечной фабрикант",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "skupschik",
+        "name_ru": "Скупщик",
+        "aliases_ru": [
+          "шибай"
+        ],
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "spekulyant",
+        "name_ru": "Спекулянт",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "schetovod",
+        "name_ru": "Счетовод",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "traktirschik",
+        "name_ru": "Трактирщик",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ulichnyy-torgovec",
+        "name_ru": "Уличный торговец",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "abbat",
+        "name_ru": "Аббат",
+        "aliases_ru": [
+          "аббатиса"
+        ],
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "akolit",
+        "name_ru": "Аколит",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "arhiepiskop",
+        "name_ru": "Архиепископ",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vigilariy",
+        "name_ru": "Вигиларий",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "dervish",
+        "name_ru": "Дервиш",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "episkop",
+        "name_ru": "Епископ",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zhrec",
+        "name_ru": "Жрец",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zvonar",
+        "name_ru": "Звонарь",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "inkvizitor",
+        "name_ru": "Инквизитор",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "inok",
+        "name_ru": "Инок",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kanonik",
+        "name_ru": "Каноник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kapellan",
+        "name_ru": "Капеллан",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kardinal82-kelar",
+        "name_ru": "Кардинал82. Келарь",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "klirik",
+        "name_ru": "Клирик",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kultist",
+        "name_ru": "Культист",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "lider-kulta",
+        "name_ru": "Лидер культа",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "missioner",
+        "name_ru": "Миссионер",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "monah",
+        "name_ru": "Монах",
+        "aliases_ru": [
+          "мних"
+        ],
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "nastoyatel",
+        "name_ru": "Настоятель",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "otshelnik",
+        "name_ru": "Отшельник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "paladin",
+        "name_ru": "Паладин",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pervosvyaschennik",
+        "name_ru": "Первосвященник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "podatelmilostyni93-ponomar",
+        "name_ru": "Подательмилостыни93. Пономарь",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "poslushnik",
+        "name_ru": "Послушник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "prodavecindulgenciy",
+        "name_ru": "Продавециндульгенций",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "proricatel",
+        "name_ru": "Прорицатель",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "prorok",
+        "name_ru": "Пророк",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ryasofor",
+        "name_ru": "Рясофор",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "svechnik",
+        "name_ru": "Свечник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "svyaschennik",
+        "name_ru": "Священник",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "tamplier",
+        "name_ru": "Тамплиер",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "formariy",
+        "name_ru": "Формарий",
+        "aliases_ru": null,
+        "categories": [],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ekzorcistvooruzhennye-sily-i-bezopasnostzdorove",
+        "name_ru": "ЭкзорцистВООРУЖЕННЫЕ СИЛЫ И БЕЗОПАСНОСТЬЗДОРОВЬЕ",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "arbaletchik",
+        "name_ru": "Арбалетчик",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "barabanschik",
+        "name_ru": "Барабанщик",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "boevoy-mag",
+        "name_ru": "Боевой маг",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vyshibala",
+        "name_ru": "Вышибала",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "general",
+        "name_ru": "Генерал",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "gonec",
+        "name_ru": "Гонец",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "gorodskoydozornyy",
+        "name_ru": "Городскойдозорный",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "denschik",
+        "name_ru": "Денщик",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "detektiv",
+        "name_ru": "Детектив",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "druzhinnik",
+        "name_ru": "Дружинник",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "duelist",
+        "name_ru": "Дуэлист",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kavalerist",
+        "name_ru": "Кавалерист",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kaper",
+        "name_ru": "Капер",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kapitan119-kastelyan",
+        "name_ru": "Капитан119. Кастелян",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kvartirmeyster",
+        "name_ru": "Квартирмейстер",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "komissar",
+        "name_ru": "Комиссар",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kopeyschik",
+        "name_ru": "Копейщик",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "korolevskiygvardeec",
+        "name_ru": "Королевскийгвардеец",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "marshal",
+        "name_ru": "Маршал",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "nadziratel",
+        "name_ru": "Надзиратель",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "nadsmotrschik",
+        "name_ru": "Надсмотрщик",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "naemnik",
+        "name_ru": "Наемник",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "osadnyyartillerist",
+        "name_ru": "Осадныйартиллерист",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "oficer-inspekcii",
+        "name_ru": "Офицер инспекции",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "oficer-razvedki",
+        "name_ru": "Офицер разведки",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ohrannik",
+        "name_ru": "Охранник",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "palach",
+        "name_ru": "Палач",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "parlamentskiypristav134-pozharnyy",
+        "name_ru": "Парламентскийпристав134. Пожарный",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "polevoy-medik",
+        "name_ru": "Полевой медик",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pristav",
+        "name_ru": "Пристав",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pytatel",
+        "name_ru": "Пытатель",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "saper",
+        "name_ru": "Сапёр",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "serzhant",
+        "name_ru": "Сержант",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "skaut",
+        "name_ru": "Скаут",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "soldat",
+        "name_ru": "Солдат",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "strelok",
+        "name_ru": "Стрелок",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "taktik",
+        "name_ru": "Тактик",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "telohranitel",
+        "name_ru": "Телохранитель",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "tyuremschik",
+        "name_ru": "Тюремщик",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "hozyain-zastavy",
+        "name_ru": "Хозяин заставы",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "chasovoy",
+        "name_ru": "Часовой",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "shpion",
+        "name_ru": "Шпион",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "akusher",
+        "name_ru": "Акушер",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "alienist",
+        "name_ru": "Алиенист",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "alhimik",
+        "name_ru": "Алхимик",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "aptekar",
+        "name_ru": "Аптекарь",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "veterinar154-vrach",
+        "name_ru": "Ветеринар154. Врач",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "grobovschik",
+        "name_ru": "Гробовщик",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "doktor",
+        "name_ru": "Доктор",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "krovopuskatel",
+        "name_ru": "Кровопускатель",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "medsestra159-povituha",
+        "name_ru": "Медсестра159. Повитуха",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "travnik",
+        "name_ru": "Травник",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "hirurg",
+        "name_ru": "Хирург",
+        "aliases_ru": null,
+        "categories": [
+          "health"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "celiteliskusstvamagicheskie-iskusstva",
+        "name_ru": "ЦелительИСКУССТВАМАГИЧЕСКИЕ ИСКУССТВА",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "akter",
+        "name_ru": "Актер",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "atlet",
+        "name_ru": "Атлет",
+        "aliases_ru": [
+          "Спортсмен"
+        ],
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "bard",
+        "name_ru": "Бард",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vitrazhist",
+        "name_ru": "Витражист",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "gladiator",
+        "name_ru": "Гладиатор",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "dramaturg",
+        "name_ru": "Драматург",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ikonopisec",
+        "name_ru": "Иконописец",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kulachnyy-boec172-limner",
+        "name_ru": "Кулачный боец172. Лимнер",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "menestrel",
+        "name_ru": "Менестрель",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "payac",
+        "name_ru": "Паяц",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pevec",
+        "name_ru": "Певец",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pisatel",
+        "name_ru": "Писатель",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "portnoy",
+        "name_ru": "Портной",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "poet",
+        "name_ru": "Поэт",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "raeshnik",
+        "name_ru": "Раёшник",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "skald181-skomoroh",
+        "name_ru": "Скальд181. Скоморох",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "skulptor",
+        "name_ru": "Скульптор",
+        "aliases_ru": [
+          "ваятель"
+        ],
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "stekolschik",
+        "name_ru": "Стекольщик",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "tancor",
+        "name_ru": "Танцор",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "tatuirovschik",
+        "name_ru": "Татуировщик",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "trubadur",
+        "name_ru": "Трубадур",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ulichnyy-muzykant",
+        "name_ru": "Уличный музыкант",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "hudozhnik",
+        "name_ru": "Художник",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "cirkovoy-artist",
+        "name_ru": "Цирковой артист",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "avgur",
+        "name_ru": "Авгур",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "arhimag",
+        "name_ru": "Архимаг",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vedun",
+        "name_ru": "Ведун",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vedma",
+        "name_ru": "Ведьма",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "volshebnik",
+        "name_ru": "Волшебник",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vorozhey",
+        "name_ru": "Ворожей",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "druid",
+        "name_ru": "Друид",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zaklinatel-shkolyvoploscheniya",
+        "name_ru": "Заклинатель школыВоплощения",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zaklinatel-shkolyvyzova199-zaklinatel-shkolyograzhdeniya",
+        "name_ru": "Заклинатель школыВызова199. Заклинатель школыОграждения",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zacharovatel",
+        "name_ru": "Зачарователь",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "znahar",
+        "name_ru": "Знахарь",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "illyuzionist",
+        "name_ru": "Иллюзионист",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "koldun",
+        "name_ru": "Колдун",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "mag",
+        "name_ru": "Маг",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "medium",
+        "name_ru": "Медиум",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "mudrec",
+        "name_ru": "Мудрец",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "nekromant208-oboroten",
+        "name_ru": "Некромант208. Оборотень",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "prizyvatel",
+        "name_ru": "Призыватель",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "providec",
+        "name_ru": "Провидец",
+        "aliases_ru": [
+          "оракул"
+        ],
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ritualist",
+        "name_ru": "Ритуалист",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "runnyyzaklinatel",
+        "name_ru": "Рунныйзаклинатель",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "transmutator",
+        "name_ru": "Трансмутатор",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "charodey",
+        "name_ru": "Чародей",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "shaman",
+        "name_ru": "Шаман",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "elementalistobrazovanie-naukapravitelstvo-vlast",
+        "name_ru": "ЭлементалистОБРАЗОВАНИЕ , НАУКАПРАВИТЕЛЬСТВО , ВЛАСТЬ",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "arheolog",
+        "name_ru": "Археолог",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "arhivarius",
+        "name_ru": "Архивариус",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "astrolog",
+        "name_ru": "Астролог",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "bibliotekar",
+        "name_ru": "Библиотекарь",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "bogoslov",
+        "name_ru": "Богослов",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "botanik",
+        "name_ru": "Ботаник",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vospitannik",
+        "name_ru": "Воспитанник",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "gorolog226-dekan",
+        "name_ru": "Горолог226. Декан",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "izobretatel",
+        "name_ru": "Изобретатель",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "inzhener",
+        "name_ru": "Инженер",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "istorik",
+        "name_ru": "Историк",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kartograf",
+        "name_ru": "Картограф",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "matematik",
+        "name_ru": "Математик",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pisar",
+        "name_ru": "Писарь",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "professor",
+        "name_ru": "Профессор",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "repetitor235-student",
+        "name_ru": "Репетитор235. Студент",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "uchenik",
+        "name_ru": "Ученик",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "uchenyy",
+        "name_ru": "Ученый",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "uchitel",
+        "name_ru": "Учитель",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "filosof",
+        "name_ru": "Философ",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "himik",
+        "name_ru": "Химик",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "advokat",
+        "name_ru": "Адвокат",
+        "aliases_ru": [
+          "стряпчий"
+        ],
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "aristokrat",
+        "name_ru": "Аристократ",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "baron",
+        "name_ru": "Барон",
+        "aliases_ru": [
+          "баронесса"
+        ],
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "velmozha",
+        "name_ru": "Вельможа",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vikont",
+        "name_ru": "Виконт",
+        "aliases_ru": [
+          "виконтесса"
+        ],
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vozhd",
+        "name_ru": "Вождь",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "gercog",
+        "name_ru": "Герцог",
+        "aliases_ru": [
+          "герцогиня"
+        ],
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "graf",
+        "name_ru": "Граф",
+        "aliases_ru": [
+          "графиня"
+        ],
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "diplomat",
+        "name_ru": "Дипломат",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "imperator",
+        "name_ru": "Император",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kancler",
+        "name_ru": "Канцлер",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "konstebl253-korol",
+        "name_ru": "Констебль253. Король",
+        "aliases_ru": [
+          "королева"
+        ],
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "markiz",
+        "name_ru": "Маркиз",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "master-nadmonetoy",
+        "name_ru": "Мастер надмонетой",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "master-nadshpionami",
+        "name_ru": "Мастер надшпионами",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ministr",
+        "name_ru": "Министр",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "oldermen",
+        "name_ru": "Олдермен",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "orator",
+        "name_ru": "Оратор",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pazh",
+        "name_ru": "Паж",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pridvornyy",
+        "name_ru": "Придворный",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "princ",
+        "name_ru": "Принц",
+        "aliases_ru": [
+          "принцесса263. Расценщик"
+        ],
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "rycar",
+        "name_ru": "Рыцарь",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "sborschik-nalogov",
+        "name_ru": "Сборщик налогов",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "senator",
+        "name_ru": "Сенатор",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "skvayr",
+        "name_ru": "Сквайр",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "stareyshina",
+        "name_ru": "Старейшина",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "styuard",
+        "name_ru": "Стюард",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "sudya",
+        "name_ru": "Судья",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "freylina",
+        "name_ru": "Фрейлина",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ceremoniymeyster",
+        "name_ru": "Церемониймейстер",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ercgercog",
+        "name_ru": "Эрцгерцог",
+        "aliases_ru": null,
+        "categories": [
+          "arts"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "brakoner",
+        "name_ru": "Браконьер",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vzlomschik",
+        "name_ru": "Взломщик",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vor",
+        "name_ru": "Вор",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "glavar-bandy",
+        "name_ru": "Главарь банды",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "grabitel-mogil",
+        "name_ru": "Грабитель могил",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "grabitel",
+        "name_ru": "Грабитель",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kontrabandist",
+        "name_ru": "Контрабандист",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "naemnyy-ubiyca",
+        "name_ru": "Наёмный убийца",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "narkobaron",
+        "name_ru": "Наркобарон",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "narkotorgovec",
+        "name_ru": "Наркоторговец",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pirat",
+        "name_ru": "Пират",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pohititel",
+        "name_ru": "Похититель",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "razboynik",
+        "name_ru": "Разбойник",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "reyder290-rostovschik",
+        "name_ru": "Рейдер290. Ростовщик",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "skupschik-kradenogo",
+        "name_ru": "Скупщик краденого",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ustroitelpetushinyh-boev",
+        "name_ru": "Устроительпетушиных боёв",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "sharlatan",
+        "name_ru": "Шарлатан",
+        "aliases_ru": [
+          "жулик"
+        ],
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "barmen",
+        "name_ru": "Бармен",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "burlak",
+        "name_ru": "Бурлак",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "bufetchik",
+        "name_ru": "Буфетчик",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vinokur",
+        "name_ru": "Винокур",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vodonos",
+        "name_ru": "Водонос",
+        "aliases_ru": [
+          "водовоз"
+        ],
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "gornichnaya",
+        "name_ru": "Горничная",
+        "aliases_ru": [
+          "батлер"
+        ],
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "guverner",
+        "name_ru": "Гувернер",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "degustator",
+        "name_ru": "Дегустатор",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "domrabotnica",
+        "name_ru": "Домработница",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zagotovschikdrevesnogo-uglya",
+        "name_ru": "Заготовщикдревесного угля",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zemlekop",
+        "name_ru": "Землекоп",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kelner",
+        "name_ru": "Кельнер",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kladovschik",
+        "name_ru": "Кладовщик",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "klerk",
+        "name_ru": "Клерк",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "konditer309-krupe",
+        "name_ru": "Кондитер309. Крупье",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kuharka",
+        "name_ru": "Кухарка",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "lovec-vrediteley",
+        "name_ru": "Ловец вредителей",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "mazhordom",
+        "name_ru": "Мажордом",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "mogilschik",
+        "name_ru": "Могильщик",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "myasnik",
+        "name_ru": "Мясник",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "parikmaher",
+        "name_ru": "Парикмахер",
+        "aliases_ru": null,
+        "categories": [
+          "craft",
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pekar",
+        "name_ru": "Пекарь",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "plyumazhnyymaster",
+        "name_ru": "Плюмажныймастер",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "podmetalschik",
+        "name_ru": "Подметальщик",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "portovyy-rabochiy",
+        "name_ru": "Портовый рабочий",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "porte",
+        "name_ru": "Портье",
+        "aliases_ru": [
+          "швейцар"
+        ],
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "prostitutka",
+        "name_ru": "Проститутка",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "rab323-rabotnikprachechnoy",
+        "name_ru": "Раб323. Работникпрачечной",
+        "aliases_ru": [
+          "прачка"
+        ],
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "raznorabochiy",
+        "name_ru": "Разнорабочий",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "sadovnik",
+        "name_ru": "Садовник",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "sadovod",
+        "name_ru": "Садовод",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "sidelka",
+        "name_ru": "Сиделка",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "smotritelpriyuta",
+        "name_ru": "Смотрительприюта",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "starevschik",
+        "name_ru": "Старьёвщик",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "tavernschik",
+        "name_ru": "Тавернщик",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "trubochist",
+        "name_ru": "Трубочист",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ustroitel-sada",
+        "name_ru": "Устроитель сада",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "florist",
+        "name_ru": "Флорист",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "fonarschik",
+        "name_ru": "Фонарщик",
+        "aliases_ru": null,
+        "categories": [
+          "crime"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "shef-povarremeslosvyaz",
+        "name_ru": "Шеф - поварРЕМЕСЛОСВЯЗЬ",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "bashmachnik",
+        "name_ru": "Башмачник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "bondar",
+        "name_ru": "Бондарь",
+        "aliases_ru": [
+          "бочар"
+        ],
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "brilliantschik",
+        "name_ru": "Бриллиантщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "brylyar",
+        "name_ru": "Брыляр",
+        "aliases_ru": [
+          "модистка"
+        ],
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "butylochnik",
+        "name_ru": "Бутылочник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "verevochnik",
+        "name_ru": "Верёвочник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vydelyvatelsnastey",
+        "name_ru": "Выделывательснастей",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vyshivalschik",
+        "name_ru": "Вышивальщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "gonchar",
+        "name_ru": "Гончар",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "graver",
+        "name_ru": "Гравёр",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "gravirovschik",
+        "name_ru": "Гравировщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "derevschik",
+        "name_ru": "Деревщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "dolbezhnik",
+        "name_ru": "Долбежник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "dubilschik",
+        "name_ru": "Дубильщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zhestyanschik",
+        "name_ru": "Жестянщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zamochnik",
+        "name_ru": "Замочник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zerkalschik",
+        "name_ru": "Зеркальщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zolotar",
+        "name_ru": "Золотарь",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zolotyh-delmaster",
+        "name_ru": "Золотых делмастер",
+        "aliases_ru": [
+          "серебряныхделмастер"
+        ],
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "izgotoviteligrushek357-izgotovitel-kart",
+        "name_ru": "Изготовительигрушек357. Изготовитель карт",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "karetnik",
+        "name_ru": "Каретник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kozhevnik",
+        "name_ru": "Кожевник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kozhemyaka",
+        "name_ru": "Кожемяка",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kolesnik",
+        "name_ru": "Колесник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kolchuzhnik",
+        "name_ru": "Кольчужник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "komyazhnik",
+        "name_ru": "Комяжник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "krasilschik",
+        "name_ru": "Красильщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kuznec",
+        "name_ru": "Кузнец",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "lapotnik",
+        "name_ru": "Лапотник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ludilschik",
+        "name_ru": "Лудильщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "luchnik",
+        "name_ru": "Лучник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "lyute",
+        "name_ru": "Лютье",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "mebelnyy-master",
+        "name_ru": "Мебельный мастер",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "mednik",
+        "name_ru": "Медник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "metlovyaz",
+        "name_ru": "Мётловяз",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "mehovschik",
+        "name_ru": "Меховщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "mechnik",
+        "name_ru": "Мечник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "mylovar",
+        "name_ru": "Мыловар",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "nozhedel",
+        "name_ru": "Ножедел",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "optik",
+        "name_ru": "Оптик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "oruzheynik",
+        "name_ru": "Оружейник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "perepletchik381-perchatochnik",
+        "name_ru": "Переплётчик381. Перчаточник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pechatnik",
+        "name_ru": "Печатник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pechnik",
+        "name_ru": "Печник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pivovar",
+        "name_ru": "Пивовар",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "podshivalschik",
+        "name_ru": "Подшивальщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "sapozhnik",
+        "name_ru": "Сапожник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "sedelschik",
+        "name_ru": "Седельщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "skornyak",
+        "name_ru": "Скорняк",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "slesar",
+        "name_ru": "Слесарь",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "stekloduv",
+        "name_ru": "Стеклодув",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "stolyar",
+        "name_ru": "Столяр",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "takelazhnik",
+        "name_ru": "Такелажник",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "taksidermist",
+        "name_ru": "Таксидермист",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "tekstilschik",
+        "name_ru": "Текстильщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "tkach",
+        "name_ru": "Ткач",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "fletcher",
+        "name_ru": "Флетчер",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "chasovschik",
+        "name_ru": "Часовщик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "shveya",
+        "name_ru": "Швея",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "yuvelir",
+        "name_ru": "Ювелир",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "gerold",
+        "name_ru": "Герольд",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "glashatay",
+        "name_ru": "Глашатай",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kurer404-lingvist",
+        "name_ru": "Курьер404. Лингвист",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "perevodchik",
+        "name_ru": "Переводчик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "perelozhitel407-plakatchik",
+        "name_ru": "Переложитель407. Плакатчик",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "posylnyy",
+        "name_ru": "Посыльный",
+        "aliases_ru": null,
+        "categories": [
+          "craft"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "tolmachselskoe-i-lesnoe-hozyaystvo-zhivotnovodstvotransport",
+        "name_ru": "ТолмачСЕЛЬСКОЕ И ЛЕСНОЕ ХОЗЯЙСТВО , ЖИВОТНОВОДСТВОТРАНСПОРТ",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "boniter",
+        "name_ru": "Бонитер",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "breytor",
+        "name_ru": "Брейтор",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vinogradar",
+        "name_ru": "Виноградарь",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "dressirovschik",
+        "name_ru": "Дрессировщик",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "eger",
+        "name_ru": "Егерь",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zhivotnovod",
+        "name_ru": "Животновод",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "zverolov",
+        "name_ru": "Зверолов",
+        "aliases_ru": [
+          "траппер"
+        ],
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "konevod",
+        "name_ru": "Коневод",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "konoval",
+        "name_ru": "Коновал",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "konyuh",
+        "name_ru": "Конюх",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "konyushiy",
+        "name_ru": "Конюший",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "lesnichiy423-lesorub",
+        "name_ru": "Лесничий423. Лесоруб",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "melnik",
+        "name_ru": "Мельник",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "molochnik",
+        "name_ru": "Молочник",
+        "aliases_ru": [
+          "доярка"
+        ],
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ohotnik",
+        "name_ru": "Охотник",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pastuh",
+        "name_ru": "Пастух",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pahar",
+        "name_ru": "Пахарь",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "psar",
+        "name_ru": "Псарь",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pticelov",
+        "name_ru": "Птицелов",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "pchelovod",
+        "name_ru": "Пчеловод",
+        "aliases_ru": [
+          "бортник"
+        ],
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "razmolschik",
+        "name_ru": "Размольщик",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "remonter",
+        "name_ru": "Ремонтёр",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "rybak",
+        "name_ru": "Рыбак",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "sedlyar436-skotovod",
+        "name_ru": "Седляр436. Скотовод",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "sledopyt",
+        "name_ru": "Следопыт",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "smotritelzooparka",
+        "name_ru": "Смотрительзоопарка",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "sokolnik",
+        "name_ru": "Сокольник",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "staratel",
+        "name_ru": "Старатель",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "suknoval",
+        "name_ru": "Сукновал",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "taksator",
+        "name_ru": "Таксатор",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "fermer",
+        "name_ru": "Фермер",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "furazhir",
+        "name_ru": "Фуражир",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "shahter",
+        "name_ru": "Шахтёр",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "shornik",
+        "name_ru": "Шорник",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "bocman",
+        "name_ru": "Боцман",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vagonschik",
+        "name_ru": "Вагонщик",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "voznica",
+        "name_ru": "Возница",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "vperedsmotryaschiy",
+        "name_ru": "Вперёдсмотрящий",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kanonir",
+        "name_ru": "Канонир",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "karavanschik453-konopatchik",
+        "name_ru": "Караванщик453. Конопатчик",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "korabelschik",
+        "name_ru": "Корабельщик",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "kucher",
+        "name_ru": "Кучер",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "lodochnik",
+        "name_ru": "Лодочник",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "moryak",
+        "name_ru": "Моряк",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "ohrannik-karavana",
+        "name_ru": "Охранник каравана",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "paromschik460-pervyy-pomoschnik",
+        "name_ru": "Паромщик460. Первый помощник",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "rulevoy",
+        "name_ru": "Рулевой",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "shturman",
+        "name_ru": "Штурман",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "yunga",
+        "name_ru": "Юнга",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      },
+      {
+        "id": "yamschik",
+        "name_ru": "Ямщик",
+        "aliases_ru": null,
+        "categories": [
+          "transport"
+        ],
+        "source": {
+          "title": "464 Профессий (LSS)",
+          "file": "464 Профессий  (LSS).pdf"
+        }
+      }
+    ],
+    "names": [],
+    "travelers": [
+      {
+        "id": "traveler-1",
+        "ref": 1,
+        "description_ru": "Вывстречаетепожилогоджентльмена, идущегоподорогесгруппойизшестималеньких собак. Ондержиткаждуюизнихнаповодках, прикреплённыхкегобольшомурюкзаку. Тот наполненсобачьейодеждойиигрушками. Запоследниенескольколетэтотмужчинанаучил"
+      },
+      {
+        "id": "traveler-2",
+        "ref": 2,
+        "description_ru": "Выпроходитемимочеловекавструящемсякрасномодеянии, исполняющегоневероятномедленныйтанецсзакрытымиглазами. Вокругэтогочеловекабезсознаниялежатбандиты."
+      },
+      {
+        "id": "traveler-3",
+        "ref": 3,
+        "description_ru": "Вывидитестаруюженщинусмаленькойдевочкой, онимедленнодвижутсявсторонувашей группы. Когдавыподходитеближе, выпонимаете, чтоженщинанасамомделеслепая, а девочканаправляетеё. Этаженщиназаметнонапрягается, когдавыпроходитемимоних, и"
+      },
+      {
+        "id": "traveler-4",
+        "ref": 4,
+        "description_ru": "Парамолодожёноввовремямедовогомесяцарешилинаправитьсявуединённуюхижинув лесу. Ониобаочаровательныиоченьдружелюбны, ночемдольшевыснимиразговариваете, тембольшевамкажется, чточто-тоздесьнетак. Например, очевидно, чтоженихмногоеполучитвслучаебезвременнойкончиныневесты."
+      },
+      {
+        "id": "traveler-5",
+        "ref": 5,
+        "description_ru": "медныхмонетонсделаетдлявасилилюбогоизчленоввашейгруппырисунокуглемна бумаге. За 5 золотыхонпрекратитрисоватьцветыипроведетвремя, следуязагруппой, рисуя портретодногоизвас, поканезакончит. Еслиегоспроситьоегоработе, онпридетввосторг ипокажетвамсвойальбомдлярисования. Онполонразличныхрисунковипортретовлюдей, встреченныхимнадороге. Онговорит, чтоникогданезабываетлицаидаженарисуеткого-нибудьподаннымвамидеталямза 10 медныхмонет. Онудивительноточен, дажеесливыне слишкомхорошивописаниидеталей.",
+        "tags": []
+      },
+      {
+        "id": "traveler-6",
+        "ref": 6,
+        "description_ru": "Кдеревупривязанасобака. Кажется, вокругбольшеникогонет, однакоеслигруппапопытает сязабратьщенка, егохозяинрешитегоотыскать…"
+      },
+      {
+        "id": "traveler-7",
+        "ref": 7,
+        "description_ru": "Низкаяженщинастоитрядомсповозкойиторгуетмагическимиталисманами. Еёпомощник, большойглухойвеликан, которыйтянеттележку, ухмыляетсякаждыйраз, когдакто-топодходит. ЖенщинузовутТабита, ионапо-тихомуочаровательна. Приразговоресэтойпарой становитсяпонятно, чтоониблизкиедрузья, которыераньшевместебылиискателямиприключений."
+      },
+      {
+        "id": "traveler-8",
+        "ref": 8,
+        "description_ru": "Мужчинаврванойодеждеутверждает, чтоондворянин, котороговыгнализдомазлойбрат/ сестра. Скорейвсего, еговыгналипотому, чтоонжадныйпридурок, ногруппаузнаетобэтом позже, когдаонначнёттребоватьвсёбольшеибольше."
+      },
+      {
+        "id": "traveler-9",
+        "ref": 9,
+        "description_ru": "Двакобольда, одетыевстарыеплащи, стоятрядомдругсдругом. Ониутверждают, чтоявляютсязнаменитымидраконорожденнымивоинами, но, похоже, онинезнают, чтонасамом делеявляютсякобольдами."
+      },
+      {
+        "id": "traveler-10",
+        "ref": 10,
+        "description_ru": "Вывидитепару, каквамкажется, брошенныхлошадей. Придетальномрассмотренииоказывается, чтонанихвсёещёвиситвсёснаряжение, иихявнобросиливспешке."
+      },
+      {
+        "id": "traveler-11",
+        "ref": 11,
+        "description_ru": "Человекроетмогилу, арядомлежитукрытоесаваномтело. 12Вывстречаетелюдоящеравдоспехахпаладина. Онплоховыдаётсебязапаладина, доспехи которогоносит, новсёравнопритворяетсязаконно-добрым. Или, возможно, онизменилсвоё мировоззрениепослетого, какполучилснаряжение. Влюбомслучае, онголоден… 13Пастухсдюжинойовец. Оннастаиваетнатом, чтовсеовцыпринадлежатему, нопродолжает оглядыватьсячерезплечо. 14Дорожнаябригадаиз 10 человекпытаетсяубратьпеньпосредидорого. Четверочленоввооруженылукамиижалуютсянадриаду, котораямешаетихработе. Двоенепосредственновыкорчёвываютпень. Остальные «наблюдают» заэтим. 15Наводнениеперекрылочастьдороги. Рядомстоитколдун, предлагающийзанебольшуюплату расчиститьчастьдороги. Колдунверенсвоемусловуисоздаётсухойперешеекнадругойберег, однакокактолькогруппапонемупереходит, ивода, иколдунисчезают. 16Чисточёрнаяинеестественновысокаятабаксипредлагаетлюбойволшебныйпредмет (по выборуМастера) вобменнаинтереснуюисторию. Чтобыполучитьпредмет, игрокдолжен рассказатьисторию, раскрывающуючастьегопредыстории, ипройтипроверкуубеждениясо сложностью 14. Каждыйигрокможетпопытатьсясделатьэтоодинраз, нокаждыйразпринеудачеинтерестабаксиугасает, асложностьувеличиваетсяна 2. Еслисложностьдостигает 20, то невпечатлённаятабаксиуходит.",
+        "tags": []
+      },
+      {
+        "id": "traveler-12",
+        "ref": 12,
+        "description_ru": "Вывстречаетелюдоящеравдоспехахпаладина. Онплоховыдаётсебязапаладина, доспехи которогоносит, новсёравнопритворяетсязаконно-добрым. Или, возможно, онизменилсвоё мировоззрениепослетого, какполучилснаряжение. Влюбомслучае, онголоден…"
+      },
+      {
+        "id": "traveler-13",
+        "ref": 13,
+        "description_ru": "Пастухсдюжинойовец. Оннастаиваетнатом, чтовсеовцыпринадлежатему, нопродолжает оглядыватьсячерезплечо."
+      },
+      {
+        "id": "traveler-14",
+        "ref": 14,
+        "description_ru": "Дорожнаябригадаиз 10 человекпытаетсяубратьпеньпосредидорого. Четверочленоввооруженылукамиижалуютсянадриаду, котораямешаетихработе. Двоенепосредственновыкорчёвываютпень. Остальные «наблюдают» заэтим."
+      },
+      {
+        "id": "traveler-15",
+        "ref": 15,
+        "description_ru": "Наводнениеперекрылочастьдороги. Рядомстоитколдун, предлагающийзанебольшуюплату расчиститьчастьдороги. Колдунверенсвоемусловуисоздаётсухойперешеекнадругойберег, однакокактолькогруппапонемупереходит, ивода, иколдунисчезают."
+      },
+      {
+        "id": "traveler-16",
+        "ref": 16,
+        "description_ru": "Чисточёрнаяинеестественновысокаятабаксипредлагаетлюбойволшебныйпредмет (по выборуМастера) вобменнаинтереснуюисторию. Чтобыполучитьпредмет, игрокдолжен рассказатьисторию, раскрывающуючастьегопредыстории, ипройтипроверкуубеждениясо"
+      },
+      {
+        "id": "traveler-17",
+        "ref": 17,
+        "description_ru": "Маленькаяибеднаясемьясовсемисвоимипожиткамипереезжаетвновыйгород. 18Волшебникогненныйтритонторгуетмагическимиминералами, кристалламиипылью. Онживётвхижинесбольшимкостромпосередине. Большуючастьвременионпроводитдома, изготавливаяпорошкиизанимаясьразнымремесломоколокостра. Хотяонинесамыйдобрый, однакоумный, сильныйиотзывчивый. Онпродаётмагическиеинемагическиеукрашения, фейерверки, компонентыиингредиентыдлязаклинанийирецептов. 19Одинокийжаболюдоднаждызаблудилсяитеперьживётвпещере. Онсчитаетсебяимператоромэтойпещеры. Унегоестьдругиелягушкиижабывкачествеприспешниковиохранников. 20Вывидитедвефигурыверхомналошадях: полуросликаизелёногодраконорожденного. Они едутрысьюоколомили, поканеостанавливаютсяоколообочинырядомсохраняемымибогатоукрашеннымфургоном. Каквыяснилось, драконорожденный – сенатор, возвращающийся изпоездкиподальнимдеревням. Оностановился, чтобыпокормитьинапоитьлошадей, но случайноуронилключотфургонавканаву. Полурослик – слесарьизсоседнегогорода. 21Вызамечаетебездомнуюсобаку, голоднуюигрязную. Нанейестьошейниксприкреплённойк немузапиской, похожейнакрикопомощи! 22Вывстречаетегруппусперсонажамитехжеклассов, чтоиувас, нодругихархетипов. Онинемногонеприятныистремятсявыполнитьтотжеквест/миссию, чтоивашагруппа. 23Чёрныйрыцарьпутешествуетверхомнаконе. Онможетоказатьсякакой-тоиллюзиейили странствующимбоссом. 24Голодныйнищий, которыйпозжепридётгруппенапомощь, еслионипомогутему. Еслиже нет, тоонсделаетчто-топлохое. 25Сумасшедшийстарикутверждает, чтознает, гденаходитсятайный, полныйволшебствалес. Выследуетезаним, нонасамомделеонпростохочетзавестивасксебедомой, потомучто емуоченьодинокостехпор, какумерлаегожена. 26Двапожилыхмужчиныверхомнагигантскойулитке. Онипродаютобычныемагическиепредметыикартыблизлежащийпещерныхсистем, аещёмогунаучитьгруппунекоторымновым зельям. 27Человек, чьёвсётелокромепронзительныхголубыхглазпокрытотканевымиповязками. Он одетвгрязнуюистаруюодеждудворянинидержитподрукойрелигиозныйтекст. Онвежлив инастойчив, очевиднорелигиозен, атакжеунегоглубокийшелковистыйголос. Еслиприсмотреться, становитсяпонятно, чтовсяегокожаобожжена. Занимследуютпредзнаменования смерти. 28Группагвардейцеввезёттруплюбимойграфиниобратнонародину. Еслиснимипоговорить, вразговореонипредположат, чтокеёсмертипривелакакая-тонечестнаяигра, ипопросят искателейприключенийпровестирасследование. 29Хэррин, полурослик-повариегосотрудники, тожеполурослики. Онипутешествуютвпоисках Мрачногогриба, которыйсчитаетсясамымвкуснымнасвете. Ихтелохранителемявляется большойидобрыйполуоркпопрозвищу – Джой. 30Слепойспалкойспотыкаетсяподороге. Еслигруппаостановитсяпоговоритьсним, онрасскажетотом, чтовмолодостионбыллучшимбандитомвэтомокруге. Проблемавтом, что онинепереставалимбыть, когдапотерялзрение. Егоприятелипрячутсявглушинаобочине дорогиистреляютпоотрядуизарбалетовикороткихлуков. 31ГруппастранствующихбардовподназваниемСердцедраконавсерединесвоего «самого большоготуразавсюисторию», входекоторогоонииграютвнесколькихгородахмира. Эта встречаможетповторятьсянаразныхдорогах. 32Группамонаховсовершаетпаломничествоксвятынесвоегоордена, чтобымедитироватьи пройтиобучение. 33Бродячийцирксгруппойартистов, одинизкоторыхпредлагаетпоказать, чтоонумеет (читатькартыТароиликаким-либообразомузнатьбудущеесобытие) наобочинедорогизапару монет. 34Фанатик, совершающийрелигиозноепаломничествокдалекомусвятомуместу. Паломник толькочтоотправилсявпутьиполонрешимостииискреннейверой. Этоегопервоепаломничество, идосихпоронвёлдостаточнозакрытуюжизнь. 35Странствующийбард, которыйпостоянноговоритвзагадках. Онзнаетмножествоисторийи легенд, иможетрассказатьонекоторыхзабытыхместахссокровищамивобменнауникальнуюпеснюилимузыкальноепроизведение. 36Группаразбойников, выдающихсебязарелигиозныхпоследователей, совершающихпаломничествовближайшийхрам. Онипланируютограбитьсвятоеместоиубитьвсех, ктонаходит сявнутри. 37Фермериегосемьяведутзасобойзатяжелонагруженнойтележкойтрёхбыков, двуховец, пятьсвинейисемьгусей. Наверхутележкиненадёжновозвышаетсяединственноекресло-качалка, ккоторомупривязанабабушка. 38Путешествующаятруппанеудачливыхартистовснебольшойпроблемой, которуюигрокимогутрешить. Вихтруппеестьподающийнадеждымолодоймастер-рассказчик, которыйнавернякабудетзаинтересованигрокамииихисториями. Помогитеимиливпечатлитеих, чтобы рассказыоподвигахкомандыперешливместеснимивследующийбольшойгород. 39Глупыйфермер, которомупродаликотавмешке (асказали, чтоэтопоросёнок). Фермервот чаянии, онпотратилкаждуюкопейку, которуюимел, внадеждеизменитьсвоёположение. 40Коробейниксостаройлошадьюиполусломаннойтележкой, застрявшейвгрязнойколее. На самомделеторговец – шпион, путешествующийподприкрытием, ионспециальнозастрял, чтобывступитьвконтактсдругимилюдьми. Всетовары, которыеунеговфургоне, украдены уместнойвластиилирелигиознойгруппы, иигрокимогуткакзнать, такинезнатьобэтом. Торговецжеготовсделатьоченьмногое, чтобыегонепоймали… 41Некомпетентныйискательприключений, которыйнепринимает «нет» вкачествеответаипланируетнаправитьсятудаже, кудаиигроки. Ондовольнодружелюбный, но, похоже, онслишкомсильностарается. 42Рыцарь, путешествующийсоченьнесущественнойсвитойиливообщебезнеё. Рыцарьпо какой-топричинебылвынужденпродатьсвоегодорогогобоевогоконяилижеизмоталегодо травмы. Альтернативно: рыцарьнасамомделеявляетсяпаладином, поклявшимсянеездить налошадиителегевтечениеодногомесяцаиодногодня. 43Сдорогиприближаетсягруппагрязныхшахтёров-дварфов, предлагающихобменятьочень ценныедрагоценныекамнинаэльиеду («непайки, анастоящуюеду!»). Онитолькочтообнаружилиогромноеместорождениеихотятотпраздноватьэтособытие. Надеюсь, увасесть, что импредложить. 44Квамприближаетсяохотник проситвашейпомощи. Онхудойиочевидноголоден. Онговорит, чтовыследилсовомедведявближайшейпещере, иесливыпоможетеегоубить, это прокормитегосемьюнамесяцвперёд. 45Посредидорогивызамечаететрупмужчины. Этомолодойчеловекнестаршевосемнадцати-девятнадцатилет. Унегоперерезаногорло. Есливыостановитесь, чтобыосмотретьтело, выбыстроувидитепоисковуюгруппу, идущуюввашусторону. Ониищутэтогопарня, ивам явнонеследовалонаходитьсятакблизкокнему. 46Вызамечаетеэльфа, прислонившегосякдереву. Онзалиткровьюинаходитьсянаграни смерти. Онрассказывает, чтоявляетсякурьеромипопалвзасадубандитов. Онговоритвам, чтоонинесмоглинайтипослание, котороеоннесёт; оноспрятановнутриегоботинка. Он проситвасдоставитьдлянегосообщениеженщинепоимениЭллаКорвинвдеревнеЛощины Тредера, внесколькихдняхездыотвас. СообщениеотеёсынаДенниса, которыйобучается волшебствууэльфов. ВслучаедоставкиЭлланакормитвашугруппу (сытноерагуизбаранины свосхитительнымдомашнимпеченьем) ипредложитприютвсвоёмсарае, рядомсосвоей призовойсвиньёйЖозефиной. 47Медведьвжилетеишляпе-дербипродаётискусноизготовленныемузыкальныеинструменты. Рядомтележка, запряжённаяволами, привязаннаякдеревунаобочинедороги. Егозовутсэр УильямБирингтонII. Оннеговорит, номожетпониматьиписатьнадоскесошибками. Если выпопытаетесьунегочто-тоукрасть, онбезколебанийнападётнаваскакСвирепыймедведь. Небольшаягруппабардовразныхрасустроилаимпровизированныйджем-сейшннаполяненеподалеку. Звучатонивеликолепно, иеслиихспросить, ониобъясняютзвуккачеством инструментов. Любой, ктовладеетмузыкальныминструментомиимеетдостаточнозолота вкошельке, долженпроверитьВолюсосложностью 10, чтобысэкономитьилибудетобязан купитьинструмент. Ценывысокие (в 2 раза), номастерствотогостоит. Яркаявывесканаборту тележки, написаннаяжирнымшрифтом, гласит: «Музыкалныеинсрументылучшыхпроизвадителей, искустновомастерасэраУ.М. БирингтонаIII, влоделец» 48Мимопроезжаеттройкагрязныхмужиковвневероятнонаряднойкарете. Онинервноулыбаютсяимашутвашейгруппе. ПроверкаОбнаружениясосложностью 18 позволитзаметить пятнокровинабоковойсторонекареты. 49Вывстречаетегруппуиздюжиныилиоколотогомолодыхлюдей. Ониносяткопьяикожаные доспехи. Кажется, онипытаютсяпривлечьвашевнимание. Еслинанихнапасть, онитутже убегут. Еслиснимипоговорить, онибудутзаявлять, чтоявляютсясолдатами, итребуютналога. Вслучаеотказаониразмахиваюткопьямииговорятогневекороля, нобегутприпервых признакахнасилия. Насамомделеонитрусыидезертиры, пытающиесяпробратьсянаюг. 50Мужчинаумоляетопомощи. «Меняограбилибандиты. Пожалуйста, добрыенезнакомцы, подвезитеменявдеревню, котораянаходитсявсеговднепути?» Припервойжевозможности онпопытаетсяукрастьчто-нибудьценноеиуехатьнавашейлошади. Есливыпопытаетесьего остановить, онударитваспервым. 51Оченьпожилаяпараостанавливаетвас. Онипросятвасоставитьнемногосеребранапамять обихсыне, убитомнаэтомсамомместедвадцатьлетназад. 52Великансидитнаполяне, онплачет. Звукиегослезэхомзаносятсяпооткрытомупространству. Егоженунедавноубилиискателиприключений, ионпридетвярость, увидевваше оружие. Есливамудастсяегоуспокоить, онпредставитсяУргирромибудетумолятьваснайти справедливостьдляегожены, убиворка-варвара «КарнакаСмелого», человека-волшебника «АльдоЧернорукого», гнома-клерика «ТордокаГоры». » игнома-разбойника «МошенникаДаффингтонДингл». 53Вывстречаетеневероятнопожилогогнома, полностьюобнаженного, стоящегопосредидорогиитребующегоуплатыпошлинывразмере 10 зм. Онвладеетпосохомипровозглашаетсебя КоролемДороги. Ксчастью, егодлиннаябелаябородаскрываетморщинистыеягодицыот вашеговзгляда. 54Лучниквызываетвсехжелающихнаохотничьесостязание. Ставкав 100 золотых. Призполучиттот, ктосможетубитьбольшевсегоптицзачас. 55МортиМеннекаум, странствующийгном-алхимик, открылмагазинвэтомнеобычномместе. Егоценынемноговышесреднего, ноонлюбитпошутитьиготовторговаться, есликто-тосможетегорассмешить. ЕгосынМэнни, здоровенныйбоецсдлинныммечомистальнымщитом, смотритнавас. 56Призраквитаетнавашемпути. ЭтоГрегорЯнтос. Онпроситвасдоставитьсообщениеегожене Алиевсоседнийгород: «Этобылонеслучайно. Келварразрезалменя, чтобыдобратьсядо тебя. Недоверяйему». КогдавынайдетеАлю, онабудетзамужемзаКелваромужедевятьлет, иунихестьдочь. Онивполнесчастливаясемья. Грегорумердвенадцатьлетназад, ивгороде егонедолюбливали. Унегобыларепутациячеловека, которыйнапивалсяиизбивалАлью. 57Двенадцатилетниймальчиксидит, скрестивноги, навалуне, которыйкажетсянеуместнымна этомучасткедороги. Наголовеонноситобручизверевки. Еслиснимпоговорить, оноткроет глаза, узнаетваси, кажется, обратитвнимание, нонезаговорит. Онбудетотвечать «да» или «нет» навопросы, покачиваяголовой. Онпринялобетмолчанияисобираетсястатьмонахом. Есливыпопроситеопомощи, онможетпоказатьвамсвоймонастырь, гдевысможетеспать, естьитренироватьсявтечениенедели. 58Горожанин (Гарг) споритспродавцом (Финес). Онутверждает, чтозаплатилза 50 чудесных лекарств, новящике, которыйдалемупродавец, былотолько 46. Продавецутверждает, что покупатель, должнобыть, выпилчетыредозылекарства, потомучтоунего «естьсистема». Споридетза 8 золотых. 59Мимоваснатележкепроезжаетторговец. Занимстопорамиивиламигонитсяполовина деревни. Ониутверждают, чтоонвоспользовалсяими, продавимцветнойвискивофлаконе изаявив, чтоонвылечитшахтерскуюлихорадку. Есливыпоймаетепродавца, онскажет, что эточестнаяработа – продаватьлюдямнадеждунабезнадежнуюболезнь. Онвернет 75% денег города, есливыегозапугаете (сложность 15). ЕсливыпревзойдетеегоЗапугиваниена 10 или более, онвернетвсе. 60Приближаетсяпатрулькоролевскойгвардии. Шестерокрепкихмужчин, покрайнеймеренесколькораненых, охраняютнечтопохожеенажелезныйсейф. Онипутешествуютбыстро. Они говорят, чтосразувидят, чтовызаслуживающийдовериянарод, ипросятвасприсоединиться книмвдоставкеихневероятноценногогрузаккоролю (чтонаходитсявнесколькихнеделях путиотвас), обещаянебольшоевознаграждениезаусилия. Есливыоткажетесь, ониещераз подчеркнут, наскольконевероятноцененихгруз, иобъяснят, чтоониусталииослабелиотпутешествияиуязвимыдлябандитов. Еслисейфоткрыть (убивохранниковивзломавсложный замок), внемокажетсяписьмоиздругогокоролевства — мирныйдоговор. 61Группаизчетырехмаленькихдетейнестаршевосьми-девятилетгордоостанавливаетвашу группу. Онигерои-приключенцыихотятприсоединитьсяквашейгруппе. Убиватьпротивных троллей, побеждатьужасныхдраконовинеложитьсяспатьстолько, сколькозахотят. 62Толпагорожан, вооруженнаясамодельныморужиемифакелами, маршируетвсторонуближайшегогорода. Онизаявляют, чтособираютсясражатьсясместныммелкимлордом, потому чтоегоналогислишкомвысоки. Еслибудетбой, ихобязательнозарежут. 63Небольшаягруппаизтрехпожилыхженщин, одетыхвдомотканыеигрязныешали. Уодной женщиныопухланога, ионаприхрамывает. Уоднойопухлагуба, икогдаонаговорит, унее течетслюна. Утретьейвывернутизараженпалец, из-зачегоонанеможетничегоухватить. Уоднойизнихестьножницы, удругой — мешоксподготовленнымльнянымволокном, ау третьей — прялкаиверетено. Они — фэйри, замаскированныестраннойсилой, сдаромпро роческогопредвиденияистраннойэтикой. Либоже, ониведьмыссомнительнымимотивами, номоральнымкодексом «вознаграждения» тех, ктопроявляеткнимуважение, которого, поих мнению, онизаслуживают. 64Этимологвабсурдномкостюмескомедийнобольшойсеткойотнасекомых, короткимишортами, пробковымшлемом, носкамиисандалиями. Онпроситпомочьпойматьто, чтовидит толькоон. 65Подойдякповоротудороги, выслышитедваголоса, громкожалующихсядругнадруга. — Ты сказала, чтознаешь, кудамыидем! «Ясказала, чтоэтоВосток, атысказала, чтокарта — пустая тратаденег!» Женщина-Голиафсидитнаупавшемдеревенаобочинедороги. Женщина-полуросликсидитнаееплечахипередаетсвоейспутницефляжкусвином. 66Напервыйвзгляднормальныймужчинавстречаетгруппунадороге. Чащевсегоонбудет обращатьсякучастникуссамымиволшебнымиукрашениями. Посленеловкогоразговора онбыстропопытаетсяукрастьдрагоценностиисбежать. Когдагруппанападаетнанего, он превращаетсявдревнегомедногодраконаиулетает. Онинесмогутегоотследить. Позже, еслигруппабудетрасследоватьпреступлениявсоседнемгороде, онимогутуслышатьслухо нелегальномчерномрынкемагии. Медныйдраконявляетсяцентральнойфигуройоперациии вернетпредметы, еслиснимстолкнуться. 67Неботемнеет, иначинаетсясильныйдождь. Вывидитемужчину, идущеговдругуюсторону, с тяжелымзонтикомивтяжеломпальто. Дождьидетдотехпор, покамужчинанаходитсявполе зрения, азатемсразужепроясняется.",
+        "tags": []
+      },
+      {
+        "id": "traveler-18",
+        "ref": 18,
+        "description_ru": "Волшебникогненныйтритонторгуетмагическимиминералами, кристалламиипылью. Онживётвхижинесбольшимкостромпосередине. Большуючастьвременионпроводитдома, изготавливаяпорошкиизанимаясьразнымремесломоколокостра. Хотяонинесамыйдобрый, однакоумный, сильныйиотзывчивый. Онпродаётмагическиеинемагическиеукрашения, фейерверки, компонентыиингредиентыдлязаклинанийирецептов."
+      },
+      {
+        "id": "traveler-19",
+        "ref": 19,
+        "description_ru": "Одинокийжаболюдоднаждызаблудилсяитеперьживётвпещере. Онсчитаетсебяимператоромэтойпещеры. Унегоестьдругиелягушкиижабывкачествеприспешниковиохранников."
+      },
+      {
+        "id": "traveler-20",
+        "ref": 20,
+        "description_ru": "Вывидитедвефигурыверхомналошадях: полуросликаизелёногодраконорожденного. Они едутрысьюоколомили, поканеостанавливаютсяоколообочинырядомсохраняемымибогатоукрашеннымфургоном. Каквыяснилось, драконорожденный – сенатор, возвращающийся изпоездкиподальнимдеревням. Оностановился, чтобыпокормитьинапоитьлошадей, но"
+      },
+      {
+        "id": "traveler-21",
+        "ref": 21,
+        "description_ru": "Вызамечаетебездомнуюсобаку, голоднуюигрязную. Нанейестьошейниксприкреплённойк немузапиской, похожейнакрикопомощи!"
+      },
+      {
+        "id": "traveler-22",
+        "ref": 22,
+        "description_ru": "Вывстречаетегруппусперсонажамитехжеклассов, чтоиувас, нодругихархетипов. Онинемногонеприятныистремятсявыполнитьтотжеквест/миссию, чтоивашагруппа."
+      },
+      {
+        "id": "traveler-23",
+        "ref": 23,
+        "description_ru": "Чёрныйрыцарьпутешествуетверхомнаконе. Онможетоказатьсякакой-тоиллюзиейили странствующимбоссом."
+      },
+      {
+        "id": "traveler-24",
+        "ref": 24,
+        "description_ru": "Голодныйнищий, которыйпозжепридётгруппенапомощь, еслионипомогутему. Еслиже нет, тоонсделаетчто-топлохое."
+      },
+      {
+        "id": "traveler-25",
+        "ref": 25,
+        "description_ru": "Сумасшедшийстарикутверждает, чтознает, гденаходитсятайный, полныйволшебствалес. Выследуетезаним, нонасамомделеонпростохочетзавестивасксебедомой, потомучто емуоченьодинокостехпор, какумерлаегожена."
+      },
+      {
+        "id": "traveler-26",
+        "ref": 26,
+        "description_ru": "Двапожилыхмужчиныверхомнагигантскойулитке. Онипродаютобычныемагическиепредметыикартыблизлежащийпещерныхсистем, аещёмогунаучитьгруппунекоторымновым зельям."
+      },
+      {
+        "id": "traveler-27",
+        "ref": 27,
+        "description_ru": "Человек, чьёвсётелокромепронзительныхголубыхглазпокрытотканевымиповязками. Он одетвгрязнуюистаруюодеждудворянинидержитподрукойрелигиозныйтекст. Онвежлив инастойчив, очевиднорелигиозен, атакжеунегоглубокийшелковистыйголос. Еслиприсмотреться, становитсяпонятно, чтовсяегокожаобожжена. Занимследуютпредзнаменования"
+      },
+      {
+        "id": "traveler-28",
+        "ref": 28,
+        "description_ru": "Группагвардейцеввезёттруплюбимойграфиниобратнонародину. Еслиснимипоговорить, вразговореонипредположат, чтокеёсмертипривелакакая-тонечестнаяигра, ипопросят искателейприключенийпровестирасследование."
+      },
+      {
+        "id": "traveler-29",
+        "ref": 29,
+        "description_ru": "Хэррин, полурослик-повариегосотрудники, тожеполурослики. Онипутешествуютвпоисках Мрачногогриба, которыйсчитаетсясамымвкуснымнасвете. Ихтелохранителемявляется большойидобрыйполуоркпопрозвищу – Джой."
+      },
+      {
+        "id": "traveler-30",
+        "ref": 30,
+        "description_ru": "Слепойспалкойспотыкаетсяподороге. Еслигруппаостановитсяпоговоритьсним, онрасскажетотом, чтовмолодостионбыллучшимбандитомвэтомокруге. Проблемавтом, что онинепереставалимбыть, когдапотерялзрение. Егоприятелипрячутсявглушинаобочине дорогиистреляютпоотрядуизарбалетовикороткихлуков."
+      },
+      {
+        "id": "traveler-31",
+        "ref": 31,
+        "description_ru": "ГруппастранствующихбардовподназваниемСердцедраконавсерединесвоего «самого большоготуразавсюисторию», входекоторогоонииграютвнесколькихгородахмира. Эта встречаможетповторятьсянаразныхдорогах."
+      },
+      {
+        "id": "traveler-32",
+        "ref": 32,
+        "description_ru": "Группамонаховсовершаетпаломничествоксвятынесвоегоордена, чтобымедитироватьи пройтиобучение."
+      },
+      {
+        "id": "traveler-33",
+        "ref": 33,
+        "description_ru": "Бродячийцирксгруппойартистов, одинизкоторыхпредлагаетпоказать, чтоонумеет (читатькартыТароиликаким-либообразомузнатьбудущеесобытие) наобочинедорогизапару монет."
+      },
+      {
+        "id": "traveler-34",
+        "ref": 34,
+        "description_ru": "Фанатик, совершающийрелигиозноепаломничествокдалекомусвятомуместу. Паломник толькочтоотправилсявпутьиполонрешимостииискреннейверой. Этоегопервоепаломничество, идосихпоронвёлдостаточнозакрытуюжизнь."
+      },
+      {
+        "id": "traveler-35",
+        "ref": 35,
+        "description_ru": "Странствующийбард, которыйпостоянноговоритвзагадках. Онзнаетмножествоисторийи легенд, иможетрассказатьонекоторыхзабытыхместахссокровищамивобменнауникальнуюпеснюилимузыкальноепроизведение."
+      },
+      {
+        "id": "traveler-36",
+        "ref": 36,
+        "description_ru": "Группаразбойников, выдающихсебязарелигиозныхпоследователей, совершающихпаломничествовближайшийхрам. Онипланируютограбитьсвятоеместоиубитьвсех, ктонаходит сявнутри."
+      },
+      {
+        "id": "traveler-37",
+        "ref": 37,
+        "description_ru": "Фермериегосемьяведутзасобойзатяжелонагруженнойтележкойтрёхбыков, двуховец, пятьсвинейисемьгусей. Наверхутележкиненадёжновозвышаетсяединственноекресло-качалка, ккоторомупривязанабабушка."
+      },
+      {
+        "id": "traveler-38",
+        "ref": 38,
+        "description_ru": "Путешествующаятруппанеудачливыхартистовснебольшойпроблемой, которуюигрокимогутрешить. Вихтруппеестьподающийнадеждымолодоймастер-рассказчик, которыйнавернякабудетзаинтересованигрокамииихисториями. Помогитеимиливпечатлитеих, чтобы рассказыоподвигахкомандыперешливместеснимивследующийбольшойгород."
+      },
+      {
+        "id": "traveler-39",
+        "ref": 39,
+        "description_ru": "Глупыйфермер, которомупродаликотавмешке (асказали, чтоэтопоросёнок). Фермервот чаянии, онпотратилкаждуюкопейку, которуюимел, внадеждеизменитьсвоёположение."
+      },
+      {
+        "id": "traveler-40",
+        "ref": 40,
+        "description_ru": "Коробейниксостаройлошадьюиполусломаннойтележкой, застрявшейвгрязнойколее. На самомделеторговец – шпион, путешествующийподприкрытием, ионспециальнозастрял, чтобывступитьвконтактсдругимилюдьми. Всетовары, которыеунеговфургоне, украдены"
+      },
+      {
+        "id": "traveler-41",
+        "ref": 41,
+        "description_ru": "Некомпетентныйискательприключений, которыйнепринимает «нет» вкачествеответаипланируетнаправитьсятудаже, кудаиигроки. Ондовольнодружелюбный, но, похоже, онслишкомсильностарается."
+      },
+      {
+        "id": "traveler-42",
+        "ref": 42,
+        "description_ru": "Рыцарь, путешествующийсоченьнесущественнойсвитойиливообщебезнеё. Рыцарьпо какой-топричинебылвынужденпродатьсвоегодорогогобоевогоконяилижеизмоталегодо травмы. Альтернативно: рыцарьнасамомделеявляетсяпаладином, поклявшимсянеездить"
+      },
+      {
+        "id": "traveler-43",
+        "ref": 43,
+        "description_ru": "Сдорогиприближаетсягруппагрязныхшахтёров-дварфов, предлагающихобменятьочень ценныедрагоценныекамнинаэльиеду («непайки, анастоящуюеду!»). Онитолькочтообнаружилиогромноеместорождениеихотятотпраздноватьэтособытие. Надеюсь, увасесть, что импредложить."
+      },
+      {
+        "id": "traveler-44",
+        "ref": 44,
+        "description_ru": "Квамприближаетсяохотник проситвашейпомощи. Онхудойиочевидноголоден. Онговорит, чтовыследилсовомедведявближайшейпещере, иесливыпоможетеегоубить, это прокормитегосемьюнамесяцвперёд."
+      },
+      {
+        "id": "traveler-45",
+        "ref": 45,
+        "description_ru": "Посредидорогивызамечаететрупмужчины. Этомолодойчеловекнестаршевосемнадцати-девятнадцатилет. Унегоперерезаногорло. Есливыостановитесь, чтобыосмотретьтело, выбыстроувидитепоисковуюгруппу, идущуюввашусторону. Ониищутэтогопарня, ивам явнонеследовалонаходитьсятакблизкокнему."
+      },
+      {
+        "id": "traveler-46",
+        "ref": 46,
+        "description_ru": "Вызамечаетеэльфа, прислонившегосякдереву. Онзалиткровьюинаходитьсянаграни смерти. Онрассказывает, чтоявляетсякурьеромипопалвзасадубандитов. Онговоритвам, чтоонинесмоглинайтипослание, котороеоннесёт; оноспрятановнутриегоботинка. Он"
+      },
+      {
+        "id": "traveler-47",
+        "ref": 47,
+        "description_ru": "Медведьвжилетеишляпе-дербипродаётискусноизготовленныемузыкальныеинструменты. Рядомтележка, запряжённаяволами, привязаннаякдеревунаобочинедороги. Егозовутсэр УильямБирингтонII. Оннеговорит, номожетпониматьиписатьнадоскесошибками. Если"
+      },
+      {
+        "id": "traveler-48",
+        "ref": 48,
+        "description_ru": "Мимопроезжаеттройкагрязныхмужиковвневероятнонаряднойкарете. Онинервноулыбаютсяимашутвашейгруппе. ПроверкаОбнаружениясосложностью 18 позволитзаметить пятнокровинабоковойсторонекареты."
+      },
+      {
+        "id": "traveler-49",
+        "ref": 49,
+        "description_ru": "Вывстречаетегруппуиздюжиныилиоколотогомолодыхлюдей. Ониносяткопьяикожаные доспехи. Кажется, онипытаютсяпривлечьвашевнимание. Еслинанихнапасть, онитутже убегут. Еслиснимипоговорить, онибудутзаявлять, чтоявляютсясолдатами, итребуютналога. Вслучаеотказаониразмахиваюткопьямииговорятогневекороля, нобегутприпервых"
+      },
+      {
+        "id": "traveler-50",
+        "ref": 50,
+        "description_ru": "Мужчинаумоляетопомощи. «Меняограбилибандиты. Пожалуйста, добрыенезнакомцы, подвезитеменявдеревню, котораянаходитсявсеговднепути?» Припервойжевозможности онпопытаетсяукрастьчто-нибудьценноеиуехатьнавашейлошади. Есливыпопытаетесьего"
+      },
+      {
+        "id": "traveler-51",
+        "ref": 51,
+        "description_ru": "Оченьпожилаяпараостанавливаетвас. Онипросятвасоставитьнемногосеребранапамять обихсыне, убитомнаэтомсамомместедвадцатьлетназад."
+      },
+      {
+        "id": "traveler-52",
+        "ref": 52,
+        "description_ru": "Великансидитнаполяне, онплачет. Звукиегослезэхомзаносятсяпооткрытомупространству. Егоженунедавноубилиискателиприключений, ионпридетвярость, увидевваше оружие. Есливамудастсяегоуспокоить, онпредставитсяУргирромибудетумолятьваснайти справедливостьдляегожены, убиворка-варвара «КарнакаСмелого», человека-волшебника"
+      },
+      {
+        "id": "traveler-53",
+        "ref": 53,
+        "description_ru": "Вывстречаетеневероятнопожилогогнома, полностьюобнаженного, стоящегопосредидорогиитребующегоуплатыпошлинывразмере 10 зм. Онвладеетпосохомипровозглашаетсебя КоролемДороги. Ксчастью, егодлиннаябелаябородаскрываетморщинистыеягодицыот вашеговзгляда."
+      },
+      {
+        "id": "traveler-54",
+        "ref": 54,
+        "description_ru": "Лучниквызываетвсехжелающихнаохотничьесостязание. Ставкав 100 золотых. Призполучиттот, ктосможетубитьбольшевсегоптицзачас."
+      },
+      {
+        "id": "traveler-55",
+        "ref": 55,
+        "description_ru": "МортиМеннекаум, странствующийгном-алхимик, открылмагазинвэтомнеобычномместе. Егоценынемноговышесреднего, ноонлюбитпошутитьиготовторговаться, есликто-тосможетегорассмешить. ЕгосынМэнни, здоровенныйбоецсдлинныммечомистальнымщитом, смотритнавас."
+      },
+      {
+        "id": "traveler-56",
+        "ref": 56,
+        "description_ru": "Призраквитаетнавашемпути. ЭтоГрегорЯнтос. Онпроситвасдоставитьсообщениеегожене Алиевсоседнийгород: «Этобылонеслучайно. Келварразрезалменя, чтобыдобратьсядо тебя. Недоверяйему». КогдавынайдетеАлю, онабудетзамужемзаКелваромужедевятьлет,"
+      },
+      {
+        "id": "traveler-57",
+        "ref": 57,
+        "description_ru": "Двенадцатилетниймальчиксидит, скрестивноги, навалуне, которыйкажетсянеуместнымна этомучасткедороги. Наголовеонноситобручизверевки. Еслиснимпоговорить, оноткроет глаза, узнаетваси, кажется, обратитвнимание, нонезаговорит. Онбудетотвечать «да» или"
+      },
+      {
+        "id": "traveler-58",
+        "ref": 58,
+        "description_ru": "Горожанин (Гарг) споритспродавцом (Финес). Онутверждает, чтозаплатилза 50 чудесных лекарств, новящике, которыйдалемупродавец, былотолько 46. Продавецутверждает, что покупатель, должнобыть, выпилчетыредозылекарства, потомучтоунего «естьсистема»."
+      },
+      {
+        "id": "traveler-59",
+        "ref": 59,
+        "description_ru": "Мимоваснатележкепроезжаетторговец. Занимстопорамиивиламигонитсяполовина деревни. Ониутверждают, чтоонвоспользовалсяими, продавимцветнойвискивофлаконе изаявив, чтоонвылечитшахтерскуюлихорадку. Есливыпоймаетепродавца, онскажет, что"
+      },
+      {
+        "id": "traveler-60",
+        "ref": 60,
+        "description_ru": "Приближаетсяпатрулькоролевскойгвардии. Шестерокрепкихмужчин, покрайнеймеренесколькораненых, охраняютнечтопохожеенажелезныйсейф. Онипутешествуютбыстро. Они говорят, чтосразувидят, чтовызаслуживающийдовериянарод, ипросятвасприсоединиться книмвдоставкеихневероятноценногогрузаккоролю (чтонаходитсявнесколькихнеделях"
+      },
+      {
+        "id": "traveler-61",
+        "ref": 61,
+        "description_ru": "Группаизчетырехмаленькихдетейнестаршевосьми-девятилетгордоостанавливаетвашу группу. Онигерои-приключенцыихотятприсоединитьсяквашейгруппе. Убиватьпротивных троллей, побеждатьужасныхдраконовинеложитьсяспатьстолько, сколькозахотят."
+      },
+      {
+        "id": "traveler-62",
+        "ref": 62,
+        "description_ru": "Толпагорожан, вооруженнаясамодельныморужиемифакелами, маршируетвсторонуближайшегогорода. Онизаявляют, чтособираютсясражатьсясместныммелкимлордом, потому чтоегоналогислишкомвысоки. Еслибудетбой, ихобязательнозарежут."
+      },
+      {
+        "id": "traveler-63",
+        "ref": 63,
+        "description_ru": "Небольшаягруппаизтрехпожилыхженщин, одетыхвдомотканыеигрязныешали. Уодной женщиныопухланога, ионаприхрамывает. Уоднойопухлагуба, икогдаонаговорит, унее течетслюна. Утретьейвывернутизараженпалец, из-зачегоонанеможетничегоухватить."
+      },
+      {
+        "id": "traveler-64",
+        "ref": 64,
+        "description_ru": "Этимологвабсурдномкостюмескомедийнобольшойсеткойотнасекомых, короткимишортами, пробковымшлемом, носкамиисандалиями. Онпроситпомочьпойматьто, чтовидит толькоон."
+      },
+      {
+        "id": "traveler-65",
+        "ref": 65,
+        "description_ru": "Подойдякповоротудороги, выслышитедваголоса, громкожалующихсядругнадруга. — Ты сказала, чтознаешь, кудамыидем! «Ясказала, чтоэтоВосток, атысказала, чтокарта — пустая тратаденег!» Женщина-Голиафсидитнаупавшемдеревенаобочинедороги. Женщина-полуросликсидитнаееплечахипередаетсвоейспутницефляжкусвином."
+      },
+      {
+        "id": "traveler-66",
+        "ref": 66,
+        "description_ru": "Напервыйвзгляднормальныймужчинавстречаетгруппунадороге. Чащевсегоонбудет обращатьсякучастникуссамымиволшебнымиукрашениями. Посленеловкогоразговора онбыстропопытаетсяукрастьдрагоценностиисбежать. Когдагруппанападаетнанего, он"
+      },
+      {
+        "id": "traveler-67",
+        "ref": 67,
+        "description_ru": "Неботемнеет, иначинаетсясильныйдождь. Вывидитемужчину, идущеговдругуюсторону, с тяжелымзонтикомивтяжеломпальто. Дождьидетдотехпор, покамужчинанаходитсявполе зрения, азатемсразужепроясняется."
+      },
+      {
+        "id": "traveler-68",
+        "ref": 68,
+        "description_ru": "Семьгномов-шахтеровжелаютвамдоброгодня, отправляясьнаработувсвоюшахту. 69Проходиткартограф, желающийпродатькопиюсвоейкартыместностиза 40 золотых. Сэтой картойгруппаможетпутешествоватьдополнительнона 1к4 миливденьвпределахобласти карты. 70ВынаходитестранствующегоученикаГонда (илилюбогодругогоподобногобогаремесла), которыйпредлагаетпочинитьлюбоесломанноеилиповрежденноеснаряжение. 71Раненыймолодойрыцарьлежитнаобочинедороги. Егопопыткаспастипринцессуотдракона сновапровалилась. Онбылснесколькимиприключенцамиинаемниками, ноосталсяединственнымвыжившим. 72Гадалкасидитнаобочинедорогивтележке, изкоторой, кажется, онаведетсвойбизнес. На телегеестьтабличка, котораягласит, чтопростоепредсказаниестоит 1 серебро, аболее сложное — 1 золото. (Еслиеепросятдоказатьсвойталант, онаиспользуетИскусстводруидов, показываяпогодуназавтра, ипроситприйтизавтраипроверить, правалиона). Есликому-либоизчленовгруппыпредсказываютсудьбу, Мастерможетвыбратьсудьбуилипредсказать неминуемуюсмертьнаихпути. 73Гномнаходитсяподлюбопытнойповозкой, возитсясмеханическимустройствомиругаетсяна бурю. Онотказываетсяотпомощиинастаивает, чтовытолькопомешаетеему. 74Вывидитетрёхмудрецоввысшихэльфов, ссорящихсямеждусобой, спорящихпоповодуинтерпретациинекойкнигиТайн. Онинезамечаютгруппу, есликнимнеобращаются/нездороваются. 75Мужчинусповязкойнаглазах, вботинкечутьбольшевторогоичем-товродемеханического протезаруки, ведётявностраннаясобака. Когдаегоспрашиваютоявнонеестественнойсобаке, онпростоговорит: «Яемудоверяю. Онвывелменяоттудаобратно». 76Шеф-поварнебольшогоресторана/таверныобосновалсянаобочинередкопосещаемойдорогиизадаетсявопросом, почемуунегоникогданебываетклиентов. 77Бедныйстарик, сидящийнаобочинедороги, проситмелочь, чтобынакормитьсвоюсобаку. Есливыпроведетеснимидостаточновремени, выпоймёте, чтособакаявляетсядруидом, и парапопытаетсявасограбить. 78Эльфигномнаповозке, запряженнойпаройволов. Обаносятдорогуюияркуюодежду. Гном куритглинянуютрубку, анаколеняхунегобогатоукрашенныймногозарядныйарбалет. Они предлагаютгруппевозможностькупитьихтоварыипоказатьимколлекциюоружияидоспеховвтележке. Всёснаряжениеужебылоиспользовано, некотороеоченьявно: помятаяброня соследамиотлезвийипятнамикрови. Естьнесколькохорошихштукипохорошейцене. Если естькакие-томагическиепредметы, продавцыобэтомнеподозреваютипродаютихстандартно. Этиперсонажизарабатываютхорошиеденьги, грабяполясражений, большаячастькоторыхполученаврезультатенедавнегостолкновениямеждуармиямидвухдворян. Повашему усмотрениюуэльфаможетбытьврукаветузнаслучайнеприятностей. 79Женщинаишестеромаленькихдетейприближаютсякповозке. Оникажутсягрязными, уставшимиинапуганными, ноеслигруппабудетдружелюбна, матьрасскажетсвоюисторию: отец сбежализсемьи, ионибольшенемогутпозволитьсебежитьвсвоемпредыдущемдоме. Мать предлагаетгруппеоднузолотуюмонету, еслионисопроводятихвследующуюдеревню. Ходят слухи, чтовэтомрайоневодятсяволки, ионибоятся, чтонедоберутсядогородадонаступлениятемноты. 80Путешествующийменестрельиеговозлюбленнаяприближаютсянаосле. Онпредлагаетсыгратьваммелодиюзамонету. Онхудшийпевец, котороговыкогда-либослышали. Онзабираетвашумонетуидвижетсядальшеподороге. 81Большаяволшебнаякаменнаяхижина. Лачуганевосприимчиваковсеймагии, атакжек холодномуоружию. Внутринаходитсядомполезногомогущественноговолшебникасомножествоммагическихпредметовизелий. Оноткрылмагазин, вкоторомпродаётмагические предметыпонесколькоболеенизкимценам, чемвСправочнике. Онкупитлюбойредкий магическийпредметза 110% отегофактическойстоимости. Онпокупаетобычныймагический предметза 90% отегофактическойстоимости. Днемприходитмноголюдей, аночьюникого нет. Этопотому, чтоонразговариваетвосне. Влюбойденьестьвероятность 1/3, чтоонбудет использоватьзаклинанияк4 восне. 82Двазнаменитыхфехтовальщикасражаютсянадуэли. Одинмогмухлеватьилинемухлевать впрошломилиможетпланироватьсделатьэто. Ихпоследователипытаютсялибоостановить схваткуиищутпомощи, либообсуждаютусловияиищутнейтральногоарбитра. 83Одинокий, ботиноксосломаннымкаблуком. Ботинокживойиимеетиндивидуальность, он постоянножалуется: «Моисобакиустали!». Этоможетбыть, аможетинебыть, волшебник, которыйобманываетвасспомощьючар. 84Путешествующийхудожникустановилхолстнасоседнемполеирисуетполевыецветы. За",
+        "tags": []
+      },
+      {
+        "id": "traveler-69",
+        "ref": 69,
+        "description_ru": "Проходиткартограф, желающийпродатькопиюсвоейкартыместностиза 40 золотых. Сэтой картойгруппаможетпутешествоватьдополнительнона 1к4 миливденьвпределахобласти карты."
+      },
+      {
+        "id": "traveler-70",
+        "ref": 70,
+        "description_ru": "ВынаходитестранствующегоученикаГонда (илилюбогодругогоподобногобогаремесла), которыйпредлагаетпочинитьлюбоесломанноеилиповрежденноеснаряжение."
+      },
+      {
+        "id": "traveler-71",
+        "ref": 71,
+        "description_ru": "Раненыймолодойрыцарьлежитнаобочинедороги. Егопопыткаспастипринцессуотдракона сновапровалилась. Онбылснесколькимиприключенцамиинаемниками, ноосталсяединственнымвыжившим."
+      },
+      {
+        "id": "traveler-72",
+        "ref": 72,
+        "description_ru": "Гадалкасидитнаобочинедорогивтележке, изкоторой, кажется, онаведетсвойбизнес. На телегеестьтабличка, котораягласит, чтопростоепредсказаниестоит 1 серебро, аболее сложное — 1 золото. (Еслиеепросятдоказатьсвойталант, онаиспользуетИскусстводруидов,"
+      },
+      {
+        "id": "traveler-73",
+        "ref": 73,
+        "description_ru": "Гномнаходитсяподлюбопытнойповозкой, возитсясмеханическимустройствомиругаетсяна бурю. Онотказываетсяотпомощиинастаивает, чтовытолькопомешаетеему."
+      },
+      {
+        "id": "traveler-74",
+        "ref": 74,
+        "description_ru": "Вывидитетрёхмудрецоввысшихэльфов, ссорящихсямеждусобой, спорящихпоповодуинтерпретациинекойкнигиТайн. Онинезамечаютгруппу, есликнимнеобращаются/нездороваются."
+      },
+      {
+        "id": "traveler-75",
+        "ref": 75,
+        "description_ru": "Мужчинусповязкойнаглазах, вботинкечутьбольшевторогоичем-товродемеханического протезаруки, ведётявностраннаясобака. Когдаегоспрашиваютоявнонеестественнойсобаке, онпростоговорит: «Яемудоверяю. Онвывелменяоттудаобратно»."
+      },
+      {
+        "id": "traveler-76",
+        "ref": 76,
+        "description_ru": "Шеф-поварнебольшогоресторана/таверныобосновалсянаобочинередкопосещаемойдорогиизадаетсявопросом, почемуунегоникогданебываетклиентов."
+      },
+      {
+        "id": "traveler-77",
+        "ref": 77,
+        "description_ru": "Бедныйстарик, сидящийнаобочинедороги, проситмелочь, чтобынакормитьсвоюсобаку. Есливыпроведетеснимидостаточновремени, выпоймёте, чтособакаявляетсядруидом, и парапопытаетсявасограбить."
+      },
+      {
+        "id": "traveler-78",
+        "ref": 78,
+        "description_ru": "Эльфигномнаповозке, запряженнойпаройволов. Обаносятдорогуюияркуюодежду. Гном куритглинянуютрубку, анаколеняхунегобогатоукрашенныймногозарядныйарбалет. Они предлагаютгруппевозможностькупитьихтоварыипоказатьимколлекциюоружияидоспеховвтележке. Всёснаряжениеужебылоиспользовано, некотороеоченьявно: помятаяброня"
+      },
+      {
+        "id": "traveler-79",
+        "ref": 79,
+        "description_ru": "Женщинаишестеромаленькихдетейприближаютсякповозке. Оникажутсягрязными, уставшимиинапуганными, ноеслигруппабудетдружелюбна, матьрасскажетсвоюисторию: отец сбежализсемьи, ионибольшенемогутпозволитьсебежитьвсвоемпредыдущемдоме. Мать предлагаетгруппеоднузолотуюмонету, еслионисопроводятихвследующуюдеревню. Ходят"
+      },
+      {
+        "id": "traveler-80",
+        "ref": 80,
+        "description_ru": "Путешествующийменестрельиеговозлюбленнаяприближаютсянаосле. Онпредлагаетсыгратьваммелодиюзамонету. Онхудшийпевец, котороговыкогда-либослышали. Онзабираетвашумонетуидвижетсядальшеподороге."
+      },
+      {
+        "id": "traveler-81",
+        "ref": 81,
+        "description_ru": "Большаяволшебнаякаменнаяхижина. Лачуганевосприимчиваковсеймагии, атакжек холодномуоружию. Внутринаходитсядомполезногомогущественноговолшебникасомножествоммагическихпредметовизелий. Оноткрылмагазин, вкоторомпродаётмагические предметыпонесколькоболеенизкимценам, чемвСправочнике. Онкупитлюбойредкий"
+      },
+      {
+        "id": "traveler-82",
+        "ref": 82,
+        "description_ru": "Двазнаменитыхфехтовальщикасражаютсянадуэли. Одинмогмухлеватьилинемухлевать впрошломилиможетпланироватьсделатьэто. Ихпоследователипытаютсялибоостановить схваткуиищутпомощи, либообсуждаютусловияиищутнейтральногоарбитра."
+      },
+      {
+        "id": "traveler-83",
+        "ref": 83,
+        "description_ru": "Одинокий, ботиноксосломаннымкаблуком. Ботинокживойиимеетиндивидуальность, он постоянножалуется: «Моисобакиустали!». Этоможетбыть, аможетинебыть, волшебник, которыйобманываетвасспомощьючар."
+      },
+      {
+        "id": "traveler-84",
+        "ref": 84,
+        "description_ru": "Путешествующийхудожникустановилхолстнасоседнемполеирисуетполевыецветы. За"
+      },
+      {
+        "id": "traveler-85",
+        "ref": 85,
+        "description_ru": "Солидныйпьяныйсатир, главнымобразомозабоченныйтем, гдебудетследующаявечеринка. 86Напыщенныйдурак-эльф, которыйболее 400 летпотратилнаосвоениепризывавидаволков, которыйвымервэтомрайоне. Демонстрируетвойпочтиприлюбойвозможностииожидает, чтовыбудетевпечатлены. 87Полныйстарыйголиафвкрасномпальтосбелойотделкойтащитбольшуюсумку, полную подарков.",
+        "tags": []
+      },
+      {
+        "id": "traveler-86",
+        "ref": 86,
+        "description_ru": "Напыщенныйдурак-эльф, которыйболее 400 летпотратилнаосвоениепризывавидаволков, которыйвымервэтомрайоне. Демонстрируетвойпочтиприлюбойвозможностииожидает, чтовыбудетевпечатлены."
+      },
+      {
+        "id": "traveler-87",
+        "ref": 87,
+        "description_ru": "Полныйстарыйголиафвкрасномпальтосбелойотделкойтащитбольшуюсумку, полную подарков."
+      },
+      {
+        "id": "traveler-88",
+        "ref": 88,
+        "description_ru": "Рогатыйчёртскоробкойвруках. Предлагаетвамзаглянутьвнутрьвобменнавашудушу. 89Седойпаладинсогромныммечомипарящимщитомвотчаяннойсхваткесдвумяневидимымипреследователями. Большеполезныхматериаловвывсегдавтелеге “SneakyDice | ПолезностидляДнД” Автороригинальнойстатьи: DNDSPEAKПеревод: AtreyuВерсткаиоформление: AmpersandCrew 90Фирболгспитвхоботесвоегодомашнегослона, которыйпослушнокатитсяподороге, вежливоотступаявсторону, пропускаядвижение. 91Трихолмовыхвеликана, которымбылопорученоразграбитьблизлежащуюдеревню. Онизаблудилисьихотятполучитьуказанияотгруппы. 92Отшельник, гордопротягиваярукикпрохожим, держитврукахединственныйстарыйносокс дыркойнапятке. Громковосклицает: «Посмотритенамойносок!» Развеэтонечудесно?! Эти носкипринадлежалимоейсемьенапротяжениинесколькихпоколенийиниразунебыли мокрыми! Внемнетничеговолшебногоилиособенного, ноэтолучшийносок, когда-либо созданный!» 93Мрачныйповелительдемоновтащиттачку, вкоторойлежиточеньпьяный, оченьсчастливый дварф, громкопоющий «86 бутылокпиванастене!» Еслиегопрервать, священнослужитель громкорыгает, хмурится, азатемпожимаетплечами, начинаясновас « 1 пилокбутывана стене», преждечемхихикнутьизаснуть. Приэтомповелительдемоновсадитсяиначинает плакать. 94Старикичетвероегонемыхсыновей, всевлохмотьях, одинизнихнесбольшуютрость. На самомделестарик — этоголовагигантскогомага, аего «сыновья» — егоконечности, превращенныевгруппулюдей. Старикпопроситчастьпайкагруппы. Егосыновьябудутестьиесть, покаедынеостанется. 95Страннопахнущийгном, укоторогоподплащомспрятаныразличныемагическиепредметы, такиекакмаленькиекарманныечасы, которыеделаютвасневидимымнашестьсекунд, рука сосвечаминакончикахпальцев, которыепризажжениипарализуюткаждоесуществос 14 или болеехаризмойврадиусе 100 футов, ипустойбуклет, которыйничегонеделает, новыглядит чрезвычайноважнымдлявсех, ктоеговидят. 96АнгмарБлейдволкер – человек-рыцарь. Унеёкаштановыеволосыиголубыеглаза, онагордо носитшрамнаоднойсторонелица. Онавсегданемногоопаздываетинемногоэксцентрична, авконюшнеунееестьотидж, которогоонавыращиваеткакдомашнееживотное. Затоона ловкообращаетсясклинком. Онаушлаиздома, потомучтотамобиталипривидения. 97ЗейнДрейк – поэтвысшийэльф – унегооченьдлинныевьющиесякаштановыеволосы, выбритыеналевойстороне, кариеглазаигрубаязолотистаякожа. Унегонежноетипичноелицо скороткимиусами. Онвсегдаговоритгромкоидраматично. Крометого, онзнаетнастоящее имяангела. 98АйлетФалаваул, торговец-полуэльф, унеедлинныевьющиесякрашеныечерныеволосыи зеленыеглаза. Онавсегдаговориттихоиглубокорелигиозна. Еедомуничтожилабуря. 99ДоранГромовержец, гном-дворянин, Бесконечнонетерпеливый, Доранвсегдакричиточемто. Унегокороткиесветлыеволосыидлиннаяборода, которуюегоженакаждоеутрозаплетает. Старыйдругхочетемуотомстить. 100Порат - волшебникдраконорожденный. Подозрительныйисклонныйкрычанию, онглубоко заботитсяоместныхгорожанах. ЧеловекпоимениКаваррукралоднуизегокнигзаклинаний.",
+        "tags": []
+      },
+      {
+        "id": "traveler-89",
+        "ref": 89,
+        "description_ru": "Седойпаладинсогромныммечомипарящимщитомвотчаяннойсхваткесдвумяневидимымипреследователями. Большеполезныхматериаловвывсегдавтелеге “SneakyDice | ПолезностидляДнД” Автороригинальнойстатьи: DNDSPEAKПеревод: AtreyuВерсткаиоформление: AmpersandCrew"
+      },
+      {
+        "id": "traveler-90",
+        "ref": 90,
+        "description_ru": "Фирболгспитвхоботесвоегодомашнегослона, которыйпослушнокатитсяподороге, вежливоотступаявсторону, пропускаядвижение."
+      },
+      {
+        "id": "traveler-91",
+        "ref": 91,
+        "description_ru": "Трихолмовыхвеликана, которымбылопорученоразграбитьблизлежащуюдеревню. Онизаблудилисьихотятполучитьуказанияотгруппы."
+      },
+      {
+        "id": "traveler-92",
+        "ref": 92,
+        "description_ru": "Отшельник, гордопротягиваярукикпрохожим, держитврукахединственныйстарыйносокс дыркойнапятке. Громковосклицает: «Посмотритенамойносок!» Развеэтонечудесно?! Эти носкипринадлежалимоейсемьенапротяжениинесколькихпоколенийиниразунебыли"
+      },
+      {
+        "id": "traveler-93",
+        "ref": 93,
+        "description_ru": "Мрачныйповелительдемоновтащиттачку, вкоторойлежиточеньпьяный, оченьсчастливый дварф, громкопоющий «86 бутылокпиванастене!» Еслиегопрервать, священнослужитель громкорыгает, хмурится, азатемпожимаетплечами, начинаясновас « 1 пилокбутывана"
+      },
+      {
+        "id": "traveler-94",
+        "ref": 94,
+        "description_ru": "Старикичетвероегонемыхсыновей, всевлохмотьях, одинизнихнесбольшуютрость. На самомделестарик — этоголовагигантскогомага, аего «сыновья» — егоконечности, превращенныевгруппулюдей. Старикпопроситчастьпайкагруппы. Егосыновьябудутестьиесть, покаедынеостанется."
+      },
+      {
+        "id": "traveler-95",
+        "ref": 95,
+        "description_ru": "Страннопахнущийгном, укоторогоподплащомспрятаныразличныемагическиепредметы, такиекакмаленькиекарманныечасы, которыеделаютвасневидимымнашестьсекунд, рука сосвечаминакончикахпальцев, которыепризажжениипарализуюткаждоесуществос 14 или"
+      },
+      {
+        "id": "traveler-96",
+        "ref": 96,
+        "description_ru": "АнгмарБлейдволкер – человек-рыцарь. Унеёкаштановыеволосыиголубыеглаза, онагордо носитшрамнаоднойсторонелица. Онавсегданемногоопаздываетинемногоэксцентрична, авконюшнеунееестьотидж, которогоонавыращиваеткакдомашнееживотное. Затоона"
+      },
+      {
+        "id": "traveler-97",
+        "ref": 97,
+        "description_ru": "ЗейнДрейк – поэтвысшийэльф – унегооченьдлинныевьющиесякаштановыеволосы, выбритыеналевойстороне, кариеглазаигрубаязолотистаякожа. Унегонежноетипичноелицо скороткимиусами. Онвсегдаговоритгромкоидраматично. Крометого, онзнаетнастоящее имяангела."
+      },
+      {
+        "id": "traveler-98",
+        "ref": 98,
+        "description_ru": "АйлетФалаваул, торговец-полуэльф, унеедлинныевьющиесякрашеныечерныеволосыи зеленыеглаза. Онавсегдаговориттихоиглубокорелигиозна. Еедомуничтожилабуря."
+      },
+      {
+        "id": "traveler-99",
+        "ref": 99,
+        "description_ru": "ДоранГромовержец, гном-дворянин, Бесконечнонетерпеливый, Доранвсегдакричиточемто. Унегокороткиесветлыеволосыидлиннаяборода, которуюегоженакаждоеутрозаплетает. Старыйдругхочетемуотомстить."
+      },
+      {
+        "id": "traveler-100",
+        "ref": 100,
+        "description_ru": "Порат - волшебникдраконорожденный. Подозрительныйисклонныйкрычанию, онглубоко заботитсяоместныхгорожанах. ЧеловекпоимениКаваррукралоднуизегокнигзаклинаний."
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+    "name": "DnD Copilot",
+    "short_name": "DnD Copilot",
+    "description": "Помощник мастера D&D с генераторами персонажей и противников",
+    "start_url": "./index.php",
+    "display": "standalone",
+    "background_color": "#f8ecd0",
+    "theme_color": "#a67c52",
+    "orientation": "portrait-primary",
+    "icons": [{
+        "src": "favicon.svg",
+        "sizes": "32x32",
+        "type": "image/svg+xml"
+    }],
+    "categories": ["games", "utilities"],
+    "lang": "ru"
+}
