@@ -348,6 +348,22 @@ if ($userCreatedAt !== 'Неизвестно') {
             color: var(--text-secondary);
         }
         
+        .google-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            margin-left: 8px;
+        }
+        
+        .google-badge img {
+            width: 16px;
+            height: 16px;
+        }
+        
         .back-link {
             display: inline-block;
             margin-bottom: 20px;
@@ -436,7 +452,14 @@ if ($userCreatedAt !== 'Неизвестно') {
                 <div class="user-info">
                     <div class="info-row">
                         <span class="info-label">Имя пользователя:</span>
-                        <span class="info-value"><?php echo htmlspecialchars($currentUser); ?></span>
+                        <span class="info-value">
+                            <?php echo htmlspecialchars($currentUser); ?>
+                            <?php if (isset($userData['auth_method']) && $userData['auth_method'] === 'google'): ?>
+                                <span class="google-badge" title="Вход через Google аккаунт">
+                                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjY0IDkuMjA0NTVDMTcuNjQgOC41NjY0IDE3LjU4MjcgNy45NTI3MyAxNy40NzI3IDcuMzYzNjRIMTlWMTBIMTcuNjRWOS4yMDQ1NVoiIGZpbGw9IiNGQjQwMzEiLz4KPHBhdGggZD0iTTkgMTguMDAwMUMxMS40MyAxOC4wMDAxIDEzLjQ2NzMgMTcuMTk0NSAxNC45NjM2IDE1Ljc4MzZMMTIuNzA5MSAxNC4wNjM2QzExLjk3MjcgMTQuNzYzNiAxMC44NzI3IDE1LjIyNzMgOS41IDE1LjIyNzNDNy4xNDU0NSAxNS4yMjczIDUuMjcyNzMgMTMuNjM2NCA0LjU0NTQ1IDExLjU0NTVIMi4wOTA5MVYxMy44MTgySDQuNTQ1NDVDNC44ODE4MiAxNC42MzY0IDUuNjM2MzYgMTUuMjcyNyA2LjU5MDkxIDE1LjI3MjdDNi44MTgxOCAxNS4yNzI3IDcuMDMxODIgMTUuMjMxOCA3LjIzMTgyIDE1LjE1NDVDNy40MzE4MiAxNS4wNzcyIDcuNjE4MTggMTQuOTY4MiA3Ljc4MTgyIDE0LjgyNzNDNy45NDU0NSAxNC42ODY0IDguMDgxODIgMTQuNTE4MiA4LjE5MDkxIDE0LjMyNzNDOC4zIDE0LjEzNjQgOC4zNjM2NCAxMy45MjcyIDguMzkwOTEgMTMuNzA5MUM4LjQxODE4IDEzLjQ5MDkgOC40MTgxOCAxMy4yNjM2IDguMzkwOTEgMTMuMDQ1NUg4LjM2MzY0SDQuNTQ1NDVDNC41NDU0NSAxMi45NTQ1IDQuNTQ1NDUgMTIuODYzNiA0LjU0NTQ1IDEyLjc3MjdDNC41NDU0NSAxMi42ODE4IDQuNTQ1NDUgMTIuNTkwOSA0LjU0NTQ1IDEyLjVIMTlWMTQuNUg4LjM5MDkxQzguMzYzNjQgMTQuMjgxOCA4LjMgMTQuMDcyNyA4LjE5MDkxIDEzLjg4MThDOC4wODE4MiAxMy42OTA5IDcuOTQ1NDUgMTMuNTIyNyA3Ljc4MTgyIDEzLjM4MThDNy42MTgxOCAxMy4yNDA5IDcuNDMxODIgMTMuMTMxOCA3LjIzMTgyIDEzLjA1NDVDNy4wMzE4MiAxMi45NzcyIDYuODE4MTggMTIuOTM2NCA2LjU5MDkxIDEyLjkzNjRDNi4zNjM2NCAxMi45MzY0IDYuMTUwOTEgMTIuOTc3MiA1Ljk1MDkxIDEzLjA1NDVDNS43NTA5MSAxMy4xMzE4IDUuNTY4MTggMTMuMjQwOSA1LjQwNDU1IDEzLjM4MThDNS4yNDA5MSAxMy41MjI3IDUuMTA0NTUgMTMuNjkwOSA0Ljk5NTQ1IDEzLjg4MThDNC44ODYzNiAxNC4wNzI3IDQuODIyNzMgMTQuMjgxOCA0Ljc5NTQ1IDE0LjVIMi4wOTA5MVYxNi43NzI3SDQuNTQ1NDVDNS4yNzI3MyAxNC42MzY0IDcuMTQ1NDUgMTMuMDQ1NSA5LjUgMTMuMDQ1NUMxMC44NzI3IDEzLjA0NTUgMTEuOTcyNyAxMy41MDkxIDEyLjcwOTEgMTQuMjA5MUwxNC45NjM2IDEyLjQ4OTFDMTMuNDY3MyAxMS4wNzgxIDExLjQzIDEwLjI3MjcgOSAxMC4yNzI3QzYuNTY5MDkgMTAuMjcyNyA0LjUzMTgyIDExLjA3ODEgMy4wMzYzNiAxMi40ODkxQzEuNTQwOTEgMTMuODk5MSAwLjc3MjcyNyAxNS44MzE4IDAuNzcyNzI3IDE4SDBWMTYuNzI3M0MwIDE0LjQ1NDUgMC43NzI3MjcgMTIuNTIyNyAyLjI2ODE4IDEwLjk5MDlDMy43NjM2NCA5LjQ1OTA5IDUuNzY5MDkgOC42ODE4MiA4LjI4MTgyIDguNjgxODJDMTAuNzk0NSA4LjY4MTgyIDEyLjgwMTggOS40NTkwOSAxNC4yOTczIDEwLjk5MDlDMTUuNzkyNyAxMi41MjI3IDE2LjU0NTUgMTQuNDU0NSAxNi41NDU1IDE2Ljc3MjNWMThIMTlWMTYuNzI3M0MxOSAxNC40NTQ1IDE4LjIyNzMgMTIuNTIyNyAxNi43MzE4IDEwLjk5MDlDMTUuMjM2NCA5LjQ1OTA5IDEzLjIzMDkgOC42ODE4MiAxMC43MTgyIDguNjgxODJaIiBmaWxsPSIjRkZDMTA3Ii8+CjxwYXRoIGQ9Ik0xNy42NCA5LjIwNDU1QzE3LjY0IDguNTY2NCAxNy41ODI3IDcuOTUyNzMgMTcuNDcyNyA3LjM2MzY0SDE5VjEwSDE3LjY0VjkuMjA0NTVaIiBmaWxsPSIjRkI0MDMxIi8+CjxwYXRoIGQ9Ik0xNy42NCA5LjIwNDU1QzE3LjY0IDguNTY2NCAxNy41ODI3IDcuOTUyNzMgMTcuNDcyNyA3LjM2MzY0SDE5VjEwSDE3LjY0VjkuMjA0NTVaIiBmaWxsPSIjRkI0MDMxIi8+Cjwvc3ZnPgo=" alt="Google" width="16" height="16">
+                                </span>
+                            <?php endif; ?>
+                        </span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Дата регистрации:</span>

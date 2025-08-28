@@ -267,6 +267,55 @@ $csrf_token = generateCSRFToken();
             transform: translateY(-1px);
         }
         
+        .google-btn.large {
+            padding: 16px;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+        
+        .google-registration-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .google-registration-info h3 {
+            color: var(--text-tertiary);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .google-registration-info p {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border-primary);
+        }
+        
+        .benefit-icon {
+            font-size: 1.2em;
+        }
+        
+        .benefit-item span:last-child {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
         @media (max-width: 600px) {
             .login-container {
                 padding: 30px 20px;
@@ -290,7 +339,7 @@ $csrf_token = generateCSRFToken();
         
         <div class="form-tabs">
             <button class="tab-btn active" onclick="switchTab('login')">Вход</button>
-            <button class="tab-btn" onclick="switchTab('register')">Регистрация</button>
+            <button class="tab-btn" onclick="switchTab('register')">Регистрация через Google</button>
         </div>
         
         <div id="message"></div>
@@ -322,31 +371,27 @@ $csrf_token = generateCSRFToken();
         
         <!-- Форма регистрации -->
         <div id="register-form" class="form-content">
-            <form id="registerForm">
-                <div class="form-group">
-                    <label for="register-username">Имя пользователя:</label>
-                    <input type="text" id="register-username" name="username" required>
+            <div class="google-registration-info">
+                <h3>Регистрация через Google</h3>
+                <p>Для регистрации в системе используйте свой Google аккаунт. Это обеспечивает безопасность и удобство входа.</p>
+                
+                <div class="benefits">
+                    <div class="benefit-item">
+                        <span class="benefit-icon">🔐</span>
+                        <span>Безопасная авторизация</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">⚡</span>
+                        <span>Быстрый вход</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">📧</span>
+                        <span>Автоматическое заполнение данных</span>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="register-password">Пароль:</label>
-                    <input type="password" id="register-password" name="password" required>
-                    <small style="color: #666; font-size: 0.9em; margin-top: 5px; display: block;">
-                        Минимум 8 символов: заглавные, строчные, цифры, спецсимволы
-                    </small>
-                </div>
-                <div class="form-group">
-                    <label for="register-password-confirm">Подтвердите пароль:</label>
-                    <input type="password" id="register-password-confirm" name="password_confirm" required>
-                </div>
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
-                <button type="submit" class="submit-btn">Зарегистрироваться</button>
-            </form>
-            
-            <div class="divider">
-                <span>или</span>
             </div>
             
-            <a href="google-auth.php" class="google-btn">
+            <a href="google-auth.php" class="google-btn large">
                 <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjY0IDkuMjA0NTVDMTcuNjQgOC41NjY0IDE3LjU4MjcgNy45NTI3MyAxNy40NzI3IDcuMzYzNjRIMTlWMTBIMTcuNjRWOS4yMDQ1NVoiIGZpbGw9IiNGQjQwMzEiLz4KPHBhdGggZD0iTTkgMTguMDAwMUMxMS40MyAxOC4wMDAxIDEzLjQ2NzMgMTcuMTk0NSAxNC45NjM2IDE1Ljc4MzZMMTIuNzA5MSAxNC4wNjM2QzExLjk3MjcgMTQuNzYzNiAxMC44NzI3IDE1LjIyNzMgOS41IDE1LjIyNzNDNy4xNDU0NSAxNS4yMjczIDUuMjcyNzMgMTMuNjM2NCA0LjU0NTQ1IDExLjU0NTVIMi4wOTA5MVYxMy44MTgySDQuNTQ1NDVDNC44ODE4MiAxNC42MzY0IDUuNjM2MzYgMTUuMjcyNyA2LjU5MDkxIDE1LjI3MjdDNi44MTgxOCAxNS4yNzI3IDcuMDMxODIgMTUuMjMxOCA3LjIzMTgyIDE1LjE1NDVDNy40MzE4MiAxNS4wNzcyIDcuNjE4MTggMTQuOTY4MiA3Ljc4MTgyIDE0LjgyNzNDNy45NDU0NSAxNC42ODY0IDguMDgxODIgMTQuNTE4MiA4LjE5MDkxIDE0LjMyNzNDOC4zIDE0LjEzNjQgOC4zNjM2NCAxMy45MjcyIDguMzkwOTEgMTMuNzA5MUM4LjQxODE4IDEzLjQ5MDkgOC40MTgxOCAxMy4yNjM2IDguMzkwOTEgMTMuMDQ1NUg4LjM2MzY0SDQuNTQ1NDVDNC41NDU0NSAxMi45NTQ1IDQuNTQ1NDUgMTIuODYzNiA0LjU0NTQ1IDEyLjc3MjdDNC41NDU0NSAxMi42ODE4IDQuNTQ1NDUgMTIuNTkwOSA0LjU0NTQ1IDEyLjVIMTlWMTQuNUg4LjM5MDkxQzguMzYzNjQgMTQuMjgxOCA4LjMgMTQuMDcyNyA4LjE5MDkxIDEzLjg4MThDOC4wODE4MiAxMy42OTA5IDcuOTQ1NDUgMTMuNTIyNyA3Ljc4MTgyIDEzLjM4MThDNy42MTgxOCAxMy4yNDA5IDcuNDMxODIgMTMuMTMxOCA3LjIzMTgyIDEzLjA1NDVDNy4wMzE4MiAxMi45NzcyIDYuODE4MTggMTIuOTM2NCA2LjU5MDkxIDEyLjkzNjRDNi4zNjM2NCAxMi45MzY0IDYuMTUwOTEgMTIuOTc3MiA1Ljk1MDkxIDEzLjA1NDVDNS43NTA5MSAxMy4xMzE4IDUuNTY4MTggMTMuMjQwOSA1LjQwNDU1IDEzLjM4MThDNS4yNDA5MSAxMy41MjI3IDUuMTA0NTUgMTMuNjkwOSA0Ljk5NTQ1IDEzLjg4MThDNC44ODYzNiAxNC4wNzI3IDQuODIyNzMgMTQuMjgxOCA0Ljc5NTQ1IDE0LjVIMi4wOTA5MVYxNi43NzI3SDQuNTQ1NDVDNS4yNzI3MyAxNC42MzY0IDcuMTQ1NDUgMTMuMDQ1NSA5LjUgMTMuMDQ1NUMxMC44NzI3IDEzLjA0NTUgMTEuOTcyNyAxMy41MDkxIDEyLjcwOTEgMTQuMjA5MUwxNC45NjM2IDEyLjQ4OTFDMTMuNDY3MyAxMS4wNzgxIDExLjQzIDEwLjI3MjcgOSAxMC4yNzI3QzYuNTY5MDkgMTAuMjcyNyA0LjUzMTgyIDExLjA3ODEgMy4wMzYzNiAxMi40ODkxQzEuNTQwOTEgMTMuODk5MSAwLjc3MjcyNyAxNS44MzE4IDAuNzcyNzI3IDE4SDBWMTYuNzI3M0MwIDE0LjQ1NDUgMC43NzI3MjcgMTIuNTIyNyAyLjI2ODE4IDEwLjk5MDlDMy43NjM2NCA5LjQ1OTA5IDUuNzY5MDkgOC42ODE4MiA4LjI4MTgyIDguNjgxODJDMTAuNzk0NSA4LjY4MTgyIDEyLjgwMTggOS40NTkwOSAxNC4yOTczIDEwLjk5MDlDMTUuNzkyNyAxMi41MjI3IDE2LjU0NTUgMTQuNDU0NSAxNi41NDU1IDE2Ljc3MjNWMThIMTlWMTYuNzI3M0MxOSAxNC40NTQ1IDE4LjIyNzMgMTIuNTIyNyAxNi43MzE4IDEwLjk5MDlDMTUuMjM2NCA5LjQ1OTA5IDEzLjIzMDkgOC42ODE4MiAxMC43MTgyIDguNjgxODJaIiBmaWxsPSIjRkZDMTA3Ii8+CjxwYXRoIGQ9Ik0xNy42NCA5LjIwNDU1QzE3LjY0IDguNTY2NCAxNy41ODI3IDcuOTUyNzMgMTcuNDcyNyA3LjM2MzY0SDE5VjEwSDE3LjY0VjkuMjA0NTVaIiBmaWxsPSIjRkI0MDMxIi8+CjxwYXRoIGQ9Ik0xNy42NCA5LjIwNDU1QzE3LjY0IDguNTY2NCAxNy41ODI3IDcuOTUyNzMgMTcuNDcyNyA3LjM2MzY0SDE5VjEwSDE3LjY0VjkuMjA0NTVaIiBmaWxsPSIjRkI0MDMxIi8+Cjwvc3ZnPgo=" alt="Google" width="18" height="18">
                 Зарегистрироваться через Google
             </a>
@@ -372,8 +417,6 @@ $csrf_token = generateCSRFToken();
             } else {
                 document.querySelector('.tab-btn:last-child').classList.add('active');
                 document.getElementById('register-form').classList.add('active');
-                // Фокус на поле ввода имени пользователя
-                setTimeout(() => document.getElementById('register-username').focus(), 100);
             }
             
             // Очищаем сообщения
@@ -457,113 +500,7 @@ $csrf_token = generateCSRFToken();
             });
         });
         
-        // Обработка формы регистрации
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('register-username').value.trim();
-            const password = document.getElementById('register-password').value;
-            const passwordConfirm = document.getElementById('register-password-confirm').value;
-            const csrfToken = document.querySelector('#registerForm input[name="csrf_token"]').value;
-            
-            if (!username || !password || !passwordConfirm) {
-                showMessage('Заполните все поля', 'error');
-                return;
-            }
-            
-            if (password !== passwordConfirm) {
-                showMessage('Пароли не совпадают', 'error');
-                document.getElementById('register-password-confirm').focus();
-                return;
-            }
-            
-            // Проверяем сложность пароля на клиенте
-            if (password.length < 8) {
-                showMessage('Пароль должен быть не менее 8 символов', 'error');
-                document.getElementById('register-password').focus();
-                return;
-            }
-            
-            if (!/[A-Z]/.test(password)) {
-                showMessage('Пароль должен содержать хотя бы одну заглавную букву', 'error');
-                document.getElementById('register-password').focus();
-                return;
-            }
-            
-            if (!/[a-z]/.test(password)) {
-                showMessage('Пароль должен содержать хотя бы одну строчную букву', 'error');
-                document.getElementById('register-password').focus();
-                return;
-            }
-            
-            if (!/[0-9]/.test(password)) {
-                showMessage('Пароль должен содержать хотя бы одну цифру', 'error');
-                document.getElementById('register-password').focus();
-                return;
-            }
-            
-            if (!/[^A-Za-z0-9]/.test(password)) {
-                showMessage('Пароль должен содержать хотя бы один специальный символ', 'error');
-                document.getElementById('register-password').focus();
-                return;
-            }
-            
-            showLoading(true);
-            
-            const formData = new FormData();
-            formData.append('action', 'register');
-            formData.append('username', username);
-            formData.append('password', password);
-            formData.append('csrf_token', csrfToken);
-            
-            fetch('users.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                showLoading(false);
-                if (data.success) {
-                    showMessage('Регистрация успешна! Выполняется вход...', 'success');
-                    // Автоматически входим в систему после регистрации
-                    setTimeout(() => {
-                        const loginData = new FormData();
-                        loginData.append('action', 'login');
-                        loginData.append('username', username);
-                        loginData.append('password', password);
-                        loginData.append('csrf_token', csrfToken);
-                        
-                        fetch('users.php', {
-                            method: 'POST',
-                            body: loginData
-                        })
-                        .then(response => response.json())
-                        .then(loginResult => {
-                            if (loginResult.success) {
-                                window.location.href = 'index.php?welcome=1';
-                            } else {
-                                // Если автоматический вход не удался, переключаемся на вкладку входа
-                                switchTab('login');
-                                document.getElementById('login-username').value = username;
-                                showMessage('Регистрация успешна! Теперь войдите в систему.', 'success');
-                            }
-                        });
-                    }, 1500);
-                } else {
-                    showMessage(data.message, 'error');
-                    // Фокус на поле, где произошла ошибка
-                    if (data.message.includes('имя пользователя')) {
-                        document.getElementById('register-username').focus();
-                    } else if (data.message.includes('пароль')) {
-                        document.getElementById('register-password').focus();
-                    }
-                }
-            })
-            .catch(error => {
-                showLoading(false);
-                showMessage('Ошибка соединения', 'error');
-            });
-        });
+
     </script>
 </body>
 </html>

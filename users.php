@@ -205,6 +205,9 @@ function recordRegistrationAttempt($ip, $success) {
 
 // Функция для регистрации пользователя
 function registerUser($username, $password, $email = null) {
+    // Обычная регистрация отключена - только через Google OAuth
+    return ['success' => false, 'message' => 'Регистрация возможна только через Google аккаунт. Используйте кнопку "Зарегистрироваться через Google".'];
+    
     $users = loadUsers();
     $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
     
