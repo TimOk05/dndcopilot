@@ -2,10 +2,43 @@
 session_start();
 require_once 'users.php';
 
+// Автоматическое определение мобильного устройства и переадресация
+function isMobileDevice() {
+    $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    $mobileKeywords = ['Android', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone', 'Mobile', 'Opera Mini'];
+    
+    foreach ($mobileKeywords as $keyword) {
+        if (stripos($userAgent, $keyword) !== false) {
+            return true;
+        }
+    }
+    
+    // Дополнительная проверка по ширине экрана (если доступна)
+    if (isset($_GET['screen_width']) && $_GET['screen_width'] <= 768) {
+        return true;
+    }
+    
+    return false;
+}
+
 // Проверяем авторизацию
 if (!isLoggedIn()) {
     header('Location: login.php');
     exit;
+}
+
+// Если это мобильное устройство и пользователь не выбрал десктопную версию явно
+if (isMobileDevice() && !isset($_GET['force_desktop']) && !isset($_SESSION['prefer_desktop'])) {
+    // Проверяем, есть ли сохраненный выбор в сессии
+    if (!isset($_SESSION['preferred_version'])) {
+        // Если нет сохраненного выбора, перенаправляем на мобильную версию
+        header('Location: mobile.html');
+        exit;
+    } elseif ($_SESSION['preferred_version'] === 'mobile') {
+        // Если пользователь ранее выбрал мобильную версию
+        header('Location: mobile.html');
+        exit;
+    }
 }
 
 // Получаем имя текущего пользователя
