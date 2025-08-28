@@ -261,11 +261,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message']) && !isset(
 
 // --- Генерация быстрых кнопок ---
 $fastBtns = '';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей">🎲 Бросок костей</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей">⚔️ Персонаж</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников">👹 Противники</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="Управление инициативой" aria-label="Открыть управление инициативой">⚡ Инициатива</button>';
-$fastBtns .= '<a href="combat.html" class="fast-btn btn btn-primary interactive" style="text-decoration: none; display: inline-block;" data-tooltip="Система боя" aria-label="Перейти к системе боя">⚔️ Система боя</a>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей">&#127922; Бросок костей</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей">&#9876;&#65039; Персонаж</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников">&#128127; Противники</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="Управление инициативой" aria-label="Открыть управление инициативой">&#9889; Инициатива</button>';
+$fastBtns .= '<a href="combat.html" class="fast-btn btn btn-primary interactive" style="text-decoration: none; display: inline-block;" data-tooltip="Система боя" aria-label="Перейти к системе боя">&#9876;&#65039; Система боя</a>';
 
 // --- Генерация сообщений чата (пропускаем system) ---
 $chatMsgs = '';
@@ -418,7 +418,7 @@ function openCharacterModal() {
     showModal(`
         <div class="character-generator">
             <div class="generator-header">
-                <h2>⚔️ Генератор персонажей</h2>
+                <h2>&#9876;&#65039; Генератор персонажей</h2>
                 <p class="generator-subtitle">Создайте полноценного персонажа с использованием D&D API и AI</p>
             </div>
             
@@ -505,7 +505,7 @@ function openCharacterModal() {
                 </div>
                 
                 <button type="submit" class="generate-btn">
-                    <span class="btn-icon">⚔️</span>
+                    <span class="btn-icon">&#9876;&#65039;</span>
                     <span class="btn-text">Создать персонажа</span>
                 </button>
             </form>
@@ -595,7 +595,7 @@ function openEnemyModal() {
     showModal(`
         <div class="enemy-generator">
             <div class="generator-header">
-                <h2>👹 Генератор противников</h2>
+                <h2>&#128127; Генератор противников</h2>
                 <p class="generator-subtitle">Создайте подходящих противников для вашей группы</p>
             </div>
             
@@ -650,7 +650,7 @@ function openEnemyModal() {
 
                 
                 <button type="submit" class="generate-btn">
-                    <span class="btn-icon">👹</span>
+                    <span class="btn-icon">&#128127;</span>
                     <span class="btn-text">Создать противников</span>
                 </button>
             </form>
@@ -696,7 +696,7 @@ function openEnemyModal() {
             resultDiv.innerHTML = '<div class="error">Ошибка сети. Попробуйте ещё раз.</div>';
         })
         .finally(() => {
-            submitBtn.innerHTML = '<span class="btn-icon">👹</span><span class="btn-text">Создать противников</span>';
+            submitBtn.innerHTML = '<span class="btn-icon">&#128127;</span><span class="btn-text">Создать противников</span>';
             submitBtn.disabled = false;
         });
     });
@@ -1315,7 +1315,7 @@ function openInitiativeModal() {
     } else {
         showModal('<div class="initiative-container">' +
             '<div class="initiative-header">' +
-                '<h3>⚡ Инициатива</h3>' +
+                '<h3>&#9889; Инициатива</h3>' +
                 '<div class="initiative-stats">' +
                     '<span class="stat-item">Участников: <strong id="initiative-count">0</strong></span>' +
                     '<span class="stat-item">Раунд: <strong id="initiative-round">1</strong></span>' +
@@ -1325,9 +1325,9 @@ function openInitiativeModal() {
             '<div class="initiative-list" id="initiative-list"></div>' +
             '<div class="initiative-controls">' +
                 '<div class="control-group">' +
-                    '<button class="initiative-btn player-btn" onclick="addInitiativeEntry(\'player\')">👤 Игрок</button>' +
-                    '<button class="initiative-btn enemy-btn" onclick="addInitiativeEntry(\'enemy\')">👹 Противник</button>' +
-                    '<button class="initiative-btn other-btn" onclick="addInitiativeEntry(\'other\')">⚡ Ещё</button>' +
+                    '<button class="initiative-btn player-btn" onclick="addInitiativeEntry(\'player\')">&#128100; Игрок</button>' +
+                    '<button class="initiative-btn enemy-btn" onclick="addInitiativeEntry(\'enemy\')">&#128127; Противник</button>' +
+                    '<button class="initiative-btn other-btn" onclick="addInitiativeEntry(\'other\')">&#9889; Ещё</button>' +
                 '</div>' +
                 '<div class="control-group">' +
                     '<button class="initiative-btn round-btn" onclick="nextRound()">🔄 Новый раунд</button>' +
@@ -1415,8 +1415,8 @@ function updateInitiativeDisplay() {
     // Показываем текущего участника
     if (initiativeList.length > 0) {
         let current = initiativeList[currentInitiativeIndex];
-        let typeIcon = current.type === 'player' ? '👤' : 
-                      current.type === 'enemy' ? '👹' : '⚡';
+        let typeIcon = current.type === 'player' ? '&#128100;' :
+current.type === 'enemy' ? '&#128127;' : '&#9889;';
         
         document.getElementById('initiative-current-turn').innerHTML = 
             '<div class="current-turn-display">' +
@@ -1442,8 +1442,8 @@ function updateInitiativeDisplay() {
         let typeClass = entry.type === 'player' ? 'player-entry' : 
                        entry.type === 'enemy' ? 'enemy-entry' : 'other-entry';
         let activeClass = isActive ? ' active' : '';
-        let typeIcon = entry.type === 'player' ? '👤' : 
-                      entry.type === 'enemy' ? '👹' : '⚡';
+        let typeIcon = entry.type === 'player' ? '&#128100;' :
+entry.type === 'enemy' ? '&#128127;' : '&#9889;';
         
         listHtml += '<div class="initiative-item ' + typeClass + activeClass + '" onclick="setActiveInitiative(' + index + ')">' +
             '<div class="initiative-item-content">' +
@@ -1866,7 +1866,7 @@ function formatNpcBlocks(txt, forcedName = '') {
         let techContent = techParams.fullBlock.replace(/\n/g, '<br>');
         out += `<div class='npc-col-block'>
             <div class='npc-collapsible-header collapsed' onclick='toggleTechnicalParams(this)'>
-                <div><span style='font-size:1.2em;'>⚔️</span> <b>Технические параметры</b></div>
+                <div><span style='font-size:1.2em;'>&#9876;&#65039;</span> <b>Технические параметры</b></div>
                 <span class='toggle-icon'>▼</span>
             </div>
             <div class='npc-collapsible-content collapsed'>
@@ -1877,7 +1877,7 @@ function formatNpcBlocks(txt, forcedName = '') {
         let listHtml = '<ul class="npc-modern-list">' + summaryLines.map(s => `<li>${s}</li>`).join('') + '</ul>';
         out += `<div class='npc-col-block'>
             <div class='npc-collapsible-header collapsed' onclick='toggleTechnicalParams(this)'>
-                <div><span style='font-size:1.2em;'>⚔️</span> <b>Технические параметры</b></div>
+                <div><span style='font-size:1.2em;'>&#9876;&#65039;</span> <b>Технические параметры</b></div>
                 <span class='toggle-icon'>▼</span>
             </div>
             <div class='npc-collapsible-content collapsed'>
@@ -1929,10 +1929,10 @@ function formatNpcBlocks(txt, forcedName = '') {
     
     // Внешность
     if (appear && appear.length > 10) {
-        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>👤</span> <b>Внешность</b><div class='npc-content'>${firstSentence(appear)}</div></div>`;
+        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>&#128100;</span> <b>Внешность</b><div class='npc-content'>${firstSentence(appear)}</div></div>`;
     } else if (!appear || appear.length <= 10) {
         let randomAppear = fallbackAppearances[Math.floor(Math.random() * fallbackAppearances.length)];
-        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>👤</span> <b>Внешность</b><div class='npc-content'>${randomAppear}</div></div>`;
+        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>&#128100;</span> <b>Внешность</b><div class='npc-content'>${randomAppear}</div></div>`;
     }
     out += `</div>`;
     setTimeout(() => {
@@ -1969,7 +1969,7 @@ function formatCharacterFromApi(character) {
     
     // Боевые характеристики
     out += '<div class="character-section">';
-    out += '<div class="section-title collapsed" onclick="toggleSection(this)">⚔️ Боевые характеристики <span class="toggle-icon">▶</span></div>';
+    out += '<div class="section-title collapsed" onclick="toggleSection(this)">&#9876;&#65039; Боевые характеристики <span class="toggle-icon">▶</span></div>';
     out += '<div class="section-content collapsed">';
     out += '<div class="info-grid">';
     out += '<div class="info-item"><strong>Хиты:</strong> ' + (character.hit_points || 'Не определены') + '</div>';
@@ -2015,7 +2015,7 @@ function formatCharacterFromApi(character) {
     // Владения
     if (character.proficiencies && character.proficiencies.length > 0) {
         out += '<div class="character-section">';
-        out += '<div class="section-title collapsed" onclick="toggleSection(this)">⚔️ Владения <span class="toggle-icon">▶</span></div>';
+        out += '<div class="section-title collapsed" onclick="toggleSection(this)">&#9876;&#65039; Владения <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
         out += '<div class="proficiencies-list">';
         character.proficiencies.forEach(prof => {
@@ -2125,7 +2125,7 @@ function formatEnemiesFromApi(enemies) {
         
         // Боевые характеристики
         out += '<div class="enemy-section">';
-        out += '<div class="section-title collapsed" onclick="toggleSection(this)">⚔️ Боевые характеристики <span class="toggle-icon">▶</span></div>';
+        out += '<div class="section-title collapsed" onclick="toggleSection(this)">&#9876;&#65039; Боевые характеристики <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
         out += '<div class="info-grid">';
         out += '<div class="info-item"><strong>Хиты:</strong> ' + (enemy.hit_points || 'Не определены') + '</div>';
@@ -2153,7 +2153,7 @@ function formatEnemiesFromApi(enemies) {
         // Действия
         if (enemy.actions && enemy.actions.length > 0) {
             out += '<div class="enemy-section">';
-            out += '<div class="section-title collapsed" onclick="toggleSection(this)">⚔️ Действия <span class="toggle-icon">▶</span></div>';
+            out += '<div class="section-title collapsed" onclick="toggleSection(this)">&#9876;&#65039; Действия <span class="toggle-icon">▶</span></div>';
             out += '<div class="section-content collapsed">';
             out += '<ul class="actions-list">';
             enemy.actions.forEach(action => {
