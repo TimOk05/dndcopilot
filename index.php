@@ -261,11 +261,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message']) && !isset(
 
 // --- Генерация быстрых кнопок ---
 $fastBtns = '';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей">&#127922; Бросок костей</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей">&#9876;&#65039; Персонаж</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников">&#128127; Противники</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="Управление инициативой" aria-label="Открыть управление инициативой">&#9889; Инициатива</button>';
-$fastBtns .= '<a href="combat.html" class="fast-btn btn btn-primary interactive" style="text-decoration: none; display: inline-block;" data-tooltip="Система боя" aria-label="Перейти к системе боя">&#9876;&#65039; Система боя</a>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей">🎲 Бросок костей</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей">⚔️ Персонаж</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников">👹 Противники</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="Управление инициативой" aria-label="Открыть управление инициативой">⚡ Инициатива</button>';
+$fastBtns .= '<a href="combat.html" class="fast-btn btn btn-primary interactive" style="text-decoration: none; display: inline-block;" data-tooltip="Система боя" aria-label="Перейти к системе боя">⚔️ Система боя</a>';
 
 // --- Генерация сообщений чата (пропускаем system) ---
 $chatMsgs = '';

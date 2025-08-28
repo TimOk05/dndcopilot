@@ -120,33 +120,33 @@ if (isLoggedIn()) {
         
         <!-- Форма входа -->
         <form id="loginForm" class="form active">
-            <div class="form-group">
+                <div class="form-group">
                 <label>Имя пользователя или Email:</label>
                 <input type="text" name="username" required>
-            </div>
-            <div class="form-group">
+                </div>
+                <div class="form-group">
                 <label>Пароль:</label>
                 <input type="password" name="password" required>
-            </div>
+                    </div>
             <button type="submit">Войти</button>
-        </form>
+            </form>
         
         <!-- Форма регистрации -->
         <form id="registerForm" class="form">
-            <div class="form-group">
+                <div class="form-group">
                 <label>Имя пользователя:</label>
                 <input type="text" name="username" required>
-            </div>
-            <div class="form-group">
+                </div>
+                <div class="form-group">
                 <label>Email:</label>
                 <input type="email" name="email" required>
-            </div>
-            <div class="form-group">
+                </div>
+                <div class="form-group">
                 <label>Пароль:</label>
                 <input type="password" name="password" required>
-            </div>
+                    </div>
             <button type="submit">Зарегистрироваться</button>
-        </form>
+            </form>
     </div>
 
     <script>

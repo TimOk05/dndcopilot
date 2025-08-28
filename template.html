@@ -157,7 +157,19 @@
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
-        /* Стили для admin-link в средней теме */
+        /* Стили для stats-link и admin-link в средней теме */
+        
+        [data-theme="medium"] .stats-link {
+            background: var(--accent-info) !important;
+            color: var(--bg-secondary) !important;
+            border-color: var(--accent-info) !important;
+        }
+        
+        [data-theme="medium"] .admin-link {
+            background: var(--accent-warning) !important;
+            color: var(--bg-secondary) !important;
+            border-color: var(--accent-warning) !important;
+        }
         /* Стили для иконок управляются системной структурой и CSS переменными */
         /* Тёмная тема */
         
@@ -374,6 +386,19 @@
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
         }
+        /* Стили для stats-link и admin-link в темной теме */
+        
+        [data-theme="dark"] .stats-link {
+            background: var(--accent-info) !important;
+            color: var(--bg-secondary) !important;
+            border-color: var(--accent-info) !important;
+        }
+        
+        [data-theme="dark"] .admin-link {
+            background: var(--accent-warning) !important;
+            color: var(--bg-secondary) !important;
+            border-color: var(--accent-warning) !important;
+        }
         /* Кнопки для мистической темы */
         
         [data-theme="mystic"] .fast-btn,
@@ -434,6 +459,19 @@
             text-rendering: optimizeLegibility !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
+        }
+        /* Стили для stats-link и admin-link в мистической теме */
+        
+        [data-theme="mystic"] .stats-link {
+            background: var(--accent-info) !important;
+            color: var(--bg-secondary) !important;
+            border-color: var(--accent-info) !important;
+        }
+        
+        [data-theme="mystic"] .admin-link {
+            background: var(--accent-warning) !important;
+            color: var(--bg-secondary) !important;
+            border-color: var(--accent-warning) !important;
         }
         
         body {
@@ -4167,17 +4205,15 @@
         /* Иконка статистики (справа от переключателя темы) */
         
         .stats-link {
-            position: absolute;
-            top: 0;
-            right: 90px;
+            position: relative;
             width: 40px;
             height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #ff0000 !important;
-            color: #ffffff !important;
-            border: 2px solid #ff0000 !important;
+            background: var(--accent-info);
+            color: var(--bg-secondary);
+            border: 2px solid var(--accent-info);
             border-radius: 8px;
             padding: 0;
             font-size: 0.85em;
@@ -4198,17 +4234,15 @@
         /* Иконка администратора (справа от статистики) */
         
         .admin-link {
-            position: absolute;
-            top: 0;
-            right: 140px;
+            position: relative;
             width: 40px;
             height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #00ff00 !important;
-            color: #000000 !important;
-            border: 2px solid #00ff00 !important;
+            background: var(--accent-warning);
+            color: var(--bg-secondary);
+            border: 2px solid var(--accent-warning);
             border-radius: 8px;
             padding: 0;
             font-size: 1.1em;
@@ -4398,21 +4432,21 @@
                         </span>
                     <?php endif; ?>
                 </div>
-                <div class="flex gap-2">
+                <div class="flex gap-2 items-center">
+                    <!-- Иконка статистики - всегда видна -->
+                    <a href="stats.php" class="stats-link tooltip" data-tooltip="Статистика пользователя" style="display: block !important; visibility: visible !important; opacity: 1 !important;">📊</a>
+
+                    <!-- Отладочная информация: <?php echo isAdmin() ? 'Admin: true' : 'Admin: false'; ?> -->
+                    <?php if (isAdmin()): ?>
+                    <a href="admin.php" class="admin-link tooltip" data-tooltip="Админ панель" style="display: block !important; visibility: visible !important; opacity: 1 !important;">🔧</a>
+                    <?php else: ?>
+                    <!-- Показываем иконку админа для отладки (временно) -->
+                    <a href="admin.php" class="admin-link tooltip" data-tooltip="Админ панель (отладка)" style="display: block !important; visibility: visible !important; opacity: 1 !important; background: #ff6b6b !important;">🔧</a>
+                    <?php endif; ?>
+
                     <button class="logout-btn btn btn-secondary" onclick="logout()">🚪 Выйти</button>
                 </div>
             </div>
-
-            <!-- Иконка статистики - всегда видна -->
-            <a href="stats.php" class="stats-link tooltip" data-tooltip="Статистика пользователя" style="display: block !important; visibility: visible !important; opacity: 1 !important;">📊</a>
-
-            <!-- Отладочная информация: <?php echo isAdmin() ? 'Admin: true' : 'Admin: false'; ?> -->
-            <?php if (isAdmin()): ?>
-            <a href="admin.php" class="admin-link tooltip" data-tooltip="Админ панель" style="display: block !important; visibility: visible !important; opacity: 1 !important;">🔧</a>
-            <?php else: ?>
-            <!-- Показываем иконку админа для отладки (временно) -->
-            <a href="admin.php" class="admin-link tooltip" data-tooltip="Админ панель (отладка)" style="display: block !important; visibility: visible !important; opacity: 1 !important; background: #ff6b6b !important;">🔧</a>
-            <?php endif; ?>
 
             <div class="theme-toggle">
                 <div class="theme-dropdown">
