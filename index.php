@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'users.php';
+require_once 'auth.php';
 
 // Автоматическое определение мобильного устройства и переадресация
 function isMobileDevice() {
@@ -34,7 +34,7 @@ if (isMobileDevice()) {
 }
 
 // Получаем имя текущего пользователя
-$currentUser = getCurrentUser();
+$currentUser = $_SESSION['username'] ?? 'Пользователь';
 
 
 
