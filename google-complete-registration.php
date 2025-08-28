@@ -37,23 +37,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = implode('. ', $password_errors);
                 $messageType = 'error';
             } else {
-                // Создаем пользователя через Google
-                $googleAuth = new GoogleAuth();
-                $newUser = $googleAuth->createUserFromGoogle($googleUserData);
+                // Создаем пользователя через Google с паролем
+                $result = registerUser($username, $password, $email, $googleUserData['id']);
                 
-                // Устанавливаем сессию
-                $_SESSION['user_id'] = $newUser['id'];
-                $_SESSION['username'] = $newUser['username'];
-                $_SESSION['role'] = $newUser['role'];
-                $_SESSION['login_time'] = time();
-                $_SESSION['auth_method'] = 'google';
-                
-                // Очищаем данные Google
-                unset($_SESSION['google_user_data']);
-                
-                // Перенаправляем на главную страницу
-                header('Location: index.php?welcome=1');
-                exit;
+                if ($result['success']) {
+                    // Ищем созданного пользователя
+                    $users = loadUsers();
+                    $newUser = null;
+                    foreach ($users as $user) {
+                        if (isset($user['google_id']) && $user['google_id'] === $googleUserData['id']) {
+                            $newUser = $user;
+                            break;
+                        }
+                    }
+                    
+                    if ($newUser) {
+                        // Устанавливаем сессию
+                        $_SESSION['user_id'] = $newUser['id'];
+                        $_SESSION['username'] = $newUser['username'];
+                        $_SESSION['role'] = $newUser['role'];
+                        $_SESSION['login_time'] = time();
+                        $_SESSION['auth_method'] = 'google_with_password';
+                        
+                        // Очищаем данные Google
+                        unset($_SESSION['google_user_data']);
+                        
+                        // Перенаправляем на главную страницу
+                        header('Location: index.php?welcome=1');
+                        exit;
+                    } else {
+                        $message = 'Ошибка создания пользователя';
+                        $messageType = 'error';
+                    }
+                } else {
+                    $message = $result['message'];
+                    $messageType = 'error';
+                }
             }
         }
     }

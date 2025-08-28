@@ -203,8 +203,13 @@ function recordRegistrationAttempt($ip, $success) {
     file_put_contents($registration_attempts_file, json_encode($attempts));
 }
 
-// Функция для регистрации пользователя
-function registerUser($username, $password, $email = null) {
+// Функция для регистрации пользователя (только через Google)
+function registerUser($username, $password, $email = null, $googleId = null) {
+    // Проверяем, что регистрация происходит только через Google
+    if (!$googleId || !$email) {
+        return ['success' => false, 'message' => 'Регистрация возможна только через Google аккаунт. Используйте кнопку "Зарегистрироваться через Google".'];
+    }
+    
     $users = loadUsers();
     $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
     
@@ -228,7 +233,7 @@ function registerUser($username, $password, $email = null) {
     
     // Очищаем входные данные
     $username = sanitizeInput($username);
-    $email = $email ? sanitizeInput($email) : null;
+    $email = sanitizeInput($email);
     
     // Проверяем сложность пароля
     $passwordErrors = validatePassword($password);
@@ -237,11 +242,15 @@ function registerUser($username, $password, $email = null) {
         return ['success' => false, 'message' => implode(', ', $passwordErrors)];
     }
     
-    // Проверяем, не существует ли уже пользователь с таким именем
+    // Проверяем, не существует ли уже пользователь с таким email или google_id
     foreach ($users as $user) {
-        if (hash_equals($user['username'], $username)) {
+        if (isset($user['email']) && hash_equals($user['email'], $email)) {
             recordRegistrationAttempt($ip, false);
-            return ['success' => false, 'message' => 'Пользователь с таким именем уже существует'];
+            return ['success' => false, 'message' => 'Пользователь с таким email уже существует'];
+        }
+        if (isset($user['google_id']) && hash_equals($user['google_id'], $googleId)) {
+            recordRegistrationAttempt($ip, false);
+            return ['success' => false, 'message' => 'Этот Google аккаунт уже привязан к другому пользователю'];
         }
     }
     
@@ -249,12 +258,14 @@ function registerUser($username, $password, $email = null) {
     $newUser = [
         'id' => uniqid(),
         'username' => $username,
-        'password_hash' => password_hash($password, PASSWORD_DEFAULT),
         'email' => $email,
+        'google_id' => $googleId,
+        'password_hash' => password_hash($password, PASSWORD_DEFAULT),
         'role' => 'user',
         'created_at' => date('Y-m-d H:i:s'),
         'is_active' => true,
-        'login_count' => 0
+        'login_count' => 0,
+        'auth_method' => 'google_with_password'
     ];
     
     $users[] = $newUser;
@@ -263,7 +274,7 @@ function registerUser($username, $password, $email = null) {
     // Записываем успешную регистрацию
     recordRegistrationAttempt($ip, true);
     
-    logActivity('user_registered', $username, $ip, true);
+    logActivity('user_registered_google_with_password', $username, $ip, true);
     
     return ['success' => true, 'message' => 'Пользователь успешно зарегистрирован'];
 }
@@ -285,10 +296,10 @@ function authenticateUser($username, $password) {
         return ['success' => false, 'message' => 'Ваша активность была отмечена как подозрительная. Попробуйте позже.'];
     }
     
-    // Ищем пользователя
+    // Ищем пользователя по email или username
     $user = null;
     foreach ($users as $u) {
-        if (hash_equals($u['username'], $username)) {
+        if (hash_equals($u['email'], $username) || hash_equals($u['username'], $username)) {
             $user = $u;
             break;
         }
@@ -297,7 +308,14 @@ function authenticateUser($username, $password) {
     if (!$user) {
         recordLoginAttempt($ip, false);
         logActivity('login_failed', $username, $ip, false, ['reason' => 'user_not_found']);
-        return ['success' => false, 'message' => 'Неверное имя пользователя или пароль'];
+        return ['success' => false, 'message' => 'Неверное имя пользователя/email или пароль'];
+    }
+    
+    // Проверяем, что у пользователя есть пароль (Google аккаунты с паролем)
+    if (!isset($user['password_hash']) || empty($user['password_hash'])) {
+        recordLoginAttempt($ip, false);
+        logActivity('login_failed', $username, $ip, false, ['reason' => 'no_password_set']);
+        return ['success' => false, 'message' => 'Для входа используйте Google аккаунт. У вас не установлен пароль для приложения.'];
     }
     
     // Проверяем пароль
@@ -544,25 +562,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $response = $result;
                 break;
                 
-            case 'register':
-                $username = $_POST['username'] ?? '';
-                $password = $_POST['password'] ?? '';
-                $csrfToken = $_POST['csrf_token'] ?? '';
-                
-                // Проверяем CSRF токен
-                if (!verifyCSRFToken($csrfToken)) {
-                    $response = ['success' => false, 'message' => 'Ошибка безопасности. Обновите страницу.'];
-                    break;
-                }
-                
-                if (empty($username) || empty($password)) {
-                    $response = ['success' => false, 'message' => 'Заполните все поля'];
-                    break;
-                }
-                
-                $result = registerUser($username, $password);
-                $response = $result;
-                break;
+
                 
             case 'logout':
                 $result = logout();

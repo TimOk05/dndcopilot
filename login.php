@@ -493,6 +493,83 @@ $csrf_token = generateCSRFToken();
             font-size: 0.95rem;
         }
         
+        /* Стили для новой формы регистрации */
+        .register-info {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .register-info h3 {
+            color: var(--text-tertiary);
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-md);
+            font-weight: 700;
+        }
+        
+        .register-info p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .register-steps {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-primary);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+        
+        .step:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px var(--shadow-primary);
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--bg-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        
+        .step-content h4 {
+            color: var(--text-tertiary);
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-xs);
+            font-weight: 600;
+        }
+        
+        .step-content p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin: 0;
+            line-height: 1.5;
+        }
+        
+        .register-google-btn {
+            margin-top: var(--spacing-lg);
+            font-size: 1.1rem;
+            padding: var(--spacing-md) var(--spacing-lg);
+        }
+        
         .password-toggle {
             position: absolute;
             right: var(--spacing-md);
@@ -615,7 +692,7 @@ $csrf_token = generateCSRFToken();
                 Вход
             </button>
             <button class="tab-btn" onclick="switchTab('register')" aria-label="Переключиться на форму регистрации">
-                Регистрация
+                Регистрация через Google
             </button>
         </div>
         
@@ -668,67 +745,38 @@ $csrf_token = generateCSRFToken();
         
         <!-- Форма регистрации -->
         <div id="register-form" class="form-content">
-            <form id="registerForm" novalidate>
-                <div class="form-group">
-                    <label for="register-username">Имя пользователя</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="register-username" name="username" required autocomplete="username" placeholder="Придумайте имя пользователя">
-                        <span class="input-icon">👤</span>
-                    </div>
-                </div>
+            <div class="register-info">
+                <h3>Регистрация через Google</h3>
+                <p>Для регистрации в приложении необходимо использовать Google аккаунт. После авторизации через Google вы сможете установить дополнительный пароль для входа в приложение.</p>
                 
-                <div class="form-group">
-                    <label for="register-password">Пароль</label>
-                    <div class="input-wrapper">
-                        <input type="password" id="register-password" name="password" required autocomplete="new-password" placeholder="Создайте пароль">
-                        <button type="button" class="password-toggle" onclick="togglePassword('register-password')" aria-label="Показать/скрыть пароль">
-                            👁️
-                        </button>
+                <div class="register-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Авторизация через Google</h4>
+                            <p>Нажмите кнопку ниже для авторизации через ваш Google аккаунт</p>
+                        </div>
                     </div>
-                    <small style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; display: block;">
-                        Минимум 8 символов, включая буквы и цифры
-                    </small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="register-password-confirm">Подтвердите пароль</label>
-                    <div class="input-wrapper">
-                        <input type="password" id="register-password-confirm" name="password_confirm" required autocomplete="new-password" placeholder="Повторите пароль">
-                        <button type="button" class="password-toggle" onclick="togglePassword('register-password-confirm')" aria-label="Показать/скрыть пароль">
-                            👁️
-                        </button>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Завершение регистрации</h4>
+                            <p>Заполните дополнительные поля и установите пароль для приложения</p>
+                        </div>
                     </div>
-                </div>
-                
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
-                <button type="submit" class="submit-btn" id="registerSubmit">
-                    <span class="btn-text">Зарегистрироваться</span>
-                    <span class="btn-loading" style="display: none;">
-                        <div class="spinner"></div>
-                    </span>
-                </button>
-            </form>
-            
-            <div class="divider">
-                <span>или</span>
-            </div>
-            
-            <div class="benefits">
-                <div class="benefit-item">
-                    <span class="benefit-icon">🔐</span>
-                    <span class="benefit-text">Безопасная авторизация через Google</span>
-                </div>
-                <div class="benefit-item">
-                    <span class="benefit-icon">⚡</span>
-                    <span class="benefit-text">Быстрый вход без паролей</span>
-                </div>
-                <div class="benefit-item">
-                    <span class="benefit-icon">📧</span>
-                    <span class="benefit-text">Автоматическое заполнение данных</span>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Готово!</h4>
+                            <p>Теперь вы можете входить как через Google, так и через пароль</p>
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <a href="google-auth.php" class="google-btn" aria-label="Зарегистрироваться через Google">
+            <a href="google-auth.php" class="google-btn register-google-btn" aria-label="Зарегистрироваться через Google">
                 <svg class="google-icon" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -900,64 +948,7 @@ $csrf_token = generateCSRFToken();
             });
         });
         
-        // Обработка формы регистрации
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('register-username').value.trim();
-            const password = document.getElementById('register-password').value;
-            const passwordConfirm = document.getElementById('register-password-confirm').value;
-            const csrfToken = document.querySelector('#registerForm input[name="csrf_token"]').value;
-            
-            if (!username || !password || !passwordConfirm) {
-                showMessage('Заполните все поля', 'error');
-                document.getElementById('registerForm').classList.add('shake');
-                setTimeout(() => document.getElementById('registerForm').classList.remove('shake'), 500);
-                return;
-            }
-            
-            if (password !== passwordConfirm) {
-                showMessage('Пароли не совпадают', 'error');
-                document.getElementById('register-password-confirm').focus();
-                return;
-            }
-            
-            const passwordErrors = validatePassword(password);
-            if (passwordErrors.length > 0) {
-                showMessage('Пароль не соответствует требованиям: ' + passwordErrors.join(', '), 'error');
-                return;
-            }
-            
-            showLoading('registerSubmit', true);
-            
-            const formData = new FormData();
-            formData.append('action', 'register');
-            formData.append('username', username);
-            formData.append('password', password);
-            formData.append('password_confirm', passwordConfirm);
-            formData.append('csrf_token', csrfToken);
-            
-            fetch('users.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                showLoading('registerSubmit', false);
-                if (data.success) {
-                    showMessage(data.message, 'success');
-                    setTimeout(() => {
-                        window.location.href = 'index.php';
-                    }, 1000);
-                } else {
-                    showMessage(data.message, 'error');
-                }
-            })
-            .catch(error => {
-                showLoading('registerSubmit', false);
-                showMessage('Ошибка соединения. Проверьте интернет.', 'error');
-            });
-        });
+
         
         // Предотвращение двойного клика
         document.querySelectorAll('form').forEach(form => {
