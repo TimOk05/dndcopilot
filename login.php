@@ -14,14 +14,21 @@ $csrf_token = generateCSRFToken();
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход в DnD Copilot</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=UnifrakturCook:wght@700&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#a67c52">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DnD Copilot">
+    <title>DnD Copilot - Вход</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=UnifrakturCook:wght@700&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Цветовая схема */
             --bg-primary: #f8ecd0;
             --bg-secondary: #fffbe6;
             --bg-tertiary: #f3e1b6;
+            --bg-overlay: rgba(248, 236, 208, 0.95);
             --text-primary: #2d1b00;
             --text-secondary: #3d2a0a;
             --text-tertiary: #7c4a02;
@@ -31,201 +38,305 @@ $csrf_token = generateCSRFToken();
             --accent-secondary: #7c4a02;
             --accent-success: #2bb07b;
             --accent-danger: #b71c1c;
-            --shadow-primary: #0002;
-            --shadow-secondary: #0006;
+            --accent-warning: #ffd700;
+            --shadow-primary: rgba(0, 0, 0, 0.1);
+            --shadow-secondary: rgba(0, 0, 0, 0.2);
+            --shadow-tertiary: rgba(0, 0, 0, 0.05);
+            
+            /* Размеры для мобильных */
+            --header-height: 60px;
+            --input-height: 48px;
+            --button-height: 52px;
+            --border-radius: 12px;
+            --border-radius-large: 16px;
+            --spacing-xs: 8px;
+            --spacing-sm: 12px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
-            background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
-            background-size: cover;
+            font-family: 'Roboto', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            margin: 0;
-            font-family: 'Roboto', 'IM Fell English SC', serif;
-            color: var(--text-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: var(--spacing-md);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Анимированный фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(1deg); }
         }
         
         .login-container {
-            background: var(--bg-primary) url('https://www.transparenttextures.com/patterns/old-mathematics.png');
-            border: 8px solid var(--border-primary);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px var(--shadow-secondary), 0 0 0 12px rgba(210, 180, 140, 0.3);
-            max-width: 500px;
+            background: var(--bg-overlay);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--border-primary);
+            border-radius: var(--border-radius-large);
+            box-shadow: 
+                0 20px 40px var(--shadow-secondary),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
             width: 100%;
-            padding: 40px 30px;
+            max-width: 400px;
+            padding: var(--spacing-xl);
             position: relative;
+            overflow: hidden;
         }
         
-        .login-container:before,
-        .login-container:after {
+        /* Декоративные элементы */
+        .login-container::before,
+        .login-container::after {
             content: '';
             position: absolute;
-            width: 54px;
-            height: 54px;
-            background: url('https://cdn-icons-png.flaticon.com/512/616/616494.png') no-repeat center/contain;
-            opacity: 0.12;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: -1;
         }
         
-        .login-container:before {
-            left: -30px;
-            top: -30px;
+        .login-container::before {
+            top: -50px;
+            left: -50px;
+            animation: float 6s ease-in-out infinite;
         }
         
-        .login-container:after {
-            right: -30px;
-            bottom: -30px;
-            transform: scaleX(-1);
+        .login-container::after {
+            bottom: -50px;
+            right: -50px;
+            animation: float 6s ease-in-out infinite reverse;
         }
         
-        h1 {
-            font-family: 'UnifrakturCook', cursive;
-            font-size: 2.2em;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .logo {
+            font-family: 'UnifrakturCook', cursive;
+            font-size: 2.5rem;
             color: var(--text-tertiary);
+            margin-bottom: var(--spacing-sm);
+            text-shadow: 
+                0 2px 4px var(--shadow-primary),
+                0 0 20px rgba(166, 124, 82, 0.3);
             letter-spacing: 2px;
-            text-shadow: 0 2px 0 rgba(255, 255, 255, 0.5), 0 0 8px rgba(166, 124, 82, 0.7);
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.8;
         }
         
         .form-tabs {
             display: flex;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--border-primary);
+            background: var(--bg-tertiary);
+            border-radius: var(--border-radius);
+            padding: 4px;
+            margin-bottom: var(--spacing-xl);
+            position: relative;
         }
         
         .tab-btn {
             flex: 1;
-            padding: 15px;
+            padding: var(--spacing-sm) var(--spacing-md);
             background: none;
             border: none;
             font-family: inherit;
-            font-size: 1.1em;
+            font-size: 1rem;
+            font-weight: 500;
             color: var(--text-secondary);
             cursor: pointer;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
+            border-radius: calc(var(--border-radius) - 4px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 2;
         }
         
         .tab-btn.active {
+            background: var(--bg-primary);
             color: var(--text-tertiary);
-            border-bottom-color: var(--accent-primary);
-            font-weight: bold;
+            box-shadow: 0 2px 8px var(--shadow-primary);
+            transform: translateY(-1px);
         }
         
-        .tab-btn:hover {
-            background: var(--bg-tertiary);
+        .tab-btn:not(.active):hover {
+            color: var(--text-tertiary);
+            background: rgba(166, 124, 82, 0.1);
         }
         
         .form-content {
             display: none;
+            animation: fadeInUp 0.3s ease-out;
         }
         
         .form-content.active {
             display: block;
         }
         
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .form-group:last-child {
+            margin-bottom: var(--spacing-md);
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: var(--spacing-xs);
             color: var(--text-secondary);
-            font-weight: bold;
-            font-size: 1.1em;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .input-wrapper {
+            position: relative;
         }
         
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            padding: 12px 16px;
+            height: var(--input-height);
+            padding: 0 var(--spacing-md);
             border: 2px solid var(--border-primary);
-            border-radius: 10px;
-            font-size: 1.1em;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
             background: var(--bg-secondary);
             color: var(--text-primary);
             font-family: inherit;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
         
         input[type="text"]:focus,
         input[type="password"]:focus {
             outline: none;
             border-color: var(--accent-secondary);
-            background: var(--bg-tertiary);
-            box-shadow: 0 0 15px rgba(166, 124, 82, 0.3);
+            background: var(--bg-primary);
+            box-shadow: 
+                0 0 0 4px rgba(166, 124, 82, 0.1),
+                0 4px 12px var(--shadow-primary);
+            transform: translateY(-1px);
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            font-size: 1.2rem;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus + .input-icon {
+            color: var(--accent-secondary);
+            transform: translateY(-50%) scale(1.1);
         }
         
         .submit-btn {
             width: 100%;
-            padding: 15px;
-            background: var(--accent-primary);
+            height: var(--button-height);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: var(--bg-secondary);
-            border: 2px solid var(--accent-secondary);
-            border-radius: 10px;
-            font-size: 1.2em;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
             font-family: inherit;
-            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            margin-top: var(--spacing-md);
+        }
+        
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .submit-btn:hover::before {
+            left: 100%;
         }
         
         .submit-btn:hover {
-            background: var(--accent-secondary);
-            color: var(--bg-secondary);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--shadow-secondary);
+            box-shadow: 
+                0 8px 25px var(--shadow-secondary),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
         }
         
-        .message {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            text-align: center;
+        .submit-btn:active {
+            transform: translateY(0);
         }
         
-        .message.success {
-            background: var(--accent-success);
-            color: var(--bg-secondary);
-        }
-        
-        .message.error {
-            background: var(--accent-danger);
-            color: var(--bg-secondary);
-        }
-        
-        .loading {
-            display: none;
-            text-align: center;
-            margin-top: 10px;
-        }
-        
-        .spinner {
-            border: 3px solid var(--bg-tertiary);
-            border-top: 3px solid var(--accent-primary);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
         
         .divider {
             text-align: center;
-            margin: 20px 0;
+            margin: var(--spacing-xl) 0;
             position: relative;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
         
         .divider::before {
@@ -236,163 +347,394 @@ $csrf_token = generateCSRFToken();
             right: 0;
             height: 1px;
             background: var(--border-primary);
+            opacity: 0.3;
         }
         
         .divider span {
-            background: var(--bg-primary);
-            padding: 0 15px;
-            color: var(--text-secondary);
-            font-size: 0.9em;
+            background: var(--bg-overlay);
+            padding: 0 var(--spacing-md);
+            position: relative;
+            z-index: 1;
         }
         
         .google-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: var(--spacing-sm);
             width: 100%;
-            padding: 12px;
+            height: var(--button-height);
             background: white;
             color: #333;
             border: 2px solid var(--border-primary);
-            border-radius: 8px;
+            border-radius: var(--border-radius);
             text-decoration: none;
             font-weight: 500;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .google-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+            transition: left 0.5s;
+        }
+        
+        .google-btn:hover::before {
+            left: 100%;
         }
         
         .google-btn:hover {
-            background: #f8f9fa;
             border-color: var(--accent-primary);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--shadow-primary);
         }
         
-        .google-btn.large {
-            padding: 16px;
-            font-size: 1.1em;
-            margin-top: 20px;
+        .google-btn:active {
+            transform: translateY(0);
         }
         
-        .google-registration-info {
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .message {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-lg);
+            font-weight: 500;
             text-align: center;
-            margin-bottom: 30px;
+            animation: slideIn 0.3s ease-out;
+            border: 1px solid transparent;
         }
         
-        .google-registration-info h3 {
-            color: var(--text-tertiary);
-            margin-bottom: 15px;
-            font-size: 1.3em;
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        .google-registration-info p {
-            color: var(--text-secondary);
-            margin-bottom: 25px;
-            line-height: 1.5;
+        .message.success {
+            background: rgba(43, 176, 123, 0.1);
+            color: var(--accent-success);
+            border-color: rgba(43, 176, 123, 0.3);
+        }
+        
+        .message.error {
+            background: rgba(183, 28, 28, 0.1);
+            color: var(--accent-danger);
+            border-color: rgba(183, 28, 28, 0.3);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: var(--spacing-md);
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--bg-tertiary);
+            border-top: 3px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         .benefits {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
+            margin: var(--spacing-lg) 0;
         }
         
         .benefit-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
             background: var(--bg-secondary);
-            border-radius: 8px;
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-sm);
             border: 1px solid var(--border-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .benefit-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px var(--shadow-primary);
         }
         
         .benefit-icon {
-            font-size: 1.2em;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
         }
         
-        .benefit-item span:last-child {
+        .benefit-text {
             color: var(--text-secondary);
             font-weight: 500;
+            font-size: 0.95rem;
         }
         
-        @media (max-width: 600px) {
-            .login-container {
-                padding: 30px 20px;
-                margin: 10px;
+        .password-toggle {
+            position: absolute;
+            right: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .password-toggle:hover {
+            color: var(--accent-secondary);
+            background: rgba(166, 124, 82, 0.1);
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--border-primary);
+            opacity: 0.3;
+        }
+        
+        .form-footer a {
+            color: var(--text-tertiary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .form-footer a:hover {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+        }
+        
+        /* Мобильные адаптации */
+        @media (max-width: 480px) {
+            body {
+                padding: var(--spacing-sm);
             }
             
-            h1 {
-                font-size: 1.8em;
+            .login-container {
+                padding: var(--spacing-lg);
+                margin: 0;
+            }
+            
+            .logo {
+                font-size: 2rem;
             }
             
             .tab-btn {
-                padding: 12px;
-                font-size: 1em;
+                padding: var(--spacing-xs) var(--spacing-sm);
+                font-size: 0.9rem;
             }
+            
+            input[type="text"],
+            input[type="password"] {
+                font-size: 16px; /* Предотвращает зум на iOS */
+            }
+        }
+        
+        /* Анимации для улучшения UX */
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Улучшенная доступность */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Фокус для клавиатурной навигации */
+        .tab-btn:focus,
+        input:focus,
+        .submit-btn:focus,
+        .google-btn:focus {
+            outline: 2px solid var(--accent-secondary);
+            outline-offset: 2px;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h1>DnD Copilot</h1>
+        <div class="header">
+            <div class="logo">DnD Copilot</div>
+            <div class="subtitle">Мастер подземелий в вашем кармане</div>
+        </div>
         
         <div class="form-tabs">
-            <button class="tab-btn active" onclick="switchTab('login')">Вход</button>
-            <button class="tab-btn" onclick="switchTab('register')">Регистрация через Google</button>
+            <button class="tab-btn active" onclick="switchTab('login')" aria-label="Переключиться на форму входа">
+                Вход
+            </button>
+            <button class="tab-btn" onclick="switchTab('register')" aria-label="Переключиться на форму регистрации">
+                Регистрация
+            </button>
         </div>
         
         <div id="message"></div>
         
         <!-- Форма входа -->
         <div id="login-form" class="form-content active">
-            <form id="loginForm">
+            <form id="loginForm" novalidate>
                 <div class="form-group">
-                    <label for="login-username">Имя пользователя:</label>
-                    <input type="text" id="login-username" name="username" required>
+                    <label for="login-username">Имя пользователя</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="login-username" name="username" required autocomplete="username" placeholder="Введите имя пользователя">
+                        <span class="input-icon">👤</span>
+                    </div>
                 </div>
+                
                 <div class="form-group">
-                    <label for="login-password">Пароль:</label>
-                    <input type="password" id="login-password" name="password" required>
+                    <label for="login-password">Пароль</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="login-password" name="password" required autocomplete="current-password" placeholder="Введите пароль">
+                        <button type="button" class="password-toggle" onclick="togglePassword('login-password')" aria-label="Показать/скрыть пароль">
+                            👁️
+                        </button>
+                    </div>
                 </div>
+                
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
-                <button type="submit" class="submit-btn">Войти</button>
+                <button type="submit" class="submit-btn" id="loginSubmit">
+                    <span class="btn-text">Войти</span>
+                    <span class="btn-loading" style="display: none;">
+                        <div class="spinner"></div>
+                    </span>
+                </button>
             </form>
             
             <div class="divider">
                 <span>или</span>
             </div>
             
-            <a href="google-auth.php" class="google-btn">
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjY0IDkuMjA0NTVDMTcuNjQgOC41NjY0IDE3LjU4MjcgNy45NTI3MyAxNy40NzI3IDcuMzYzNjRIMTlWMTBIMTcuNjRWOS4yMDQ1NVoiIGZpbGw9IiNGQjQwMzEiLz4KPHBhdGggZD0iTTkgMTguMDAwMUMxMS40MyAxOC4wMDAxIDEzLjQ2NzMgMTcuMTk0NSAxNC45NjM2IDE1Ljc4MzZMMTIuNzA5MSAxNC4wNjM2QzExLjk3MjcgMTQuNzYzNiAxMC44NzI3IDE1LjIyNzMgOS41IDE1LjIyNzNDNy4xNDU0NSAxNS4yMjczIDUuMjcyNzMgMTMuNjM2NCA0LjU0NTQ1IDExLjU0NTVIMi4wOTA5MVYxMy44MTgySDQuNTQ1NDVDNC44ODE4MiAxNC42MzY0IDUuNjM2MzYgMTUuMjcyNyA2LjU5MDkxIDE1LjI3MjdDNi44MTgxOCAxNS4yNzI3IDcuMDMxODIgMTUuMjMxOCA3LjIzMTgyIDE1LjE1NDVDNy40MzE4MiAxNS4wNzcyIDcuNjE4MTggMTQuOTY4MiA3Ljc4MTgyIDE0LjgyNzNDNy45NDU0NSAxNC42ODY0IDguMDgxODIgMTQuNTE4MiA4LjE5MDkxIDE0LjMyNzNDOC4zIDE0LjEzNjQgOC4zNjM2NCAxMy45MjcyIDguMzkwOTEgMTMuNzA5MUM4LjQxODE4IDEzLjQ5MDkgOC40MTgxOCAxMy4yNjM2IDguMzkwOTEgMTMuMDQ1NUg4LjM2MzY0SDQuNTQ1NDVDNC41NDU0NSAxMi45NTQ1IDQuNTQ1NDUgMTIuODYzNiA0LjU0NTQ1IDEyLjc3MjdDNC41NDU0NSAxMi42ODE4IDQuNTQ1NDUgMTIuNTkwOSA0LjU0NTQ1IDEyLjVIMTlWMTQuNUg4LjM5MDkxQzguMzYzNjQgMTQuMjgxOCA4LjMgMTQuMDcyNyA4LjE5MDkxIDEzLjg4MThDOC4wODE4MiAxMy42OTA5IDcuOTQ1NDUgMTMuNTIyNyA3Ljc4MTgyIDEzLjM4MThDNy42MTgxOCAxMy4yNDA5IDcuNDMxODIgMTMuMTMxOCA3LjIzMTgyIDEzLjA1NDVDNy4wMzE4MiAxMi45NzcyIDYuODE4MTggMTIuOTM2NCA2LjU5MDkxIDEyLjkzNjRDNi4zNjM2NCAxMi45MzY0IDYuMTUwOTEgMTIuOTc3MiA1Ljk1MDkxIDEzLjA1NDVDNS43NTA5MSAxMy4xMzE4IDUuNTY4MTggMTMuMjQwOSA1LjQwNDU1IDEzLjM4MThDNS4yNDA5MSAxMy41MjI3IDUuMTA0NTUgMTMuNjkwOSA0Ljk5NTQ1IDEzLjg4MThDNC44ODYzNiAxNC4wNzI3IDQuODIyNzMgMTQuMjgxOCA0Ljc5NTQ1IDE0LjVIMi4wOTA5MVYxNi43NzI3SDQuNTQ1NDVDNS4yNzI3MyAxNC42MzY0IDcuMTQ1NDUgMTMuMDQ1NSA5LjUgMTMuMDQ1NUMxMC44NzI3IDEzLjA0NTUgMTEuOTcyNyAxMy41MDkxIDEyLjcwOTEgMTQuMjA5MUwxNC45NjM2IDEyLjQ4OTFDMTMuNDY3MyAxMS4wNzgxIDExLjQzIDEwLjI3MjcgOSAxMC4yNzI3QzYuNTY5MDkgMTAuMjcyNyA0LjUzMTgyIDExLjA3ODEgMy4wMzYzNiAxMi40ODkxQzEuNTQwOTEgMTMuODk5MSAwLjc3MjcyNyAxNS44MzE4IDAuNzcyNzI3IDE4SDBWMTYuNzI3M0MwIDE0LjQ1NDUgMC43NzI3MjcgMTIuNTIyNyAyLjI2ODE4IDEwLjk5MDlDMy43NjM2NCA5LjQ1OTA5IDUuNzY5MDkgOC42ODE4MiA4LjI4MTgyIDguNjgxODJDMTAuNzk0NSA4LjY4MTgyIDEyLjgwMTggOS40NTkwOSAxNC4yOTczIDEwLjk5MDlDMTUuNzkyNyAxMi41MjI3IDE2LjU0NTUgMTQuNDU0NSAxNi41NDU1IDE2Ljc3MjNWMThIMTlWMTYuNzI3M0MxOSAxNC40NTQ1IDE4LjIyNzMgMTIuNTIyNyAxNi43MzE4IDEwLjk5MDlDMTUuMjM2NCA5LjQ1OTA5IDEzLjIzMDkgOC42ODE4MiAxMC43MTgyIDguNjgxODJaIiBmaWxsPSIjRkZDMTA3Ii8+CjxwYXRoIGQ9Ik0xNy42NCA5LjIwNDU1QzE3LjY0IDguNTY2NCAxNy41ODI3IDcuOTUyNzMgMTcuNDcyNyA3LjM2MzY0SDE5VjEwSDE3LjY0VjkuMjA0NTVaIiBmaWxsPSIjRkI0MDMxIi8+CjxwYXRoIGQ9Ik0xNy42NCA5LjIwNDU1QzE3LjY0IDguNTY2NCAxNy41ODI3IDcuOTUyNzMgMTcuNDcyNyA3LjM2MzY0SDE5VjEwSDE3LjY0VjkuMjA0NTVaIiBmaWxsPSIjRkI0MDMxIi8+Cjwvc3ZnPgo=" alt="Google" width="18" height="18">
+            <a href="google-auth.php" class="google-btn" aria-label="Войти через Google">
+                <svg class="google-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
                 Войти через Google
             </a>
         </div>
         
         <!-- Форма регистрации -->
         <div id="register-form" class="form-content">
-            <div class="google-registration-info">
-                <h3>Регистрация через Google</h3>
-                <p>Для регистрации в системе используйте свой Google аккаунт. Это обеспечивает безопасность и удобство входа.</p>
+            <form id="registerForm" novalidate>
+                <div class="form-group">
+                    <label for="register-username">Имя пользователя</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="register-username" name="username" required autocomplete="username" placeholder="Придумайте имя пользователя">
+                        <span class="input-icon">👤</span>
+                    </div>
+                </div>
                 
-                <div class="benefits">
-                    <div class="benefit-item">
-                        <span class="benefit-icon">🔐</span>
-                        <span>Безопасная авторизация</span>
+                <div class="form-group">
+                    <label for="register-password">Пароль</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="register-password" name="password" required autocomplete="new-password" placeholder="Создайте пароль">
+                        <button type="button" class="password-toggle" onclick="togglePassword('register-password')" aria-label="Показать/скрыть пароль">
+                            👁️
+                        </button>
                     </div>
-                    <div class="benefit-item">
-                        <span class="benefit-icon">⚡</span>
-                        <span>Быстрый вход</span>
+                    <small style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; display: block;">
+                        Минимум 8 символов, включая буквы и цифры
+                    </small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-password-confirm">Подтвердите пароль</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="register-password-confirm" name="password_confirm" required autocomplete="new-password" placeholder="Повторите пароль">
+                        <button type="button" class="password-toggle" onclick="togglePassword('register-password-confirm')" aria-label="Показать/скрыть пароль">
+                            👁️
+                        </button>
                     </div>
-                    <div class="benefit-item">
-                        <span class="benefit-icon">📧</span>
-                        <span>Автоматическое заполнение данных</span>
-                    </div>
+                </div>
+                
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
+                <button type="submit" class="submit-btn" id="registerSubmit">
+                    <span class="btn-text">Зарегистрироваться</span>
+                    <span class="btn-loading" style="display: none;">
+                        <div class="spinner"></div>
+                    </span>
+                </button>
+            </form>
+            
+            <div class="divider">
+                <span>или</span>
+            </div>
+            
+            <div class="benefits">
+                <div class="benefit-item">
+                    <span class="benefit-icon">🔐</span>
+                    <span class="benefit-text">Безопасная авторизация через Google</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">⚡</span>
+                    <span class="benefit-text">Быстрый вход без паролей</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">📧</span>
+                    <span class="benefit-text">Автоматическое заполнение данных</span>
                 </div>
             </div>
             
-            <a href="google-auth.php" class="google-btn large">
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjY0IDkuMjA0NTVDMTcuNjQgOC41NjY0IDE3LjU4MjcgNy45NTI3MyAxNy40NzI3IDcuMzYzNjRIMTlWMTBIMTcuNjRWOS4yMDQ1NVoiIGZpbGw9IiNGQjQwMzEiLz4KPHBhdGggZD0iTTkgMTguMDAwMUMxMS40MyAxOC4wMDAxIDEzLjQ2NzMgMTcuMTk0NSAxNC45NjM2IDE1Ljc4MzZMMTIuNzA5MSAxNC4wNjM2QzExLjk3MjcgMTQuNzYzNiAxMC44NzI3IDE1LjIyNzMgOS41IDE1LjIyNzNDNy4xNDU0NSAxNS4yMjczIDUuMjcyNzMgMTMuNjM2NCA0LjU0NTQ1IDExLjU0NTVIMi4wOTA5MVYxMy44MTgySDQuNTQ1NDVDNC44ODE4MiAxNC42MzY0IDUuNjM2MzYgMTUuMjcyNyA2LjU5MDkxIDE1LjI3MjdDNi44MTgxOCAxNS4yNzI3IDcuMDMxODIgMTUuMjMxOCA3LjIzMTgyIDE1LjE1NDVDNy40MzE4MiAxNS4wNzcyIDcuNjE4MTggMTQuOTY4MiA3Ljc4MTgyIDE0LjgyNzNDNy45NDU0NSAxNC42ODY0IDguMDgxODIgMTQuNTE4MiA4LjE5MDkxIDE0LjMyNzNDOC4zIDE0LjEzNjQgOC4zNjM2NCAxMy45MjcyIDguMzkwOTEgMTMuNzA5MUM4LjQxODE4IDEzLjQ5MDkgOC40MTgxOCAxMy4yNjM2IDguMzkwOTEgMTMuMDQ1NUg4LjM2MzY0SDQuNTQ1NDVDNC41NDU0NSAxMi45NTQ1IDQuNTQ1NDUgMTIuODYzNiA0LjU0NTQ1IDEyLjc3MjdDNC41NDU0NSAxMi42ODE4IDQuNTQ1NDUgMTIuNTkwOSA0LjU0NTQ1IDEyLjVIMTlWMTQuNUg4LjM5MDkxQzguMzYzNjQgMTQuMjgxOCA4LjMgMTQuMDcyNyA4LjE5MDkxIDEzLjg4MThDOC4wODE4MiAxMy42OTA5IDcuOTQ1NDUgMTMuNTIyNyA3Ljc4MTgyIDEzLjM4MThDNy42MTgxOCAxMy4yNDA5IDcuNDMxODIgMTMuMTMxOCA3LjIzMTgyIDEzLjA1NDVDNy4wMzE4MiAxMi45NzcyIDYuODE4MTggMTIuOTM2NCA2LjU5MDkxIDEyLjkzNjRDNi4zNjM2NCAxMi45MzY0IDYuMTUwOTEgMTIuOTc3MiA1Ljk1MDkxIDEzLjA1NDVDNS43NTA5MSAxMy4xMzE4IDUuNTY4MTggMTMuMjQwOSA1LjQwNDU1IDEzLjM4MThDNS4yNDA5MSAxMy41MjI3IDUuMTA0NTUgMTMuNjkwOSA0Ljk5NTQ1IDEzLjg4MThDNC44ODYzNiAxNC4wNzI3IDQuODIyNzMgMTQuMjgxOCA0Ljc5NTQ1IDE0LjVIMi4wOTA5MVYxNi43NzI3SDQuNTQ1NDVDNS4yNzI3MyAxNC42MzY0IDcuMTQ1NDUgMTMuMDQ1NSA5LjUgMTMuMDQ1NUMxMC44NzI3IDEzLjA0NTUgMTEuOTcyNyAxMy41MDkxIDEyLjcwOTEgMTQuMjA5MUwxNC45NjM2IDEyLjQ4OTFDMTMuNDY3MyAxMS4wNzgxIDExLjQzIDEwLjI3MjcgOSAxMC4yNzI3QzYuNTY5MDkgMTAuMjcyNyA0LjUzMTgyIDExLjA3ODEgMy4wMzYzNiAxMi40ODkxQzEuNTQwOTEgMTMuODk5MSAwLjc3MjcyNyAxNS44MzE4IDAuNzcyNzI3IDE4SDBWMTYuNzI3M0MwIDE0LjQ1NDUgMC43NzI3MjcgMTIuNTIyNyAyLjI2ODE4IDEwLjk5MDlDMy43NjM2NCA5LjQ1OTA5IDUuNzY5MDkgOC42ODE4MiA4LjI4MTgyIDguNjgxODJDMTAuNzk0NSA4LjY4MTgyIDEyLjgwMTggOS40NTkwOSAxNC4yOTczIDEwLjk5MDlDMTUuNzkyNyAxMi41MjI3IDE2LjU0NTUgMTQuNDU0NSAxNi41NDU1IDE2Ljc3MjNWMThIMTlWMTYuNzI3M0MxOSAxNC40NTQ1IDE4LjIyNzMgMTIuNTIyNyAxNi43MzE4IDEwLjk5MDlDMTUuMjM2NCA5LjQ1OTA5IDEzLjIzMDkgOC42ODE4MiAxMC43MTgyIDguNjgxODJaIiBmaWxsPSIjRkZDMTA3Ii8+CjxwYXRoIGQ9Ik0xNy42NCA5LjIwNDU1QzE3LjY0IDguNTY2NCAxNy41ODI3IDcuOTUyNzMgMTcuNDcyNyA3LjM2MzY0SDE5VjEwSDE3LjY0VjkuMjA0NTVaIiBmaWxsPSIjRkI0MDMxIi8+CjxwYXRoIGQ9Ik0xNy42NCA5LjIwNDU1QzE3LjY0IDguNTY2NCAxNy41ODI3IDcuOTUyNzMgMTcuNDcyNyA3LjM2MzY0SDE5VjEwSDE3LjY0VjkuMjA0NTVaIiBmaWxsPSIjRkI0MDMxIi8+Cjwvc3ZnPgo=" alt="Google" width="18" height="18">
+            <a href="google-auth.php" class="google-btn" aria-label="Зарегистрироваться через Google">
+                <svg class="google-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
                 Зарегистрироваться через Google
             </a>
         </div>
@@ -400,9 +742,14 @@ $csrf_token = generateCSRFToken();
         <div class="loading" id="loading">
             <div class="spinner"></div>
         </div>
+        
+        <div class="form-footer">
+            <a href="index.php">← Вернуться на главную</a>
+        </div>
     </div>
 
     <script>
+        // Переключение между вкладками
         function switchTab(tab) {
             // Убираем активный класс у всех кнопок и форм
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -412,29 +759,81 @@ $csrf_token = generateCSRFToken();
             if (tab === 'login') {
                 document.querySelector('.tab-btn:first-child').classList.add('active');
                 document.getElementById('login-form').classList.add('active');
-                // Фокус на поле ввода имени пользователя
                 setTimeout(() => document.getElementById('login-username').focus(), 100);
             } else {
                 document.querySelector('.tab-btn:last-child').classList.add('active');
                 document.getElementById('register-form').classList.add('active');
+                setTimeout(() => document.getElementById('register-username').focus(), 100);
             }
             
             // Очищаем сообщения
             document.getElementById('message').innerHTML = '';
         }
         
+        // Показать/скрыть пароль
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const toggle = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggle.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        }
+        
+        // Показать сообщение
         function showMessage(text, type) {
             const messageDiv = document.getElementById('message');
             messageDiv.innerHTML = `<div class="message ${type}">${text}</div>`;
+            
+            // Автоматически скрыть через 5 секунд
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
         }
         
-        function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        // Показать/скрыть загрузку
+        function showLoading(buttonId, show) {
+            const button = document.getElementById(buttonId);
+            const btnText = button.querySelector('.btn-text');
+            const btnLoading = button.querySelector('.btn-loading');
+            
+            if (show) {
+                button.disabled = true;
+                btnText.style.display = 'none';
+                btnLoading.style.display = 'inline-flex';
+            } else {
+                button.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        }
+        
+        // Валидация пароля
+        function validatePassword(password) {
+            const errors = [];
+            if (password.length < 8) errors.push('Минимум 8 символов');
+            if (!/[A-Z]/.test(password)) errors.push('Нужна заглавная буква');
+            if (!/[a-z]/.test(password)) errors.push('Нужна строчная буква');
+            if (!/\d/.test(password)) errors.push('Нужна цифра');
+            return errors;
         }
         
         // Автофокус при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('login-username').focus();
+            
+            // Добавляем haptic feedback для мобильных устройств
+            if ('vibrate' in navigator) {
+                document.querySelectorAll('button, .google-btn').forEach(element => {
+                    element.addEventListener('click', () => {
+                        navigator.vibrate(50);
+                    });
+                });
+            }
         });
         
         // Автоматический переход к следующему полю при нажатии Enter
@@ -465,10 +864,12 @@ $csrf_token = generateCSRFToken();
             
             if (!username || !password) {
                 showMessage('Заполните все поля', 'error');
+                document.getElementById('loginForm').classList.add('shake');
+                setTimeout(() => document.getElementById('loginForm').classList.remove('shake'), 500);
                 return;
             }
             
-            showLoading(true);
+            showLoading('loginSubmit', true);
             
             const formData = new FormData();
             formData.append('action', 'login');
@@ -482,7 +883,7 @@ $csrf_token = generateCSRFToken();
             })
             .then(response => response.json())
             .then(data => {
-                showLoading(false);
+                showLoading('loginSubmit', false);
                 if (data.success) {
                     showMessage(data.message, 'success');
                     setTimeout(() => {
@@ -490,17 +891,92 @@ $csrf_token = generateCSRFToken();
                     }, 1000);
                 } else {
                     showMessage(data.message, 'error');
-                    // Фокус на поле пароля при ошибке
                     document.getElementById('login-password').focus();
                 }
             })
             .catch(error => {
-                showLoading(false);
-                showMessage('Ошибка соединения', 'error');
+                showLoading('loginSubmit', false);
+                showMessage('Ошибка соединения. Проверьте интернет.', 'error');
             });
         });
         
-
+        // Обработка формы регистрации
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('register-username').value.trim();
+            const password = document.getElementById('register-password').value;
+            const passwordConfirm = document.getElementById('register-password-confirm').value;
+            const csrfToken = document.querySelector('#registerForm input[name="csrf_token"]').value;
+            
+            if (!username || !password || !passwordConfirm) {
+                showMessage('Заполните все поля', 'error');
+                document.getElementById('registerForm').classList.add('shake');
+                setTimeout(() => document.getElementById('registerForm').classList.remove('shake'), 500);
+                return;
+            }
+            
+            if (password !== passwordConfirm) {
+                showMessage('Пароли не совпадают', 'error');
+                document.getElementById('register-password-confirm').focus();
+                return;
+            }
+            
+            const passwordErrors = validatePassword(password);
+            if (passwordErrors.length > 0) {
+                showMessage('Пароль не соответствует требованиям: ' + passwordErrors.join(', '), 'error');
+                return;
+            }
+            
+            showLoading('registerSubmit', true);
+            
+            const formData = new FormData();
+            formData.append('action', 'register');
+            formData.append('username', username);
+            formData.append('password', password);
+            formData.append('password_confirm', passwordConfirm);
+            formData.append('csrf_token', csrfToken);
+            
+            fetch('users.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                showLoading('registerSubmit', false);
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.php';
+                    }, 1000);
+                } else {
+                    showMessage(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                showLoading('registerSubmit', false);
+                showMessage('Ошибка соединения. Проверьте интернет.', 'error');
+            });
+        });
+        
+        // Предотвращение двойного клика
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function() {
+                const submitBtn = this.querySelector('.submit-btn');
+                if (submitBtn.disabled) {
+                    return false;
+                }
+            });
+        });
+        
+        // Улучшенная обработка ошибок сети
+        window.addEventListener('online', function() {
+            showMessage('Соединение восстановлено', 'success');
+        });
+        
+        window.addEventListener('offline', function() {
+            showMessage('Нет соединения с интернетом', 'error');
+        });
     </script>
 </body>
 </html>
