@@ -4133,9 +4133,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--accent-info);
-            color: #f8f4e8;
-            border: 2px solid var(--accent-info);
+            background: #007bff;
+            color: #ffffff;
+            border: 2px solid #007bff;
             border-radius: 8px;
             padding: 0;
             font-size: 0.85em;
@@ -4149,6 +4149,9 @@
             font-weight: 600;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
             z-index: 10001;
+            /* Отладочные стили для видимости */
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         /* Иконка администратора (справа от статистики) */
         
@@ -4161,9 +4164,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--accent-warning);
-            color: #f8f4e8;
-            border: 2px solid var(--accent-warning);
+            background: #ffc107;
+            color: #000000;
+            border: 2px solid #ffc107;
             border-radius: 8px;
             padding: 0;
             font-size: 1.1em;
@@ -4176,6 +4179,9 @@
             font-weight: 600;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
             z-index: 10001;
+            /* Отладочные стили для видимости */
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         /* Hover эффекты для иконок */
         
@@ -4356,6 +4362,7 @@
             </div>
 
             <a href="stats.php" class="stats-link tooltip" data-tooltip="Статистика пользователя">📊</a>
+            <!-- Отладочная информация: <?php echo isAdmin() ? 'Admin: true' : 'Admin: false'; ?> -->
             <?php if (isAdmin()): ?>
             <a href="admin.php" class="admin-link tooltip" data-tooltip="Админ панель">🔧</a>
             <?php endif; ?>
