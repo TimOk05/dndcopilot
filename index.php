@@ -546,7 +546,7 @@ function openCharacterModal() {
             progressFill.style.width = progress + '%';
         }, 200);
         
-        fetch('api/generate-characters.php', {
+        fetch('api/generate-characters-v2.php', {
             method: 'POST',
             body: formData
         })
