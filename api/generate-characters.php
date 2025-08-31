@@ -80,7 +80,12 @@ class CharacterGenerator {
                 $nameList = $raceData['unisex'];
             }
             
-            // Если все еще нет имен, используем имена другого пола
+            // Если все еще нет имен, используем унисекс имена
+            if (empty($nameList) && !empty($raceData['unisex'])) {
+                $nameList = $raceData['unisex'];
+            }
+            
+            // Только в крайнем случае используем имена другого пола
             if (empty($nameList)) {
                 if ($gender === 'male' && !empty($raceData['female'])) {
                     $nameList = $raceData['female'];
@@ -97,15 +102,24 @@ class CharacterGenerator {
         
         // Fallback имена для случаев, когда JSON файл недоступен или раса не найдена
         $fallbackNames = [
-            'male' => ['Алексей', 'Дмитрий', 'Иван', 'Михаил', 'Сергей', 'Андрей', 'Владимир', 'Николай', 'Петр', 'Александр'],
-            'female' => ['Анна', 'Елена', 'Мария', 'Ольга', 'Татьяна', 'Ирина', 'Наталья', 'Светлана', 'Екатерина', 'Юлия']
+            'male' => ['Торин', 'Гимли', 'Леголас', 'Арагорн', 'Боромир', 'Гэндальф', 'Фродо', 'Сэм', 'Мерри', 'Пиппин'],
+            'female' => ['Арвен', 'Галадриэль', 'Эовин', 'Розмари', 'Лютиэн', 'Идриль', 'Анкалиме', 'Нимродэль', 'Элвинг', 'Аэрин'],
+            'unisex' => ['Ривен', 'Скай', 'Тейлор', 'Морган', 'Кейси', 'Джордан', 'Алексис', 'Дрю', 'Ким', 'Пэт']
         ];
         
         if ($gender === 'random') {
             $gender = rand(0, 1) ? 'male' : 'female';
         }
         
-        return $fallbackNames[$gender][array_rand($fallbackNames[$gender])];
+        // Сначала пробуем имена для конкретного пола, потом унисекс
+        if (isset($fallbackNames[$gender]) && !empty($fallbackNames[$gender])) {
+            return $fallbackNames[$gender][array_rand($fallbackNames[$gender])];
+        } elseif (isset($fallbackNames['unisex']) && !empty($fallbackNames['unisex'])) {
+            return $fallbackNames['unisex'][array_rand($fallbackNames['unisex'])];
+        } else {
+            // Крайний случай
+            return $gender === 'male' ? 'Торин' : 'Арвен';
+        }
     }
     
     /**
