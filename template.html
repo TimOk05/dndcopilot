@@ -4149,7 +4149,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            max-width: calc(100% - 200px);
+            max-width: calc(100% - 120px);
             flex-wrap: wrap;
             background: rgba(255, 255, 255, 0.1);
             padding: 8px 12px;
@@ -4162,6 +4162,14 @@
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
+        }
+        
+        .user-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            min-width: 0;
         }
         
         .welcome-text {
@@ -4206,8 +4214,8 @@
         
         .stats-link {
             position: relative;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -4227,6 +4235,7 @@
             font-weight: 600;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
             z-index: 10001;
+            flex-shrink: 0;
             /* Отладочные стили для видимости */
             opacity: 1 !important;
             visibility: visible !important;
@@ -4235,8 +4244,8 @@
         
         .admin-link {
             position: relative;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -4255,6 +4264,7 @@
             font-weight: 600;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
             z-index: 10001;
+            flex-shrink: 0;
             /* Отладочные стили для видимости */
             opacity: 1 !important;
             visibility: visible !important;
@@ -4378,8 +4388,8 @@
             color: #fff5f5;
             border: 2px solid var(--accent-danger);
             border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 0.9em;
+            padding: 6px 12px;
+            font-size: 0.85em;
             font-family: 'IM Fell English SC', serif;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -4389,6 +4399,7 @@
             text-shadow: 1px 1px 3px rgba(183, 28, 28, 0.9);
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
         
         .logout-btn::before {
@@ -4414,6 +4425,55 @@
             text-shadow: 2px 2px 4px rgba(183, 28, 28, 1);
             border-color: #ff0000;
         }
+        /* Медиа-запросы для мобильных устройств */
+        
+        @media (max-width: 768px) {
+            .user-info {
+                max-width: calc(100% - 80px);
+                padding: 6px 8px;
+            }
+            .welcome-text {
+                font-size: 0.85em;
+                max-width: 150px;
+            }
+            .stats-link,
+            .admin-link {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8em;
+            }
+            .logout-btn {
+                padding: 4px 8px;
+                font-size: 0.8em;
+            }
+            .user-controls {
+                gap: 6px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .user-info {
+                max-width: calc(100% - 60px);
+                padding: 4px 6px;
+            }
+            .welcome-text {
+                font-size: 0.8em;
+                max-width: 120px;
+            }
+            .stats-link,
+            .admin-link {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75em;
+            }
+            .logout-btn {
+                padding: 3px 6px;
+                font-size: 0.75em;
+            }
+            .user-controls {
+                gap: 4px;
+            }
+        }
     </style>
 </head>
 
@@ -4432,7 +4492,7 @@
                         </span>
                     <?php endif; ?>
                 </div>
-                <div class="flex gap-2 items-center">
+                <div class="user-controls flex gap-2 items-center">
                     <!-- Иконка статистики - всегда видна -->
                     <a href="stats.php" class="stats-link tooltip" data-tooltip="Статистика пользователя" style="display: block !important; visibility: visible !important; opacity: 1 !important;">📊</a>
 

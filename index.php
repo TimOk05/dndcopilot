@@ -1948,6 +1948,11 @@ function formatNpcBlocks(txt, forcedName = '') {
 
 // --- Форматирование персонажей от API системы ---
 function formatCharacterFromApi(character) {
+    // Проверяем, что character является валидным объектом
+    if (!character || typeof character !== 'object') {
+        return '<div class="error">Ошибка: Некорректные данные персонажа</div>';
+    }
+    
     let out = '<div class="character-block">';
     
     // Заголовок персонажа
@@ -1984,7 +1989,7 @@ function formatCharacterFromApi(character) {
     out += '</div></div>';
     
     // Характеристики
-    if (character.abilities) {
+    if (character.abilities && typeof character.abilities === 'object') {
         out += '<div class="character-section">';
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">📊 Характеристики <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
@@ -2000,33 +2005,37 @@ function formatCharacterFromApi(character) {
     }
     
     // Броски спасения
-    if (character.saving_throws && character.saving_throws.length > 0) {
+    if (character.saving_throws && Array.isArray(character.saving_throws) && character.saving_throws.length > 0) {
         out += '<div class="character-section">';
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">🛡️ Броски спасения <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content saving-throws-content collapsed">';
         out += '<div class="info-grid">';
         character.saving_throws.forEach(throw_item => {
-            out += '<div class="info-item"><strong>' + (throw_item.name || 'Неизвестно') + ':</strong> ' + (throw_item.modifier >= 0 ? '+' : '') + (throw_item.modifier || '0') + '</div>';
+            if (throw_item && typeof throw_item === 'object') {
+                out += '<div class="info-item"><strong>' + (throw_item.name || 'Неизвестно') + ':</strong> ' + (throw_item.modifier >= 0 ? '+' : '') + (throw_item.modifier || '0') + '</div>';
+            }
         });
         out += '</div>';
         out += '</div></div>';
     }
     
     // Владения
-    if (character.proficiencies && character.proficiencies.length > 0) {
+    if (character.proficiencies && Array.isArray(character.proficiencies) && character.proficiencies.length > 0) {
         out += '<div class="character-section">';
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">&#9876;&#65039; Владения <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
         out += '<div class="proficiencies-list">';
         character.proficiencies.forEach(prof => {
-            out += '<span class="proficiency-tag">' + prof + '</span>';
+            if (prof && typeof prof === 'string') {
+                out += '<span class="proficiency-tag">' + prof + '</span>';
+            }
         });
         out += '</div>';
         out += '</div></div>';
     }
     
     // Описание
-    if (character.description) {
+    if (character.description && typeof character.description === 'string') {
         out += '<div class="character-section">';
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">📝 Описание <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
@@ -2035,7 +2044,7 @@ function formatCharacterFromApi(character) {
     }
     
     // Предыстория
-    if (character.background) {
+    if (character.background && typeof character.background === 'string') {
         out += '<div class="character-section">';
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">📖 Предыстория <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
@@ -2044,35 +2053,37 @@ function formatCharacterFromApi(character) {
     }
     
     // Заклинания
-    if (character.spells && character.spells.length > 0) {
+    if (character.spells && Array.isArray(character.spells) && character.spells.length > 0) {
         out += '<div class="character-section">';
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">🔮 Заклинания <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
         out += '<div class="spell-list">';
         character.spells.forEach(spell => {
-            if (typeof spell === 'object' && spell.name) {
+            if (typeof spell === 'object' && spell && spell.name) {
                 // Новый формат с детальной информацией
                 out += '<div class="spell-item">';
                 out += '<div class="spell-header" onclick="toggleSpellDetails(this)">';
                 out += '<span class="spell-name">' + spell.name + '</span>';
-                out += '<span class="spell-level">' + spell.level + ' уровень</span>';
-                out += '<span class="spell-school">' + spell.school + '</span>';
+                out += '<span class="spell-level">' + (spell.level || '?') + ' уровень</span>';
+                out += '<span class="spell-school">' + (spell.school || 'Неизвестно') + '</span>';
                 out += '<span class="spell-toggle">▼</span>';
                 out += '</div>';
                 out += '<div class="spell-details" style="display: none;">';
                 out += '<div class="spell-info">';
-                out += '<div><strong>Время накладывания:</strong> ' + spell.casting_time + '</div>';
-                out += '<div><strong>Дистанция:</strong> ' + spell.range + '</div>';
-                out += '<div><strong>Компоненты:</strong> ' + spell.components + '</div>';
-                out += '<div><strong>Длительность:</strong> ' + spell.duration + '</div>';
+                out += '<div><strong>Время накладывания:</strong> ' + (spell.casting_time || 'Не указано') + '</div>';
+                out += '<div><strong>Дистанция:</strong> ' + (spell.range || 'Не указана') + '</div>';
+                out += '<div><strong>Компоненты:</strong> ' + (spell.components || 'Не указаны') + '</div>';
+                out += '<div><strong>Длительность:</strong> ' + (spell.duration || 'Не указана') + '</div>';
                 if (spell.damage) {
                     out += '<div><strong>Урон:</strong> ' + spell.damage + '</div>';
                 }
                 out += '</div>';
-                out += '<div class="spell-description">' + spell.description + '</div>';
+                if (spell.description) {
+                    out += '<div class="spell-description">' + spell.description + '</div>';
+                }
                 out += '</div>';
                 out += '</div>';
-            } else {
+            } else if (typeof spell === 'string' && spell) {
                 // Старый формат (просто строка)
                 out += '<div class="spell-item">';
                 out += '<div class="spell-name">' + spell + '</div>';
@@ -2084,13 +2095,15 @@ function formatCharacterFromApi(character) {
     }
     
     // Снаряжение
-    if (character.equipment && character.equipment.length > 0) {
+    if (character.equipment && Array.isArray(character.equipment) && character.equipment.length > 0) {
         out += '<div class="character-section">';
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">🎒 Снаряжение <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
         out += '<ul class="equipment-list">';
         character.equipment.forEach(item => {
-            out += '<li>' + item + '</li>';
+            if (item && typeof item === 'string') {
+                out += '<li>' + item + '</li>';
+            }
         });
         out += '</ul>';
         out += '</div></div>';
@@ -2102,14 +2115,25 @@ function formatCharacterFromApi(character) {
 
 // --- Форматирование противников от API системы ---
 function formatEnemiesFromApi(enemies) {
+    // Проверяем, что enemies является массивом
+    if (!enemies || !Array.isArray(enemies)) {
+        return '<div class="error">Ошибка: Некорректные данные противников</div>';
+    }
+    
     let out = '<div class="enemies-container">';
     enemies.forEach((enemy, index) => {
+        // Проверяем, что enemy является валидным объектом
+        if (!enemy || typeof enemy !== 'object') {
+            out += '<div class="error">Ошибка: Некорректные данные противника #' + (index + 1) + '</div>';
+            return;
+        }
+        
         out += '<div class="enemy-block">';
         
         // Заголовок противника
         out += '<div class="enemy-header">';
         out += '<h3>' + (enemy.name || 'Без имени') + '</h3>';
-        out += '<div class="enemy-subtitle">CR ' + (enemy.challenge_rating || '?') + '</div>';
+        out += '<div class="enemy-subtitle">CR ' + (enemy.challenge_rating || enemy.cr || '?') + '</div>';
         out += '</div>';
         
         // Основная информация
@@ -2128,14 +2152,14 @@ function formatEnemiesFromApi(enemies) {
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">&#9876;&#65039; Боевые характеристики <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
         out += '<div class="info-grid">';
-        out += '<div class="info-item"><strong>Хиты:</strong> ' + (enemy.hit_points || 'Не определены') + '</div>';
-        out += '<div class="info-item"><strong>Класс доспеха:</strong> ' + (enemy.armor_class || 'Не определен') + '</div>';
+        out += '<div class="info-item"><strong>Хиты:</strong> ' + (enemy.hit_points || enemy.hp || 'Не определены') + '</div>';
+        out += '<div class="info-item"><strong>Класс доспеха:</strong> ' + (enemy.armor_class || enemy.ac || 'Не определен') + '</div>';
         out += '<div class="info-item"><strong>Скорость:</strong> ' + (enemy.speed || 'Не определена') + '</div>';
         out += '</div>';
         out += '</div></div>';
         
         // Характеристики
-        if (enemy.abilities) {
+        if (enemy.abilities && typeof enemy.abilities === 'object') {
             out += '<div class="enemy-section">';
             out += '<div class="section-title collapsed" onclick="toggleSection(this)">📊 Характеристики <span class="toggle-icon">▶</span></div>';
             out += '<div class="section-content collapsed">';
@@ -2151,37 +2175,54 @@ function formatEnemiesFromApi(enemies) {
         }
         
         // Действия
-        if (enemy.actions && enemy.actions.length > 0) {
+        if (enemy.actions && Array.isArray(enemy.actions) && enemy.actions.length > 0) {
             out += '<div class="enemy-section">';
             out += '<div class="section-title collapsed" onclick="toggleSection(this)">&#9876;&#65039; Действия <span class="toggle-icon">▶</span></div>';
             out += '<div class="section-content collapsed">';
             out += '<ul class="actions-list">';
             enemy.actions.forEach(action => {
-                out += '<li>' + (action.name || 'Неизвестное действие') + ': ' + (action.description || 'Нет описания') + '</li>';
+                if (action && typeof action === 'object') {
+                    out += '<li>' + (action.name || 'Неизвестное действие') + ': ' + (action.description || 'Нет описания') + '</li>';
+                } else if (typeof action === 'string') {
+                    out += '<li>' + action + '</li>';
+                }
             });
             out += '</ul>';
             out += '</div></div>';
         }
         
         // Особые способности
-        if (enemy.special_abilities && enemy.special_abilities.length > 0) {
+        if (enemy.special_abilities && Array.isArray(enemy.special_abilities) && enemy.special_abilities.length > 0) {
             out += '<div class="enemy-section">';
             out += '<div class="section-title collapsed" onclick="toggleSection(this)">🌟 Особые способности <span class="toggle-icon">▶</span></div>';
             out += '<div class="section-content collapsed">';
             out += '<ul class="abilities-list">';
             enemy.special_abilities.forEach(ability => {
-                out += '<li>' + (ability.name || 'Неизвестная способность') + ': ' + (ability.description || 'Нет описания') + '</li>';
+                if (ability && typeof ability === 'object') {
+                    out += '<li>' + (ability.name || 'Неизвестная способность') + ': ' + (ability.description || 'Нет описания') + '</li>';
+                } else if (typeof ability === 'string') {
+                    out += '<li>' + ability + '</li>';
+                }
             });
             out += '</ul>';
             out += '</div></div>';
         }
         
         // Описание
-        if (enemy.description) {
+        if (enemy.description && typeof enemy.description === 'string') {
             out += '<div class="enemy-section">';
             out += '<div class="section-title collapsed" onclick="toggleSection(this)">📝 Описание <span class="toggle-icon">▶</span></div>';
             out += '<div class="section-content collapsed">';
             out += '<p>' + enemy.description + '</p>';
+            out += '</div></div>';
+        }
+        
+        // Тактика
+        if (enemy.tactics && typeof enemy.tactics === 'string') {
+            out += '<div class="enemy-section">';
+            out += '<div class="section-title collapsed" onclick="toggleSection(this)">🎯 Тактика <span class="toggle-icon">▶</span></div>';
+            out += '<div class="section-content collapsed">';
+            out += '<p>' + enemy.tactics + '</p>';
             out += '</div></div>';
         }
         
