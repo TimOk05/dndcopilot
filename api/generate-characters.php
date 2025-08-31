@@ -1180,9 +1180,10 @@ class CharacterGenerator {
     }
     
     /**
-     * Генерация улучшенного fallback описания без AI
+     * Генерация описания персонажа
      */
     private function generateFallbackDescription($character) {
+        return "Описание персонажа недоступно";
         $race = $character['race'];
         $gender = $character['gender'];
         $name = $character['name'];
@@ -1306,9 +1307,10 @@ class CharacterGenerator {
     }
     
     /**
-     * Генерация улучшенной fallback предыстории без AI
+     * Генерация предыстории персонажа
      */
     private function generateFallbackBackground($character) {
+        return "Предыстория персонажа недоступна";
         $race = $character['race'];
         $class = $character['class'];
         $occupation = $character['occupation'];

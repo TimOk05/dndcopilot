@@ -4,7 +4,7 @@ if (php_sapi_name() !== 'cli') {
     header('Content-Type: application/json');
 }
 require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/fallback-data.php';
+
 
 class EnemyGenerator {
     private $dnd5e_api_url = 'https://www.dnd5eapi.co/api';
@@ -88,26 +88,26 @@ class EnemyGenerator {
      * Генерация одного противника
      */
     private function generateSingleEnemy($cr_range, $enemy_type, $environment, $use_ai) {
-        // Используем fallback данные для надежности
-        $fallback_monsters = $this->getFallbackMonsters();
+        // Получаем данные монстров из API
+        $monsters = $this->getMonstersList();
         
-        if (empty($fallback_monsters)) {
+        if (empty($monsters)) {
             throw new Exception('База данных монстров недоступна');
         }
         
         // Фильтруем монстров по CR и типу
-        $filtered_monsters = $this->filterFallbackMonsters($fallback_monsters, $cr_range, $enemy_type, $environment);
+        $filtered_monsters = $this->filterMonsters($monsters, $cr_range, $enemy_type, $environment);
         
         if (empty($filtered_monsters)) {
             // Если не найдено подходящих, берем случайного монстра из подходящего CR
-            $filtered_monsters = array_filter($fallback_monsters, function($monster) use ($cr_range) {
+            $filtered_monsters = array_filter($monsters, function($monster) use ($cr_range) {
                 $cr = $this->parseCR($monster['challenge_rating'] ?? '0');
                 return $cr >= $cr_range['min'] && $cr <= $cr_range['max'];
             });
             
             if (empty($filtered_monsters)) {
                 // Если все еще нет подходящих, берем любого монстра
-                $filtered_monsters = $fallback_monsters;
+                $filtered_monsters = $monsters;
             }
         }
         
@@ -115,7 +115,7 @@ class EnemyGenerator {
         $monster = $filtered_monsters[array_rand($filtered_monsters)];
         
         // Получаем детальную информацию о монстре
-        $monster_details = $this->getFallbackMonsterDetails($monster['index']);
+        $monster_details = $this->getMonsterDetails($monster['index']);
         
         if (!$monster_details) {
             throw new Exception('Не удалось получить информацию о монстре: ' . ($monster['name'] ?? 'Unknown'));
@@ -153,45 +153,11 @@ class EnemyGenerator {
             return $response['results'];
         }
         
-        // Fallback: возвращаем базовый список монстров если API недоступен
-        return $this->getFallbackMonsters();
+        // API недоступен - возвращаем ошибку
+        return [];
     }
     
-    /**
-     * Получение fallback данных монстров
-     */
-    private function getFallbackMonsters() {
-        return FallbackData::getMonsters();
-    }
-    
-    /**
-     * Фильтрация fallback монстров
-     */
-    private function filterFallbackMonsters($monsters, $cr_range, $enemy_type, $environment) {
-        $filtered = [];
-        
-        foreach ($monsters as $monster) {
-            // Проверяем CR
-            $cr = $this->parseCR($monster['challenge_rating']);
-            if (!$this->checkCRRange($cr, $cr_range)) {
-                continue;
-            }
-            
-            // Проверяем тип (если указан)
-            if ($enemy_type && $enemy_type !== '' && strpos(strtolower($monster['type']), strtolower($enemy_type)) === false) {
-                continue;
-            }
-            
-            // Проверяем среду (если указана)
-            if ($environment && $environment !== '' && !$this->checkEnvironment($monster, $environment)) {
-                continue;
-            }
-            
-            $filtered[] = $monster;
-        }
-        
-        return $filtered;
-    }
+
     
     /**
      * Фильтрация монстров по параметрам
@@ -225,15 +191,15 @@ class EnemyGenerator {
     /**
      * Получение детальной информации о монстре
      */
-    private function getFallbackMonsterDetails($monsterIndex) {
-        $monsters = FallbackData::getMonsters();
+    private function getMonsterDetails($monsterIndex) {
+        $url = $this->dnd5e_api_url . '/monsters/' . $monsterIndex;
+        $response = $this->makeRequest($url);
         
-        foreach ($monsters as $monster) {
-            if ($monster['index'] === $monsterIndex) {
-                return $monster;
-            }
+        if ($response) {
+            return $response;
         }
         
+        // API недоступен - возвращаем ошибку
         return null;
     }
     

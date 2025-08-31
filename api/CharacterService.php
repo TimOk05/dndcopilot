@@ -4,20 +4,9 @@ require_once __DIR__ . '/../config.php';
 class CharacterService {
     private $dndApiUrl;
     private $deepseekApiKey;
-    private $fallbackData;
-    
     public function __construct() {
         $this->dndApiUrl = DND_API_URL;
         $this->deepseekApiKey = getApiKey('deepseek');
-        $this->loadFallbackData();
-    }
-    
-    /**
-     * Загрузка резервных данных
-     */
-    private function loadFallbackData() {
-        require_once __DIR__ . '/fallback-data.php';
-        $this->fallbackData = new FallbackData();
     }
     
     /**
@@ -167,8 +156,11 @@ class CharacterService {
             logMessage('Failed to fetch race data from API', 'WARNING', ['race' => $race, 'error' => $e->getMessage()]);
         }
         
-        // Fallback на локальные данные
-        return $this->fallbackData->getRaceData($race);
+        // API недоступен - возвращаем ошибку
+        return [
+            'error' => 'API недоступен',
+            'message' => "Не удалось получить данные расы '{$race}' из внешних API"
+        ];
     }
     
     /**
@@ -186,8 +178,11 @@ class CharacterService {
             logMessage('Failed to fetch class data from API', 'WARNING', ['class' => $class, 'error' => $e->getMessage()]);
         }
         
-        // Fallback на локальные данные
-        return $this->fallbackData->getClassData($class);
+        // API недоступен - возвращаем ошибку
+        return [
+            'error' => 'API недоступен',
+            'message' => "Не удалось получить данные класса '{$class}' из внешних API"
+        ];
     }
     
     /**
@@ -468,17 +463,17 @@ class CharacterService {
      */
     private function generateDescription($character) {
         if (!$this->deepseekApiKey) {
-            return $this->getFallbackDescription($character);
+            return "Описание персонажа недоступно";
         }
         
         $prompt = $this->buildDescriptionPrompt($character);
         
         try {
             $response = $this->callDeepSeek($prompt);
-            return $response ?: $this->getFallbackDescription($character);
+            return $response ?: "Описание персонажа недоступно";
         } catch (Exception $e) {
             logMessage('AI description generation failed', 'WARNING', ['error' => $e->getMessage()]);
-            return $this->getFallbackDescription($character);
+            return "Описание персонажа недоступно";
         }
     }
     
@@ -487,17 +482,17 @@ class CharacterService {
      */
     private function generateBackground($character) {
         if (!$this->deepseekApiKey) {
-            return $this->getFallbackBackground($character);
+            return "Предыстория персонажа недоступна";
         }
         
         $prompt = $this->buildBackgroundPrompt($character);
         
         try {
             $response = $this->callDeepSeek($prompt);
-            return $response ?: $this->getFallbackBackground($character);
+            return $response ?: "Предыстория персонажа недоступна";
         } catch (Exception $e) {
             logMessage('AI background generation failed', 'WARNING', ['error' => $e->getMessage()]);
-            return $this->getFallbackBackground($character);
+            return "Предыстория персонажа недоступна";
         }
     }
     
@@ -586,30 +581,6 @@ class CharacterService {
         return null;
     }
     
-    /**
-     * Fallback описание
-     */
-    private function getFallbackDescription($character) {
-        $descriptions = [
-            "{$character['name']} - {$character['race']} {$character['class']} с ярко выраженным характером. Обладает {$character['occupation']} навыками и следует принципам {$character['alignment']} мировоззрения.",
-            "{$character['name']} представляет собой типичного {$character['race']} {$character['class']}. Профессия {$character['occupation']} наложила отпечаток на его внешность и поведение.",
-            "{$character['name']} - опытный {$character['class']} {$character['race']} происхождения. {$character['occupation']} опыт помогает в приключениях."
-        ];
-        
-        return $descriptions[array_rand($descriptions)];
-    }
-    
-    /**
-     * Fallback предыстория
-     */
-    private function getFallbackBackground($character) {
-        $backgrounds = [
-            "{$character['name']} начал свой путь как {$character['occupation']}, но судьба привела его к изучению искусства {$character['class']}. Теперь он ищет приключений и славы.",
-            "Происходя из семьи {$character['occupation']}, {$character['name']} всегда мечтал стать {$character['class']}. После долгих лет обучения он готов к приключениям.",
-            "{$character['name']} был {$character['occupation']} до тех пор, пока не обнаружил в себе способности {$character['class']}. Теперь он путешествует по миру в поисках знаний и приключений."
-        ];
-        
-        return $backgrounds[array_rand($backgrounds)];
-    }
+
 }
 ?>
