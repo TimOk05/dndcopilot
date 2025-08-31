@@ -564,13 +564,15 @@ function openCharacterModal() {
                     resultDiv.innerHTML = formatCharacterFromApi(character);
                     
                     // Добавляем кнопку сохранения в заметки
-                    resultDiv.innerHTML += `
-                        <div class="save-character-section">
-                            <button class="save-character-btn" onclick="saveCharacterToNotes(${JSON.stringify(character).replace(/"/g, '&quot;')})">
-                                💾 Сохранить в заметки
-                            </button>
-                        </div>
-                    `;
+                    if (character && typeof character === 'object') {
+                        resultDiv.innerHTML += `
+                            <div class="save-character-section">
+                                <button class="save-character-btn" onclick="saveCharacterToNotes(${JSON.stringify(character).replace(/"/g, '&quot;')})">
+                                    💾 Сохранить в заметки
+                                </button>
+                            </div>
+                        `;
+                    }
                     
                     // Автоматическая прокрутка к результату
                     setTimeout(() => {
