@@ -158,73 +158,112 @@ echo json_encode($response, JSON_UNESCAPED_UNICODE);
  * Генерация персонажа для мобильной версии
  */
 function generateMobileCharacter($race, $characterClass, $level) {
-    // Загружаем данные имен
-    $namesData = json_decode(file_get_contents('pdf/dnd_race_names_ru_v2.json'), true);
-    $name = generateCharacterName($race, $namesData);
-    
-    // Базовые характеристики
-    $abilities = generateAbilities();
-    $proficiencyBonus = floor(($level - 1) / 4) + 2;
-    
-    // Рассчитываем характеристики
-    $hp = calculateHP($characterClass, $level, $abilities['con']);
-    $ac = calculateAC($characterClass, $abilities['dex']);
-    
-    // Генерируем описание
-    $description = generateCharacterDescription($race, $characterClass, $level);
-    
-    return [
-        'name' => $name,
-        'race' => $race,
-        'class' => $characterClass,
-        'level' => $level,
-        'abilities' => $abilities,
-        'hp' => $hp,
-        'ac' => $ac,
-        'proficiency_bonus' => $proficiencyBonus,
-        'description' => $description,
-        'features' => getClassFeatures($characterClass, $level),
-        'equipment' => getClassEquipment($characterClass),
-        'spells' => getClassSpells($characterClass, $level)
-    ];
+    try {
+        // Загружаем данные имен
+        $namesData = json_decode(file_get_contents('pdf/dnd_race_names_ru_v2.json'), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            logMessage('ERROR', 'Failed to parse race names JSON: ' . json_last_error_msg());
+            $namesData = null;
+        }
+        
+        $name = generateCharacterName($race, $namesData);
+        
+        // Базовые характеристики
+        $abilities = generateAbilities();
+        $proficiencyBonus = floor(($level - 1) / 4) + 2;
+        
+        // Рассчитываем характеристики
+        $hp = calculateHP($characterClass, $level, $abilities['con']);
+        $ac = calculateAC($characterClass, $abilities['dex']);
+        
+        // Генерируем описание
+        $description = generateCharacterDescription($race, $characterClass, $level);
+        
+        logMessage('INFO', 'Mobile character generated successfully', [
+            'race' => $race,
+            'class' => $characterClass,
+            'level' => $level
+        ]);
+        
+        return [
+            'name' => $name,
+            'race' => $race,
+            'class' => $characterClass,
+            'level' => $level,
+            'abilities' => $abilities,
+            'hp' => $hp,
+            'ac' => $ac,
+            'proficiency_bonus' => $proficiencyBonus,
+            'description' => $description,
+            'features' => getClassFeatures($characterClass, $level),
+            'equipment' => getClassEquipment($characterClass),
+            'spells' => getClassSpells($characterClass, $level)
+        ];
+    } catch (Exception $e) {
+        logMessage('ERROR', 'Mobile character generation failed: ' . $e->getMessage());
+        throw $e;
+    }
 }
 
 /**
  * Генерация противника для мобильной версии
  */
 function generateMobileEnemy($cr) {
-    // Загружаем данные противников
-    $enemiesData = json_decode(file_get_contents('api/fallback-data.php'), true);
-    
-    // Фильтруем по CR
-    $filteredEnemies = array_filter($enemiesData['enemies'] ?? [], function($enemy) use ($cr) {
-        return $enemy['cr'] == $cr;
-    });
-    
-    if (empty($filteredEnemies)) {
-        // Если нет точного совпадения, берем ближайшего
-        $filteredEnemies = array_filter($enemiesData['enemies'] ?? [], function($enemy) use ($cr) {
-            return $enemy['cr'] <= $cr + 1 && $enemy['cr'] >= $cr - 1;
+    try {
+        // Загружаем данные противников из fallback-data
+        require_once 'api/fallback-data.php';
+        $fallbackData = new FallbackData();
+        $enemiesData = $fallbackData->getAllData();
+        
+        if (!$enemiesData || !isset($enemiesData['enemies'])) {
+            throw new Exception('База данных противников недоступна');
+        }
+        
+        // Фильтруем по CR
+        $filteredEnemies = array_filter($enemiesData['enemies'], function($enemy) use ($cr) {
+            return isset($enemy['cr']) && $enemy['cr'] == $cr;
         });
+        
+        if (empty($filteredEnemies)) {
+            // Если нет точного совпадения, ищем ближайший CR
+            $availableCRs = array_unique(array_column($enemiesData['enemies'], 'cr'));
+            sort($availableCRs);
+            
+            $closestCR = $availableCRs[0];
+            foreach ($availableCRs as $availableCR) {
+                if ($availableCR >= $cr) {
+                    $closestCR = $availableCR;
+                    break;
+                }
+            }
+            
+            $filteredEnemies = array_filter($enemiesData['enemies'], function($enemy) use ($closestCR) {
+                return isset($enemy['cr']) && $enemy['cr'] == $closestCR;
+            });
+        }
+        
+        if (empty($filteredEnemies)) {
+            throw new Exception('Не найдены подходящие противники');
+        }
+        
+        // Выбираем случайного противника
+        $enemy = $filteredEnemies[array_rand($filteredEnemies)];
+        
+        // Генерируем дополнительные данные
+        $enemy['description'] = generateEnemyDescription($enemy);
+        $enemy['tactics'] = generateEnemyTactics($enemy);
+        
+        logMessage('INFO', 'Mobile enemy generated successfully', [
+            'cr' => $cr,
+            'name' => $enemy['name']
+        ]);
+        
+        return $enemy;
+        
+    } catch (Exception $e) {
+        logMessage('ERROR', 'Mobile enemy generation failed: ' . $e->getMessage());
+        throw $e;
     }
-    
-    if (empty($filteredEnemies)) {
-        // Берем случайного противника
-        $filteredEnemies = $enemiesData['enemies'] ?? [];
-    }
-    
-    $enemy = $filteredEnemies[array_rand($filteredEnemies)];
-    
-    return [
-        'name' => $enemy['name'] ?? 'Неизвестный противник',
-        'cr' => $enemy['cr'] ?? $cr,
-        'hp' => $enemy['hp'] ?? rand(10, 50),
-        'ac' => $enemy['ac'] ?? rand(10, 18),
-        'abilities' => $enemy['abilities'] ?? generateAbilities(),
-        'actions' => $enemy['actions'] ?? ['Атака'],
-        'description' => $enemy['description'] ?? 'Описание противника',
-        'tactics' => generateEnemyTactics($enemy['name'] ?? 'Противник')
-    ];
 }
 
 /**
@@ -254,201 +293,398 @@ function askMobileAI($question) {
  * Генерация имени персонажа
  */
 function generateCharacterName($race, $namesData) {
-    $raceNames = null;
+    $race = strtolower($race);
     
-    // Ищем расу в данных
-    foreach ($namesData['data'] ?? [] as $raceData) {
-        if ($raceData['race'] === $race) {
-            $raceNames = $raceData;
-            break;
-        }
-    }
-    
-    if ($raceNames) {
-        $allNames = array_merge(
-            $raceNames['male'] ?? [],
-            $raceNames['female'] ?? [],
-            $raceNames['unisex'] ?? []
-        );
-        
-        if (!empty($allNames)) {
-            return $allNames[array_rand($allNames)];
+    if ($namesData && isset($namesData['data'])) {
+        foreach ($namesData['data'] as $raceData) {
+            if (strtolower($raceData['race']) === $race) {
+                $gender = rand(0, 1) ? 'male' : 'female';
+                
+                $nameList = [];
+                if ($gender === 'male' && !empty($raceData['male'])) {
+                    $nameList = $raceData['male'];
+                } elseif ($gender === 'female' && !empty($raceData['female'])) {
+                    $nameList = $raceData['female'];
+                }
+                
+                if (empty($nameList) && !empty($raceData['unisex'])) {
+                    $nameList = $raceData['unisex'];
+                }
+                
+                if (!empty($nameList)) {
+                    return $nameList[array_rand($nameList)];
+                }
+            }
         }
     }
     
     // Fallback имена
-    $fallbackNames = ['Александр', 'Елена', 'Михаил', 'Анна', 'Дмитрий', 'Мария'];
-    return $fallbackNames[array_rand($fallbackNames)];
+    $fallbackNames = [
+        'male' => ['Алексей', 'Дмитрий', 'Иван', 'Михаил', 'Сергей', 'Андрей', 'Владимир', 'Николай', 'Петр', 'Александр'],
+        'female' => ['Анна', 'Елена', 'Мария', 'Ольга', 'Татьяна', 'Ирина', 'Наталья', 'Светлана', 'Екатерина', 'Юлия']
+    ];
+    
+    $gender = rand(0, 1) ? 'male' : 'female';
+    return $fallbackNames[$gender][array_rand($fallbackNames[$gender])];
 }
 
 /**
  * Генерация характеристик
  */
 function generateAbilities() {
-    return [
-        'str' => rand(8, 18),
-        'dex' => rand(8, 18),
-        'con' => rand(8, 18),
-        'int' => rand(8, 18),
-        'wis' => rand(8, 18),
-        'cha' => rand(8, 18)
-    ];
+    $abilities = [];
+    $abilityNames = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+    
+    foreach ($abilityNames as $ability) {
+        $rolls = [];
+        for ($i = 0; $i < 4; $i++) {
+            $rolls[] = rand(1, 6);
+        }
+        sort($rolls);
+        array_shift($rolls); // Убираем минимальный
+        $abilities[$ability] = array_sum($rolls);
+    }
+    
+    return $abilities;
 }
 
 /**
- * Расчет HP
+ * Расчет хитов
  */
-function calculateHP($class, $level, $conMod) {
-    $baseHP = [
-        'barbarian' => 12,
+function calculateHP($characterClass, $level, $con) {
+    $hitDie = getHitDie($characterClass);
+    $conBonus = floor(($con - 10) / 2);
+    
+    $baseHP = $hitDie + $conBonus;
+    $additionalHP = 0;
+    
+    for ($i = 2; $i <= $level; $i++) {
+        $additionalHP += rand(1, $hitDie) + $conBonus;
+    }
+    
+    return max(1, $baseHP + $additionalHP);
+}
+
+/**
+ * Получение кости хитов класса
+ */
+function getHitDie($characterClass) {
+    $hitDice = [
         'fighter' => 10,
-        'paladin' => 10,
-        'ranger' => 10,
         'wizard' => 6,
-        'sorcerer' => 6,
-        'warlock' => 8,
+        'rogue' => 8,
         'cleric' => 8,
+        'ranger' => 10,
+        'barbarian' => 12,
+        'bard' => 8,
         'druid' => 8,
         'monk' => 8,
-        'rogue' => 8,
-        'bard' => 8,
+        'paladin' => 10,
+        'sorcerer' => 6,
+        'warlock' => 8,
         'artificer' => 8
     ];
     
-    $hitDie = $baseHP[$class] ?? 8;
-    $conBonus = floor(($conMod - 10) / 2);
-    
-    return $hitDie + $conBonus + ($level - 1) * (rand(1, $hitDie) + $conBonus);
+    return $hitDice[$characterClass] ?? 8;
 }
 
 /**
- * Расчет AC
+ * Расчет класса доспеха
  */
-function calculateAC($class, $dexMod) {
-    $dexBonus = floor(($dexMod - 10) / 2);
+function calculateAC($characterClass, $dex) {
+    $dexBonus = floor(($dex - 10) / 2);
     
-    switch ($class) {
-        case 'barbarian':
-        case 'monk':
-            return 10 + $dexBonus; // Упрощенный расчет для мобильной версии
-        case 'wizard':
-        case 'sorcerer':
-            return 10 + $dexBonus;
-        default:
-            return 10 + $dexBonus + 2; // Предполагаем наличие доспехов
+    $armorProficiencies = getArmorProficiencies($characterClass);
+    
+    if (in_array('heavy', $armorProficiencies)) {
+        return 16 + min(2, $dexBonus); // Кольчуга
+    } elseif (in_array('medium', $armorProficiencies)) {
+        return 14 + min(2, $dexBonus); // Кожаный доспех
+    } else {
+        return 10 + $dexBonus; // Без доспеха
     }
+}
+
+/**
+ * Получение владений доспехами класса
+ */
+function getArmorProficiencies($characterClass) {
+    $proficiencies = [
+        'fighter' => ['light', 'medium', 'heavy'],
+        'wizard' => [],
+        'rogue' => ['light'],
+        'cleric' => ['light', 'medium'],
+        'ranger' => ['light', 'medium'],
+        'barbarian' => ['light', 'medium'],
+        'bard' => ['light'],
+        'druid' => ['light', 'medium'],
+        'monk' => [],
+        'paladin' => ['light', 'medium', 'heavy'],
+        'sorcerer' => [],
+        'warlock' => ['light'],
+        'artificer' => ['light', 'medium']
+    ];
+    
+    return $proficiencies[$characterClass] ?? [];
 }
 
 /**
  * Генерация описания персонажа
  */
-function generateCharacterDescription($race, $class, $level) {
-    $descriptions = [
-        'human' => 'Человек - самая распространенная раса в мире. Адаптивные и амбициозные.',
-        'elf' => 'Эльф - древняя раса, известная своей грацией и долголетием.',
-        'dwarf' => 'Дварф - крепкая раса, известная своим мастерством в ремеслах.',
-        'halfling' => 'Полурослик - маленькая, но храбрая раса, любящая комфорт и приключения.',
-        'orc' => 'Орк - сильная раса, известная своей воинственностью и выносливостью.',
-        'tiefling' => 'Тифлинг - потомок демонов, часто сталкивающийся с предрассудками.',
-        'dragonborn' => 'Драконорожденный - раса с кровью драконов, гордая и могущественная.',
-        'gnome' => 'Гном - маленькая раса, известная своим любопытством и изобретательностью.'
+function generateCharacterDescription($race, $characterClass, $level) {
+    $raceNames = [
+        'human' => 'Человек',
+        'elf' => 'Эльф',
+        'dwarf' => 'Дварф',
+        'halfling' => 'Полурослик',
+        'tiefling' => 'Тифлинг',
+        'dragonborn' => 'Драконорожденный'
     ];
     
-    $raceDesc = $descriptions[$race] ?? 'Таинственная раса с уникальными способностями.';
+    $classNames = [
+        'fighter' => 'Воин',
+        'wizard' => 'Волшебник',
+        'rogue' => 'Плут',
+        'cleric' => 'Жрец',
+        'ranger' => 'Следопыт',
+        'barbarian' => 'Варвар',
+        'bard' => 'Бард',
+        'druid' => 'Друид',
+        'monk' => 'Монах',
+        'paladin' => 'Паладин',
+        'sorcerer' => 'Чародей',
+        'warlock' => 'Колдун',
+        'artificer' => 'Изобретатель'
+    ];
     
-    return "Это $level-уровневый $class $race. " . $raceDesc;
+    $raceName = $raceNames[$race] ?? $race;
+    $className = $classNames[$characterClass] ?? $characterClass;
+    
+    $descriptions = [
+        'human' => "Опытный {$className} с решительным взглядом и уверенными движениями. Годы тренировок сделали каждое действие отточенным и эффективным.",
+        'elf' => "Благородный эльф-{$className} с изящными чертами лица и проницательным взглядом. Эльфийская грация сочетается с боевым мастерством.",
+        'dwarf' => "Крепкий дварф-{$className} с честным взглядом и надежными руками мастера. Дварфийская стойкость проявляется в каждом движении.",
+        'halfling' => "Жизнерадостный полурослик-{$className} с озорными глазами и быстрыми движениями. Природная ловкость позволяет находить выход из любой ситуации.",
+        'tiefling' => "Загадочный тифлинг-{$className} с изящными рогами и глазами, мерцающими внутренним огнем. Врожденная харизма завораживает окружающих.",
+        'dragonborn' => "Величественный драконорожденный-{$className} с чешуйчатой кожей и гордой осанкой. Драконье наследие проявляется в каждом жесте."
+    ];
+    
+    return $descriptions[$race] ?? "Опытный {$raceName}-{$className} {$level} уровня, готовый к любым испытаниям.";
 }
 
 /**
- * Получение особенностей класса
+ * Получение способностей класса
  */
-function getClassFeatures($class, $level) {
-    $features = [
+function getClassFeatures($characterClass, $level) {
+    $features = [];
+    
+    $baseFeatures = [
         'fighter' => ['Боевой стиль', 'Second Wind'],
-        'wizard' => ['Заклинания', 'Arcane Recovery'],
-        'rogue' => ['Sneak Attack', 'Cunning Action'],
-        'cleric' => ['Заклинания', 'Divine Domain'],
-        'ranger' => ['Favored Enemy', 'Natural Explorer'],
-        'barbarian' => ['Rage', 'Unarmored Defense'],
-        'bard' => ['Bardic Inspiration', 'Song of Rest'],
-        'druid' => ['Druidic', 'Wild Shape'],
-        'monk' => ['Unarmored Defense', 'Martial Arts'],
-        'paladin' => ['Divine Sense', 'Lay on Hands'],
-        'sorcerer' => ['Sorcery Points', 'Metamagic'],
-        'warlock' => ['Pact Magic', 'Eldritch Invocations'],
-        'artificer' => ['Magical Tinkering', 'Infuse Item']
+        'wizard' => ['Заклинания', 'Восстановление заклинаний'],
+        'rogue' => ['Скрытность', 'Sneak Attack'],
+        'cleric' => ['Заклинания', 'Божественный домен'],
+        'ranger' => ['Любимый враг', 'Естественный исследователь'],
+        'barbarian' => ['Ярость', 'Защита без доспехов'],
+        'bard' => ['Вдохновение барда', 'Песнь отдыха'],
+        'druid' => ['Дикий облик', 'Друидский'],
+        'monk' => ['Безоружная защита', 'Боевые искусства'],
+        'paladin' => ['Божественное чувство', 'Божественное здоровье'],
+        'sorcerer' => ['Магическое происхождение', 'Метамагия'],
+        'warlock' => ['Пакт с покровителем', 'Мистические арканумы'],
+        'artificer' => ['Магическое изобретение', 'Инфузия']
     ];
     
-    return $features[$class] ?? ['Особенности класса'];
+    $features = $baseFeatures[$characterClass] ?? ['Базовые способности'];
+    
+    if ($level >= 2) {
+        $features[] = 'Дополнительная атака';
+    }
+    if ($level >= 5) {
+        $features[] = 'Улучшенная критическая атака';
+    }
+    
+    return $features;
 }
 
 /**
  * Получение снаряжения класса
  */
-function getClassEquipment($class) {
-    $equipment = [
-        'fighter' => ['Меч', 'Щит', 'Кольчуга'],
-        'wizard' => ['Посох', 'Книга заклинаний', 'Компонентный мешочек'],
-        'rogue' => ['Короткие мечи', 'Кожаная броня', 'Воровские инструменты'],
-        'cleric' => ['Булава', 'Щит', 'Священный символ'],
-        'ranger' => ['Длинный лук', 'Короткий меч', 'Кожаная броня'],
-        'barbarian' => ['Секира', 'Кожаная броня', 'Рюкзак'],
-        'bard' => ['Лютня', 'Кожаная броня', 'Инструмент'],
-        'druid' => ['Древесный посох', 'Кожаная броня', 'Друидский фокус'],
-        'monk' => ['Короткий меч', 'Простая одежда', 'Монашеское оружие'],
-        'paladin' => ['Меч', 'Щит', 'Кольчуга'],
-        'sorcerer' => ['Посох', 'Компонентный мешочек', 'Простая одежда'],
-        'warlock' => ['Короткий меч', 'Кожаная броня', 'Мистический фокус'],
-        'artificer' => ['Инструменты', 'Кожаная броня', 'Артифисерский фокус']
+function getClassEquipment($characterClass) {
+    $equipment = [];
+    
+    // Доспехи
+    $armorProficiencies = getArmorProficiencies($characterClass);
+    if (in_array('heavy', $armorProficiencies)) {
+        $equipment[] = 'Кольчуга';
+    } elseif (in_array('medium', $armorProficiencies)) {
+        $equipment[] = 'Кожаный доспех';
+    } elseif (in_array('light', $armorProficiencies)) {
+        $equipment[] = 'Кожаная броня';
+    }
+    
+    // Оружие
+    $weaponProficiencies = getWeaponProficiencies($characterClass);
+    if (in_array('martial', $weaponProficiencies)) {
+        $weapons = ['Длинный меч', 'Боевой топор', 'Молот', 'Копье', 'Алебарда'];
+        $equipment[] = $weapons[array_rand($weapons)];
+    } elseif (in_array('simple', $weaponProficiencies)) {
+        $weapons = ['Булава', 'Короткий меч', 'Кинжал', 'Дубина', 'Копье'];
+        $equipment[] = $weapons[array_rand($weapons)];
+    }
+    
+    // Базовое снаряжение
+    $equipment[] = 'Рюкзак исследователя';
+    $equipment[] = 'Веревка (50 футов)';
+    $equipment[] = 'Факел';
+    $equipment[] = 'Трутница';
+    
+    // Зелья
+    $potions = ['Зелье лечения', 'Зелье невидимости', 'Зелье прыгучести', 'Зелье сопротивления огню'];
+    $equipment[] = $potions[array_rand($potions)];
+    
+    // Деньги
+    $gold = rand(5, 25);
+    $equipment[] = "{$gold} золотых монет";
+    
+    return $equipment;
+}
+
+/**
+ * Получение владений оружием класса
+ */
+function getWeaponProficiencies($characterClass) {
+    $proficiencies = [
+        'fighter' => ['simple', 'martial'],
+        'wizard' => ['daggers', 'quarterstaffs', 'light_crossbows'],
+        'rogue' => ['simple', 'shortswords', 'longswords'],
+        'cleric' => ['simple'],
+        'ranger' => ['simple', 'martial'],
+        'barbarian' => ['simple', 'martial'],
+        'bard' => ['simple', 'hand_crossbows', 'longswords'],
+        'druid' => ['simple'],
+        'monk' => ['simple', 'shortswords'],
+        'paladin' => ['simple', 'martial'],
+        'sorcerer' => ['daggers', 'quarterstaffs', 'light_crossbows'],
+        'warlock' => ['simple'],
+        'artificer' => ['simple']
     ];
     
-    return $equipment[$class] ?? ['Базовое снаряжение'];
+    return $proficiencies[$characterClass] ?? ['simple'];
 }
 
 /**
  * Получение заклинаний класса
  */
-function getClassSpells($class, $level) {
-    $spellcasters = ['wizard', 'sorcerer', 'warlock', 'cleric', 'druid', 'bard', 'paladin', 'ranger', 'artificer'];
+function getClassSpells($characterClass, $level) {
+    $spellcasters = ['wizard', 'cleric', 'ranger', 'bard', 'druid', 'paladin', 'sorcerer', 'warlock', 'artificer'];
     
-    if (!in_array($class, $spellcasters)) {
+    if (!in_array($characterClass, $spellcasters)) {
         return [];
     }
     
-    $spells = [
-        'wizard' => ['Magic Missile', 'Shield', 'Fireball'],
-        'sorcerer' => ['Charm Person', 'Magic Missile', 'Fireball'],
-        'warlock' => ['Eldritch Blast', 'Hex', 'Armor of Agathys'],
-        'cleric' => ['Cure Wounds', 'Bless', 'Spiritual Weapon'],
-        'druid' => ['Cure Wounds', 'Entangle', 'Call Lightning'],
-        'bard' => ['Vicious Mockery', 'Cure Wounds', 'Charm Person'],
-        'paladin' => ['Cure Wounds', 'Bless', 'Divine Smite'],
-        'ranger' => ['Cure Wounds', 'Hunter\'s Mark', 'Conjure Animals'],
-        'artificer' => ['Cure Wounds', 'Magic Stone', 'Faerie Fire']
+    $spells = [];
+    
+    // Заклинания 1 уровня
+    if ($level >= 1) {
+        $level1_spells = [
+            'Свет',
+            'Магическая стрела',
+            'Лечение ран',
+            'Щит',
+            'Обнаружение магии',
+            'Компрессионная волна'
+        ];
+        
+        $spell_count = min(2, count($level1_spells));
+        $selected_spells = array_rand($level1_spells, $spell_count);
+        if (!is_array($selected_spells)) {
+            $selected_spells = [$selected_spells];
+        }
+        
+        foreach ($selected_spells as $index) {
+            $spells[] = $level1_spells[$index];
+        }
+    }
+    
+    // Заклинания 2 уровня
+    if ($level >= 3) {
+        $level2_spells = ['Огненный шар', 'Невидимость', 'Улучшение способностей'];
+        $spells[] = $level2_spells[array_rand($level2_spells)];
+    }
+    
+    // Заклинания 3 уровня
+    if ($level >= 5) {
+        $level3_spells = ['Молния', 'Полет', 'Огненный шар'];
+        $spells[] = $level3_spells[array_rand($level3_spells)];
+    }
+    
+    return $spells;
+}
+
+/**
+ * Генерация описания противника
+ */
+function generateEnemyDescription($enemy) {
+    $type = $enemy['type'] ?? 'unknown';
+    $cr = $enemy['cr'] ?? 1;
+    
+    $descriptions = [
+        'beast' => "Дикое животное с острыми клыками и когтями. Глаза горят диким огнем, а каждое движение выдает хищную природу.",
+        'humanoid' => "Гуманоид с опытным взглядом и уверенными движениями. В руках крепко сжимает оружие, готовый к бою.",
+        'undead' => "Нежить с пустыми глазницами и неестественными движениями. От него исходит зловещая аура смерти.",
+        'dragon' => "Величественный дракон с чешуйчатой кожей и острыми когтями. В глазах горит древняя мудрость и опасность.",
+        'fiend' => "Демон с рогами и крыльями, от которого исходит адское пламя. Каждое движение пропитано злом и ненавистью.",
+        'celestial' => "Небесное существо с сияющей аурой и ангельскими крыльями. От него исходит божественная энергия.",
+        'construct' => "Механическое существо с металлическими частями и магическими рунами. Движения точны и безжалостны.",
+        'elemental' => "Элементаль, состоящий из чистой стихии. Тело постоянно меняет форму, подчиняясь силам природы.",
+        'fey' => "Фей с эфирной красотой и загадочным взглядом. Каждое движение грациозно и наполнено магией.",
+        'giant' => "Гигант огромного роста с мощными мышцами. Каждый шаг заставляет землю дрожать.",
+        'monstrosity' => "Чудовище с уродливыми чертами и неестественными конечностями. Его вид внушает ужас и отвращение.",
+        'ooze' => "Слизь с желеобразным телом и кислотными выделениями. Постоянно меняет форму и размер.",
+        'plant' => "Растительное существо с ветвистыми конечностями и листьями. Движения медленны, но смертоносны.",
+        'unknown' => "Таинственное существо с неопределенной природой. Его истинная форма скрыта от глаз смертных."
     ];
     
-    return $spells[$class] ?? [];
+    $baseDescription = $descriptions[$type] ?? $descriptions['unknown'];
+    
+    // Добавляем информацию о силе
+    if ($cr <= 1) {
+        $strength = "Это относительно слабое существо, подходящее для начинающих авантюристов.";
+    } elseif ($cr <= 5) {
+        $strength = "Это существо средней силы, способное бросить вызов опытной группе.";
+    } elseif ($cr <= 10) {
+        $strength = "Это опасное существо, требующее серьезной подготовки для победы.";
+    } else {
+        $strength = "Это смертельно опасное существо, способное уничтожить целую группу авантюристов.";
+    }
+    
+    return $baseDescription . " " . $strength;
 }
 
 /**
  * Генерация тактики противника
  */
-function generateEnemyTactics($enemyName) {
+function generateEnemyTactics($enemy) {
+    $type = $enemy['type'] ?? 'unknown';
+    $cr = $enemy['cr'] ?? 1;
+    
     $tactics = [
-        'Гоблин' => 'Атакует из засады, использует численное преимущество',
-        'Орк' => 'Прямая атака, полагается на силу и выносливость',
-        'Тролль' => 'Регенерация, атакует ближайшую цель',
-        'Дракон' => 'Использует дыхание, летает для преимущества',
-        'Нежить' => 'Нечувствителен к страху, атакует без устали',
-        'Демон' => 'Телепортация, использует магические способности'
+        'beast' => "Дикие звери полагаются на инстинкты и физическую силу. Они атакуют ближайшую цель, используя клыки и когти.",
+        'humanoid' => "Гуманоиды используют тактику и стратегию. Они могут отступать, перегруппировываться и использовать окружение.",
+        'undead' => "Нежить не чувствует боли и страха. Они атакуют без остановки, пока не будут полностью уничтожены.",
+        'dragon' => "Драконы используют свою летающую способность и дыхание. Они атакуют с воздуха и избегают ближнего боя.",
+        'fiend' => "Демоны используют магию и хитрость. Они могут телепортироваться и использовать проклятия.",
+        'celestial' => "Небесные существа используют исцеляющую магию и защитные заклинания. Они предпочитают дистанционный бой.",
+        'construct' => "Конструкты следуют запрограммированным инструкциям. Они атакуют систематично и без эмоций.",
+        'elemental' => "Элементали используют силы природы. Они могут создавать препятствия и использовать стихийную магию.",
+        'fey' => "Фей используют иллюзии и очарование. Они предпочитают избегать прямого конфликта.",
+        'giant' => "Гиганты полагаются на грубую силу. Они атакуют в ближнем бою, используя огромное оружие.",
+        'monstrosity' => "Чудовища используют неожиданные атаки и уродливые способности. Они непредсказуемы в бою.",
+        'ooze' => "Слизи медленно движутся, но могут разделяться и поглощать противников.",
+        'plant' => "Растительные существа используют яды и способность к регенерации. Они атакуют из засады.",
+        'unknown' => "Тактика этого существа неизвестна. Оно может использовать любые доступные методы атаки."
     ];
     
-    foreach ($tactics as $enemy => $tactic) {
-        if (stripos($enemyName, $enemy) !== false) {
-            return $tactic;
-        }
-    }
-    
-    return 'Атакует ближайшую цель, использует доступные способности';
+    return $tactics[$type] ?? $tactics['unknown'];
 }
 ?>

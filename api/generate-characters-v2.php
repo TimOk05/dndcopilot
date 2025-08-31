@@ -1,50 +1,62 @@
 <?php
-// Убираем заголовки для использования в тестах
-if (php_sapi_name() !== 'cli') {
-    header('Content-Type: application/json');
-}
-
-// Проверяем метод запроса только если это не CLI
-if (php_sapi_name() !== 'cli' && (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST')) {
-    echo json_encode(['success' => false, 'error' => 'Метод не поддерживается']);
-    exit;
-}
+header('Content-Type: application/json');
 require_once __DIR__ . '/../config.php';
 
 class CharacterGeneratorV2 {
-    private $dnd5e_api_url = 'https://www.dnd5eapi.co/api';
     private $deepseek_api_key;
     private $occupations = [];
-    private $raceNames = [];
+    private $race_names = [];
     
     public function __construct() {
         $this->deepseek_api_key = getApiKey('deepseek');
-        $this->loadLocalData();
+        $this->loadData();
     }
     
     /**
-     * Загрузка локальных данных из JSON файлов
+     * Загрузка всех необходимых данных
      */
-    private function loadLocalData() {
+    private function loadData() {
         // Загружаем профессии
-        $occupationsFile = __DIR__ . '/../pdf/d100_unique_traders.json';
-        if (file_exists($occupationsFile)) {
-            $jsonData = json_decode(file_get_contents($occupationsFile), true);
-            if (isset($jsonData['data']['occupations'])) {
-                $this->occupations = $jsonData['data']['occupations'];
-            }
-        }
+        $this->loadOccupations();
         
         // Загружаем имена
-        $namesFile = __DIR__ . '/../pdf/dnd_race_names_ru_v2.json';
-        if (file_exists($namesFile)) {
-            $jsonData = json_decode(file_get_contents($namesFile), true);
-            if (isset($jsonData['data'])) {
-                foreach ($jsonData['data'] as $raceData) {
-                    $raceKey = strtolower($raceData['race']);
-                    $this->raceNames[$raceKey] = $raceData;
+        $this->loadRaceNames();
+    }
+    
+    /**
+     * Загрузка профессий из JSON файла
+     */
+    private function loadOccupations() {
+        try {
+            $jsonFile = __DIR__ . '/../pdf/d100_unique_traders.json';
+            if (file_exists($jsonFile)) {
+                $jsonData = json_decode(file_get_contents($jsonFile), true);
+                if (isset($jsonData['data']['occupations'])) {
+                    $this->occupations = $jsonData['data']['occupations'];
                 }
             }
+        } catch (Exception $e) {
+            logMessage('ERROR', 'Failed to load occupations: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Загрузка имен из JSON файла
+     */
+    private function loadRaceNames() {
+        try {
+            $jsonFile = __DIR__ . '/../pdf/dnd_race_names_ru_v2.json';
+            if (file_exists($jsonFile)) {
+                $jsonData = json_decode(file_get_contents($jsonFile), true);
+                if (isset($jsonData['data'])) {
+                    foreach ($jsonData['data'] as $raceData) {
+                        $raceKey = strtolower($raceData['race']);
+                        $this->race_names[$raceKey] = $raceData;
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            logMessage('ERROR', 'Failed to load race names: ' . $e->getMessage());
         }
     }
     
@@ -52,63 +64,66 @@ class CharacterGeneratorV2 {
      * Генерация персонажа
      */
     public function generateCharacter($params) {
-        $race = $params['race'] ?? 'human';
-        $class = $params['class'] ?? 'fighter';
-        $level = (int)($params['level'] ?? 1);
-        $alignment = $params['alignment'] ?? 'neutral';
-        $gender = $params['gender'] ?? 'random';
-        $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
-        
         try {
-            // 1. Получаем данные из API D&D
-            $race_data = $this->getRaceDataFromAPI($race);
-            $class_data = $this->getClassDataFromAPI($class);
+            // Валидация параметров
+            $this->validateParams($params);
             
-            // 2. Генерируем характеристики
+            $race = $params['race'] ?? 'human';
+            $class = $params['class'] ?? 'fighter';
+            $level = (int)($params['level'] ?? 1);
+            $alignment = $params['alignment'] ?? 'neutral';
+            $gender = $params['gender'] ?? 'random';
+            $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
+            
+            // Получаем данные расы и класса
+            $race_data = $this->getRaceData($race);
+            $class_data = $this->getClassData($class);
+            
+            // Генерируем характеристики
             $abilities = $this->generateAbilities($race_data, $level);
             
-            // 3. Получаем имя из JSON
-            $name = $this->generateName($race, $gender);
-            
-            // 4. Получаем профессию из JSON
-            $occupation = $this->getRandomOccupation();
-            
-            // 5. Рассчитываем параметры
+            // Создаем персонажа
             $character = [
-                'name' => $name,
-                'race' => $race_data['name'] ?? $race,
-                'class' => $class_data['name'] ?? $class,
+                'name' => $this->generateName($race, $gender),
+                'race' => $race_data['name'],
+                'class' => $class_data['name'],
                 'level' => $level,
                 'alignment' => $this->getAlignmentText($alignment),
                 'gender' => $this->getGenderText($gender),
-                'occupation' => $occupation,
+                'occupation' => $this->getRandomOccupation(),
                 'abilities' => $abilities,
                 'hit_points' => $this->calculateHP($class_data, $abilities['con'], $level),
                 'armor_class' => $this->calculateAC($class_data, $abilities['dex']),
-                'speed' => $this->getSpeed($race_data),
+                'speed' => $race_data['speed'] ?? 30,
                 'initiative' => $this->calculateInitiative($abilities['dex']),
                 'proficiency_bonus' => $this->calculateProficiencyBonus($level),
                 'attack_bonus' => $this->calculateAttackBonus($class_data, $abilities, $level),
                 'damage' => $this->calculateDamage($class_data, $abilities, $level),
                 'main_weapon' => $this->getMainWeapon($class_data),
-                'proficiencies' => $this->getProficiencies($class_data),
-                'spells' => $this->getSpells($class_data, $level, $abilities['int'], $abilities['wis'], $abilities['cha']),
+                'proficiencies' => $class_data['proficiencies'] ?? [],
+                'spells' => $this->getSpells($class_data, $level, $abilities),
                 'features' => $this->getFeatures($class_data, $level),
                 'equipment' => $this->getEquipment($class_data),
                 'saving_throws' => $this->getSavingThrows($class_data, $abilities)
             ];
             
-            // 6. Генерируем описание и предысторию (AI или fallback)
-            $character['use_ai'] = $use_ai ? 'on' : 'off';
-            $character['description'] = $this->generateDescription($character);
-            $character['background'] = $this->generateBackground($character);
+            // Добавляем описание
+            $character['description'] = $this->generateDescription($character, $use_ai);
+            $character['background'] = $this->generateBackground($character, $use_ai);
+            
+            logMessage('INFO', 'Character generated successfully', [
+                'race' => $race,
+                'class' => $class,
+                'level' => $level
+            ]);
             
             return [
                 'success' => true,
-                'npc' => $character
+                'character' => $character
             ];
             
         } catch (Exception $e) {
+            logMessage('ERROR', 'Character generation failed: ' . $e->getMessage());
             return [
                 'success' => false,
                 'error' => $e->getMessage()
@@ -117,296 +132,120 @@ class CharacterGeneratorV2 {
     }
     
     /**
-     * Получение данных расы из API D&D
+     * Валидация параметров
      */
-    private function getRaceDataFromAPI($race) {
-        try {
-            $url = $this->dnd5e_api_url . "/races/$race";
-            $response = $this->makeApiRequest($url);
-            
-            if ($response) {
-                return $response;
-            }
-        } catch (Exception $e) {
-            error_log("Failed to fetch race data from API: " . $e->getMessage());
+    private function validateParams($params) {
+        $level = (int)($params['level'] ?? 1);
+        if ($level < 1 || $level > 20) {
+            throw new Exception('Уровень персонажа должен быть от 1 до 20');
         }
         
-        // Fallback данные
-        return $this->getFallbackRaceData($race);
+        $valid_races = ['human', 'elf', 'dwarf', 'halfling', 'orc', 'tiefling', 'dragonborn', 'gnome', 'half-elf', 'half-orc', 'tabaxi', 'aarakocra', 'goblin', 'kenku', 'lizardfolk', 'triton', 'yuan-ti', 'goliath', 'firbolg', 'bugbear', 'hobgoblin', 'kobold'];
+        $race = $params['race'] ?? 'human';
+        if (!in_array($race, $valid_races)) {
+            throw new Exception('Неверная раса персонажа');
+        }
+        
+        $valid_classes = ['fighter', 'wizard', 'rogue', 'cleric', 'ranger', 'barbarian', 'bard', 'druid', 'monk', 'paladin', 'sorcerer', 'warlock', 'artificer'];
+        $class = $params['class'] ?? 'fighter';
+        if (!in_array($class, $valid_classes)) {
+            throw new Exception('Неверный класс персонажа');
+        }
     }
     
     /**
-     * Получение данных класса из API D&D
+     * Получение данных расы
      */
-    private function getClassDataFromAPI($class) {
-        try {
-            $url = $this->dnd5e_api_url . "/classes/$class";
-            $response = $this->makeApiRequest($url);
-            
-            if ($response) {
-                return $response;
-            }
-        } catch (Exception $e) {
-            error_log("Failed to fetch class data from API: " . $e->getMessage());
-        }
-        
-        // Fallback данные
-        return $this->getFallbackClassData($class);
-    }
-    
-    /**
-     * Выполнение API запроса
-     */
-    private function makeApiRequest($url) {
-        if (!function_exists('curl_init')) {
-            return null;
-        }
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        
-        if ($response && $httpCode === 200) {
-            return json_decode($response, true);
-        }
-        
-        return null;
-    }
-    
-    /**
-     * Генерация имени из JSON файла
-     */
-    private function generateName($race, $gender) {
-        $race = strtolower($race);
-        
-        if (isset($this->raceNames[$race])) {
-            $raceData = $this->raceNames[$race];
-            
-            if ($gender === 'random') {
-                $gender = rand(0, 1) ? 'male' : 'female';
-            }
-            
-            $nameList = [];
-            if ($gender === 'male' && !empty($raceData['male'])) {
-                $nameList = $raceData['male'];
-            } elseif ($gender === 'female' && !empty($raceData['female'])) {
-                $nameList = $raceData['female'];
-            }
-            
-            if (empty($nameList) && !empty($raceData['unisex'])) {
-                $nameList = $raceData['unisex'];
-            }
-            
-            if (!empty($nameList)) {
-                return $nameList[array_rand($nameList)];
-            }
-        }
-        
-        // Fallback имена
-        $fallbackNames = [
-            'male' => ['Алексей', 'Дмитрий', 'Иван', 'Михаил', 'Сергей', 'Андрей', 'Владимир', 'Николай', 'Петр', 'Александр'],
-            'female' => ['Анна', 'Елена', 'Мария', 'Ольга', 'Татьяна', 'Ирина', 'Наталья', 'Светлана', 'Екатерина', 'Юлия']
-        ];
-        
-        $gender = $gender === 'random' ? (rand(0, 1) ? 'male' : 'female') : $gender;
-        return $fallbackNames[$gender][array_rand($fallbackNames[$gender])];
-    }
-    
-    /**
-     * Получение случайной профессии из JSON
-     */
-    private function getRandomOccupation() {
-        if (empty($this->occupations)) {
-            return 'Странник';
-        }
-        
-        $occupation = $this->occupations[array_rand($this->occupations)];
-        $name = $occupation['name_ru'] ?? 'Странник';
-        
-        // Очищаем от лишних символов
-        $name = preg_replace('/[^\p{L}\p{N}\s\-]/u', '', $name);
-        $name = preg_replace('/\s+/', ' ', $name);
-        $name = preg_replace('/\d+/', '', $name);
-        $name = preg_replace('/\s+([А-ЯЁ])/u', ' $1', $name);
-        $name = trim($name);
-        
-        if (empty($name) || strlen($name) < 2) {
-            return 'Странник';
-        }
-        
-        return $name;
-    }
-    
-    /**
-     * Генерация описания с помощью AI
-     */
-    private function generateDescription($character) {
-        if ($this->deepseek_api_key) {
-            $characterInfo = $this->buildCharacterInfo($character);
-            
-            $prompt = "Опиши внешность и характер персонажа на основе его полных данных:\n\n" . $characterInfo . "\n" .
-                     "Включи детали внешности, особенности поведения и характерные черты, связанные с его расой, классом, профессией и характеристиками. " .
-                     "Ответ должен быть кратким (2-3 предложения) и атмосферным.";
-            
-            try {
-                $response = $this->callDeepSeek($prompt);
-                if ($response) {
-                    return $response;
-                }
-            } catch (Exception $e) {
-                error_log("AI description generation failed: " . $e->getMessage());
-            }
-        }
-        
-        // Fallback описание
-        return $this->generateFallbackDescription($character);
-    }
-    
-    /**
-     * Генерация предыстории с помощью AI
-     */
-    private function generateBackground($character) {
-        if ($this->deepseek_api_key) {
-            $characterInfo = $this->buildCharacterInfo($character);
-            
-            $prompt = "Создай краткую предысторию персонажа на основе его полных данных:\n\n" . $characterInfo . "\n" .
-                     "Включи мотивацию, ключевое событие из прошлого и цель персонажа, связанные с его расой, классом, профессией и характеристиками. " .
-                     "Ответ должен быть кратким (2-3 предложения) и интересным.";
-            
-            try {
-                $response = $this->callDeepSeek($prompt);
-                if ($response) {
-                    return $response;
-                }
-            } catch (Exception $e) {
-                error_log("AI background generation failed: " . $e->getMessage());
-            }
-        }
-        
-        // Fallback предыстория
-        return $this->generateFallbackBackground($character);
-    }
-    
-    /**
-     * Формирование информации о персонаже для AI
-     */
-    private function buildCharacterInfo($character) {
-        $info = "Персонаж: {$character['name']}, {$character['race']} {$character['class']} {$character['level']} уровня.\n";
-        $info .= "Профессия: {$character['occupation']}\n";
-        $info .= "Пол: {$character['gender']}\n";
-        $info .= "Мировоззрение: {$character['alignment']}\n";
-        $info .= "Характеристики: СИЛ {$character['abilities']['str']}, ЛОВ {$character['abilities']['dex']}, ТЕЛ {$character['abilities']['con']}, ИНТ {$character['abilities']['int']}, МДР {$character['abilities']['wis']}, ХАР {$character['abilities']['cha']}\n";
-        $info .= "Боевые параметры: Хиты {$character['hit_points']}, КД {$character['armor_class']}, Скорость {$character['speed']} футов, Инициатива {$character['initiative']}, Бонус мастерства +{$character['proficiency_bonus']}\n";
-        $info .= "Урон: {$character['damage']}\n";
-        
-        if (!empty($character['proficiencies'])) {
-            $info .= "Владения: " . implode(', ', $character['proficiencies']) . "\n";
-        }
-        
-        if (!empty($character['spells'])) {
-            $info .= "Заклинания: " . implode(', ', array_column($character['spells'], 'name')) . "\n";
-        }
-        
-        return $info;
-    }
-    
-    /**
-     * Вызов DeepSeek API
-     */
-    private function callDeepSeek($prompt) {
-        if (!$this->deepseek_api_key) {
-            return null;
-        }
-        
-        $data = [
-            'model' => 'deepseek-chat',
-            'messages' => [
-                ['role' => 'system', 'content' => 'Ты помощник мастера D&D. Создавай интересных и атмосферных персонажей.'],
-                ['role' => 'user', 'content' => $prompt]
+    private function getRaceData($race) {
+        $races = [
+            'human' => [
+                'name' => 'Человек',
+                'ability_bonuses' => ['str' => 1, 'dex' => 1, 'con' => 1, 'int' => 1, 'wis' => 1, 'cha' => 1],
+                'traits' => ['Универсальность', 'Дополнительное владение навыком'],
+                'speed' => 30
             ],
-            'max_tokens' => 200,
-            'temperature' => 0.8
-        ];
-        
-        // Проверяем доступность cURL
-        if (function_exists('curl_init')) {
-            return $this->callDeepSeekWithCurl($data);
-        } else {
-            return $this->callDeepSeekWithFileGetContents($data);
-        }
-    }
-    
-    private function callDeepSeekWithCurl($data) {
-        $ch = curl_init('https://api.deepseek.com/v1/chat/completions');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->deepseek_api_key
-        ]);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        
-        if ($response && $httpCode === 200) {
-            $result = json_decode($response, true);
-            if (isset($result['choices'][0]['message']['content'])) {
-                return trim($result['choices'][0]['message']['content']);
-            }
-        }
-        
-        return null;
-    }
-    
-    private function callDeepSeekWithFileGetContents($data) {
-        // Проверяем, доступен ли HTTPS wrapper
-        if (!in_array('https', stream_get_wrappers())) {
-            error_log("HTTPS wrapper not available, using fallback description");
-            return null;
-        }
-        
-        $url = 'https://api.deepseek.com/v1/chat/completions';
-        
-        $options = [
-            'http' => [
-                'header' => [
-                    'Content-Type: application/json',
-                    'Authorization: Bearer ' . $this->deepseek_api_key
-                ],
-                'method' => 'POST',
-                'content' => json_encode($data),
-                'timeout' => 10
+            'elf' => [
+                'name' => 'Эльф',
+                'ability_bonuses' => ['dex' => 2],
+                'traits' => ['Темное зрение', 'Келебрас', 'Иммунитет к усыплению', 'Транс'],
+                'speed' => 30
+            ],
+            'dwarf' => [
+                'name' => 'Дварф',
+                'ability_bonuses' => ['con' => 2],
+                'traits' => ['Темное зрение', 'Устойчивость к яду', 'Владение боевым топором'],
+                'speed' => 25
+            ],
+            'halfling' => [
+                'name' => 'Полурослик',
+                'ability_bonuses' => ['dex' => 2],
+                'traits' => ['Удача', 'Смелость', 'Ловкость полурослика'],
+                'speed' => 25
+            ],
+            'tiefling' => [
+                'name' => 'Тифлинг',
+                'ability_bonuses' => ['cha' => 2, 'int' => 1],
+                'traits' => ['Темное зрение', 'Устойчивость к огню', 'Адское наследие'],
+                'speed' => 30
+            ],
+            'dragonborn' => [
+                'name' => 'Драконорожденный',
+                'ability_bonuses' => ['str' => 2, 'cha' => 1],
+                'traits' => ['Дыхание дракона', 'Устойчивость к урону', 'Драконье наследие'],
+                'speed' => 30
             ]
         ];
         
-        $context = stream_context_create($options);
-        $result = file_get_contents($url, false, $context);
-        
-        if ($result === false) {
-            error_log("Failed to call DeepSeek API, using fallback description");
-            return null;
-        }
-        
-        $response = json_decode($result, true);
-        
-        if (isset($response['choices'][0]['message']['content'])) {
-            return trim($response['choices'][0]['message']['content']);
-        }
-        
-        error_log("Invalid response from DeepSeek API, using fallback description");
-        return null;
+        return $races[$race] ?? $races['human'];
     }
     
-    // ... остальные методы остаются такими же как в оригинальном файле ...
+    /**
+     * Получение данных класса
+     */
+    private function getClassData($class) {
+        $classes = [
+            'fighter' => [
+                'name' => 'Воин',
+                'hit_die' => 10,
+                'proficiencies' => ['Все доспехи', 'Щиты', 'Простое оружие', 'Воинское оружие'],
+                'features' => ['Боевой стиль', 'Second Wind'],
+                'spellcasting' => false
+            ],
+            'wizard' => [
+                'name' => 'Волшебник',
+                'hit_die' => 6,
+                'proficiencies' => ['Кинжалы', 'Посохи', 'Арбалеты'],
+                'features' => ['Заклинания', 'Восстановление заклинаний'],
+                'spellcasting' => true,
+                'spellcasting_ability' => 'int'
+            ],
+            'rogue' => [
+                'name' => 'Плут',
+                'hit_die' => 8,
+                'proficiencies' => ['Легкие доспехи', 'Простое оружие', 'Короткие мечи', 'Длинные мечи'],
+                'features' => ['Скрытность', 'Sneak Attack'],
+                'spellcasting' => false
+            ],
+            'cleric' => [
+                'name' => 'Жрец',
+                'hit_die' => 8,
+                'proficiencies' => ['Легкие доспехи', 'Средние доспехи', 'Щиты', 'Простое оружие'],
+                'features' => ['Заклинания', 'Божественный домен'],
+                'spellcasting' => true,
+                'spellcasting_ability' => 'wis'
+            ],
+            'ranger' => [
+                'name' => 'Следопыт',
+                'hit_die' => 10,
+                'proficiencies' => ['Легкие доспехи', 'Средние доспехи', 'Щиты', 'Простое оружие', 'Воинское оружие'],
+                'features' => ['Любимый враг', 'Естественный исследователь'],
+                'spellcasting' => true,
+                'spellcasting_ability' => 'wis'
+            ]
+        ];
+        
+        return $classes[$class] ?? $classes['fighter'];
+    }
     
     /**
      * Генерация характеристик
@@ -423,11 +262,9 @@ class CharacterGeneratorV2 {
         
         // Применяем бонусы расы
         if (isset($race_data['ability_bonuses'])) {
-            foreach ($race_data['ability_bonuses'] as $bonus) {
-                $ability = $bonus['ability_score']['name'] ?? $bonus['ability_score'];
-                $ability = strtolower($ability);
+            foreach ($race_data['ability_bonuses'] as $ability => $bonus) {
                 if (isset($abilities[$ability])) {
-                    $abilities[$ability] += $bonus['bonus'];
+                    $abilities[$ability] += $bonus;
                     $abilities[$ability] = min(20, $abilities[$ability]);
                 }
             }
@@ -456,21 +293,86 @@ class CharacterGeneratorV2 {
             $rolls[] = rand(1, 6);
         }
         sort($rolls);
-        array_shift($rolls);
+        array_shift($rolls); // Убираем минимальный
         return array_sum($rolls);
+    }
+    
+    /**
+     * Генерация имени
+     */
+    private function generateName($race, $gender) {
+        $race = strtolower($race);
+        
+        if (isset($this->race_names[$race])) {
+            $raceData = $this->race_names[$race];
+            
+            if ($gender === 'random') {
+                $gender = rand(0, 1) ? 'male' : 'female';
+            }
+            
+            $nameList = [];
+            
+            if ($gender === 'male' && !empty($raceData['male'])) {
+                $nameList = $raceData['male'];
+            } elseif ($gender === 'female' && !empty($raceData['female'])) {
+                $nameList = $raceData['female'];
+            }
+            
+            if (empty($nameList) && !empty($raceData['unisex'])) {
+                $nameList = $raceData['unisex'];
+            }
+            
+            if (!empty($nameList)) {
+                return $nameList[array_rand($nameList)];
+            }
+        }
+        
+        // Fallback имена
+        $fallbackNames = [
+            'male' => ['Алексей', 'Дмитрий', 'Иван', 'Михаил', 'Сергей', 'Андрей', 'Владимир', 'Николай', 'Петр', 'Александр'],
+            'female' => ['Анна', 'Елена', 'Мария', 'Ольга', 'Татьяна', 'Ирина', 'Наталья', 'Светлана', 'Екатерина', 'Юлия']
+        ];
+        
+        if ($gender === 'random') {
+            $gender = rand(0, 1) ? 'male' : 'female';
+        }
+        
+        return $fallbackNames[$gender][array_rand($fallbackNames[$gender])];
+    }
+    
+    /**
+     * Получение случайной профессии
+     */
+    private function getRandomOccupation() {
+        if (empty($this->occupations)) {
+            return 'Странник';
+        }
+        
+        $occupation = $this->occupations[array_rand($this->occupations)];
+        $name = $occupation['name_ru'] ?? 'Странник';
+        
+        // Очищаем от лишних символов
+        $name = preg_replace('/[^\p{L}\p{N}\s\-]/u', '', $name);
+        $name = preg_replace('/\s+/', ' ', $name);
+        $name = trim($name);
+        
+        if (empty($name) || strlen($name) < 2) {
+            return 'Странник';
+        }
+        
+        return $name;
     }
     
     /**
      * Расчет хитов
      */
-    private function calculateHP($class_data, $con_modifier, $level) {
-        $hit_die = $class_data['hit_die'] ?? 8;
-        $con_bonus = floor(($con_modifier - 10) / 2);
-        $base_hp = $hit_die + $con_bonus;
+    private function calculateHP($class_data, $con, $level) {
+        $con_bonus = floor(($con - 10) / 2);
+        $base_hp = $class_data['hit_die'] + $con_bonus;
         $additional_hp = 0;
         
         for ($i = 2; $i <= $level; $i++) {
-            $additional_hp += rand(1, $hit_die) + $con_bonus;
+            $additional_hp += rand(1, $class_data['hit_die']) + $con_bonus;
         }
         
         return max(1, $base_hp + $additional_hp);
@@ -479,16 +381,12 @@ class CharacterGeneratorV2 {
     /**
      * Расчет класса доспеха
      */
-    private function calculateAC($class_data, $dex_modifier) {
-        $dex_bonus = floor(($dex_modifier - 10) / 2);
+    private function calculateAC($class_data, $dex) {
+        $dex_bonus = floor(($dex - 10) / 2);
         
-        // Проверяем владения доспехами
-        $proficiencies = $class_data['proficiencies'] ?? [];
-        $proficiency_names = array_column($proficiencies, 'name');
-        
-        if (in_array('All Armor', $proficiency_names)) {
+        if (in_array('Все доспехи', $class_data['proficiencies'])) {
             return 16 + min(2, $dex_bonus); // Кольчуга
-        } elseif (in_array('Medium Armor', $proficiency_names)) {
+        } elseif (in_array('Средние доспехи', $class_data['proficiencies'])) {
             return 14 + min(2, $dex_bonus); // Кожаный доспех
         } else {
             return 10 + $dex_bonus; // Без доспеха
@@ -496,17 +394,10 @@ class CharacterGeneratorV2 {
     }
     
     /**
-     * Получение скорости
-     */
-    private function getSpeed($race_data) {
-        return $race_data['speed']['walk'] ?? 30;
-    }
-    
-    /**
      * Расчет инициативы
      */
-    private function calculateInitiative($dex_modifier) {
-        return floor(($dex_modifier - 10) / 2);
+    private function calculateInitiative($dex) {
+        return floor(($dex - 10) / 2);
     }
     
     /**
@@ -517,41 +408,29 @@ class CharacterGeneratorV2 {
     }
     
     /**
-     * Расчет попадания (атаки)
+     * Расчет бонуса атаки
      */
-    private function calculateAttackBonus($class_data, $abilities, $level = 1) {
+    private function calculateAttackBonus($class_data, $abilities, $level) {
         $proficiency_bonus = $this->calculateProficiencyBonus($level);
         $str_bonus = floor(($abilities['str'] - 10) / 2);
         $attack_bonus = $proficiency_bonus + $str_bonus;
         
-        if ($attack_bonus >= 0) {
-            return '+' . $attack_bonus;
-        } else {
-            return $attack_bonus;
-        }
+        return $attack_bonus >= 0 ? '+' . $attack_bonus : $attack_bonus;
     }
     
     /**
      * Расчет урона
      */
-    private function calculateDamage($class_data, $abilities, $level = 1) {
-        $hit_die = $class_data['hit_die'] ?? 8;
+    private function calculateDamage($class_data, $abilities, $level) {
+        $damage_die = $class_data['hit_die'];
         $damage_bonus = floor(($abilities['str'] - 10) / 2);
         
         $dice_count = 1;
-        $dice_size = $hit_die;
+        if ($level >= 5) $dice_count = 2;
+        if ($level >= 11) $dice_count = 3;
+        if ($level >= 20) $dice_count = 4;
         
-        if ($level >= 5) {
-            $dice_count = 2;
-        }
-        if ($level >= 11) {
-            $dice_count = 3;
-        }
-        if ($level >= 20) {
-            $dice_count = 4;
-        }
-        
-        $damage_formula = $dice_count . 'd' . $dice_size;
+        $damage_formula = $dice_count . 'd' . $damage_die;
         
         if ($damage_bonus > 0) {
             $damage_formula .= ' + ' . $damage_bonus;
@@ -566,14 +445,15 @@ class CharacterGeneratorV2 {
      * Получение основного оружия
      */
     private function getMainWeapon($class_data) {
-        $proficiencies = $class_data['proficiencies'] ?? [];
-        $proficiency_names = array_column($proficiencies, 'name');
+        $weapons = [];
         
-        if (in_array('Martial Weapons', $proficiency_names)) {
+        if (in_array('Воинское оружие', $class_data['proficiencies'])) {
             $weapons = ['Длинный меч', 'Боевой топор', 'Молот', 'Копье', 'Алебарда', 'Меч-рапира'];
-        } elseif (in_array('Simple Weapons', $proficiency_names)) {
+        } elseif (in_array('Простое оружие', $class_data['proficiencies'])) {
             $weapons = ['Булава', 'Короткий меч', 'Кинжал', 'Дубина', 'Копье', 'Топор'];
-        } else {
+        }
+        
+        if (empty($weapons)) {
             $weapons = ['Кинжал', 'Дубина', 'Копье'];
         }
         
@@ -581,29 +461,55 @@ class CharacterGeneratorV2 {
     }
     
     /**
-     * Получение владений
-     */
-    private function getProficiencies($class_data) {
-        $proficiencies = $class_data['proficiencies'] ?? [];
-        return array_column($proficiencies, 'name');
-    }
-    
-    /**
      * Получение заклинаний
      */
-    private function getSpells($class_data, $level, $int, $wis, $cha) {
-        if (!isset($class_data['spellcasting'])) {
+    private function getSpells($class_data, $level, $abilities) {
+        if (!$class_data['spellcasting']) {
             return [];
         }
         
-        // Простая реализация заклинаний
+        $spellcasting_ability = $class_data['spellcasting_ability'] ?? 'int';
+        $ability_score = $abilities[$spellcasting_ability];
+        $ability_modifier = floor(($ability_score - 10) / 2);
+        
         $spells = [];
+        
+        // Заклинания 1 уровня
         if ($level >= 1) {
-            $spells[] = [
-                'name' => 'Свет',
-                'level' => 1,
-                'school' => 'Воплощение'
+            $level1_spells = [
+                [
+                    'name' => 'Свет',
+                    'level' => 1,
+                    'school' => 'Воплощение',
+                    'casting_time' => '1 действие',
+                    'range' => 'Касание',
+                    'components' => 'V, M (светлячок или светящийся мох)',
+                    'duration' => '1 час',
+                    'description' => 'Вы касаетесь объекта размером не больше 10 футов в любом измерении. Пока заклинание активно, объект испускает яркий свет в радиусе 20 футов и тусклый свет еще на 20 футов.',
+                    'damage' => null
+                ],
+                [
+                    'name' => 'Магическая стрела',
+                    'level' => 1,
+                    'school' => 'Воплощение',
+                    'casting_time' => '1 действие',
+                    'range' => '120 футов',
+                    'components' => 'V, S',
+                    'duration' => 'Мгновенно',
+                    'description' => 'Вы создаете три светящихся дротика магической энергии. Каждый дротик поражает цель по вашему выбору, которую вы можете видеть в пределах дистанции.',
+                    'damage' => '1d4 + ' . $ability_modifier . ' урона силовым полем за дротик'
+                ]
             ];
+            
+            $spell_count = min(2, count($level1_spells));
+            $selected_spells = array_rand($level1_spells, $spell_count);
+            if (!is_array($selected_spells)) {
+                $selected_spells = [$selected_spells];
+            }
+            
+            foreach ($selected_spells as $index) {
+                $spells[] = $level1_spells[$index];
+            }
         }
         
         return $spells;
@@ -613,18 +519,13 @@ class CharacterGeneratorV2 {
      * Получение способностей
      */
     private function getFeatures($class_data, $level) {
-        $features = [];
+        $features = $class_data['features'];
         
-        if (isset($class_data['class_levels'])) {
-            foreach ($class_data['class_levels'] as $classLevel) {
-                if ($classLevel['level'] <= $level) {
-                    if (isset($classLevel['features'])) {
-                        foreach ($classLevel['features'] as $feature) {
-                            $features[] = $feature['name'];
-                        }
-                    }
-                }
-            }
+        if ($level >= 2) {
+            $features[] = 'Дополнительная атака';
+        }
+        if ($level >= 5) {
+            $features[] = 'Улучшенная критическая атака';
         }
         
         return $features;
@@ -636,11 +537,41 @@ class CharacterGeneratorV2 {
     private function getEquipment($class_data) {
         $equipment = [];
         
+        // Доспехи
+        if (in_array('Все доспехи', $class_data['proficiencies'])) {
+            $armors = ['Кольчуга', 'Кожаный доспех', 'Кожаная броня', 'Стеганый доспех'];
+            $equipment[] = $armors[array_rand($armors)];
+        } elseif (in_array('Средние доспехи', $class_data['proficiencies'])) {
+            $armors = ['Кожаный доспех', 'Кожаная броня', 'Стеганый доспех'];
+            $equipment[] = $armors[array_rand($armors)];
+        } elseif (in_array('Легкие доспехи', $class_data['proficiencies'])) {
+            $armors = ['Кожаная броня', 'Стеганый доспех'];
+            $equipment[] = $armors[array_rand($armors)];
+        }
+        
+        // Щиты
+        if (in_array('Щиты', $class_data['proficiencies'])) {
+            $equipment[] = 'Деревянный щит';
+        }
+        
+        // Оружие
+        if (in_array('Воинское оружие', $class_data['proficiencies'])) {
+            $weapons = ['Длинный меч', 'Боевой топор', 'Молот', 'Копье', 'Алебарда'];
+            $equipment[] = $weapons[array_rand($weapons)];
+        } elseif (in_array('Простое оружие', $class_data['proficiencies'])) {
+            $weapons = ['Булава', 'Короткий меч', 'Кинжал', 'Дубина', 'Копье'];
+            $equipment[] = $weapons[array_rand($weapons)];
+        }
+        
         // Базовое снаряжение
         $equipment[] = 'Рюкзак исследователя';
         $equipment[] = 'Веревка (50 футов)';
         $equipment[] = 'Факел';
         $equipment[] = 'Трутница';
+        
+        // Зелья
+        $potions = ['Зелье лечения', 'Зелье невидимости', 'Зелье прыгучести', 'Зелье сопротивления огню'];
+        $equipment[] = $potions[array_rand($potions)];
         
         // Деньги
         $gold = rand(5, 25);
@@ -655,15 +586,120 @@ class CharacterGeneratorV2 {
     private function getSavingThrows($class_data, $abilities) {
         $saving_throws = [];
         
-        if (isset($class_data['saving_throws'])) {
-            foreach ($class_data['saving_throws'] as $save) {
-                $ability = strtolower($save['name']);
-                $modifier = floor(($abilities[$ability] - 10) / 2);
-                $saving_throws[] = ['name' => $save['name'], 'modifier' => $modifier];
+        if (isset($class_data['spellcasting']) && $class_data['spellcasting']) {
+            $spellcasting_ability = $class_data['spellcasting_ability'] ?? 'int';
+            $spellcasting_ability_score = $abilities[$spellcasting_ability] ?? 10;
+            $spellcasting_ability_modifier = floor(($spellcasting_ability_score - 10) / 2);
+            $saving_throws[] = ['name' => 'Заклинания', 'modifier' => $spellcasting_ability_modifier];
+        }
+
+        $saving_throws[] = ['name' => 'Сила', 'modifier' => floor(($abilities['str'] - 10) / 2)];
+        $saving_throws[] = ['name' => 'Ловкость', 'modifier' => floor(($abilities['dex'] - 10) / 2)];
+        $saving_throws[] = ['name' => 'Телосложение', 'modifier' => floor(($abilities['con'] - 10) / 2)];
+        $saving_throws[] = ['name' => 'Интеллект', 'modifier' => floor(($abilities['int'] - 10) / 2)];
+        $saving_throws[] = ['name' => 'Мудрость', 'modifier' => floor(($abilities['wis'] - 10) / 2)];
+        $saving_throws[] = ['name' => 'Харизма', 'modifier' => floor(($abilities['cha'] - 10) / 2)];
+
+        return $saving_throws;
+    }
+    
+    /**
+     * Генерация описания
+     */
+    private function generateDescription($character, $use_ai) {
+        if ($use_ai && $this->deepseek_api_key) {
+            try {
+                $prompt = "Опиши внешность и характер персонажа {$character['name']}, {$character['race']} {$character['class']} {$character['level']} уровня. Профессия: {$character['occupation']}. Пол: {$character['gender']}. Мировоззрение: {$character['alignment']}. Ответ должен быть кратким (2-3 предложения) и атмосферным.";
+                $response = $this->callDeepSeek($prompt);
+                if ($response) {
+                    return $response;
+                }
+            } catch (Exception $e) {
+                logMessage('ERROR', 'AI description generation failed: ' . $e->getMessage());
             }
         }
         
-        return $saving_throws;
+        return $this->generateFallbackDescription($character);
+    }
+    
+    /**
+     * Генерация предыстории
+     */
+    private function generateBackground($character, $use_ai) {
+        if ($use_ai && $this->deepseek_api_key) {
+            try {
+                $prompt = "Создай краткую предысторию персонажа {$character['name']}, {$character['race']} {$character['class']} {$character['level']} уровня. Профессия: {$character['occupation']}. Пол: {$character['gender']}. Мировоззрение: {$character['alignment']}. Включи мотивацию и ключевое событие из прошлого. Ответ должен быть кратким (2-3 предложения) и интересным.";
+                $response = $this->callDeepSeek($prompt);
+                if ($response) {
+                    return $response;
+                }
+            } catch (Exception $e) {
+                logMessage('ERROR', 'AI background generation failed: ' . $e->getMessage());
+            }
+        }
+        
+        return $this->generateFallbackBackground($character);
+    }
+    
+    /**
+     * Fallback описание
+     */
+    private function generateFallbackDescription($character) {
+        $name = $character['name'];
+        $race = $character['race'];
+        $class = $character['class'];
+        $occupation = $character['occupation'];
+        $gender = $character['gender'];
+        
+        $descriptions = [
+            'Человек' => [
+                'Мужчина' => "{$name} - закаленный в боях мужчина с решительным взглядом. Его опыт как {$occupation} научил его читать людей, а годы тренировок сделали каждое движение смертоносным.",
+                'Женщина' => "{$name} - уверенная женщина с умным взглядом и грациозными движениями. Её работа {$occupation} научила её быть практичной, а природная интуиция помогает принимать верные решения."
+            ],
+            'Эльф' => [
+                'Мужчина' => "{$name} - благородный эльф с изящными чертами лица и проницательным взглядом. Его работа {$occupation} добавила к врожденной мудрости практический опыт.",
+                'Женщина' => "{$name} - элегантная эльфийка с тонкими чертами лица и мудрым взглядом. Её работа {$occupation} добавила к врожденной элегантности практический опыт."
+            ],
+            'Дварф' => [
+                'Мужчина' => "{$name} - крепкий дварф с честным взглядом и надежными руками мастера. Его работа {$occupation} развила в нем упорство и мастерство.",
+                'Женщина' => "{$name} - крепкая дварфийка с заплетёнными в сложные косы волосами и решительным выражением лица. Её работа {$occupation} развила практичность и надежность."
+            ]
+        ];
+        
+        if (isset($descriptions[$race][$gender])) {
+            return $descriptions[$race][$gender];
+        }
+        
+        return "{$name} - опытный представитель расы {$race}, чей характер отражает опыт работы {$occupation}. В каждом движении чувствуется внутренняя сила и готовность к приключениям.";
+    }
+    
+    /**
+     * Fallback предыстория
+     */
+    private function generateFallbackBackground($character) {
+        $name = $character['name'];
+        $race = $character['race'];
+        $class = $character['class'];
+        $occupation = $character['occupation'];
+        $gender = $character['gender'];
+        
+        $backgrounds = [
+            'Человек' => [
+                'Мужчина' => "{$name} вырос в мире, где каждый должен найти свое место. Работая {$occupation}, он развил практический ум и упорство. Однажды судьба привела его к важному выбору, который изменил его жизнь навсегда.",
+                'Женщина' => "{$name} выросла в мире, где женщины должны были быть сильными и независимыми. Работая {$occupation}, она развила практический ум и упорство. Однажды она поняла, что может изменить мир к лучшему."
+            ],
+            'Эльф' => [
+                'Мужчина' => "{$name} провел долгие годы в изучении древних традиций своего народа. Его работа {$occupation} добавила к эльфийской мудрости практический опыт. Однажды он понял, что должен покинуть родные леса.",
+                'Женщина' => "{$name} провела долгие годы в изучении древних традиций своего народа. Её работа {$occupation} добавила к эльфийской мудрости практический опыт. Однажды она поняла, что должна поделиться своей мудростью."
+            ]
+        ];
+        
+        if (isset($backgrounds[$race][$gender])) {
+            return $backgrounds[$race][$gender];
+        }
+        
+        $genderPronoun = ($gender === 'Женщина') ? 'её' : 'его';
+        return "{$name} прошёл непростой путь от {$occupation} до {$class}. Опыт работы научил {$genderPronoun} ценить упорство и мастерство. Теперь {$genderPronoun} стремится найти свое место в мире.";
     }
     
     /**
@@ -693,149 +729,65 @@ class CharacterGeneratorV2 {
     }
     
     /**
-     * Fallback данные для рас
+     * Вызов DeepSeek API
      */
-    private function getFallbackRaceData($race) {
-        $fallback_races = [
-            'human' => [
-                'name' => 'Человек',
-                'ability_bonuses' => [['ability_score' => 'str', 'bonus' => 1], ['ability_score' => 'dex', 'bonus' => 1], ['ability_score' => 'con', 'bonus' => 1], ['ability_score' => 'int', 'bonus' => 1], ['ability_score' => 'wis', 'bonus' => 1], ['ability_score' => 'cha', 'bonus' => 1]],
-                'speed' => ['walk' => 30]
+    private function callDeepSeek($prompt) {
+        if (!$this->deepseek_api_key) {
+            return null;
+        }
+        
+        if (!function_exists('curl_init')) {
+            return null;
+        }
+        
+        $data = [
+            'model' => 'deepseek-chat',
+            'messages' => [
+                ['role' => 'system', 'content' => 'Ты помощник мастера D&D. Создавай интересных и атмосферных персонажей.'],
+                ['role' => 'user', 'content' => $prompt]
             ],
-            'elf' => [
-                'name' => 'Эльф',
-                'ability_bonuses' => [['ability_score' => 'dex', 'bonus' => 2]],
-                'speed' => ['walk' => 30]
-            ],
-            'dwarf' => [
-                'name' => 'Дварф',
-                'ability_bonuses' => [['ability_score' => 'con', 'bonus' => 2]],
-                'speed' => ['walk' => 25]
-            ]
+            'max_tokens' => 200,
+            'temperature' => 0.8
         ];
         
-        return $fallback_races[$race] ?? $fallback_races['human'];
-    }
-    
-    /**
-     * Fallback данные для классов
-     */
-    private function getFallbackClassData($class) {
-        $fallback_classes = [
-            'fighter' => [
-                'name' => 'Воин',
-                'hit_die' => 10,
-                'proficiencies' => [['name' => 'All Armor'], ['name' => 'Shields'], ['name' => 'Simple Weapons'], ['name' => 'Martial Weapons']]
-            ],
-            'wizard' => [
-                'name' => 'Волшебник',
-                'hit_die' => 6,
-                'proficiencies' => [['name' => 'Daggers'], ['name' => 'Quarterstaffs'], ['name' => 'Light Crossbows']],
-                'spellcasting' => true
-            ],
-            'rogue' => [
-                'name' => 'Плут',
-                'hit_die' => 8,
-                'proficiencies' => [['name' => 'Light Armor'], ['name' => 'Simple Weapons'], ['name' => 'Shortswords'], ['name' => 'Longswords']]
-            ]
-        ];
+        $ch = curl_init('https://api.deepseek.com/v1/chat/completions');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->deepseek_api_key
+        ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         
-        return $fallback_classes[$class] ?? $fallback_classes['fighter'];
-    }
-    
-    /**
-     * Fallback описание
-     */
-    private function generateFallbackDescription($character) {
-        $name = $character['name'];
-        $race = $character['race'];
-        $class = $character['class'];
-        $occupation = $character['occupation'];
-        $gender = $character['gender'];
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
         
-        // Базовые описания по расам
-        $raceDescriptions = [
-            'Эльф' => [
-                'female' => 'высокая и грациозная, с острыми чертами лица и длинными ушами',
-                'male' => 'высокий и грациозный, с острыми чертами лица и длинными ушами'
-            ],
-            'Человек' => [
-                'female' => 'среднего роста, с выразительными глазами и уверенной походкой',
-                'male' => 'среднего роста, с выразительными глазами и уверенной походкой'
-            ],
-            'Дварф' => [
-                'female' => 'коренастая и крепкая, с густой бородой и пронзительным взглядом',
-                'male' => 'коренастый и крепкий, с густой бородой и пронзительным взглядом'
-            ]
-        ];
+        if ($response === false || $httpCode !== 200) {
+            return null;
+        }
         
-        $raceDesc = $raceDescriptions[$race][$gender] ?? 'с характерной внешностью';
+        $result = json_decode($response, true);
         
-        // Описания по классам
-        $classDescriptions = [
-            'Волшебник' => 'носит мантию с таинственными символами, в глазах мерцает магическая энергия',
-            'Воин' => 'облачен в прочную броню, движения уверенные и расчетливые',
-            'Плут' => 'движется бесшумно, в глазах читается хитрость и опыт'
-        ];
+        if (isset($result['choices'][0]['message']['content'])) {
+            return trim($result['choices'][0]['message']['content']);
+        }
         
-        $classDesc = $classDescriptions[$class] ?? 'выглядит опытным и уверенным';
-        
-        return "{$name} - {$raceDesc} {$race} {$class}. {$classDesc}. Профессия {$occupation} наложила отпечаток на характер - в каждом движении чувствуется внутренняя сила, опыт и готовность к приключениям.";
-    }
-    
-    /**
-     * Fallback предыстория
-     */
-    private function generateFallbackBackground($character) {
-        $name = $character['name'];
-        $occupation = $character['occupation'];
-        $class = $character['class'];
-        $race = $character['race'];
-        $gender = $character['gender'];
-        
-        // Предыстории по расам
-        $raceBackgrounds = [
-            'Эльф' => [
-                'female' => 'Родилась в древнем эльфийском лесу, где провела первые столетия жизни',
-                'male' => 'Родился в древнем эльфийском лесу, где провел первые столетия жизни'
-            ],
-            'Человек' => [
-                'female' => 'Выросла в шумном человеческом городе, среди торговцев и ремесленников',
-                'male' => 'Вырос в шумном человеческом городе, среди торговцев и ремесленников'
-            ],
-            'Дварф' => [
-                'female' => 'Родилась в подземных залах, среди звонких молотов и искр кузнечного дела',
-                'male' => 'Родился в подземных залах, среди звонких молотов и искр кузнечного дела'
-            ]
-        ];
-        
-        $raceBg = $raceBackgrounds[$race][$gender] ?? 'Происходит из простой семьи';
-        
-        // Мотивации по классам
-        $classMotivations = [
-            'Волшебник' => 'Стремление к знаниям и магической силе привело к изучению древних томов',
-            'Воин' => 'Желание защищать слабых и сражаться за справедливость определило жизненный путь',
-            'Плут' => 'Ловкость рук и острый ум помогли выжить в опасном мире'
-        ];
-        
-        $classMotivation = $classMotivations[$class] ?? 'Стремление к приключениям и славе';
-        
-        return "{$raceBg}. Работа {$occupation} научила ценить упорство, мастерство и важность связей. {$classMotivation}. Теперь {$name} путешествует по миру, используя свои навыки для помощи другим и поиска новых приключений.";
+        return null;
     }
 }
 
-// Обработка запроса только если это не CLI
-if (php_sapi_name() !== 'cli') {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $generator = new CharacterGeneratorV2();
-        $result = $generator->generateCharacter($_POST);
-        
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    } else {
-        echo json_encode([
-            'success' => false,
-            'error' => 'Метод не поддерживается'
-        ]);
-    }
+// Обработка запроса
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $generator = new CharacterGeneratorV2();
+    $result = $generator->generateCharacter($_POST);
+    
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+} else {
+    echo json_encode([
+        'success' => false,
+        'error' => 'Метод не поддерживается'
+    ]);
 }
 ?>
