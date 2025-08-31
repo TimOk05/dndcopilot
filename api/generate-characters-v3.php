@@ -69,6 +69,8 @@ class CharacterGeneratorV3 {
      */
     public function generateCharacter($params) {
         try {
+            logMessage('INFO', 'Начинаем генерацию персонажа', $params);
+            
             // Валидация параметров
             $this->validateParams($params);
             
@@ -80,13 +82,21 @@ class CharacterGeneratorV3 {
             $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
             
             // Получаем данные расы и класса из D&D API
+            logMessage('INFO', "Начинаем получение данных расы: {$race}");
             $race_data = $this->dnd_api_service->getRaceData($race);
+            logMessage('INFO', "Получены данные расы: " . json_encode($race_data, JSON_UNESCAPED_UNICODE));
+            
             if (isset($race_data['error'])) {
+                logMessage('ERROR', "Ошибка получения данных расы: {$race_data['message']}");
                 throw new Exception("Ошибка получения данных расы: {$race_data['message']}");
             }
             
+            logMessage('INFO', "Начинаем получение данных класса: {$class}");
             $class_data = $this->dnd_api_service->getClassData($class);
+            logMessage('INFO', "Получены данные класса: " . json_encode($class_data, JSON_UNESCAPED_UNICODE));
+            
             if (isset($class_data['error'])) {
+                logMessage('ERROR', "Ошибка получения данных класса: {$class_data['message']}");
                 throw new Exception("Ошибка получения данных класса: {$class_data['message']}");
             }
             
