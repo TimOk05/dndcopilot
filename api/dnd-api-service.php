@@ -30,19 +30,50 @@ class DndApiService {
             return $cached;
         }
         
-        // Пробуем разные API
-        $data = $this->fetchFromDnd5eApi("/races/" . strtolower($race_name));
-        if (!$data) {
-            $data = $this->fetchFromOpen5e("/races/{$race_name}/");
-        }
+        logMessage('INFO', "Запрашиваем данные расы: {$race_name}");
         
-        if ($data) {
-            $processed_data = $this->processRaceData($data);
-            $this->cacheData($cache_key, $processed_data);
-            return $processed_data;
+        // Список альтернативных названий для некоторых рас
+        $race_alternatives = [
+            'tabaxi' => ['tabaxi', 'tabax'],
+            'tiefling' => ['tiefling', 'tieflings'],
+            'half-elf' => ['half-elf', 'half-elves', 'halfelf'],
+            'half-orc' => ['half-orc', 'half-orcs', 'halforc'],
+            'high-elf' => ['high-elf', 'high-elves', 'highelf'],
+            'wood-elf' => ['wood-elf', 'wood-elves', 'woodelf']
+        ];
+        
+        $race_variants = $race_alternatives[strtolower($race_name)] ?? [$race_name];
+        
+        foreach ($race_variants as $variant) {
+            // Пробуем D&D 5e API
+            $dnd5e_url = "/races/" . strtolower($variant);
+            logMessage('INFO', "Запрашиваем D&D 5e API: {$dnd5e_url}");
+            $data = $this->fetchFromDnd5eApi($dnd5e_url);
+            if ($data && isset($data['name'])) {
+                logMessage('INFO', "Получены данные расы {$race_name} из D&D 5e API (вариант: {$variant})");
+                $processed_data = $this->processRaceData($data);
+                $this->cacheData($cache_key, $processed_data);
+                return $processed_data;
+            } elseif ($data) {
+                logMessage('WARNING', "Получены некорректные данные от D&D 5e API для расы {$race_name} (вариант: {$variant})");
+            }
+            
+            // Пробуем Open5e API
+            $open5e_url = "/races/{$variant}/";
+            logMessage('INFO', "Запрашиваем Open5e API: {$open5e_url}");
+            $data = $this->fetchFromOpen5e($open5e_url);
+            if ($data && isset($data['name'])) {
+                logMessage('INFO', "Получены данные расы {$race_name} из Open5e API (вариант: {$variant})");
+                $processed_data = $this->processRaceData($data);
+                $this->cacheData($cache_key, $processed_data);
+                return $processed_data;
+            } elseif ($data) {
+                logMessage('WARNING', "Получены некорректные данные от Open5e API для расы {$race_name} (вариант: {$variant})");
+            }
         }
         
         // API недоступен - возвращаем ошибку
+        logMessage('ERROR', "Не удалось получить данные расы '{$race_name}' ни из одного API");
         return [
             'error' => 'API недоступен',
             'message' => "Не удалось получить данные расы '{$race_name}' из внешних API"
@@ -186,6 +217,7 @@ class DndApiService {
      */
     private function makeApiRequest($url) {
         if (!function_exists('curl_init')) {
+            logMessage('ERROR', 'cURL не доступен');
             return null;
         }
         
@@ -200,14 +232,26 @@ class DndApiService {
         
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
         curl_close($ch);
         
-        if ($response === false || $httpCode !== 200) {
-            logMessage('WARNING', "API request failed: {$url}, HTTP: {$httpCode}");
+        if ($response === false) {
+            logMessage('ERROR', "cURL error: {$error} for URL: {$url}");
+            return null;
+        }
+        
+        if ($httpCode !== 200) {
+            logMessage('WARNING', "API request failed: {$url}, HTTP: {$httpCode}, Response: " . substr($response, 0, 200));
             return null;
         }
         
         $data = json_decode($response, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            logMessage('ERROR', "JSON decode error: " . json_last_error_msg() . " for URL: {$url}");
+            return null;
+        }
+        
+        logMessage('INFO', "API request successful: {$url}, Data keys: " . implode(', ', array_keys($data)));
         return $data;
     }
     
@@ -215,6 +259,8 @@ class DndApiService {
      * Обработка данных расы
      */
     private function processRaceData($data) {
+        logMessage('INFO', "Обрабатываем данные расы: " . ($data['name'] ?? 'Unknown'));
+        
         $race_data = [
             'name' => $data['name'] ?? 'Unknown',
             'speed' => $data['speed'] ?? 30,
@@ -253,6 +299,7 @@ class DndApiService {
             }
         }
         
+        logMessage('INFO', "Обработаны данные расы: {$race_data['name']}");
         return $race_data;
     }
     
