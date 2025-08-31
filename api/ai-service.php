@@ -398,14 +398,55 @@ class AiService {
         
         $result = json_decode($response, true);
         
-        // Извлекаем текст ответа в зависимости от API
-        if (isset($result['choices'][0]['message']['content'])) {
-            return trim($result['choices'][0]['message']['content']);
-        } elseif (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
-            return trim($result['candidates'][0]['content']['parts'][0]['text']);
+        // Проверяем, что JSON декодировался корректно
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            logMessage('ERROR', 'AI API returned invalid JSON: ' . json_last_error_msg());
+            return null;
         }
         
-        return null;
+        // Извлекаем текст ответа в зависимости от API
+        $ai_text = null;
+        if (isset($result['choices'][0]['message']['content'])) {
+            $ai_text = trim($result['choices'][0]['message']['content']);
+        } elseif (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
+            $ai_text = trim($result['candidates'][0]['content']['parts'][0]['text']);
+        }
+        
+        if (!$ai_text) {
+            return null;
+        }
+        
+        // Очищаем текст от потенциально проблемных символов
+        $ai_text = $this->cleanAiResponse($ai_text);
+        
+        return $ai_text;
+    }
+    
+    /**
+     * Очистка ответа от AI от проблемных символов
+     */
+    private function cleanAiResponse($text) {
+        // Удаляем управляющие символы, кроме переносов строк
+        $text = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $text);
+        
+        // Заменяем кавычки на безопасные
+        $text = str_replace(['"', '"', '"', '"'], '"', $text);
+        
+        // Заменяем апострофы на безопасные
+        $text = str_replace(["\xE2\x80\x98", "\xE2\x80\x99", "\xE2\x80\x9A", "\xE2\x80\x9B", "\xE2\x80\xB9", "\xE2\x80\xBA", "\xE2\x80\x9C", "\xE2\x80\x9D"], "'", $text);
+        
+        // Удаляем множественные пробелы и переносы строк
+        $text = preg_replace('/\s+/', ' ', $text);
+        
+        // Обрезаем пробелы в начале и конце
+        $text = trim($text);
+        
+        // Ограничиваем длину текста
+        if (strlen($text) > 1000) {
+            $text = substr($text, 0, 1000) . '...';
+        }
+        
+        return $text;
     }
     
     /**

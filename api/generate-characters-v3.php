@@ -146,7 +146,8 @@ class CharacterGeneratorV3 {
                 logMessage('WARNING', "Ошибка генерации описания: {$description['message']}");
                 $character['description'] = "Описание персонажа недоступно";
             } else {
-                $character['description'] = $description;
+                // Очищаем описание от проблемных символов
+                $character['description'] = $this->cleanTextForJson($description);
             }
             
             $background = $this->ai_service->generateCharacterBackground($character, $use_ai);
@@ -154,7 +155,8 @@ class CharacterGeneratorV3 {
                 logMessage('WARNING', "Ошибка генерации предыстории: {$background['message']}");
                 $character['background'] = "Предыстория персонажа недоступна";
             } else {
-                $character['background'] = $background;
+                // Очищаем предысторию от проблемных символов
+                $character['background'] = $this->cleanTextForJson($background);
             }
             
             logMessage('INFO', 'Character generated successfully with API data', [
@@ -477,18 +479,67 @@ class CharacterGeneratorV3 {
         
         return $alignments[$alignment] ?? 'Нейтральный';
     }
+    
+    /**
+     * Очистка текста для безопасного JSON
+     */
+    private function cleanTextForJson($text) {
+        if (!is_string($text)) {
+            return "Текст недоступен";
+        }
+        
+        // Удаляем управляющие символы, кроме переносов строк
+        $text = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $text);
+        
+        // Заменяем кавычки на безопасные
+        $text = str_replace(['"', '"', '"', '"'], '"', $text);
+        
+        // Заменяем апострофы на безопасные
+        $text = str_replace(["\xE2\x80\x98", "\xE2\x80\x99", "\xE2\x80\x9A", "\xE2\x80\x9B", "\xE2\x80\xB9", "\xE2\x80\xBA", "\xE2\x80\x9C", "\xE2\x80\x9D"], "'", $text);
+        
+        // Удаляем множественные пробелы и переносы строк
+        $text = preg_replace('/\s+/', ' ', $text);
+        
+        // Обрезаем пробелы в начале и конце
+        $text = trim($text);
+        
+        // Ограничиваем длину текста
+        if (strlen($text) > 1000) {
+            $text = substr($text, 0, 1000) . '...';
+        }
+        
+        return $text;
+    }
 }
 
 // Обработка запроса
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $generator = new CharacterGeneratorV3();
-    $result = $generator->generateCharacter($_POST);
-    
-    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    try {
+        $generator = new CharacterGeneratorV3();
+        $result = $generator->generateCharacter($_POST);
+        
+        // Проверяем, что результат можно закодировать в JSON
+        $json_result = json_encode($result, JSON_UNESCAPED_UNICODE);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            logMessage('ERROR', 'JSON encoding failed: ' . json_last_error_msg());
+            echo json_encode([
+                'success' => false,
+                'error' => 'Ошибка формирования ответа: ' . json_last_error_msg()
+            ], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo $json_result;
+        }
+    } catch (Exception $e) {
+        logMessage('ERROR', 'Character generation exception: ' . $e->getMessage());
+        echo json_encode([
+            'success' => false,
+            'error' => 'Ошибка генерации: ' . $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
+    }
 } else {
     echo json_encode([
         'success' => false,
         'error' => 'Метод не поддерживается'
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 }
 ?>

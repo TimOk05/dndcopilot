@@ -550,7 +550,21 @@ function openCharacterModal() {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            // Проверяем, что ответ можно распарсить как JSON
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('JSON parse error:', e);
+                    console.error('Response text:', text);
+                    throw new Error('Ошибка парсинга JSON: ' + e.message);
+                }
+            });
+        })
         .then(data => {
             clearInterval(progressInterval);
             progressFill.style.width = '100%';
@@ -565,13 +579,18 @@ function openCharacterModal() {
                     
                     // Добавляем кнопку сохранения в заметки
                     if (character && typeof character === 'object') {
-                        resultDiv.innerHTML += `
-                            <div class="save-character-section">
-                                <button class="save-character-btn" onclick="saveCharacterToNotes(${JSON.stringify(character).replace(/"/g, '&quot;')})">
-                                    💾 Сохранить в заметки
-                                </button>
-                            </div>
-                        `;
+                        try {
+                            const characterJson = JSON.stringify(character).replace(/"/g, '&quot;');
+                            resultDiv.innerHTML += `
+                                <div class="save-character-section">
+                                    <button class="save-character-btn" onclick="saveCharacterToNotes(${characterJson})">
+                                        💾 Сохранить в заметки
+                                    </button>
+                                </div>
+                            `;
+                        } catch (e) {
+                            console.error('Error stringifying character:', e);
+                        }
                     }
                     
                     // Автоматическая прокрутка к результату
@@ -587,6 +606,7 @@ function openCharacterModal() {
             clearInterval(progressInterval);
             progressDiv.style.display = 'none';
             this.style.display = 'block';
+            console.error('Generation error:', error);
             resultDiv.innerHTML = '<div class="error">Ошибка сети: ' + error.message + '</div>';
         });
     });
@@ -1955,12 +1975,27 @@ function formatCharacterFromApi(character) {
         return '<div class="error">Ошибка: Некорректные данные персонажа</div>';
     }
     
+    // Функция для безопасного отображения текста
+    function safeText(text) {
+        if (typeof text !== 'string') {
+            return 'Не определено';
+        }
+        // Экранируем HTML и заменяем проблемные символы
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/\n/g, '<br>');
+    }
+    
     let out = '<div class="character-block">';
     
     // Заголовок персонажа
     out += '<div class="character-header">';
-    out += '<h3>' + (character.name || 'Без имени') + '</h3>';
-    out += '<div class="character-subtitle">' + (character.race || 'Неизвестная раса') + ' - ' + (character.class || 'Неизвестный класс') + ' (уровень ' + (character.level || '?') + ')</div>';
+    out += '<h3>' + safeText(character.name || 'Без имени') + '</h3>';
+    out += '<div class="character-subtitle">' + safeText(character.race || 'Неизвестная раса') + ' - ' + safeText(character.class || 'Неизвестный класс') + ' (уровень ' + (character.level || '?') + ')</div>';
     out += '</div>';
     
     // Основная информация
@@ -1968,9 +2003,9 @@ function formatCharacterFromApi(character) {
     out += '<div class="section-title" onclick="toggleSection(this)">🏷️ Основная информация <span class="toggle-icon">▼</span></div>';
     out += '<div class="section-content">';
     out += '<div class="info-grid">';
-    out += '<div class="info-item"><strong>Пол:</strong> ' + (character.gender || 'Не определен') + '</div>';
-    out += '<div class="info-item"><strong>Мировоззрение:</strong> ' + (character.alignment || 'Не определено') + '</div>';
-    out += '<div class="info-item"><strong>Профессия:</strong> ' + (character.occupation || 'Не определена') + '</div>';
+    out += '<div class="info-item"><strong>Пол:</strong> ' + safeText(character.gender || 'Не определен') + '</div>';
+    out += '<div class="info-item"><strong>Мировоззрение:</strong> ' + safeText(character.alignment || 'Не определено') + '</div>';
+    out += '<div class="info-item"><strong>Профессия:</strong> ' + safeText(character.occupation || 'Не определена') + '</div>';
     out += '</div>';
     out += '</div></div>';
     
@@ -2014,7 +2049,7 @@ function formatCharacterFromApi(character) {
         out += '<div class="info-grid">';
         character.saving_throws.forEach(throw_item => {
             if (throw_item && typeof throw_item === 'object') {
-                out += '<div class="info-item"><strong>' + (throw_item.name || 'Неизвестно') + ':</strong> ' + (throw_item.modifier >= 0 ? '+' : '') + (throw_item.modifier || '0') + '</div>';
+                out += '<div class="info-item"><strong>' + safeText(throw_item.name || 'Неизвестно') + ':</strong> ' + (throw_item.modifier >= 0 ? '+' : '') + (throw_item.modifier || '0') + '</div>';
             }
         });
         out += '</div>';
@@ -2029,7 +2064,7 @@ function formatCharacterFromApi(character) {
         out += '<div class="proficiencies-list">';
         character.proficiencies.forEach(prof => {
             if (prof && typeof prof === 'string') {
-                out += '<span class="proficiency-tag">' + prof + '</span>';
+                out += '<span class="proficiency-tag">' + safeText(prof) + '</span>';
             }
         });
         out += '</div>';
@@ -2041,7 +2076,7 @@ function formatCharacterFromApi(character) {
         out += '<div class="character-section">';
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">📝 Описание <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
-        out += '<p>' + character.description + '</p>';
+        out += '<p>' + safeText(character.description) + '</p>';
         out += '</div></div>';
     }
     
@@ -2050,7 +2085,7 @@ function formatCharacterFromApi(character) {
         out += '<div class="character-section">';
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">📖 Предыстория <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
-        out += '<p>' + character.background + '</p>';
+        out += '<p>' + safeText(character.background) + '</p>';
         out += '</div></div>';
     }
     
@@ -2065,30 +2100,30 @@ function formatCharacterFromApi(character) {
                 // Новый формат с детальной информацией
                 out += '<div class="spell-item">';
                 out += '<div class="spell-header" onclick="toggleSpellDetails(this)">';
-                out += '<span class="spell-name">' + spell.name + '</span>';
+                out += '<span class="spell-name">' + safeText(spell.name) + '</span>';
                 out += '<span class="spell-level">' + (spell.level || '?') + ' уровень</span>';
-                out += '<span class="spell-school">' + (spell.school || 'Неизвестно') + '</span>';
+                out += '<span class="spell-school">' + safeText(spell.school || 'Неизвестно') + '</span>';
                 out += '<span class="spell-toggle">▼</span>';
                 out += '</div>';
                 out += '<div class="spell-details" style="display: none;">';
                 out += '<div class="spell-info">';
-                out += '<div><strong>Время накладывания:</strong> ' + (spell.casting_time || 'Не указано') + '</div>';
-                out += '<div><strong>Дистанция:</strong> ' + (spell.range || 'Не указана') + '</div>';
-                out += '<div><strong>Компоненты:</strong> ' + (spell.components || 'Не указаны') + '</div>';
-                out += '<div><strong>Длительность:</strong> ' + (spell.duration || 'Не указана') + '</div>';
+                out += '<div><strong>Время накладывания:</strong> ' + safeText(spell.casting_time || 'Не указано') + '</div>';
+                out += '<div><strong>Дистанция:</strong> ' + safeText(spell.range || 'Не указана') + '</div>';
+                out += '<div><strong>Компоненты:</strong> ' + safeText(spell.components || 'Не указаны') + '</div>';
+                out += '<div><strong>Длительность:</strong> ' + safeText(spell.duration || 'Не указана') + '</div>';
                 if (spell.damage) {
-                    out += '<div><strong>Урон:</strong> ' + spell.damage + '</div>';
+                    out += '<div><strong>Урон:</strong> ' + safeText(spell.damage) + '</div>';
                 }
                 out += '</div>';
                 if (spell.description) {
-                    out += '<div class="spell-description">' + spell.description + '</div>';
+                    out += '<div class="spell-description">' + safeText(spell.description) + '</div>';
                 }
                 out += '</div>';
                 out += '</div>';
             } else if (typeof spell === 'string' && spell) {
                 // Старый формат (просто строка)
                 out += '<div class="spell-item">';
-                out += '<div class="spell-name">' + spell + '</div>';
+                out += '<div class="spell-name">' + safeText(spell) + '</div>';
                 out += '</div>';
             }
         });
@@ -2104,7 +2139,7 @@ function formatCharacterFromApi(character) {
         out += '<ul class="equipment-list">';
         character.equipment.forEach(item => {
             if (item && typeof item === 'string') {
-                out += '<li>' + item + '</li>';
+                out += '<li>' + safeText(item) + '</li>';
             }
         });
         out += '</ul>';
