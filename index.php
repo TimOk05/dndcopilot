@@ -560,7 +560,7 @@ function openCharacterModal() {
                 this.style.display = 'block';
                 
                 if (data.success) {
-                    const character = data.npc;
+                    const character = data.character || data.npc; // Поддержка старого и нового формата
                     resultDiv.innerHTML = formatCharacterFromApi(character);
                     
                     // Добавляем кнопку сохранения в заметки

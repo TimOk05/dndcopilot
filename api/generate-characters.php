@@ -230,7 +230,7 @@ class CharacterGenerator {
             
             return [
                 'success' => true,
-                'npc' => $character
+                'character' => $character
             ];
             
         } catch (Exception $e) {
