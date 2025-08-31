@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json');
+    header('Content-Type: application/json');
 require_once __DIR__ . '/../config.php';
 
 class CharacterGeneratorV2 {
@@ -31,8 +31,8 @@ class CharacterGeneratorV2 {
             $jsonFile = __DIR__ . '/../pdf/d100_unique_traders.json';
             if (file_exists($jsonFile)) {
                 $jsonData = json_decode(file_get_contents($jsonFile), true);
-                if (isset($jsonData['data']['occupations'])) {
-                    $this->occupations = $jsonData['data']['occupations'];
+            if (isset($jsonData['data']['occupations'])) {
+                $this->occupations = $jsonData['data']['occupations'];
                 }
             }
         } catch (Exception $e) {
@@ -48,12 +48,12 @@ class CharacterGeneratorV2 {
             $jsonFile = __DIR__ . '/../pdf/dnd_race_names_ru_v2.json';
             if (file_exists($jsonFile)) {
                 $jsonData = json_decode(file_get_contents($jsonFile), true);
-                if (isset($jsonData['data'])) {
-                    foreach ($jsonData['data'] as $raceData) {
-                        $raceKey = strtolower($raceData['race']);
+            if (isset($jsonData['data'])) {
+                foreach ($jsonData['data'] as $raceData) {
+                    $raceKey = strtolower($raceData['race']);
                         $this->race_names[$raceKey] = $raceData;
-                    }
                 }
+            }
             }
         } catch (Exception $e) {
             logMessage('ERROR', 'Failed to load race names: ' . $e->getMessage());
@@ -68,13 +68,13 @@ class CharacterGeneratorV2 {
             // Валидация параметров
             $this->validateParams($params);
             
-            $race = $params['race'] ?? 'human';
-            $class = $params['class'] ?? 'fighter';
-            $level = (int)($params['level'] ?? 1);
-            $alignment = $params['alignment'] ?? 'neutral';
-            $gender = $params['gender'] ?? 'random';
-            $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
-            
+        $race = $params['race'] ?? 'human';
+        $class = $params['class'] ?? 'fighter';
+        $level = (int)($params['level'] ?? 1);
+        $alignment = $params['alignment'] ?? 'neutral';
+        $gender = $params['gender'] ?? 'random';
+        $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
+        
             // Получаем данные расы и класса
             $race_data = $this->getRaceData($race);
             $class_data = $this->getClassData($class);
@@ -478,8 +478,8 @@ class CharacterGeneratorV2 {
         if ($level >= 1) {
             $level1_spells = [
                 [
-                    'name' => 'Свет',
-                    'level' => 1,
+                'name' => 'Свет',
+                'level' => 1,
                     'school' => 'Воплощение',
                     'casting_time' => '1 действие',
                     'range' => 'Касание',
@@ -599,7 +599,7 @@ class CharacterGeneratorV2 {
         $saving_throws[] = ['name' => 'Интеллект', 'modifier' => floor(($abilities['int'] - 10) / 2)];
         $saving_throws[] = ['name' => 'Мудрость', 'modifier' => floor(($abilities['wis'] - 10) / 2)];
         $saving_throws[] = ['name' => 'Харизма', 'modifier' => floor(($abilities['cha'] - 10) / 2)];
-
+        
         return $saving_throws;
     }
     
@@ -779,15 +779,15 @@ class CharacterGeneratorV2 {
 }
 
 // Обработка запроса
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $generator = new CharacterGeneratorV2();
-    $result = $generator->generateCharacter($_POST);
-    
-    echo json_encode($result, JSON_UNESCAPED_UNICODE);
-} else {
-    echo json_encode([
-        'success' => false,
-        'error' => 'Метод не поддерживается'
-    ]);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $generator = new CharacterGeneratorV2();
+        $result = $generator->generateCharacter($_POST);
+        
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'error' => 'Метод не поддерживается'
+        ]);
 }
 ?>

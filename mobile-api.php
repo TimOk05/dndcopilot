@@ -159,46 +159,46 @@ echo json_encode($response, JSON_UNESCAPED_UNICODE);
  */
 function generateMobileCharacter($race, $characterClass, $level) {
     try {
-        // Загружаем данные имен
-        $namesData = json_decode(file_get_contents('pdf/dnd_race_names_ru_v2.json'), true);
+    // Загружаем данные имен
+    $namesData = json_decode(file_get_contents('pdf/dnd_race_names_ru_v2.json'), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             logMessage('ERROR', 'Failed to parse race names JSON: ' . json_last_error_msg());
             $namesData = null;
         }
         
-        $name = generateCharacterName($race, $namesData);
-        
-        // Базовые характеристики
-        $abilities = generateAbilities();
-        $proficiencyBonus = floor(($level - 1) / 4) + 2;
-        
-        // Рассчитываем характеристики
-        $hp = calculateHP($characterClass, $level, $abilities['con']);
-        $ac = calculateAC($characterClass, $abilities['dex']);
-        
-        // Генерируем описание
-        $description = generateCharacterDescription($race, $characterClass, $level);
+    $name = generateCharacterName($race, $namesData);
+    
+    // Базовые характеристики
+    $abilities = generateAbilities();
+    $proficiencyBonus = floor(($level - 1) / 4) + 2;
+    
+    // Рассчитываем характеристики
+    $hp = calculateHP($characterClass, $level, $abilities['con']);
+    $ac = calculateAC($characterClass, $abilities['dex']);
+    
+    // Генерируем описание
+    $description = generateCharacterDescription($race, $characterClass, $level);
         
         logMessage('INFO', 'Mobile character generated successfully', [
             'race' => $race,
             'class' => $characterClass,
             'level' => $level
         ]);
-        
-        return [
-            'name' => $name,
-            'race' => $race,
-            'class' => $characterClass,
-            'level' => $level,
-            'abilities' => $abilities,
-            'hp' => $hp,
-            'ac' => $ac,
-            'proficiency_bonus' => $proficiencyBonus,
-            'description' => $description,
-            'features' => getClassFeatures($characterClass, $level),
-            'equipment' => getClassEquipment($characterClass),
-            'spells' => getClassSpells($characterClass, $level)
-        ];
+    
+    return [
+        'name' => $name,
+        'race' => $race,
+        'class' => $characterClass,
+        'level' => $level,
+        'abilities' => $abilities,
+        'hp' => $hp,
+        'ac' => $ac,
+        'proficiency_bonus' => $proficiencyBonus,
+        'description' => $description,
+        'features' => getClassFeatures($characterClass, $level),
+        'equipment' => getClassEquipment($characterClass),
+        'spells' => getClassSpells($characterClass, $level)
+    ];
     } catch (Exception $e) {
         logMessage('ERROR', 'Mobile character generation failed: ' . $e->getMessage());
         throw $e;
@@ -218,13 +218,13 @@ function generateMobileEnemy($cr) {
         if (!$enemiesData || !isset($enemiesData['enemies'])) {
             throw new Exception('База данных противников недоступна');
         }
-        
-        // Фильтруем по CR
+    
+    // Фильтруем по CR
         $filteredEnemies = array_filter($enemiesData['enemies'], function($enemy) use ($cr) {
             return isset($enemy['cr']) && $enemy['cr'] == $cr;
-        });
-        
-        if (empty($filteredEnemies)) {
+    });
+    
+    if (empty($filteredEnemies)) {
             // Если нет точного совпадения, ищем ближайший CR
             $availableCRs = array_unique(array_column($enemiesData['enemies'], 'cr'));
             sort($availableCRs);
@@ -239,16 +239,16 @@ function generateMobileEnemy($cr) {
             
             $filteredEnemies = array_filter($enemiesData['enemies'], function($enemy) use ($closestCR) {
                 return isset($enemy['cr']) && $enemy['cr'] == $closestCR;
-            });
-        }
-        
-        if (empty($filteredEnemies)) {
+        });
+    }
+    
+    if (empty($filteredEnemies)) {
             throw new Exception('Не найдены подходящие противники');
-        }
-        
+    }
+    
         // Выбираем случайного противника
-        $enemy = $filteredEnemies[array_rand($filteredEnemies)];
-        
+    $enemy = $filteredEnemies[array_rand($filteredEnemies)];
+    
         // Генерируем дополнительные данные
         $enemy['description'] = generateEnemyDescription($enemy);
         $enemy['tactics'] = generateEnemyTactics($enemy);

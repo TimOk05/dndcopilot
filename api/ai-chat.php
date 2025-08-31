@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../users.php';
+require_once __DIR__ . '/../auth.php';
 
 // Проверяем авторизацию
 if (!isLoggedIn()) {
@@ -98,7 +98,7 @@ class AIChat {
      */
     private function processPDF($file) {
         $allowed_types = ['application/pdf'];
-        $max_size = MAX_FILE_SIZE;
+        $max_size = 10 * 1024 * 1024; // 10MB
         
         // Проверяем тип файла
         if (!in_array($file['type'], $allowed_types)) {

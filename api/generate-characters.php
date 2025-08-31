@@ -35,9 +35,106 @@ class CharacterGenerator {
     }
     
     /**
-     * База имён для разных рас из JSON файла
+     * Получение имен из D&D API
      */
-    private function getNamesByRace($race, $gender = 'random') {
+    private function getNamesFromDndApi($race, $gender = 'random') {
+        // Определяем пол если выбран случайный
+        if ($gender === 'random') {
+            $gender = rand(0, 1) ? 'male' : 'female';
+        }
+        
+        // Маппинг рас для D&D API
+        $raceMapping = [
+            'human' => 'human',
+            'elf' => 'elf',
+            'dwarf' => 'dwarf',
+            'halfling' => 'halfling',
+            'half-orc' => 'half-orc',
+            'half-elf' => 'half-elf',
+            'tiefling' => 'tiefling',
+            'dragonborn' => 'dragonborn',
+            'gnome' => 'gnome',
+            'tabaxi' => 'tabaxi',
+            'aarakocra' => 'aarakocra',
+            'goblin' => 'goblin',
+            'kenku' => 'kenku',
+            'lizardfolk' => 'lizardfolk',
+            'triton' => 'triton',
+            'yuan-ti' => 'yuan-ti',
+            'goliath' => 'goliath',
+            'firbolg' => 'firbolg',
+            'bugbear' => 'bugbear',
+            'hobgoblin' => 'hobgoblin',
+            'kobold' => 'kobold'
+        ];
+        
+        $apiRace = $raceMapping[strtolower($race)] ?? 'human';
+        
+        try {
+            // Получаем имена из D&D API
+            $names = $this->callDndApi("races/{$apiRace}");
+            
+            if ($names && isset($names['names'])) {
+                $nameList = [];
+                
+                // Фильтруем имена по полу
+                foreach ($names['names'] as $name) {
+                    if (isset($name['gender']) && $name['gender'] === $gender) {
+                        $nameList[] = $name['name'];
+                    }
+                }
+                
+                // Если нет имен для конкретного пола, берем все
+                if (empty($nameList) && !empty($names['names'])) {
+                    foreach ($names['names'] as $name) {
+                        $nameList[] = $name['name'];
+                    }
+                }
+                
+                if (!empty($nameList)) {
+                    return $nameList[array_rand($nameList)];
+                }
+            }
+        } catch (Exception $e) {
+            error_log("D&D API error: " . $e->getMessage());
+        }
+        
+        // Fallback на JSON файл если API недоступен
+        return $this->getNamesFromJson($race, $gender);
+    }
+    
+    /**
+     * Вызов D&D 5e API
+     */
+    private function callDndApi($endpoint) {
+        $url = "https://www.dnd5eapi.co/api/{$endpoint}";
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        
+        if ($response === false || $httpCode !== 200) {
+            throw new Exception("D&D API недоступен");
+        }
+        
+        $data = json_decode($response, true);
+        if (!$data) {
+            throw new Exception("Ошибка парсинга ответа D&D API");
+        }
+        
+        return $data;
+    }
+    
+    /**
+     * База имён для разных рас из JSON файла (fallback)
+     */
+    private function getNamesFromJson($race, $gender = 'random') {
         static $raceNames = null;
         
         // Загружаем имена из JSON файла только один раз
@@ -113,7 +210,7 @@ class CharacterGenerator {
         
         // Сначала пробуем имена для конкретного пола, потом унисекс
         if (isset($fallbackNames[$gender]) && !empty($fallbackNames[$gender])) {
-            return $fallbackNames[$gender][array_rand($fallbackNames[$gender])];
+        return $fallbackNames[$gender][array_rand($fallbackNames[$gender])];
         } elseif (isset($fallbackNames['unisex']) && !empty($fallbackNames['unisex'])) {
             return $fallbackNames['unisex'][array_rand($fallbackNames['unisex'])];
         } else {
@@ -971,7 +1068,7 @@ class CharacterGenerator {
         if ($gender === 'random') {
             $gender = rand(0, 1) ? 'male' : 'female';
         }
-        return $this->getNamesByRace($race, $gender);
+        return $this->getNamesFromDndApi($race, $gender);
     }
 
     /**
@@ -1001,11 +1098,13 @@ class CharacterGenerator {
     }
     
     /**
-     * Генерация описания с помощью AI или улучшенных шаблонов
+     * Генерация описания с помощью AI
      */
     private function generateDescription($character) {
-        // Пытаемся использовать AI, если доступен
-        if ($this->deepseek_api_key) {
+        // Обязательно используем AI для генерации описания
+        if (!$this->deepseek_api_key) {
+            return "Описание персонажа недоступно. Проверьте настройки AI API.";
+        }
             // Формируем полную информацию о персонаже для AI
             $characterInfo = "Персонаж: {$character['name']}, {$character['race']} {$character['class']} {$character['level']} уровня.\n";
             $characterInfo .= "Профессия: {$character['occupation']}\n";
@@ -1034,19 +1133,19 @@ class CharacterGenerator {
                 }
             } catch (Exception $e) {
                 error_log("AI description generation failed: " . $e->getMessage());
-            }
         }
         
-        // Если AI недоступен или не сработал, используем улучшенные шаблоны
-        return $this->generateFallbackDescription($character);
+        return "Описание персонажа недоступно. Ошибка AI генерации.";
     }
     
     /**
-     * Генерация предыстории с помощью AI или улучшенных шаблонов
+     * Генерация предыстории с помощью AI
      */
     private function generateBackground($character) {
-        // Пытаемся использовать AI, если доступен
-        if ($this->deepseek_api_key) {
+        // Обязательно используем AI для генерации предыстории
+        if (!$this->deepseek_api_key) {
+            return "Предыстория персонажа недоступна. Проверьте настройки AI API.";
+        }
             // Формируем полную информацию о персонаже для AI
             $characterInfo = "Персонаж: {$character['name']}, {$character['race']} {$character['class']} {$character['level']} уровня.\n";
             $characterInfo .= "Профессия: {$character['occupation']}\n";
@@ -1075,11 +1174,9 @@ class CharacterGenerator {
                 }
             } catch (Exception $e) {
                 error_log("AI background generation failed: " . $e->getMessage());
-            }
         }
         
-        // Если AI недоступен или не сработал, используем улучшенные шаблоны
-        return $this->generateFallbackBackground($character);
+        return "Предыстория персонажа недоступна. Ошибка AI генерации.";
     }
     
     /**
