@@ -18,6 +18,31 @@ class DndApiService {
         if (!is_dir($this->cache_dir)) {
             mkdir($this->cache_dir, 0755, true);
         }
+        
+        // Проверяем доступность интернета
+        $this->checkInternetConnection();
+    }
+    
+    /**
+     * Проверка доступности интернета
+     */
+    private function checkInternetConnection() {
+        $test_url = 'https://www.google.com';
+        $ch = curl_init($test_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        
+        $result = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        
+        if ($result === false || $httpCode !== 200) {
+            logMessage('WARNING', 'Интернет соединение недоступно или ограничено');
+        } else {
+            logMessage('INFO', 'Интернет соединение доступно');
+        }
     }
     
     /**
@@ -221,19 +246,27 @@ class DndApiService {
             return null;
         }
         
+        logMessage('INFO', "Начинаем API запрос к: {$url}");
+        
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/2.0');
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Accept: application/json',
             'Content-Type: application/json'
         ]);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
+        $info = curl_getinfo($ch);
         curl_close($ch);
+        
+        logMessage('INFO', "API запрос завершен: {$url}, HTTP: {$httpCode}, Время: {$info['total_time']}s");
         
         if ($response === false) {
             logMessage('ERROR', "cURL error: {$error} for URL: {$url}");
