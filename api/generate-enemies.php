@@ -124,7 +124,7 @@ class EnemyGenerator {
             $cached_data = json_decode(file_get_contents($cache_file), true);
             if ($cached_data && isset($cached_data['results'])) {
                 error_log("EnemyGenerator: Используем кэшированный список монстров");
-                return $cached_data['results'];
+                return $cached_data;
             }
         }
         
@@ -136,7 +136,7 @@ class EnemyGenerator {
                 
                 if ($monsters && !empty($monsters)) {
                     // Сохраняем в кэш
-                    file_put_contents($cache_file, json_encode(['results' => $monsters, 'timestamp' => time()]));
+                    file_put_contents($cache_file, json_encode($monsters));
                     return $monsters;
                 }
             } catch (Exception $e) {
