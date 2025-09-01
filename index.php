@@ -260,13 +260,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message']) && !isset(
 }
 
 // --- Генерация быстрых кнопок ---
-$fastBtns = '';
+$fastBtns = '<div class="button-grid">';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей">🎲 Бросок костей</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей">⚔️ Персонаж</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников">👹 Противники</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModal()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий">🧪 Зелья</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий">🧪 Зелья</button>';
+$fastBtns .= '<button class="fast-btn btn btn-secondary interactive" onclick="openPotionShowcase()" data-tooltip="Демо зелий" aria-label="Открыть демо генератора зелий">🎨 Демо зелий</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="Управление инициативой" aria-label="Открыть управление инициативой">⚡ Инициатива</button>';
 $fastBtns .= '<a href="combat.html" class="fast-btn btn btn-primary interactive" style="text-decoration: none; display: inline-block;" data-tooltip="Система боя" aria-label="Перейти к системе боя">⚔️ Система боя</a>';
+$fastBtns .= '</div>';
 
 // --- Генерация сообщений чата (пропускаем system) ---
 $chatMsgs = '';
@@ -1422,7 +1424,7 @@ function regenerateNpc() {
 }
 
 // --- Зелья ---
-function openPotionModal() {
+function openPotionModalSimple() {
     showModal(`
         <div class="potion-generator">
             <div class="generator-header">
@@ -1488,7 +1490,7 @@ function openPotionModal() {
         submitBtn.disabled = true;
         resultDiv.innerHTML = '<div class="loading">Создание зелий...</div>';
         
-        // Формируем параметры для API
+        // Используем упрощенный API
         const params = new URLSearchParams();
         params.append('action', 'random');
         params.append('count', formData.get('count'));
@@ -1499,7 +1501,7 @@ function openPotionModal() {
             params.append('type', formData.get('type'));
         }
         
-        fetch('api/generate-potions.php?' + params.toString())
+        fetch('api/generate-potions-simple.php?' + params.toString())
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -1540,6 +1542,11 @@ function openPotionModal() {
             submitBtn.disabled = false;
         });
     });
+}
+
+// --- Открытие демо-страницы зелий ---
+function openPotionShowcase() {
+    window.open('potion-showcase.html', '_blank');
 }
 
 // Функция форматирования зелий из API
