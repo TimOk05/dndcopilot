@@ -2564,12 +2564,44 @@ function formatEnemiesFromApi(enemies) {
             out += '<div class="section-title collapsed" onclick="toggleSection(this)">📊 Характеристики <span class="toggle-icon">▶</span></div>';
             out += '<div class="section-content collapsed">';
             out += '<div class="abilities-grid">';
-            out += '<div class="ability-item"><strong>СИЛ:</strong> ' + (enemy.abilities.str || '?') + '</div>';
-            out += '<div class="ability-item"><strong>ЛОВ:</strong> ' + (enemy.abilities.dex || '?') + '</div>';
-            out += '<div class="ability-item"><strong>ТЕЛ:</strong> ' + (enemy.abilities.con || '?') + '</div>';
-            out += '<div class="ability-item"><strong>ИНТ:</strong> ' + (enemy.abilities.int || '?') + '</div>';
-            out += '<div class="ability-item"><strong>МДР:</strong> ' + (enemy.abilities.wis || '?') + '</div>';
-            out += '<div class="ability-item"><strong>ХАР:</strong> ' + (enemy.abilities.cha || '?') + '</div>';
+            
+            // Проверяем, есть ли переведенные названия характеристик
+            if (enemy.abilities.СИЛ) {
+                out += '<div class="ability-item"><strong>СИЛ:</strong> ' + enemy.abilities.СИЛ.value + ' (' + (enemy.abilities.СИЛ.modifier >= 0 ? '+' : '') + enemy.abilities.СИЛ.modifier + ')</div>';
+            } else if (enemy.abilities.str) {
+                out += '<div class="ability-item"><strong>СИЛ:</strong> ' + enemy.abilities.str + '</div>';
+            }
+            
+            if (enemy.abilities.ЛОВ) {
+                out += '<div class="ability-item"><strong>ЛОВ:</strong> ' + enemy.abilities.ЛОВ.value + ' (' + (enemy.abilities.ЛОВ.modifier >= 0 ? '+' : '') + enemy.abilities.ЛОВ.modifier + ')</div>';
+            } else if (enemy.abilities.dex) {
+                out += '<div class="ability-item"><strong>ЛОВ:</strong> ' + enemy.abilities.dex + '</div>';
+            }
+            
+            if (enemy.abilities.ТЕЛ) {
+                out += '<div class="ability-item"><strong>ТЕЛ:</strong> ' + enemy.abilities.ТЕЛ.value + ' (' + (enemy.abilities.ТЕЛ.modifier >= 0 ? '+' : '') + enemy.abilities.ТЕЛ.modifier + ')</div>';
+            } else if (enemy.abilities.con) {
+                out += '<div class="ability-item"><strong>ТЕЛ:</strong> ' + enemy.abilities.con + '</div>';
+            }
+            
+            if (enemy.abilities.ИНТ) {
+                out += '<div class="ability-item"><strong>ИНТ:</strong> ' + enemy.abilities.ИНТ.value + ' (' + (enemy.abilities.ИНТ.modifier >= 0 ? '+' : '') + enemy.abilities.ИНТ.modifier + ')</div>';
+            } else if (enemy.abilities.int) {
+                out += '<div class="ability-item"><strong>ИНТ:</strong> ' + enemy.abilities.int + '</div>';
+            }
+            
+            if (enemy.abilities.МДР) {
+                out += '<div class="ability-item"><strong>МДР:</strong> ' + enemy.abilities.МДР.value + ' (' + (enemy.abilities.МДР.modifier >= 0 ? '+' : '') + enemy.abilities.МДР.modifier + ')</div>';
+            } else if (enemy.abilities.wis) {
+                out += '<div class="ability-item"><strong>МДР:</strong> ' + enemy.abilities.wis + '</div>';
+            }
+            
+            if (enemy.abilities.ХАР) {
+                out += '<div class="ability-item"><strong>ХАР:</strong> ' + enemy.abilities.ХАР.value + ' (' + (enemy.abilities.ХАР.modifier >= 0 ? '+' : '') + enemy.abilities.ХАР.modifier + ')</div>';
+            } else if (enemy.abilities.cha) {
+                out += '<div class="ability-item"><strong>ХАР:</strong> ' + enemy.abilities.cha + '</div>';
+            }
+            
             out += '</div>';
             out += '</div></div>';
         }

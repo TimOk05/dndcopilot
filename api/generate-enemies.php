@@ -191,6 +191,53 @@ class EnemyGenerator {
     }
     
     /**
+     * Перевод типов существ на русский
+     */
+    private function translateType($type) {
+        $translations = [
+            'beast' => 'Зверь',
+            'humanoid' => 'Гуманоид',
+            'dragon' => 'Дракон',
+            'giant' => 'Великан',
+            'undead' => 'Нежить',
+            'fiend' => 'Исчадие',
+            'celestial' => 'Небожитель',
+            'elemental' => 'Элементаль',
+            'fey' => 'Фей',
+            'monstrosity' => 'Чудовище',
+            'ooze' => 'Слизь',
+            'plant' => 'Растение',
+            'construct' => 'Конструкт',
+            'aberration' => 'Аберрация'
+        ];
+        
+        return $translations[strtolower($type)] ?? $type;
+    }
+    
+    /**
+     * Перевод сред обитания на русский
+     */
+    private function translateEnvironment($environment) {
+        $translations = [
+            'forest' => 'Лес',
+            'mountain' => 'Горы',
+            'desert' => 'Пустыня',
+            'swamp' => 'Болото',
+            'underdark' => 'Подземелье',
+            'water' => 'Вода',
+            'urban' => 'Город',
+            'grassland' => 'Равнины',
+            'hill' => 'Холмы',
+            'coastal' => 'Побережье',
+            'cave' => 'Пещера',
+            'marsh' => 'Топи',
+            'aquatic' => 'Водная среда'
+        ];
+        
+        return $translations[strtolower($environment)] ?? $environment;
+    }
+    
+    /**
      * Генерация нескольких противников одного типа
      */
     private function generateMultipleEnemies($monster, $count, $use_ai) {
@@ -242,15 +289,15 @@ class EnemyGenerator {
             // Генерируем базовые характеристики
             $enemy = [
                 'name' => $monster_details['name'],
-                'type' => $monster_details['type'],
+                'type' => $this->translateType($monster_details['type']),
                 'challenge_rating' => $monster_details['challenge_rating'],
-                'hit_points' => $monster_details['hit_points'],
+                'hit_points' => $monster_details['hit_points'] ?? 'Не определено',
                 'armor_class' => $this->formatArmorClass($monster_details['armor_class']),
-                'speed' => $monster_details['speed'] ?? 'Не определено',
-                'abilities' => $monster_details['abilities'] ?? [],
+                'speed' => $this->formatSpeed($monster_details['speed'] ?? 'Не определено'),
+                'abilities' => $this->formatAbilities($monster_details['abilities'] ?? []),
                 'actions' => $monster_details['actions'] ?? [],
                 'special_abilities' => $monster_details['special_abilities'] ?? [],
-                'environment' => $monster_details['environment'] ?? 'Не определена',
+                'environment' => $this->translateEnvironment($monster_details['environment'] ?? 'Не определена'),
                 'cr_numeric' => $this->parseCR($monster_details['challenge_rating'])
             ];
             
@@ -289,8 +336,8 @@ class EnemyGenerator {
             return [];
         }
         
-        // Берем только первые 50 монстров для производительности
-        $sample_monsters = array_slice($monsters['results'], 0, 50);
+        // Берем больше монстров для поиска подходящих с полной информацией
+        $sample_monsters = array_slice($monsters['results'], 0, 100);
         
         foreach ($sample_monsters as $monster) {
             try {
@@ -302,6 +349,12 @@ class EnemyGenerator {
                 
                 $monster_details = $this->getMonsterDetails($monster['url']);
                 if (!$monster_details) {
+                    continue;
+                }
+                
+                // Проверяем полноту данных
+                if (!$this->hasCompleteData($monster_details)) {
+                    error_log("EnemyGenerator: Монстр {$monster_details['name']} не имеет полных данных, пропускаем");
                     continue;
                 }
                 
@@ -351,7 +404,7 @@ class EnemyGenerator {
                 $filtered[] = $monster_details;
                 
                 // Ограничиваем количество проверенных монстров
-                if (count($filtered) >= 10) {
+                if (count($filtered) >= 15) {
                     break;
                 }
                 
@@ -455,6 +508,85 @@ class EnemyGenerator {
             return 'Не определено';
         }
         return $ac;
+    }
+    
+    /**
+     * Форматирование скорости
+     */
+    private function formatSpeed($speed) {
+        if (is_array($speed)) {
+            $formatted = [];
+            foreach ($speed as $type => $value) {
+                if (is_string($type)) {
+                    $formatted[] = "$type: $value";
+                } else {
+                    $formatted[] = $value;
+                }
+            }
+            return implode(', ', $formatted);
+        }
+        return $speed;
+    }
+    
+    /**
+     * Форматирование характеристик
+     */
+    private function formatAbilities($abilities) {
+        if (!is_array($abilities)) {
+            return $abilities;
+        }
+        
+        $formatted = [];
+        $ability_names = [
+            'str' => 'СИЛ',
+            'dex' => 'ЛОВ',
+            'con' => 'ТЕЛ',
+            'int' => 'ИНТ',
+            'wis' => 'МДР',
+            'cha' => 'ХАР'
+        ];
+        
+        foreach ($abilities as $ability => $value) {
+            if (isset($ability_names[$ability])) {
+                $modifier = $this->calculateModifier($value);
+                $formatted[$ability_names[$ability]] = [
+                    'value' => $value,
+                    'modifier' => $modifier
+                ];
+            }
+        }
+        
+        return $formatted;
+    }
+    
+    /**
+     * Расчет модификатора характеристики
+     */
+    private function calculateModifier($ability_score) {
+        if (!is_numeric($ability_score)) {
+            return 0;
+        }
+        return floor(($ability_score - 10) / 2);
+    }
+    
+    /**
+     * Проверка полноты данных монстра
+     */
+    private function hasCompleteData($monster) {
+        $required_fields = ['name', 'type', 'challenge_rating', 'hit_points', 'armor_class'];
+        
+        foreach ($required_fields as $field) {
+            if (!isset($monster[$field]) || empty($monster[$field])) {
+                return false;
+            }
+        }
+        
+        // Проверяем, что характеристики не пустые
+        if (!isset($monster['abilities']) || empty($monster['abilities'])) {
+            return false;
+        }
+        
+        return true;
     }
     
     /**
