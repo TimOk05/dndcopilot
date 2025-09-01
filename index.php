@@ -697,6 +697,13 @@ function openEnemyModal() {
         submitBtn.disabled = true;
         resultDiv.innerHTML = '<div class="loading">Создание противников...</div>';
         
+        // Добавляем таймаут для показа fallback сообщения
+        const timeoutId = setTimeout(() => {
+            if (resultDiv.innerHTML.includes('Создание противников...')) {
+                resultDiv.innerHTML = '<div class="loading">Используем резервные данные...</div>';
+            }
+        }, 5000);
+        
         fetch('api/generate-enemies.php', {
             method: 'POST',
             body: formData
@@ -708,15 +715,27 @@ function openEnemyModal() {
             return response.json();
         })
         .then(data => {
+            console.log('API Response:', data);
             if (data.success && data.enemies) {
-                resultDiv.innerHTML = formatEnemiesFromApi(data.enemies);
+                let resultHtml = formatEnemiesFromApi(data.enemies);
+                
+                // Добавляем индикатор fallback данных
+                if (data.fallback) {
+                    resultHtml = '<div class="fallback-notice">⚠️ Используются резервные данные (API недоступен)</div>' + resultHtml;
+                }
+                
+                resultDiv.innerHTML = resultHtml;
                 
                 // Автоматическая прокрутка к результату
                 setTimeout(() => {
                     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 100);
             } else {
-                resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || 'Неизвестная ошибка') + '</div>';
+                let errorMsg = data.error || 'Неизвестная ошибка';
+                if (data.message) {
+                    errorMsg = data.message;
+                }
+                resultDiv.innerHTML = '<div class="error">Ошибка: ' + errorMsg + '</div>';
             }
         })
         .catch(error => {
@@ -727,11 +746,14 @@ function openEnemyModal() {
                 errorMessage = `Ошибка сервера: ${error.message}`;
             } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
                 errorMessage = 'API недоступен. Проверьте подключение к интернету.';
+            } else if (error.message.includes('Failed to fetch')) {
+                errorMessage = 'Сервер недоступен. Проверьте, что сервер запущен.';
             }
             
             resultDiv.innerHTML = '<div class="error">' + errorMessage + '</div>';
         })
         .finally(() => {
+            clearTimeout(timeoutId);
             submitBtn.innerHTML = '<span class="btn-icon">&#128127;</span><span class="btn-text">Создать противников</span>';
             submitBtn.disabled = false;
         });
@@ -2166,8 +2188,11 @@ function formatCharacterFromApi(character) {
 
 // --- Форматирование противников от API системы ---
 function formatEnemiesFromApi(enemies) {
+    console.log('formatEnemiesFromApi called with:', enemies);
+    
     // Проверяем, что enemies является массивом
     if (!enemies || !Array.isArray(enemies)) {
+        console.error('Invalid enemies data:', enemies);
         return '<div class="error">Ошибка: Некорректные данные противников</div>';
     }
     
@@ -2207,9 +2232,12 @@ function formatEnemiesFromApi(enemies) {
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">&#9876;&#65039; Боевые характеристики <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
         out += '<div class="info-grid">';
-        out += '<div class="info-item"><strong>Хиты:</strong> ' + (enemy.hit_points || enemy.hp || 'Не определены') + '</div>';
+        out += '<div class="info-item"><strong>Хиты:</strong> ' + (enemy.hit_points || enemy.hp || enemy.hit_points || 'Не определены') + '</div>';
         out += '<div class="info-item"><strong>Класс доспеха:</strong> ' + (enemy.armor_class || enemy.ac || 'Не определен') + '</div>';
         out += '<div class="info-item"><strong>Скорость:</strong> ' + (enemy.speed || 'Не определена') + '</div>';
+        if (enemy.cr_numeric !== undefined) {
+            out += '<div class="info-item"><strong>CR числовой:</strong> ' + enemy.cr_numeric + '</div>';
+        }
         out += '</div>';
         out += '</div></div>';
         

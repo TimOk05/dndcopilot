@@ -104,6 +104,66 @@ class EnemyGenerator {
             ];
             
         } catch (Exception $e) {
+            error_log("EnemyGenerator: Ошибка генерации: " . $e->getMessage());
+            
+            // Пробуем использовать fallback данные
+            try {
+                require_once __DIR__ . '/fallback-data.php';
+                $fallback_enemies = FallbackData::getEnemies();
+                
+                // Фильтруем fallback данные по параметрам
+                $filtered_fallback = [];
+                foreach ($fallback_enemies as $enemy) {
+                    $cr = $enemy['cr'];
+                    if ($this->checkCRRange($cr, $cr_range)) {
+                        if (!$enemy_type || strpos(strtolower($enemy['type']), strtolower($enemy_type)) !== false) {
+                            $filtered_fallback[] = $enemy;
+                        }
+                    }
+                }
+                
+                if (!empty($filtered_fallback)) {
+                    // Выбираем случайных противников из fallback
+                    $selected = array_rand($filtered_fallback, min($count, count($filtered_fallback)));
+                    if (!is_array($selected)) {
+                        $selected = [$selected];
+                    }
+                    
+                    $enemies = [];
+                    foreach ($selected as $index) {
+                        $enemy = $filtered_fallback[$index];
+                        $enemies[] = [
+                            'name' => $enemy['name'],
+                            'type' => $enemy['type'],
+                            'challenge_rating' => $enemy['cr'],
+                            'hit_points' => $enemy['hp'],
+                            'armor_class' => $enemy['ac'],
+                            'speed' => '30 ft',
+                            'abilities' => $enemy['abilities'],
+                            'actions' => $enemy['actions'],
+                            'special_abilities' => [],
+                            'environment' => 'Не определена',
+                            'cr_numeric' => $enemy['cr'],
+                            'description' => $enemy['description'],
+                            'tactics' => $enemy['tactics']
+                        ];
+                    }
+                    
+                    return [
+                        'success' => true,
+                        'enemies' => $enemies,
+                        'threat_level' => $threat_level,
+                        'threat_level_display' => $this->getThreatLevelDisplay($threat_level),
+                        'count' => count($enemies),
+                        'cr_range' => $cr_range,
+                        'cr_numeric' => is_numeric($threat_level) ? (int)$threat_level : null,
+                        'fallback' => true
+                    ];
+                }
+            } catch (Exception $fallback_error) {
+                error_log("EnemyGenerator: Fallback также не сработал: " . $fallback_error->getMessage());
+            }
+            
             return [
                 'success' => false,
                 'error' => $e->getMessage()
