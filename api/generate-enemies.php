@@ -208,7 +208,25 @@ class EnemyGenerator {
             'ooze' => 'Слизь',
             'plant' => 'Растение',
             'construct' => 'Конструкт',
-            'aberration' => 'Аберрация'
+            'aberration' => 'Аберрация',
+            'swarm' => 'Рой',
+            'dragon turtle' => 'Дракон-черепаха',
+            'beholder' => 'Наблюдатель',
+            'mind flayer' => 'Пожиратель разума',
+            'lich' => 'Лич',
+            'vampire' => 'Вампир',
+            'werewolf' => 'Оборотень',
+            'ghost' => 'Призрак',
+            'skeleton' => 'Скелет',
+            'zombie' => 'Зомби',
+            'goblin' => 'Гоблин',
+            'orc' => 'Орк',
+            'troll' => 'Тролль',
+            'ogre' => 'Огр',
+            'hobgoblin' => 'Хобгоблин',
+            'bugbear' => 'Багбир',
+            'kobold' => 'Кобольд',
+            'gnoll' => 'Гнолл'
         ];
         
         return $translations[strtolower($type)] ?? $type;
@@ -231,7 +249,16 @@ class EnemyGenerator {
             'coastal' => 'Побережье',
             'cave' => 'Пещера',
             'marsh' => 'Топи',
-            'aquatic' => 'Водная среда'
+            'aquatic' => 'Водная среда',
+            'arctic' => 'Арктика',
+            'subterranean' => 'Подземелье',
+            'dungeon' => 'Подземелье',
+            'ruins' => 'Руины',
+            'temple' => 'Храм',
+            'tower' => 'Башня',
+            'castle' => 'Замок',
+            'village' => 'Деревня',
+            'wilderness' => 'Дикая местность'
         ];
         
         return $translations[strtolower($environment)] ?? $environment;
@@ -286,29 +313,41 @@ class EnemyGenerator {
             // Монстр уже содержит детальную информацию
             $monster_details = $monster;
             
-                        // Генерируем базовые характеристики
-        $enemy = [
-            'name' => $monster_details['name'],
-            'type' => $this->translateType($monster_details['type']),
-            'challenge_rating' => $monster_details['challenge_rating'],
-            'hit_points' => $monster_details['hit_points'] ?? 'Не определено',
-            'armor_class' => $this->formatArmorClass($monster_details['armor_class']),
-            'speed' => $this->formatSpeed($monster_details['speed'] ?? 'Не определено'),
-            'abilities' => $this->formatAbilities($monster_details['abilities'] ?? []),
-            'actions' => $this->formatActions($monster_details['actions'] ?? []),
-            'special_abilities' => $this->formatSpecialAbilities($monster_details['special_abilities'] ?? []),
-            'environment' => $this->translateEnvironment($monster_details['environment'] ?? 'Не определена'),
-            'cr_numeric' => $this->parseCR($monster_details['challenge_rating'])
-        ];
-        
+            // Убеждаемся, что характеристики установлены
+            if (!isset($monster_details['abilities']) || empty($monster_details['abilities'])) {
+                $monster_details['abilities'] = [
+                    'str' => 10,
+                    'dex' => 10,
+                    'con' => 10,
+                    'int' => 10,
+                    'wis' => 10,
+                    'cha' => 10
+                ];
+            }
+            
+            // Генерируем базовые характеристики
+            $enemy = [
+                'name' => $monster_details['name'],
+                'type' => $this->translateType($monster_details['type']),
+                'challenge_rating' => $monster_details['challenge_rating'],
+                'hit_points' => $monster_details['hit_points'] ?? 'Не определено',
+                'armor_class' => $this->formatArmorClass($monster_details['armor_class']),
+                'speed' => $this->formatSpeed($monster_details['speed'] ?? 'Не определено'),
+                'abilities' => $this->formatAbilities($monster_details['abilities'] ?? []),
+                'actions' => $this->formatActions($monster_details['actions'] ?? []),
+                'special_abilities' => $this->formatSpecialAbilities($monster_details['special_abilities'] ?? []),
+                'environment' => $this->translateEnvironment($monster_details['environment'] ?? 'Не определена'),
+                'cr_numeric' => $this->parseCR($monster_details['challenge_rating'])
+            ];
+            
             // Если AI включен, генерируем описание и тактику
-        if ($use_ai) {
+            if ($use_ai) {
                 $enemy['description'] = $this->generateDescription($monster_details);
                 $enemy['tactics'] = $this->generateTactics($monster_details);
-        }
-        
-        return $enemy;
+            }
             
+            return $enemy;
+                
         } catch (Exception $e) {
             error_log("EnemyGenerator: Ошибка генерации противника: " . $e->getMessage());
             return null;
@@ -567,8 +606,16 @@ class EnemyGenerator {
      * Форматирование характеристик
      */
     private function formatAbilities($abilities) {
-        if (!is_array($abilities)) {
-            return $abilities;
+        // Если характеристики не переданы, используем значения по умолчанию
+        if (empty($abilities) || !is_array($abilities)) {
+            $abilities = [
+                'str' => 10,
+                'dex' => 10,
+                'con' => 10,
+                'int' => 10,
+                'wis' => 10,
+                'cha' => 10
+            ];
         }
         
         $formatted = [];
@@ -581,16 +628,25 @@ class EnemyGenerator {
             'cha' => 'ХАР'
         ];
         
-        foreach ($abilities as $ability => $value) {
-            if (isset($ability_names[$ability])) {
-                $modifier = $this->calculateModifier($value);
-                $formatted[$ability_names[$ability]] = [
-                    'value' => $value,
-                    'modifier' => $modifier
-                ];
-                // Также сохраняем оригинальные ключи для совместимости
-                $formatted[$ability] = $value;
+        // Обрабатываем каждую характеристику
+        foreach ($ability_names as $eng_key => $rus_name) {
+            $value = $abilities[$eng_key] ?? 10; // Значение по умолчанию 10
+            
+            // Убеждаемся, что значение числовое
+            if (!is_numeric($value)) {
+                $value = 10;
             }
+            
+            $modifier = $this->calculateModifier($value);
+            
+            // Сохраняем в русском формате
+            $formatted[$rus_name] = [
+                'value' => $value,
+                'modifier' => $modifier
+            ];
+            
+            // Также сохраняем оригинальные ключи для совместимости
+            $formatted[$eng_key] = $value;
         }
         
         return $formatted;
@@ -618,12 +674,12 @@ class EnemyGenerator {
         foreach ($actions as $action) {
             if (is_array($action)) {
                 if (isset($action['name'])) {
-                    $formatted[] = $action['name'];
+                    $formatted[] = $this->translateAction($action['name']);
                 } elseif (isset($action[0])) {
-                    $formatted[] = $action[0];
+                    $formatted[] = $this->translateAction($action[0]);
                 }
             } else {
-                $formatted[] = $action;
+                $formatted[] = $this->translateAction($action);
             }
         }
         
@@ -642,16 +698,362 @@ class EnemyGenerator {
         foreach ($abilities as $ability) {
             if (is_array($ability)) {
                 if (isset($ability['name'])) {
-                    $formatted[] = $ability['name'];
+                    $formatted[] = $this->translateAbility($ability['name']);
                 } elseif (isset($ability[0])) {
-                    $formatted[] = $ability[0];
+                    $formatted[] = $this->translateAbility($ability[0]);
                 }
             } else {
-                $formatted[] = $ability;
+                $formatted[] = $this->translateAbility($ability);
             }
         }
         
         return $formatted;
+    }
+    
+    /**
+     * Перевод действий на русский
+     */
+    private function translateAction($action) {
+        $translations = [
+            'Warhammer' => 'Боевой молот',
+            'Sword' => 'Меч',
+            'Axe' => 'Топор',
+            'Bow' => 'Лук',
+            'Crossbow' => 'Арбалет',
+            'Dagger' => 'Кинжал',
+            'Spear' => 'Копье',
+            'Mace' => 'Булава',
+            'Staff' => 'Посох',
+            'Wand' => 'Волшебная палочка',
+            'Bite' => 'Укус',
+            'Claw' => 'Коготь',
+            'Tail' => 'Хвост',
+            'Wing' => 'Крыло',
+            'Horn' => 'Рог',
+            'Tentacle' => 'Щупальце',
+            'Spit' => 'Плевок',
+            'Breath' => 'Дыхание',
+            'Acid Breath' => 'Кислотное дыхание',
+            'Fire Breath' => 'Огненное дыхание',
+            'Lightning Breath' => 'Молниеносное дыхание',
+            'Cold Breath' => 'Ледяное дыхание',
+            'Poison Breath' => 'Ядовитое дыхание',
+            'Spell' => 'Заклинание',
+            'Magic' => 'Магия',
+            'Attack' => 'Атака',
+            'Multiattack' => 'Множественная атака',
+            'Charge' => 'Рывок',
+            'Grapple' => 'Захват',
+            'Shove' => 'Толчок',
+            'Dash' => 'Рывок',
+            'Disengage' => 'Отход',
+            'Dodge' => 'Уклонение',
+            'Help' => 'Помощь',
+            'Hide' => 'Скрытие',
+            'Ready' => 'Готовность',
+            'Search' => 'Поиск',
+            'Use an Object' => 'Использование предмета',
+            'Scimitar' => 'Скимитар',
+            'Rapier' => 'Рапира',
+            'Longsword' => 'Длинный меч',
+            'Shortsword' => 'Короткий меч',
+            'Greatsword' => 'Двуручный меч',
+            'Battleaxe' => 'Боевой топор',
+            'Greataxe' => 'Двуручный топор',
+            'Handaxe' => 'Ручной топор',
+            'Light Hammer' => 'Легкий молот',
+            'Maul' => 'Кувалда',
+            'Morningstar' => 'Моргенштерн',
+            'Pike' => 'Пика',
+            'Halberd' => 'Алебарда',
+            'Glaive' => 'Глефа',
+            'Trident' => 'Трезубец',
+            'Net' => 'Сеть',
+            'Whip' => 'Кнут',
+            'Sling' => 'Праща',
+            'Light Crossbow' => 'Легкий арбалет',
+            'Heavy Crossbow' => 'Тяжелый арбалет',
+            'Hand Crossbow' => 'Ручной арбалет',
+            'Longbow' => 'Длинный лук',
+            'Shortbow' => 'Короткий лук',
+            'Blowgun' => 'Духовая трубка',
+            'Dart' => 'Дротик',
+            'Javelin' => 'Метательное копье',
+            'Lance' => 'Копье',
+            'Punch' => 'Удар кулаком',
+            'Kick' => 'Удар ногой',
+            'Headbutt' => 'Удар головой',
+            'Trample' => 'Топтание',
+            'Gore' => 'Бодание',
+            'Constrict' => 'Сжатие',
+            'Swallow' => 'Проглатывание',
+            'Spit Acid' => 'Плевок кислотой',
+            'Spit Poison' => 'Плевок ядом',
+            'Spit Fire' => 'Плевок огнем',
+            'Spit Lightning' => 'Плевок молнией',
+            'Spit Cold' => 'Плевок льдом',
+            'Slam' => 'Мощный удар',
+            'Stab' => 'Колющий удар',
+            'Slash' => 'Режущий удар',
+            'Crush' => 'Дробящий удар',
+            'Pounce' => 'Бросок',
+            'Leap' => 'Прыжок',
+            'Rush' => 'Натиск',
+            'Tackle' => 'Захват',
+            'Pin' => 'Прижимание',
+            'Throw' => 'Бросок',
+            'Swing' => 'Размашистый удар',
+            'Thrust' => 'Толчок',
+            'Strike' => 'Удар',
+            'Hit' => 'Попадание',
+            'Miss' => 'Промах',
+            'Block' => 'Блок',
+            'Parry' => 'Парирование',
+            'Dodge' => 'Уклонение',
+            'Counter' => 'Контратака',
+            'Riposte' => 'Ответный удар',
+            'Feint' => 'Финт',
+            'Disarm' => 'Обезоруживание',
+            'Trip' => 'Подножка',
+            'Sunder' => 'Разрушение',
+            'Cleave' => 'Рассечение',
+            'Whirlwind' => 'Вихрь',
+            'Spin' => 'Вращение',
+            'Roll' => 'Кувырок',
+            'Tumble' => 'Падение',
+            'Crawl' => 'Ползание',
+            'Climb' => 'Лазание',
+            'Swim' => 'Плавание',
+            'Fly' => 'Полёт',
+            'Teleport' => 'Телепортация',
+            'Phase' => 'Фазирование',
+            'Shift' => 'Сдвиг',
+            'Blink' => 'Мерцание',
+            'Fade' => 'Исчезновение',
+            'Appear' => 'Появление',
+            'Vanish' => 'Исчезновение',
+            'Materialize' => 'Материализация',
+            'Dematerialize' => 'Дематериализация'
+        ];
+        
+        return $translations[$action] ?? $action;
+    }
+    
+    /**
+     * Перевод способностей на русский
+     */
+    private function translateAbility($ability) {
+        $translations = [
+            'Heated Body' => 'Раскаленное тело',
+            'Heated Weapons' => 'Раскаленное оружие',
+            'Illumination' => 'Освещение',
+            'Amphibious' => 'Земноводность',
+            'Innate Spellcasting' => 'Врожденное колдовство',
+            'Magic Resistance' => 'Сопротивление магии',
+            'Magic Weapons' => 'Магическое оружие',
+            'Regeneration' => 'Регенерация',
+            'Spider Climb' => 'Лазание по стенам',
+            'Web Walker' => 'Хождение по паутине',
+            'Pack Tactics' => 'Тактика стаи',
+            'Keen Senses' => 'Острые чувства',
+            'Darkvision' => 'Темное зрение',
+            'Blindsight' => 'Слепое зрение',
+            'Tremorsense' => 'Чувство вибраций',
+            'Truesight' => 'Истинное зрение',
+            'Flying' => 'Полет',
+            'Swimming' => 'Плавание',
+            'Burrowing' => 'Рытье',
+            'Climbing' => 'Лазание',
+            'Hover' => 'Парение',
+            'Invisible' => 'Невидимость',
+            'Resistance' => 'Сопротивление',
+            'Immunity' => 'Иммунитет',
+            'Vulnerability' => 'Уязвимость',
+            'Legendary Actions' => 'Легендарные действия',
+            'Lair Actions' => 'Действия логова',
+            'Regional Effects' => 'Региональные эффекты',
+            'Acid Absorption' => 'Поглощение кислоты',
+            'Fire Absorption' => 'Поглощение огня',
+            'Lightning Absorption' => 'Поглощение молнии',
+            'Cold Absorption' => 'Поглощение холода',
+            'Poison Absorption' => 'Поглощение яда',
+            'Acid Immunity' => 'Иммунитет к кислоте',
+            'Fire Immunity' => 'Иммунитет к огню',
+            'Lightning Immunity' => 'Иммунитет к молнии',
+            'Cold Immunity' => 'Иммунитет к холоду',
+            'Poison Immunity' => 'Иммунитет к яду',
+            'Acid Resistance' => 'Сопротивление кислоте',
+            'Fire Resistance' => 'Сопротивление огню',
+            'Lightning Resistance' => 'Сопротивление молнии',
+            'Cold Resistance' => 'Сопротивление холоду',
+            'Poison Resistance' => 'Сопротивление яду',
+            'Bludgeoning Resistance' => 'Сопротивление дробящему урону',
+            'Piercing Resistance' => 'Сопротивление колющему урону',
+            'Slashing Resistance' => 'Сопротивление режущему урону',
+            'Necrotic Resistance' => 'Сопротивление некротическому урону',
+            'Radiant Resistance' => 'Сопротивление излучению',
+            'Psychic Resistance' => 'Сопротивление психическому урону',
+            'Thunder Resistance' => 'Сопротивление звуковому урону',
+            'Force Resistance' => 'Сопротивление силовому урону',
+            'Acid Vulnerability' => 'Уязвимость к кислоте',
+            'Fire Vulnerability' => 'Уязвимость к огню',
+            'Lightning Vulnerability' => 'Уязвимость к молнии',
+            'Cold Vulnerability' => 'Уязвимость к холоду',
+            'Poison Vulnerability' => 'Уязвимость к яду',
+            'Bludgeoning Vulnerability' => 'Уязвимость к дробящему урону',
+            'Piercing Vulnerability' => 'Уязвимость к колющему урону',
+            'Slashing Vulnerability' => 'Уязвимость к режущему урону',
+            'Necrotic Vulnerability' => 'Уязвимость к некротическому урону',
+            'Radiant Vulnerability' => 'Уязвимость к излучению',
+            'Psychic Vulnerability' => 'Уязвимость к психическому урону',
+            'Thunder Vulnerability' => 'Уязвимость к звуковому урону',
+            'Force Vulnerability' => 'Уязвимость к силовому урону',
+            'Sunlight Sensitivity' => 'Чувствительность к солнечному свету',
+            'Water Breathing' => 'Водное дыхание',
+            'Air Breathing' => 'Воздушное дыхание',
+            'Amphibious' => 'Земноводность',
+            'Shapechanger' => 'Оборотень',
+            'Undead Fortitude' => 'Нежить-стойкость',
+            'Turn Immunity' => 'Иммунитет к обращению',
+            'Turn Resistance' => 'Сопротивление обращению',
+            'Charm Immunity' => 'Иммунитет к очарованию',
+            'Frightened Immunity' => 'Иммунитет к страху',
+            'Paralyzed Immunity' => 'Иммунитет к параличу',
+            'Petrified Immunity' => 'Иммунитет к окаменению',
+            'Poisoned Immunity' => 'Иммунитет к отравлению',
+            'Stunned Immunity' => 'Иммунитет к оглушению',
+            'Unconscious Immunity' => 'Иммунитет к потере сознания',
+            'Exhaustion Immunity' => 'Иммунитет к истощению',
+            'Grappled Immunity' => 'Иммунитет к захвату',
+            'Restrained Immunity' => 'Иммунитет к сковыванию',
+            'Prone Immunity' => 'Иммунитет к опрокидыванию',
+            'Blinded Immunity' => 'Иммунитет к ослеплению',
+            'Deafened Immunity' => 'Иммунитет к оглушению',
+            'Silenced Immunity' => 'Иммунитет к замалчиванию',
+            'Invisible Immunity' => 'Иммунитет к невидимости',
+            'Hidden Immunity' => 'Иммунитет к скрытию',
+            'Surprised Immunity' => 'Иммунитет к неожиданности',
+            'Incapacitated Immunity' => 'Иммунитет к недееспособности',
+            'Incapacitated' => 'Недееспособность',
+            'Charmed' => 'Очарованный',
+            'Frightened' => 'Испуганный',
+            'Paralyzed' => 'Парализованный',
+            'Petrified' => 'Окаменевший',
+            'Poisoned' => 'Отравленный',
+            'Stunned' => 'Оглушенный',
+            'Unconscious' => 'Без сознания',
+            'Exhausted' => 'Истощенный',
+            'Grappled' => 'Захваченный',
+            'Restrained' => 'Скованный',
+            'Prone' => 'Опрокинутый',
+            'Blinded' => 'Ослепленный',
+            'Deafened' => 'Оглушенный',
+            'Silenced' => 'Замалчиваемый',
+            'Antimagic Susceptibility' => 'Восприимчивость к антимагии',
+            'False Appearance' => 'Ложный облик',
+            'Magic Resistance' => 'Сопротивление магии',
+            'Magic Weapons' => 'Магическое оружие',
+            'Regeneration' => 'Регенерация',
+            'Spider Climb' => 'Лазание по стенам',
+            'Web Walker' => 'Хождение по паутине',
+            'Pack Tactics' => 'Тактика стаи',
+            'Keen Senses' => 'Острые чувства',
+            'Darkvision' => 'Темное зрение',
+            'Blindsight' => 'Слепое зрение',
+            'Tremorsense' => 'Чувство вибраций',
+            'Truesight' => 'Истинное зрение',
+            'Flying' => 'Полет',
+            'Swimming' => 'Плавание',
+            'Burrowing' => 'Рытье',
+            'Climbing' => 'Лазание',
+            'Hover' => 'Парение',
+            'Invisible' => 'Невидимость',
+            'Resistance' => 'Сопротивление',
+            'Immunity' => 'Иммунитет',
+            'Vulnerability' => 'Уязвимость',
+            'Legendary Actions' => 'Легендарные действия',
+            'Lair Actions' => 'Действия логова',
+            'Regional Effects' => 'Региональные эффекты',
+            'Acid Absorption' => 'Поглощение кислоты',
+            'Fire Absorption' => 'Поглощение огня',
+            'Lightning Absorption' => 'Поглощение молнии',
+            'Cold Absorption' => 'Поглощение холода',
+            'Poison Absorption' => 'Поглощение яда',
+            'Acid Immunity' => 'Иммунитет к кислоте',
+            'Fire Immunity' => 'Иммунитет к огню',
+            'Lightning Immunity' => 'Иммунитет к молнии',
+            'Cold Immunity' => 'Иммунитет к холоду',
+            'Poison Immunity' => 'Иммунитет к яду',
+            'Acid Resistance' => 'Сопротивление кислоте',
+            'Fire Resistance' => 'Сопротивление огню',
+            'Lightning Resistance' => 'Сопротивление молнии',
+            'Cold Resistance' => 'Сопротивление холоду',
+            'Poison Resistance' => 'Сопротивление яду',
+            'Bludgeoning Resistance' => 'Сопротивление дробящему урону',
+            'Piercing Resistance' => 'Сопротивление колющему урону',
+            'Slashing Resistance' => 'Сопротивление режущему урону',
+            'Necrotic Resistance' => 'Сопротивление некротическому урону',
+            'Radiant Resistance' => 'Сопротивление излучению',
+            'Psychic Resistance' => 'Сопротивление психическому урону',
+            'Thunder Resistance' => 'Сопротивление звуковому урону',
+            'Force Resistance' => 'Сопротивление силовому урону',
+            'Acid Vulnerability' => 'Уязвимость к кислоте',
+            'Fire Vulnerability' => 'Уязвимость к огню',
+            'Lightning Vulnerability' => 'Уязвимость к молнии',
+            'Cold Vulnerability' => 'Уязвимость к холоду',
+            'Poison Vulnerability' => 'Уязвимость к яду',
+            'Bludgeoning Vulnerability' => 'Уязвимость к дробящему урону',
+            'Piercing Vulnerability' => 'Уязвимость к колющему урону',
+            'Slashing Vulnerability' => 'Уязвимость к режущему урону',
+            'Necrotic Vulnerability' => 'Уязвимость к некротическому урону',
+            'Radiant Vulnerability' => 'Уязвимость к излучению',
+            'Psychic Vulnerability' => 'Уязвимость к психическому урону',
+            'Thunder Vulnerability' => 'Уязвимость к звуковому урону',
+            'Force Vulnerability' => 'Уязвимость к силовому урону',
+            'Sunlight Sensitivity' => 'Чувствительность к солнечному свету',
+            'Water Breathing' => 'Водное дыхание',
+            'Air Breathing' => 'Воздушное дыхание',
+            'Amphibious' => 'Земноводность',
+            'Shapechanger' => 'Оборотень',
+            'Undead Fortitude' => 'Нежить-стойкость',
+            'Turn Immunity' => 'Иммунитет к обращению',
+            'Turn Resistance' => 'Сопротивление обращению',
+            'Charm Immunity' => 'Иммунитет к очарованию',
+            'Frightened Immunity' => 'Иммунитет к страху',
+            'Paralyzed Immunity' => 'Иммунитет к параличу',
+            'Petrified Immunity' => 'Иммунитет к окаменению',
+            'Poisoned Immunity' => 'Иммунитет к отравлению',
+            'Stunned Immunity' => 'Иммунитет к оглушению',
+            'Unconscious Immunity' => 'Иммунитет к потере сознания',
+            'Exhaustion Immunity' => 'Иммунитет к истощению',
+            'Grappled Immunity' => 'Иммунитет к захвату',
+            'Restrained Immunity' => 'Иммунитет к сковыванию',
+            'Prone Immunity' => 'Иммунитет к опрокидыванию',
+            'Blinded Immunity' => 'Иммунитет к ослеплению',
+            'Deafened Immunity' => 'Иммунитет к оглушению',
+            'Silenced Immunity' => 'Иммунитет к замалчиванию',
+            'Invisible Immunity' => 'Иммунитет к невидимости',
+            'Hidden Immunity' => 'Иммунитет к скрытию',
+            'Surprised Immunity' => 'Иммунитет к неожиданности',
+            'Incapacitated Immunity' => 'Иммунитет к недееспособности',
+            'Incapacitated' => 'Недееспособность',
+            'Charmed' => 'Очарованный',
+            'Frightened' => 'Испуганный',
+            'Paralyzed' => 'Парализованный',
+            'Petrified' => 'Окаменевший',
+            'Poisoned' => 'Отравленный',
+            'Stunned' => 'Оглушенный',
+            'Unconscious' => 'Без сознания',
+            'Exhausted' => 'Истощенный',
+            'Grappled' => 'Захваченный',
+            'Restrained' => 'Скованный',
+            'Prone' => 'Опрокинутый',
+            'Blinded' => 'Ослепленный',
+            'Deafened' => 'Оглушенный',
+            'Silenced' => 'Замалчиваемый'
+        ];
+        
+        return $translations[$ability] ?? $ability;
     }
     
     /**
