@@ -1501,7 +1501,7 @@ function openPotionModalSimple() {
             params.append('type', formData.get('type'));
         }
         
-        fetch('api/generate-potions-simple.php?' + params.toString())
+        fetch('api/generate-potions.php?' + params.toString())
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -1558,6 +1558,12 @@ function formatPotionsFromApi(potions) {
             `<span class="potion-property">${prop}</span>`
         ).join('');
         
+        // Добавляем AI-описание если есть
+        let descriptionHtml = `<p class="potion-description">${potion.description}</p>`;
+        if (potion.ai_description) {
+            descriptionHtml += `<p class="potion-ai-description" style="font-style: italic; color: var(--text-secondary); margin-top: var(--space-2);">🤖 ${potion.ai_description}</p>`;
+        }
+        
         html += `
             <div class="potion-card" style="border-left: 4px solid ${potion.color}">
                 <div class="potion-header">
@@ -1566,7 +1572,7 @@ function formatPotionsFromApi(potions) {
                     <span class="potion-rarity" style="color: ${potion.color}">${potion.rarity}</span>
                 </div>
                 <div class="potion-body">
-                    <p class="potion-description">${potion.description}</p>
+                    ${descriptionHtml}
                     <div class="potion-details">
                         <span class="potion-type">${potion.icon} ${potion.type}</span>
                         <span class="potion-value">💰 ${potion.value}</span>
