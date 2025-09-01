@@ -129,7 +129,8 @@ class CharacterGeneratorV4 {
             logMessage('INFO', "Начинаем получение данных расы: {$race}");
             $race_data = $this->dnd_api_service->getRaceData($race);
             if (isset($race_data['error'])) {
-                throw new Exception("Не удалось получить данные расы '{$race}': " . $race_data['message']);
+                logMessage('WARNING', "API недоступен, используем базовые данные для расы: {$race}");
+                $race_data = $this->getBasicRaceData($race);
             }
             logMessage('INFO', "Получены данные расы: " . json_encode($race_data, JSON_UNESCAPED_UNICODE));
             
@@ -137,7 +138,8 @@ class CharacterGeneratorV4 {
             logMessage('INFO', "Начинаем получение данных класса: {$class}");
             $class_data = $this->dnd_api_service->getClassData($class);
             if (isset($class_data['error'])) {
-                throw new Exception("Не удалось получить данные класса '{$class}': " . $class_data['message']);
+                logMessage('WARNING', "API недоступен, используем базовые данные для класса: {$class}");
+                $class_data = $this->getBasicClassData($class);
             }
             logMessage('INFO', "Получены данные класса: " . json_encode($class_data, JSON_UNESCAPED_UNICODE));
             
@@ -179,8 +181,8 @@ class CharacterGeneratorV4 {
                 'initiative' => $this->calculateInitiative($abilities['dex']),
                 'proficiency_bonus' => $this->calculateProficiencyBonus($level),
                 'attack_bonus' => $this->calculateAttackBonus($class_data, $abilities, $level),
-                'damage' => $this->calculateDamage($class_data, $abilities, $level),
-                'main_weapon' => $this->getMainWeapon($class_data),
+                'damage' => $this->calculateDamage($this->getClassDisplayName($class, $class_data), $abilities, $level),
+                'main_weapon' => $this->getMainWeapon($this->getClassDisplayName($class, $class_data)),
                 'proficiencies' => $this->translateProficiencies($class_data['proficiencies'] ?? []),
                 'spells' => $this->processSpells($spells, $class_data, $level),
                 'features' => $this->processFeatures($features, $class_data, $level),
@@ -450,18 +452,23 @@ class CharacterGeneratorV4 {
     /**
      * Расчет урона
      */
-    private function calculateDamage($class_data, $abilities, $level) {
+    private function calculateDamage($class_name, $abilities, $level) {
         $primary_ability = 'str';
-        if (in_array($class_data['name'], ['Плут', 'Следопыт', 'Монах'])) {
+        if (in_array($class_name, ['Плут', 'Следопыт', 'Монах'])) {
             $primary_ability = 'dex';
         }
         
         $ability_modifier = floor(($abilities[$primary_ability] - 10) / 2);
         
         // Определяем базовый урон оружия в зависимости от уровня
-        $base_damage = $this->getBaseWeaponDamage($class_data['name'], $level);
+        $base_damage = $this->getBaseWeaponDamage($class_name, $level);
         
-        return $base_damage . '+' . $ability_modifier;
+        // Форматируем модификатор правильно
+        if ($ability_modifier >= 0) {
+            return $base_damage . '+' . $ability_modifier;
+        } else {
+            return $base_damage . $ability_modifier; // Минус уже есть в числе
+        }
     }
     
     /**
@@ -513,7 +520,7 @@ class CharacterGeneratorV4 {
     /**
      * Получение основного оружия
      */
-    private function getMainWeapon($class_data) {
+    private function getMainWeapon($class_name) {
         $weapons = [
             'Воин' => 'Меч',
             'Плут' => 'Кинжал',
@@ -530,7 +537,7 @@ class CharacterGeneratorV4 {
             'Артифисер' => 'Молот'
         ];
         
-        return $weapons[$class_data['name']] ?? 'Меч';
+        return $weapons[$class_name] ?? 'Меч';
     }
     
     /**
@@ -863,7 +870,8 @@ class CharacterGeneratorV4 {
     private function processFeatures($features, $class_data, $level) {
         if (empty($features)) {
             // Генерируем базовые способности для класса
-            return $this->generateBasicFeatures($class_data['name'], $level);
+            $class_name = $this->getClassDisplayName($class_data['name'], $class_data);
+            return $this->generateBasicFeatures($class_name, $level);
         }
         
         return $features;
@@ -915,10 +923,98 @@ class CharacterGeneratorV4 {
         
         return $features;
     }
+    
+    /**
+     * Базовые данные расы для fallback
+     */
+    private function getBasicRaceData($race) {
+        $race_key = strtolower($race);
+        
+        $basic_races = [
+            'aarakocra' => [
+                'name' => 'Aarakocra',
+                'speed' => 25,
+                'ability_bonuses' => ['dex' => 2, 'wis' => 1],
+                'traits' => ['Flight', 'Talons'],
+                'languages' => ['Common', 'Aarakocra'],
+                'subraces' => []
+            ],
+            'human' => [
+                'name' => 'Human',
+                'speed' => 30,
+                'ability_bonuses' => ['str' => 1, 'dex' => 1, 'con' => 1, 'int' => 1, 'wis' => 1, 'cha' => 1],
+                'traits' => ['Versatile'],
+                'languages' => ['Common'],
+                'subraces' => []
+            ],
+            'elf' => [
+                'name' => 'Elf',
+                'speed' => 30,
+                'ability_bonuses' => ['dex' => 2],
+                'traits' => ['Darkvision', 'Keen Senses'],
+                'languages' => ['Common', 'Elvish'],
+                'subraces' => []
+            ],
+            'dwarf' => [
+                'name' => 'Dwarf',
+                'speed' => 25,
+                'ability_bonuses' => ['con' => 2],
+                'traits' => ['Darkvision', 'Dwarven Resilience'],
+                'languages' => ['Common', 'Dwarvish'],
+                'subraces' => []
+            ]
+        ];
+        
+        return $basic_races[$race_key] ?? $basic_races['human'];
+    }
+    
+    /**
+     * Базовые данные класса для fallback
+     */
+    private function getBasicClassData($class) {
+        $class_key = strtolower($class);
+        
+        $basic_classes = [
+            'barbarian' => [
+                'name' => 'Barbarian',
+                'hit_die' => 12,
+                'proficiencies' => ['Light Armor', 'Medium Armor', 'Shields', 'Simple Weapons', 'Martial Weapons'],
+                'saving_throws' => ['STR', 'CON'],
+                'spellcasting' => false,
+                'spellcasting_ability' => null
+            ],
+            'fighter' => [
+                'name' => 'Fighter',
+                'hit_die' => 10,
+                'proficiencies' => ['All Armor', 'Shields', 'Simple Weapons', 'Martial Weapons'],
+                'saving_throws' => ['STR', 'CON'],
+                'spellcasting' => false,
+                'spellcasting_ability' => null
+            ],
+            'wizard' => [
+                'name' => 'Wizard',
+                'hit_die' => 6,
+                'proficiencies' => ['Simple Weapons'],
+                'saving_throws' => ['INT', 'WIS'],
+                'spellcasting' => true,
+                'spellcasting_ability' => 'int'
+            ],
+            'cleric' => [
+                'name' => 'Cleric',
+                'hit_die' => 8,
+                'proficiencies' => ['Light Armor', 'Medium Armor', 'Shields', 'Simple Weapons'],
+                'saving_throws' => ['WIS', 'CHA'],
+                'spellcasting' => true,
+                'spellcasting_ability' => 'wis'
+            ]
+        ];
+        
+        return $basic_classes[$class_key] ?? $basic_classes['fighter'];
+    }
 }
 
 // Обработка запроса
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $generator = new CharacterGeneratorV4();
         $result = $generator->generateCharacter($_POST);
@@ -929,7 +1025,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'error' => $e->getMessage()
         ], JSON_UNESCAPED_UNICODE);
     }
-} else {
+} elseif (isset($_SERVER['REQUEST_METHOD'])) {
     echo json_encode([
         'success' => false,
         'error' => 'Только POST запросы поддерживаются'
