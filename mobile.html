@@ -1177,7 +1177,7 @@
             if (rarity) params.append('rarity', rarity);
             if (type) params.append('type', type);
 
-            fetch(`api/generate-potions.php?${params.toString()}`)
+            fetch(`api/generate-potions-simple.php?${params.toString()}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -1203,11 +1203,6 @@
                     `<span class="potion-property">${prop}</span>`
                 ).join('');
                 
-                const effectsHtml = potion.effects && potion.effects.length > 0 ? 
-                    potion.effects.map(effect => 
-                        `<span class="potion-effect" style="font-size: 10px; padding: 2px 6px; background: #ff6b6b; color: white; border-radius: 3px; font-weight: 500;">${effect}</span>`
-                    ).join('') : '';
-                
                 content += `
                     <div class="potion-item" style="border-left: 4px solid ${potion.color}; margin-bottom: 20px; padding: 15px; background: var(--bg-secondary); border-radius: 8px;">
                         <div class="potion-header" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
@@ -1217,14 +1212,6 @@
                         </div>
                         <div class="potion-body">
                             <p style="margin: 0 0 15px 0; line-height: 1.5;">${potion.description}</p>
-                            ${effectsHtml ? `
-                                <div class="potion-effects" style="margin-bottom: 15px;">
-                                    <div style="font-weight: 600; color: #ff6b6b; margin-bottom: 8px; font-size: 12px;">Эффекты:</div>
-                                    <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-                                        ${effectsHtml}
-                                    </div>
-                                </div>
-                            ` : ''}
                             <div class="potion-details" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px;">
                                 <span class="potion-type" style="padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 12px;">${potion.icon} ${potion.type}</span>
                                 <span class="potion-value" style="padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 12px;">💰 ${potion.value}</span>
