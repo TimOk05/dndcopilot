@@ -1155,33 +1155,54 @@ class EnemyGenerator {
     }
 
     /**
-     * Генерация текста с помощью AI
+     * Генерация с помощью AI
      */
     private function generateWithAI($prompt) {
-        try {
-            $url = 'https://api.deepseek.com/v1/chat/completions';
+        if (!$this->deepseek_api_key) {
+            return null;
+        }
+        
         $data = [
             'model' => 'deepseek-chat',
             'messages' => [
-                    [
-                        'role' => 'user',
-                        'content' => $prompt
-                    ]
-                ],
-                'max_tokens' => 150,
-            'temperature' => 0.7
+                ['role' => 'system', 'content' => 'Ты помощник мастера D&D. Создавай интересных и атмосферных описаний для монстров.'],
+                ['role' => 'user', 'content' => $prompt]
+            ],
+            'max_tokens' => 150,
+            'temperature' => 0.8
         ];
         
-            $result = $this->makeAIRequest($url, $data);
+        // Используем file_get_contents вместо cURL
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'POST',
+                'header' => [
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $this->deepseek_api_key
+                ],
+                'content' => json_encode($data),
+                'timeout' => 10
+            ]
+        ]);
         
-        if (isset($result['choices'][0]['message']['content'])) {
-            return trim($result['choices'][0]['message']['content']);
-        }
-        
-        return null;
+        try {
+            $response = file_get_contents('https://api.deepseek.com/v1/chat/completions', false, $context);
+            
+            if ($response === false) {
+                error_log("AI API request failed: file_get_contents returned false");
+                return null;
+            }
+            
+            $result = json_decode($response, true);
+            
+            if (isset($result['choices'][0]['message']['content'])) {
+                return trim($result['choices'][0]['message']['content']);
+            }
+            
+            return null;
         } catch (Exception $e) {
-            error_log("EnemyGenerator: Ошибка AI генерации: " . $e->getMessage());
-            throw $e;
+            error_log("AI API request failed: " . $e->getMessage());
+            return null;
         }
     }
     
