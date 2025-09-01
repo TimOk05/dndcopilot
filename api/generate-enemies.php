@@ -286,19 +286,19 @@ class EnemyGenerator {
             // Монстр уже содержит детальную информацию
             $monster_details = $monster;
             
-            // Генерируем базовые характеристики
+                        // Генерируем базовые характеристики
         $enemy = [
             'name' => $monster_details['name'],
-                'type' => $this->translateType($monster_details['type']),
-                'challenge_rating' => $monster_details['challenge_rating'],
-                'hit_points' => $monster_details['hit_points'] ?? 'Не определено',
-                'armor_class' => $this->formatArmorClass($monster_details['armor_class']),
-                'speed' => $this->formatSpeed($monster_details['speed'] ?? 'Не определено'),
-                'abilities' => $this->formatAbilities($monster_details['abilities'] ?? []),
-            'actions' => $monster_details['actions'] ?? [],
-            'special_abilities' => $monster_details['special_abilities'] ?? [],
-                'environment' => $this->translateEnvironment($monster_details['environment'] ?? 'Не определена'),
-                'cr_numeric' => $this->parseCR($monster_details['challenge_rating'])
+            'type' => $this->translateType($monster_details['type']),
+            'challenge_rating' => $monster_details['challenge_rating'],
+            'hit_points' => $monster_details['hit_points'] ?? 'Не определено',
+            'armor_class' => $this->formatArmorClass($monster_details['armor_class']),
+            'speed' => $this->formatSpeed($monster_details['speed'] ?? 'Не определено'),
+            'abilities' => $this->formatAbilities($monster_details['abilities'] ?? []),
+            'actions' => $this->formatActions($monster_details['actions'] ?? []),
+            'special_abilities' => $this->formatSpecialAbilities($monster_details['special_abilities'] ?? []),
+            'environment' => $this->translateEnvironment($monster_details['environment'] ?? 'Не определена'),
+            'cr_numeric' => $this->parseCR($monster_details['challenge_rating'])
         ];
         
             // Если AI включен, генерируем описание и тактику
@@ -525,14 +525,42 @@ class EnemyGenerator {
             $formatted = [];
             foreach ($speed as $type => $value) {
                 if (is_string($type)) {
-                    $formatted[] = "$type: $value";
+                    $translated_type = $this->translateSpeedType($type);
+                    $translated_value = $this->translateSpeedValue($value);
+                    $formatted[] = "$translated_type: $translated_value";
                 } else {
-                    $formatted[] = $value;
+                    $formatted[] = $this->translateSpeedValue($value);
                 }
             }
             return implode(', ', $formatted);
         }
-        return $speed;
+        return $this->translateSpeedValue($speed);
+    }
+    
+    /**
+     * Перевод типов скорости
+     */
+    private function translateSpeedType($type) {
+        $translations = [
+            'walk' => 'Ходьба',
+            'fly' => 'Полёт',
+            'swim' => 'Плавание',
+            'climb' => 'Лазание',
+            'burrow' => 'Рытьё',
+            'hover' => 'Парение'
+        ];
+        
+        return $translations[strtolower($type)] ?? $type;
+    }
+    
+    /**
+     * Перевод значений скорости
+     */
+    private function translateSpeedValue($value) {
+        // Заменяем "ft." на "фт." и убираем лишние пробелы
+        $value = str_replace('ft.', 'фт.', $value);
+        $value = str_replace('ft', 'фт', $value);
+        return trim($value);
     }
     
     /**
@@ -576,6 +604,54 @@ class EnemyGenerator {
             return 0;
         }
         return floor(($ability_score - 10) / 2);
+    }
+    
+    /**
+     * Форматирование действий
+     */
+    private function formatActions($actions) {
+        if (!is_array($actions)) {
+            return $actions;
+        }
+        
+        $formatted = [];
+        foreach ($actions as $action) {
+            if (is_array($action)) {
+                if (isset($action['name'])) {
+                    $formatted[] = $action['name'];
+                } elseif (isset($action[0])) {
+                    $formatted[] = $action[0];
+                }
+            } else {
+                $formatted[] = $action;
+            }
+        }
+        
+        return $formatted;
+    }
+    
+    /**
+     * Форматирование специальных способностей
+     */
+    private function formatSpecialAbilities($abilities) {
+        if (!is_array($abilities)) {
+            return $abilities;
+        }
+        
+        $formatted = [];
+        foreach ($abilities as $ability) {
+            if (is_array($ability)) {
+                if (isset($ability['name'])) {
+                    $formatted[] = $ability['name'];
+                } elseif (isset($ability[0])) {
+                    $formatted[] = $ability[0];
+                }
+            } else {
+                $formatted[] = $ability;
+            }
+        }
+        
+        return $formatted;
     }
     
     /**

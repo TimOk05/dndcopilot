@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест генератора противников</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background: #007cba;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #005a87;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .loading {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧙‍♂️ Тест генератора противников</h1>
+        
+        <form id="enemyForm">
+            <div class="form-group">
+                <label for="threat_level">Уровень угрозы:</label>
+                <select id="threat_level" name="threat_level" required>
+                    <option value="">Выберите уровень угрозы</option>
+                    <option value="easy">🟢 Легкий (CR 0-3)</option>
+                    <option value="medium">🟡 Средний (CR 1-7)</option>
+                    <option value="hard">🟠 Сложный (CR 5-12)</option>
+                    <option value="deadly">🔴 Смертельный (CR 10-20)</option>
+                    <option value="random">🎲 Случайный</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="count">Количество противников:</label>
+                <input type="number" id="count" name="count" min="1" max="10" value="1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="enemy_type">Тип противников:</label>
+                <select id="enemy_type" name="enemy_type">
+                    <option value="">Любой тип</option>
+                    <option value="humanoid">Гуманоиды</option>
+                    <option value="beast">Звери</option>
+                    <option value="undead">Нежить</option>
+                    <option value="giant">Великаны</option>
+                    <option value="dragon">Драконы</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="environment">Среда обитания:</label>
+                <select id="environment" name="environment">
+                    <option value="">Любая среда</option>
+                    <option value="arctic">Арктика</option>
+                    <option value="coastal">Побережье</option>
+                    <option value="desert">Пустыня</option>
+                    <option value="forest">Лес</option>
+                    <option value="grassland">Равнины</option>
+                    <option value="hill">Холмы</option>
+                    <option value="mountain">Горы</option>
+                    <option value="swamp">Болота</option>
+                    <option value="underdark">Подземелье</option>
+                    <option value="urban">Город</option>
+                </select>
+            </div>
+            
+            <button type="submit" id="submitBtn">
+                🎲 Создать противников
+            </button>
+        </form>
+        
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.getElementById('enemyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitBtn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            
+            // Показываем состояние загрузки
+            submitBtn.innerHTML = '⏳ Создание...';
+            submitBtn.disabled = true;
+            resultDiv.innerHTML = 'Создание противников...';
+            resultDiv.className = 'result loading';
+            resultDiv.style.display = 'block';
+            
+            // Отправляем запрос
+            fetch('api/generate-enemies.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('API Response:', data);
+                
+                if (data.success && data.enemies) {
+                    let resultHtml = '<h3>✅ Противники созданы!</h3>\n\n';
+                    
+                    data.enemies.forEach((enemy, index) => {
+                        resultHtml += `--- Противник ${index + 1} ---\n`;
+                        resultHtml += `Имя: ${enemy.name}\n`;
+                        resultHtml += `Тип: ${enemy.type}\n`;
+                        resultHtml += `CR: ${enemy.challenge_rating}\n`;
+                        resultHtml += `HP: ${enemy.hit_points}\n`;
+                        resultHtml += `AC: ${enemy.armor_class}\n`;
+                        resultHtml += `Скорость: ${enemy.speed}\n`;
+                        resultHtml += `Среда: ${enemy.environment}\n`;
+                        
+                        if (enemy.abilities && Object.keys(enemy.abilities).length > 0) {
+                            resultHtml += 'Характеристики:\n';
+                            Object.entries(enemy.abilities).forEach(([key, value]) => {
+                                if (typeof value === 'object' && value.value) {
+                                    resultHtml += `  ${key}: ${value.value} (${value.modifier >= 0 ? '+' : ''}${value.modifier})\n`;
+                                } else if (typeof value === 'number') {
+                                    const mod = Math.floor((value - 10) / 2);
+                                    resultHtml += `  ${key}: ${value} (${mod >= 0 ? '+' : ''}${mod})\n`;
+                                }
+                            });
+                        }
+                        
+                        if (enemy.actions && enemy.actions.length > 0) {
+                            resultHtml += `Действия: ${enemy.actions.join(', ')}\n`;
+                        }
+                        
+                        if (enemy.special_abilities && enemy.special_abilities.length > 0) {
+                            resultHtml += `Способности: ${enemy.special_abilities.join(', ')}\n`;
+                        }
+                        
+                        if (enemy.description) {
+                            resultHtml += `Описание: ${enemy.description}\n`;
+                        }
+                        
+                        if (enemy.tactics) {
+                            resultHtml += `Тактика: ${enemy.tactics}\n`;
+                        }
+                        
+                        resultHtml += '\n';
+                    });
+                    
+                    resultDiv.innerHTML = resultHtml;
+                    resultDiv.className = 'result success';
+                } else {
+                    let errorMsg = data.error || 'Неизвестная ошибка';
+                    if (data.message) {
+                        errorMsg = data.message;
+                    }
+                    resultDiv.innerHTML = `❌ Ошибка: ${errorMsg}`;
+                    resultDiv.className = 'result error';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                let errorMessage = 'Ошибка сети. Попробуйте ещё раз.';
+                
+                if (error.message.includes('HTTP')) {
+                    errorMessage = `Ошибка сервера: ${error.message}`;
+                } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    errorMessage = 'API недоступен. Проверьте подключение к интернету.';
+                } else if (error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Сервер недоступен. Проверьте, что сервер запущен.';
+                }
+                
+                resultDiv.innerHTML = `❌ ${errorMessage}`;
+                resultDiv.className = 'result error';
+            })
+            .finally(() => {
+                submitBtn.innerHTML = '🎲 Создать противников';
+                submitBtn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
