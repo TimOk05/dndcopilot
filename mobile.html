@@ -798,6 +798,56 @@
             </div>
         </section>
 
+        <!-- Генератор зелий -->
+        <section id="potions" class="content-section">
+            <div class="card">
+                <h2 class="card-title">🧪 Генератор зелий</h2>
+
+                <div class="input-group">
+                    <label class="input-label">Количество зелий</label>
+                    <input type="number" class="input-field" id="potion-count" min="1" max="10" value="1">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Редкость</label>
+                    <select class="input-field" id="potion-rarity">
+                        <option value="">Любая редкость</option>
+                        <option value="common">Обычное</option>
+                        <option value="uncommon">Необычное</option>
+                        <option value="rare">Редкое</option>
+                        <option value="very_rare">Очень редкое</option>
+                        <option value="legendary">Легендарное</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Тип зелья</label>
+                    <select class="input-field" id="potion-type">
+                        <option value="">Любой тип</option>
+                        <option value="Восстановление">🩹 Восстановление</option>
+                        <option value="Усиление">💪 Усиление</option>
+                        <option value="Защита">🛡️ Защита</option>
+                        <option value="Иллюзия">👁️ Иллюзия</option>
+                        <option value="Трансмутация">🔄 Трансмутация</option>
+                        <option value="Некромантия">💀 Некромантия</option>
+                        <option value="Прорицание">🔮 Прорицание</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="generatePotion()">
+                    🧪 Создать зелья
+                </button>
+            </div>
+
+            <div id="potion-result" class="card hidden">
+                <h3 class="card-title">🧪 Ваши зелья</h3>
+                <div id="potion-content"></div>
+                <button class="btn btn-secondary" onclick="saveToNotes('potion')">
+                    💾 Сохранить в заметки
+                </button>
+            </div>
+        </section>
+
         <!-- Система боя -->
         <section id="combat" class="content-section">
             <div class="card">
@@ -886,6 +936,10 @@
         <a href="#" class="nav-item" onclick="showSection('enemies')">
             <div class="nav-icon">⚔️</div>
             <div>Противники</div>
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('potions')">
+            <div class="nav-icon">🧪</div>
+            <div>Зелья</div>
         </a>
         <a href="#" class="nav-item" onclick="showSection('combat')">
             <div class="nav-icon">🗡️</div>
@@ -1101,6 +1155,81 @@
                 console.error('Ошибка генерации противника:', error);
                 showModal('Ошибка соединения. Попробуйте позже.');
             });
+        }
+        
+        // Генерация зелий
+        function generatePotion() {
+            const count = parseInt(document.getElementById('potion-count').value) || 1;
+            const rarity = document.getElementById('potion-rarity').value;
+            const type = document.getElementById('potion-type').value;
+
+            if (count < 1 || count > 10) {
+                showModal('Количество зелий должно быть от 1 до 10.');
+                return;
+            }
+
+            showModal('Создание зелий...');
+
+            // Формируем параметры для API
+            const params = new URLSearchParams();
+            params.append('action', 'random');
+            params.append('count', count);
+            if (rarity) params.append('rarity', rarity);
+            if (type) params.append('type', type);
+
+            fetch(`api/generate-potions.php?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayPotions(data.data);
+                    hideModal();
+                } else {
+                    hideModal();
+                    showModal('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+                }
+            })
+            .catch(error => {
+                hideModal();
+                console.error('Ошибка генерации зелий:', error);
+                showModal('Ошибка соединения. Попробуйте позже.');
+            });
+        }
+        
+        function displayPotions(potions) {
+            let content = '<div class="potions-list">';
+            
+            potions.forEach((potion, index) => {
+                const propertiesHtml = potion.properties.map(prop => 
+                    `<span class="potion-property">${prop}</span>`
+                ).join('');
+                
+                content += `
+                    <div class="potion-item" style="border-left: 4px solid ${potion.color}; margin-bottom: 20px; padding: 15px; background: var(--bg-secondary); border-radius: 8px;">
+                        <div class="potion-header" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <span class="potion-icon" style="font-size: 24px;">${potion.icon}</span>
+                            <h4 style="margin: 0; flex: 1;">${potion.name}</h4>
+                            <span class="potion-rarity" style="color: ${potion.color}; font-size: 12px; font-weight: bold; padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; border: 1px solid currentColor;">${potion.rarity}</span>
+                        </div>
+                        <div class="potion-body">
+                            <p style="margin: 0 0 15px 0; line-height: 1.5;">${potion.description}</p>
+                            <div class="potion-details" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px;">
+                                <span class="potion-type" style="padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 12px;">${potion.icon} ${potion.type}</span>
+                                <span class="potion-value" style="padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 12px;">💰 ${potion.value}</span>
+                                <span class="potion-weight" style="padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 12px;">⚖️ ${potion.weight}</span>
+                            </div>
+                            <div class="potion-properties" style="display: flex; flex-wrap: wrap; gap: 4px;">
+                                ${propertiesHtml.split(',').map(prop => 
+                                    `<span class="potion-property" style="font-size: 10px; padding: 2px 6px; background: var(--accent-primary); color: white; border-radius: 3px; font-weight: 500;">${prop.trim()}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            content += '</div>';
+            document.getElementById('potion-content').innerHTML = content;
+            document.getElementById('potion-result').classList.remove('hidden');
         }
         
         function displayEnemy(data) {
@@ -1351,6 +1480,9 @@
                     break;
                 case 'ai':
                     content = document.getElementById('ai-content').innerText;
+                    break;
+                case 'potion':
+                    content = document.getElementById('potion-content').innerText;
                     break;
             }
             

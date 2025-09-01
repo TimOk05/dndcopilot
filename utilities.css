@@ -996,3 +996,263 @@
         display: block !important;
     }
 }
+
+/* ===== POTION GENERATOR ===== */
+
+.potion-generator {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.potion-form {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+}
+
+.form-group input,
+.form-group select {
+    padding: var(--space-3);
+    border: 1px solid var(--border-tertiary);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: var(--text-base);
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(166, 124, 82, 0.1);
+}
+
+.generate-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    width: 100%;
+    padding: var(--space-4);
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.generate-btn:hover {
+    background: var(--accent-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.generate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-icon {
+    font-size: var(--text-xl);
+}
+
+.btn-text {
+    font-size: var(--text-lg);
+}
+
+/* ===== POTION CARDS ===== */
+
+.potions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.potion-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.potion-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.potion-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+}
+
+.potion-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-tertiary);
+}
+
+.potion-icon {
+    font-size: var(--text-2xl);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+}
+
+.potion-name {
+    flex: 1;
+    margin: 0;
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.potion-rarity {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--bg-tertiary);
+    border: 1px solid currentColor;
+}
+
+.potion-body {
+    color: var(--text-secondary);
+}
+
+.potion-description {
+    margin: 0 0 var(--space-4) 0;
+    line-height: var(--line-height-relaxed);
+    font-size: var(--text-base);
+}
+
+.potion-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    font-size: var(--text-sm);
+}
+
+.potion-type,
+.potion-value,
+.potion-weight {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-tertiary);
+}
+
+.potion-properties {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.potion-property {
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-2);
+    background: var(--accent-primary);
+    color: white;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+}
+
+/* ===== LOADING STATES ===== */
+
+.loading {
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--text-tertiary);
+    font-size: var(--text-lg);
+    font-style: italic;
+}
+
+.error {
+    text-align: center;
+    padding: var(--space-6);
+    color: var(--accent-danger);
+    background: rgba(183, 28, 28, 0.1);
+    border: 1px solid var(--accent-danger);
+    border-radius: var(--radius-md);
+    font-size: var(--text-base);
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+    }
+    
+    .potions-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+    }
+    
+    .potion-card {
+        padding: var(--space-3);
+    }
+    
+    .potion-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+    }
+    
+    .potion-details {
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+    
+    .generate-btn {
+        padding: var(--space-3);
+        font-size: var(--text-base);
+    }
+}

@@ -264,6 +264,7 @@ $fastBtns = '';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей">🎲 Бросок костей</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей">⚔️ Персонаж</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников">👹 Противники</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModal()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий">🧪 Зелья</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="Управление инициативой" aria-label="Открыть управление инициативой">⚡ Инициатива</button>';
 $fastBtns .= '<a href="combat.html" class="fast-btn btn btn-primary interactive" style="text-decoration: none; display: inline-block;" data-tooltip="Система боя" aria-label="Перейти к системе боя">⚔️ Система боя</a>';
 
@@ -1360,6 +1361,259 @@ function regenerateNpc() {
     } else {
         alert('Нет сохраненных параметров для повторной генерации');
     }
+}
+
+// --- Зелья ---
+function openPotionModal() {
+    showModal(`
+        <div class="potion-generator">
+            <div class="generator-header">
+                <h2>🧪 Генератор зелий</h2>
+                <p class="generator-subtitle">Создайте магические зелья различных типов и редкости</p>
+            </div>
+            
+            <form id="potionForm" class="potion-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="potion-count">Количество зелий</label>
+                        <input type="number" id="potion-count" name="count" min="1" max="10" value="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="potion-rarity">Редкость</label>
+                        <select id="potion-rarity" name="rarity">
+                            <option value="">Любая редкость</option>
+                            <option value="common">Обычное</option>
+                            <option value="uncommon">Необычное</option>
+                            <option value="rare">Редкое</option>
+                            <option value="very_rare">Очень редкое</option>
+                            <option value="legendary">Легендарное</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="potion-type">Тип зелья</label>
+                        <select id="potion-type" name="type">
+                            <option value="">Любой тип</option>
+                            <option value="Восстановление">🩹 Восстановление</option>
+                            <option value="Усиление">💪 Усиление</option>
+                            <option value="Защита">🛡️ Защита</option>
+                            <option value="Иллюзия">👁️ Иллюзия</option>
+                            <option value="Трансмутация">🔄 Трансмутация</option>
+                            <option value="Некромантия">💀 Некромантия</option>
+                            <option value="Прорицание">🔮 Прорицание</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="submit" class="generate-btn">
+                    <span class="btn-icon">🧪</span>
+                    <span class="btn-text">Создать зелья</span>
+                </button>
+            </form>
+            
+            <div id="potionResult" class="result-container"></div>
+        </div>
+    `);
+    
+    document.getElementById('modal-save').style.display = 'none';
+    
+    // Добавляем обработчик формы
+    document.getElementById('potionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const resultDiv = document.getElementById('potionResult');
+        
+        submitBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Создание...</span>';
+        submitBtn.disabled = true;
+        resultDiv.innerHTML = '<div class="loading">Создание зелий...</div>';
+        
+        // Формируем параметры для API
+        const params = new URLSearchParams();
+        params.append('action', 'random');
+        params.append('count', formData.get('count'));
+        if (formData.get('rarity')) {
+            params.append('rarity', formData.get('rarity'));
+        }
+        if (formData.get('type')) {
+            params.append('type', formData.get('type'));
+        }
+        
+        fetch('api/generate-potions.php?' + params.toString())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Potion API Response:', data);
+            if (data.success && data.data) {
+                let resultHtml = formatPotionsFromApi(data.data);
+                resultDiv.innerHTML = resultHtml;
+                
+                // Автоматическая прокрутка к результату
+                setTimeout(() => {
+                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } else {
+                let errorMsg = data.error || 'Неизвестная ошибка';
+                resultDiv.innerHTML = '<div class="error">Ошибка: ' + errorMsg + '</div>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            let errorMessage = 'Ошибка сети. Попробуйте ещё раз.';
+            
+            if (error.message.includes('HTTP')) {
+                errorMessage = `Ошибка сервера: ${error.message}`;
+            } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                errorMessage = 'API недоступен. Проверьте подключение к интернету.';
+            } else if (error.message.includes('Failed to fetch')) {
+                errorMessage = 'Сервер недоступен. Проверьте, что сервер запущен.';
+            }
+            
+            resultDiv.innerHTML = '<div class="error">' + errorMessage + '</div>';
+        })
+        .finally(() => {
+            submitBtn.innerHTML = '<span class="btn-icon">🧪</span><span class="btn-text">Создать зелья</span>';
+            submitBtn.disabled = false;
+        });
+    });
+}
+
+// Функция форматирования зелий из API
+function formatPotionsFromApi(potions) {
+    let html = '<div class="potions-grid">';
+    
+    potions.forEach((potion, index) => {
+        const propertiesHtml = potion.properties.map(prop => 
+            `<span class="potion-property">${prop}</span>`
+        ).join('');
+        
+        html += `
+            <div class="potion-card" style="border-left: 4px solid ${potion.color}">
+                <div class="potion-header">
+                    <span class="potion-icon">${potion.icon}</span>
+                    <h3 class="potion-name">${potion.name}</h3>
+                    <span class="potion-rarity" style="color: ${potion.color}">${potion.rarity}</span>
+                </div>
+                <div class="potion-body">
+                    <p class="potion-description">${potion.description}</p>
+                    <div class="potion-details">
+                        <span class="potion-type">${potion.icon} ${potion.type}</span>
+                        <span class="potion-value">💰 ${potion.value}</span>
+                        <span class="potion-weight">⚖️ ${potion.weight}</span>
+                    </div>
+                    <div class="potion-properties">
+                        ${propertiesHtml}
+                    </div>
+                    <div class="potion-actions" style="margin-top: var(--space-4); text-align: center;">
+                        <button class="fast-btn" onclick="savePotionAsNote('${potion.name}', \`${potion.description}\`, '${potion.rarity}', '${potion.type}', '${potion.value}', '${potion.weight}', '${potion.properties.join(', ')}')" style="background: var(--accent-success);">
+                            💾 Сохранить в заметки
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    return html;
+}
+
+// Функция сохранения зелья в заметки
+function savePotionAsNote(name, description, rarity, type, value, weight, properties) {
+    const potionNote = `
+        <div class="potion-note-header" style="background: var(--bg-tertiary); padding: var(--space-3); border-radius: var(--radius-md); margin-bottom: var(--space-3); border-left: 4px solid var(--accent-primary);">
+            <h3 style="margin: 0; color: var(--text-primary);">🧪 ${name}</h3>
+            <div style="display: flex; gap: var(--space-2); margin-top: var(--space-2); flex-wrap: wrap;">
+                <span style="background: var(--accent-primary); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">${rarity}</span>
+                <span style="background: var(--bg-quaternary); color: var(--text-primary); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">${type}</span>
+            </div>
+        </div>
+        <div style="margin-bottom: var(--space-3);">
+            <strong>Описание:</strong> ${description}
+        </div>
+        <div style="margin-bottom: var(--space-3);">
+            <strong>Стоимость:</strong> ${value}<br>
+            <strong>Вес:</strong> ${weight}
+        </div>
+        <div>
+            <strong>Свойства:</strong> ${properties}
+        </div>
+    `;
+    
+    // Сохраняем в заметки через AJAX
+    fetch('', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'fast_action=save_note&content=' + encodeURIComponent(potionNote)
+    })
+    .then(response => response.text())
+    .then(result => {
+        if (result === 'OK') {
+            // Показываем уведомление об успешном сохранении
+            showNotification('Зелье сохранено в заметки!', 'success');
+            // Обновляем отображение заметок
+            updateNotesDisplay();
+        } else {
+            showNotification('Ошибка при сохранении зелья', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving potion:', error);
+        showNotification('Ошибка при сохранении зелья', 'error');
+    });
+}
+
+// Функция показа уведомлений
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: var(--space-4);
+        border-radius: var(--radius-md);
+        color: white;
+        font-weight: 600;
+        z-index: 9999;
+        max-width: 300px;
+        box-shadow: var(--shadow-lg);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    `;
+    
+    // Устанавливаем цвет в зависимости от типа
+    if (type === 'success') {
+        notification.style.background = 'var(--accent-success)';
+    } else if (type === 'error') {
+        notification.style.background = 'var(--accent-danger)';
+    } else {
+        notification.style.background = 'var(--accent-info)';
+    }
+    
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    // Показываем уведомление
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Скрываем через 3 секунды
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
 }
 
 // --- Инициатива ---
