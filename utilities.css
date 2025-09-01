@@ -1457,7 +1457,8 @@
     gap: var(--space-2);
 }
 
-.potion-property {
+.potion-property,
+.potion-effect {
     font-size: var(--text-xs);
     padding: var(--space-1) var(--space-2);
     background: var(--accent-primary);

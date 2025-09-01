@@ -264,8 +264,7 @@ $fastBtns = '<div class="button-grid">';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей">🎲 Бросок костей</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей">⚔️ Персонаж</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников">👹 Противники</button>';
-        // Кнопка демо зелий убрана - теперь используется полноценный генератор
-$fastBtns .= '<button class="fast-btn btn btn-secondary interactive" onclick="openPotionShowcase()" data-tooltip="Демо зелий" aria-label="Открыть демо генератора зелий">🎨 Демо зелий</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий">🧪 Зелья</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="Управление инициативой" aria-label="Открыть управление инициативой">⚡ Инициатива</button>';
 $fastBtns .= '<a href="combat.html" class="fast-btn btn btn-primary interactive" style="text-decoration: none; display: inline-block;" data-tooltip="Система боя" aria-label="Перейти к системе боя">⚔️ Система боя</a>';
 $fastBtns .= '</div>';
@@ -1544,19 +1543,24 @@ function openPotionModalSimple() {
     });
 }
 
-// --- Открытие демо-страницы зелий ---
-function openPotionShowcase() {
-    window.open('potion-showcase.html', '_blank');
-}
+
 
 // Функция форматирования зелий из API
 function formatPotionsFromApi(potions) {
     let html = '<div class="potions-grid">';
     
     potions.forEach((potion, index) => {
-        const propertiesHtml = potion.properties.map(prop => 
-            `<span class="potion-property">${prop}</span>`
-        ).join('');
+        // Обрабатываем эффекты (новый формат) или свойства (старый формат)
+        let effectsHtml = '';
+        if (potion.effects && potion.effects.length > 0) {
+            effectsHtml = potion.effects.map(effect => 
+                `<span class="potion-effect">${effect}</span>`
+            ).join('');
+        } else if (potion.properties && potion.properties.length > 0) {
+            effectsHtml = potion.properties.map(prop => 
+                `<span class="potion-property">${prop}</span>`
+            ).join('');
+        }
         
         let descriptionHtml = `<p class="potion-description">${potion.description}</p>`;
         
@@ -1575,10 +1579,10 @@ function formatPotionsFromApi(potions) {
                         <span class="potion-weight">⚖️ ${potion.weight}</span>
                     </div>
                     <div class="potion-properties">
-                        ${propertiesHtml}
+                        ${effectsHtml}
                     </div>
                     <div class="potion-actions" style="margin-top: var(--space-4); text-align: center;">
-                        <button class="fast-btn" onclick="savePotionAsNote('${potion.name}', \`${potion.description}\`, '${potion.rarity}', '${potion.type}', '${potion.value}', '${potion.weight}', '${potion.properties.join(', ')}')" style="background: var(--accent-success);">
+                        <button class="fast-btn" onclick="savePotionAsNote('${potion.name}', \`${potion.description}\`, '${potion.rarity}', '${potion.type}', '${potion.value}', '${potion.weight}', '${effectsHtml ? effectsHtml.replace(/<[^>]*>/g, '') : ''}')" style="background: var(--accent-success);">
                             💾 Сохранить в заметки
                         </button>
                     </div>
