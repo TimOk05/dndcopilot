@@ -287,27 +287,27 @@ class EnemyGenerator {
             $monster_details = $monster;
             
             // Генерируем базовые характеристики
-            $enemy = [
-                'name' => $monster_details['name'],
+        $enemy = [
+            'name' => $monster_details['name'],
                 'type' => $this->translateType($monster_details['type']),
                 'challenge_rating' => $monster_details['challenge_rating'],
                 'hit_points' => $monster_details['hit_points'] ?? 'Не определено',
                 'armor_class' => $this->formatArmorClass($monster_details['armor_class']),
                 'speed' => $this->formatSpeed($monster_details['speed'] ?? 'Не определено'),
                 'abilities' => $this->formatAbilities($monster_details['abilities'] ?? []),
-                'actions' => $monster_details['actions'] ?? [],
-                'special_abilities' => $monster_details['special_abilities'] ?? [],
+            'actions' => $monster_details['actions'] ?? [],
+            'special_abilities' => $monster_details['special_abilities'] ?? [],
                 'environment' => $this->translateEnvironment($monster_details['environment'] ?? 'Не определена'),
                 'cr_numeric' => $this->parseCR($monster_details['challenge_rating'])
-            ];
-            
+        ];
+        
             // Если AI включен, генерируем описание и тактику
-            if ($use_ai) {
+        if ($use_ai) {
                 $enemy['description'] = $this->generateDescription($monster_details);
                 $enemy['tactics'] = $this->generateTactics($monster_details);
-            }
-            
-            return $enemy;
+        }
+        
+        return $enemy;
             
         } catch (Exception $e) {
             error_log("EnemyGenerator: Ошибка генерации противника: " . $e->getMessage());
@@ -364,7 +364,7 @@ class EnemyGenerator {
                 
                 error_log("EnemyGenerator: Монстр {$monster_details['name']} прошел проверку полноты данных");
                 
-                // Проверяем CR
+            // Проверяем CR
                 if (!isset($monster_details['challenge_rating'])) {
                     error_log("EnemyGenerator: Монстр не содержит CR: " . json_encode($monster_details));
                     continue;
@@ -387,9 +387,9 @@ class EnemyGenerator {
                 
                 if ($enemy_type && !$this->checkType($monster_details['type'], $enemy_type)) {
                     error_log("EnemyGenerator: Монстр {$monster_details['name']} не прошел проверку типа");
-                    continue;
-                }
-                
+                continue;
+            }
+            
                 // Проверяем среду (необязательно - пропускаем если нет информации)
                 if ($environment && isset($monster_details['environment'])) {
                     if (!$this->checkEnvironment($monster_details, $environment)) {
@@ -402,9 +402,9 @@ class EnemyGenerator {
                 // Проверяем совместимость
                 if (!$this->checkCompatibility($monster_details, $cr_range)) {
                     error_log("EnemyGenerator: Монстр {$monster_details['name']} не прошел проверку совместимости");
-                    continue;
-                }
-                
+                continue;
+            }
+            
                 error_log("EnemyGenerator: Монстр {$monster_details['name']} прошел все проверки!");
                 
                 $filtered[] = $monster_details;
@@ -560,6 +560,8 @@ class EnemyGenerator {
                     'value' => $value,
                     'modifier' => $modifier
                 ];
+                // Также сохраняем оригинальные ключи для совместимости
+                $formatted[$ability] = $value;
             }
         }
         
@@ -673,32 +675,32 @@ class EnemyGenerator {
             return "Монстр использует стандартную тактику для своего типа и уровня сложности.";
         }
     }
-    
+
     /**
      * Генерация текста с помощью AI
      */
     private function generateWithAI($prompt) {
         try {
             $url = 'https://api.deepseek.com/v1/chat/completions';
-            $data = [
-                'model' => 'deepseek-chat',
-                'messages' => [
+        $data = [
+            'model' => 'deepseek-chat',
+            'messages' => [
                     [
                         'role' => 'user',
                         'content' => $prompt
                     ]
                 ],
                 'max_tokens' => 150,
-                'temperature' => 0.7
-            ];
-            
+            'temperature' => 0.7
+        ];
+        
             $result = $this->makeAIRequest($url, $data);
-            
-            if (isset($result['choices'][0]['message']['content'])) {
-                return trim($result['choices'][0]['message']['content']);
-            }
-            
-            return null;
+        
+        if (isset($result['choices'][0]['message']['content'])) {
+            return trim($result['choices'][0]['message']['content']);
+        }
+        
+        return null;
         } catch (Exception $e) {
             error_log("EnemyGenerator: Ошибка AI генерации: " . $e->getMessage());
             throw $e;
@@ -741,17 +743,17 @@ class EnemyGenerator {
             throw new Exception("Не удалось получить данные от API: $error_msg");
         }
         
-        error_log("EnemyGenerator: Успешный ответ, размер: " . strlen($response) . " байт");
-        $decoded = json_decode($response, true);
-        if (json_last_error() === JSON_ERROR_NONE) {
-            error_log("EnemyGenerator: JSON успешно декодирован");
-            return $decoded;
-        } else {
-            error_log("EnemyGenerator: JSON decode error for $url: " . json_last_error_msg());
-            throw new Exception("Ошибка разбора ответа API");
+            error_log("EnemyGenerator: Успешный ответ, размер: " . strlen($response) . " байт");
+            $decoded = json_decode($response, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                error_log("EnemyGenerator: JSON успешно декодирован");
+                return $decoded;
+            } else {
+                error_log("EnemyGenerator: JSON decode error for $url: " . json_last_error_msg());
+                throw new Exception("Ошибка разбора ответа API");
+            }
         }
-    }
-    
+        
     /**
      * Выполнение AI запроса
      */
@@ -786,7 +788,7 @@ class EnemyGenerator {
         
         return $result;
     }
-    
+
     /**
      * Получение случайного уровня угрозы
      */
@@ -794,7 +796,7 @@ class EnemyGenerator {
         $levels = ['easy', 'medium', 'hard', 'deadly'];
         return $levels[array_rand($levels)];
     }
-    
+
     /**
      * Расширение диапазона CR если не найдены монстры
      */

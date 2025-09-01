@@ -2505,6 +2505,65 @@ function formatCharacterFromApi(character) {
     return out;
 }
 
+// --- Перевод названий действий ---
+function translateActionName(actionName) {
+    const translations = {
+        'Bite': 'Укус',
+        'Claw': 'Коготь',
+        'Tail': 'Хвост',
+        'Gore': 'Рог',
+        'Slam': 'Удар',
+        'Tentacle': 'Щупальце',
+        'Sting': 'Жало',
+        'Spit': 'Плевок',
+        'Breath': 'Дыхание',
+        'Wing': 'Крыло',
+        'Hoof': 'Копыто',
+        'Punch': 'Кулак',
+        'Kick': 'Пинок',
+        'Headbutt': 'Удар головой',
+        'Charge': 'Рывок',
+        'Trample': 'Топтание',
+        'Swallow': 'Проглатывание',
+        'Constrict': 'Сжатие',
+        'Grapple': 'Захват',
+        'Shove': 'Толчок',
+        'Dash': 'Рывок',
+        'Disengage': 'Отход',
+        'Dodge': 'Уклонение',
+        'Help': 'Помощь',
+        'Hide': 'Скрытие',
+        'Ready': 'Подготовка',
+        'Search': 'Поиск',
+        'Use an Object': 'Использование предмета',
+        'Teleport': 'Телепортация',
+        'Invisibility': 'Невидимость',
+        'Polymorph': 'Превращение',
+        'Charm': 'Очарование',
+        'Fear': 'Страх',
+        'Sleep': 'Сон',
+        'Confusion': 'Смятение',
+        'Paralysis': 'Паралич',
+        'Poison': 'Яд',
+        'Disease': 'Болезнь',
+        'Curse': 'Проклятие',
+        'Blessing': 'Благословение',
+        'Healing': 'Исцеление',
+        'Regeneration': 'Регенерация',
+        'Summon': 'Призыв',
+        'Banish': 'Изгнание',
+        'Plane Shift': 'Сдвиг плана',
+        'Time Stop': 'Остановка времени',
+        'Wish': 'Желание',
+        'Meteor Swarm': 'Метеоритный дождь',
+        'Power Word Kill': 'Слово силы: смерть',
+        'Power Word Stun': 'Слово силы: оглушение',
+        'Power Word Heal': 'Слово силы: исцеление'
+    };
+    
+    return translations[actionName] || actionName;
+}
+
 // --- Форматирование противников от API системы ---
 function formatEnemiesFromApi(enemies) {
     console.log('formatEnemiesFromApi called with:', enemies);
@@ -2576,37 +2635,43 @@ function formatEnemiesFromApi(enemies) {
             if (enemy.abilities.СИЛ) {
                 out += '<div class="ability-item"><strong>СИЛ:</strong> ' + enemy.abilities.СИЛ.value + ' (' + (enemy.abilities.СИЛ.modifier >= 0 ? '+' : '') + enemy.abilities.СИЛ.modifier + ')</div>';
             } else if (enemy.abilities.str) {
-                out += '<div class="ability-item"><strong>СИЛ:</strong> ' + enemy.abilities.str + '</div>';
+                const strMod = Math.floor((enemy.abilities.str - 10) / 2);
+                out += '<div class="ability-item"><strong>СИЛ:</strong> ' + enemy.abilities.str + ' (' + (strMod >= 0 ? '+' : '') + strMod + ')</div>';
             }
             
             if (enemy.abilities.ЛОВ) {
                 out += '<div class="ability-item"><strong>ЛОВ:</strong> ' + enemy.abilities.ЛОВ.value + ' (' + (enemy.abilities.ЛОВ.modifier >= 0 ? '+' : '') + enemy.abilities.ЛОВ.modifier + ')</div>';
             } else if (enemy.abilities.dex) {
-                out += '<div class="ability-item"><strong>ЛОВ:</strong> ' + enemy.abilities.dex + '</div>';
+                const dexMod = Math.floor((enemy.abilities.dex - 10) / 2);
+                out += '<div class="ability-item"><strong>ЛОВ:</strong> ' + enemy.abilities.dex + ' (' + (dexMod >= 0 ? '+' : '') + dexMod + ')</div>';
             }
             
             if (enemy.abilities.ТЕЛ) {
                 out += '<div class="ability-item"><strong>ТЕЛ:</strong> ' + enemy.abilities.ТЕЛ.value + ' (' + (enemy.abilities.ТЕЛ.modifier >= 0 ? '+' : '') + enemy.abilities.ТЕЛ.modifier + ')</div>';
             } else if (enemy.abilities.con) {
-                out += '<div class="ability-item"><strong>ТЕЛ:</strong> ' + enemy.abilities.con + '</div>';
+                const conMod = Math.floor((enemy.abilities.con - 10) / 2);
+                out += '<div class="ability-item"><strong>ТЕЛ:</strong> ' + enemy.abilities.con + ' (' + (conMod >= 0 ? '+' : '') + conMod + ')</div>';
             }
             
             if (enemy.abilities.ИНТ) {
                 out += '<div class="ability-item"><strong>ИНТ:</strong> ' + enemy.abilities.ИНТ.value + ' (' + (enemy.abilities.ИНТ.modifier >= 0 ? '+' : '') + enemy.abilities.ИНТ.modifier + ')</div>';
             } else if (enemy.abilities.int) {
-                out += '<div class="ability-item"><strong>ИНТ:</strong> ' + enemy.abilities.int + '</div>';
+                const intMod = Math.floor((enemy.abilities.int - 10) / 2);
+                out += '<div class="ability-item"><strong>ИНТ:</strong> ' + enemy.abilities.int + ' (' + (intMod >= 0 ? '+' : '') + intMod + ')</div>';
             }
             
             if (enemy.abilities.МДР) {
                 out += '<div class="ability-item"><strong>МДР:</strong> ' + enemy.abilities.МДР.value + ' (' + (enemy.abilities.МДР.modifier >= 0 ? '+' : '') + enemy.abilities.МДР.modifier + ')</div>';
             } else if (enemy.abilities.wis) {
-                out += '<div class="ability-item"><strong>МДР:</strong> ' + enemy.abilities.wis + '</div>';
+                const wisMod = Math.floor((enemy.abilities.wis - 10) / 2);
+                out += '<div class="ability-item"><strong>МДР:</strong> ' + enemy.abilities.wis + ' (' + (wisMod >= 0 ? '+' : '') + wisMod + ')</div>';
             }
             
             if (enemy.abilities.ХАР) {
                 out += '<div class="ability-item"><strong>ХАР:</strong> ' + enemy.abilities.ХАР.value + ' (' + (enemy.abilities.ХАР.modifier >= 0 ? '+' : '') + enemy.abilities.ХАР.modifier + ')</div>';
             } else if (enemy.abilities.cha) {
-                out += '<div class="ability-item"><strong>ХАР:</strong> ' + enemy.abilities.cha + '</div>';
+                const chaMod = Math.floor((enemy.abilities.cha - 10) / 2);
+                out += '<div class="ability-item"><strong>ХАР:</strong> ' + enemy.abilities.cha + ' (' + (chaMod >= 0 ? '+' : '') + chaMod + ')</div>';
             }
             
             out += '</div>';
@@ -2621,13 +2686,15 @@ function formatEnemiesFromApi(enemies) {
             out += '<ul class="actions-list">';
             enemy.actions.forEach(action => {
                 if (action && typeof action === 'object') {
-                    out += '<li><strong>' + (action.name || 'Неизвестное действие') + '</strong>';
+                    const actionName = translateActionName(action.name || 'Неизвестное действие');
+                    out += '<li><strong>' + actionName + '</strong>';
                     if (action.description) {
                         out += ': ' + action.description;
                     }
                     out += '</li>';
                 } else if (typeof action === 'string') {
-                    out += '<li>' + action + '</li>';
+                    const actionName = translateActionName(action);
+                    out += '<li>' + actionName + '</li>';
                 }
             });
             out += '</ul>';
@@ -2642,13 +2709,15 @@ function formatEnemiesFromApi(enemies) {
             out += '<ul class="abilities-list">';
             enemy.special_abilities.forEach(ability => {
                 if (ability && typeof ability === 'object') {
-                    out += '<li><strong>' + (ability.name || 'Неизвестная способность') + '</strong>';
+                    const abilityName = translateActionName(ability.name || 'Неизвестная способность');
+                    out += '<li><strong>' + abilityName + '</strong>';
                     if (ability.description) {
                         out += ': ' + ability.description;
                     }
                     out += '</li>';
                 } else if (typeof ability === 'string') {
-                    out += '<li>' + ability + '</li>';
+                    const abilityName = translateActionName(ability);
+                    out += '<li>' + abilityName + '</li>';
                 }
             });
             out += '</ul>';
