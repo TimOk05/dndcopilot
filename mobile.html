@@ -708,26 +708,80 @@
                 <h2 class="card-title">⚔️ Генератор противников</h2>
 
                 <div class="input-group">
-                    <label class="input-label">Уровень угрозы (CR)</label>
+                    <label class="input-label">Уровень угрозы</label>
+                    <select class="input-field" id="enemy-threat-level">
+                        <option value="">Выберите уровень угрозы</option>
+                        <option value="random">🎲 Случайный</option>
+                        <option value="easy">🟢 Легкий (CR 0-3)</option>
+                        <option value="medium">🟡 Средний (CR 1-7)</option>
+                        <option value="hard">🟠 Сложный (CR 5-12)</option>
+                        <option value="deadly">🔴 Смертельный (CR 10-20)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Или конкретный CR</label>
                     <select class="input-field" id="enemy-cr">
                         <option value="">Выберите CR</option>
-                        <option value="0">0 (1/8)</option>
-                        <option value="1">1/4</option>
-                        <option value="2">1/2</option>
-                        <option value="3">1</option>
-                        <option value="4">2</option>
-                        <option value="5">3</option>
-                        <option value="6">4</option>
-                        <option value="7">5</option>
-                        <option value="8">6</option>
-                        <option value="9">7</option>
-                        <option value="10">8</option>
-                        <option value="11">9</option>
-                        <option value="12">10</option>
-                        <option value="13">11</option>
-                        <option value="14">12</option>
-                        <option value="15">13</option>
+                        <option value="0">0</option>
+                        <option value="0.125">1/8</option>
+                        <option value="0.25">1/4</option>
+                        <option value="0.5">1/2</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
                     </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Количество противников</label>
+                    <input type="number" class="input-field" id="enemy-count" min="1" max="20" value="1">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Тип противника (опционально)</label>
+                    <input type="text" class="input-field" id="enemy-type" placeholder="например: dragon, undead, beast">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Среда обитания (опционально)</label>
+                    <select class="input-field" id="enemy-environment">
+                        <option value="">Любая среда</option>
+                        <option value="arctic">Арктическая</option>
+                        <option value="coastal">Прибрежная</option>
+                        <option value="desert">Пустынная</option>
+                        <option value="forest">Лесная</option>
+                        <option value="grassland">Равнинная</option>
+                        <option value="hill">Холмистая</option>
+                        <option value="mountain">Горная</option>
+                        <option value="swamp">Болотная</option>
+                        <option value="underdark">Подземелье</option>
+                        <option value="urban">Городская</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">
+                        <input type="checkbox" id="enemy-use-ai" checked>
+                        Использовать AI для описания и тактики
+                    </label>
                 </div>
 
                 <button class="btn" onclick="generateEnemy()">
@@ -988,18 +1042,46 @@
         
         // Генерация противников
         function generateEnemy() {
-            const cr = document.getElementById('enemy-cr').value;
-            
-            if (!cr) {
-                showModal('Пожалуйста, выберите уровень угрозы.');
+            const threatLevel = document.getElementById('enemy-threat-level').value;
+            const specificCr = document.getElementById('enemy-cr').value;
+            const count = parseInt(document.getElementById('enemy-count').value) || 1;
+            const enemyType = document.getElementById('enemy-type').value;
+            const enemyEnvironment = document.getElementById('enemy-environment').value;
+            const useAI = document.getElementById('enemy-use-ai').checked;
+
+            let threatLevelParam = '';
+            let message = '';
+
+            if (threatLevel === 'random') {
+                threatLevelParam = 'random';
+                message = 'Генерация случайного уровня угрозы...';
+            } else if (threatLevel) {
+                threatLevelParam = threatLevel;
+                message = `Генерация противника уровня "${threatLevel}"...`;
+            } else if (specificCr) {
+                threatLevelParam = specificCr;
+                message = `Генерация противника с CR ${specificCr}...`;
+            } else {
+                showModal('Пожалуйста, выберите уровень угрозы или конкретный CR.');
                 return;
             }
-            
+
+            if (count < 1 || count > 20) {
+                showModal('Количество противников должно быть от 1 до 20.');
+                return;
+            }
+
             // Вызов API для генерации противника
             const formData = new FormData();
             formData.append('action', 'generate_enemy');
-            formData.append('cr', cr);
+            formData.append('threat_level', threatLevelParam);
+            formData.append('count', count);
+            formData.append('enemy_type', enemyType);
+            formData.append('environment', enemyEnvironment);
+            formData.append('use_ai', useAI ? 'on' : 'off');
             
+            showModal(message);
+
             fetch('mobile-api.php', {
                 method: 'POST',
                 body: formData
@@ -1008,37 +1090,63 @@
             .then(data => {
                 if (data.success) {
                     displayEnemy(data.data);
+                    hideModal();
                 } else {
-                    showModal('Ошибка: ' + data.message);
+                    hideModal();
+                    showModal('Ошибка: ' + (data.error || data.message || 'Неизвестная ошибка'));
                 }
             })
             .catch(error => {
+                hideModal();
+                console.error('Ошибка генерации противника:', error);
                 showModal('Ошибка соединения. Попробуйте позже.');
             });
         }
         
         function displayEnemy(data) {
-            const abilities = data.abilities || {};
+            if (Array.isArray(data)) {
+                // Множественные противники
+                let content = '<div class="enemies-list">';
+                data.forEach((enemy, index) => {
+                    content += generateEnemyHTML(enemy, index + 1);
+                });
+                content += '</div>';
+                document.getElementById('enemy-content').innerHTML = content;
+            } else {
+                // Один противник
+                document.getElementById('enemy-content').innerHTML = generateEnemyHTML(data);
+            }
+            
+            document.getElementById('enemy-result').classList.remove('hidden');
+        }
+        
+        function generateEnemyHTML(enemy, number = '') {
+            const abilities = enemy.abilities || {};
             const abilityMods = Object.keys(abilities).map(ability => {
                 const mod = Math.floor((abilities[ability] - 10) / 2);
                 return `${ability.toUpperCase()}: ${abilities[ability]} (${mod >= 0 ? '+' : ''}${mod})`;
             }).join(', ');
             
-            const content = `
+            const actions = Array.isArray(enemy.actions) ? enemy.actions.join(', ') : 
+                           (typeof enemy.actions === 'string' ? enemy.actions : 'Атака');
+            
+            const name = number ? `${enemy.name} ${number}` : enemy.name;
+            
+            return `
                 <div class="enemy-info">
-                    <h4>${data.name}</h4>
-                    <p><strong>CR:</strong> ${data.cr}</p>
-                    <p><strong>HP:</strong> ${data.hp}</p>
-                    <p><strong>AC:</strong> ${data.ac}</p>
+                    <h4>${name}</h4>
+                    <p><strong>CR:</strong> ${enemy.challenge_rating || enemy.cr || 'Неизвестно'}</p>
+                    <p><strong>Тип:</strong> ${enemy.type || 'Неизвестно'}</p>
+                    <p><strong>HP:</strong> ${enemy.hit_points || enemy.hp || 'Неизвестно'}</p>
+                    <p><strong>AC:</strong> ${enemy.armor_class || enemy.ac || 'Неизвестно'}</p>
+                    <p><strong>Скорость:</strong> ${enemy.speed || '30 ft'}</p>
                     <p><strong>Характеристики:</strong> ${abilityMods}</p>
-                    <p><strong>Действия:</strong> ${data.actions ? data.actions.join(', ') : 'Атака'}</p>
-                    <p><strong>Описание:</strong> ${data.description}</p>
-                    <p><strong>Тактика:</strong> ${data.tactics}</p>
+                    <p><strong>Действия:</strong> ${actions}</p>
+                    ${enemy.environment ? `<p><strong>Среда:</strong> ${enemy.environment}</p>` : ''}
+                    ${enemy.description ? `<p><strong>Описание:</strong> ${enemy.description}</p>` : ''}
+                    ${enemy.tactics ? `<p><strong>Тактика:</strong> ${enemy.tactics}</p>` : ''}
                 </div>
             `;
-            
-            document.getElementById('enemy-content').innerHTML = content;
-            document.getElementById('enemy-result').classList.remove('hidden');
         }
         
         // Система боя
@@ -1265,6 +1373,10 @@
         function showModal(content) {
             document.getElementById('modal-content').innerHTML = content;
             document.getElementById('result-modal').classList.add('active');
+        }
+        
+        function hideModal() {
+            document.getElementById('result-modal').classList.remove('active');
         }
         
         function closeModal() {

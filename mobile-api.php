@@ -40,15 +40,19 @@ try {
             break;
             
         case 'generate_enemy':
-            $cr = $_POST['cr'] ?? '';
+            $threat_level = $_POST['threat_level'] ?? '';
+            $count = (int)($_POST['count'] ?? 1);
+            $enemy_type = $_POST['enemy_type'] ?? '';
+            $environment = $_POST['environment'] ?? '';
+            $use_ai = isset($_POST['use_ai']) && $_POST['use_ai'] === 'on';
             
-            if (empty($cr)) {
+            if (empty($threat_level)) {
                 $response = ['success' => false, 'message' => 'Не указан уровень угрозы'];
                 break;
             }
             
             // Загружаем данные для генерации противника
-            $enemyData = generateMobileEnemy($cr);
+            $enemyData = generateMobileEnemy($threat_level, $count, $enemy_type, $environment, $use_ai);
             $response = ['success' => true, 'data' => $enemyData];
             break;
             
@@ -208,19 +212,19 @@ function generateMobileCharacter($race, $characterClass, $level) {
 /**
  * Генерация противника для мобильной версии
  */
-function generateMobileEnemy($cr) {
+function generateMobileEnemy($threat_level, $count, $enemy_type, $environment, $use_ai) {
     try {
         // Используем основной API генерации противников
         require_once 'api/generate-enemies.php';
         $generator = new EnemyGenerator();
         
-        // Передаем CR напрямую как threat_level для получения конкретного CR
+        // Передаем параметры для генерации
         $params = [
-            'threat_level' => $cr, // Передаем конкретный CR
-            'count' => 1,
-            'enemy_type' => '',
-            'environment' => '',
-            'use_ai' => true
+            'threat_level' => $threat_level,
+            'count' => $count,
+            'enemy_type' => $enemy_type,
+            'environment' => $environment,
+            'use_ai' => $use_ai
         ];
         
         $result = $generator->generateEnemies($params);
@@ -229,30 +233,17 @@ function generateMobileEnemy($cr) {
             throw new Exception($result['error']);
         }
         
-        $enemy = $result['enemies'][0];
-        
-        // Адаптируем данные для мобильной версии
-        $mobileEnemy = [
-            'name' => $enemy['name'],
-            'cr' => $enemy['challenge_rating'],
-            'hp' => $enemy['hit_points'],
-            'ac' => $enemy['armor_class'],
-            'abilities' => $enemy['abilities'],
-            'actions' => array_map(function($action) {
-                return is_array($action) ? ($action['name'] ?? 'Атака') : $action;
-            }, $enemy['actions']),
-            'description' => $enemy['description'] ?? 'Описание не определено',
-            'tactics' => $enemy['tactics'] ?? 'Тактика не определена',
-            'type' => $enemy['type'],
-            'environment' => $enemy['environment'] ?? 'Различные'
-        ];
-        
-        logMessage('INFO', 'Mobile enemy generated successfully', [
-            'cr' => $cr,
-            'name' => $enemy['name']
-        ]);
-        
-        return $mobileEnemy;
+        // Если запрошено несколько противников, возвращаем массив
+        if ($count > 1) {
+            $mobileEnemies = [];
+            foreach ($result['enemies'] as $enemy) {
+                $mobileEnemies[] = adaptEnemyForMobile($enemy);
+            }
+            return $mobileEnemies;
+        } else {
+            // Для одного противника возвращаем объект
+            return adaptEnemyForMobile($result['enemies'][0]);
+        }
         
     } catch (Exception $e) {
         logMessage('ERROR', 'Mobile enemy generation failed: ' . $e->getMessage());
@@ -260,7 +251,29 @@ function generateMobileEnemy($cr) {
     }
 }
 
-
+/**
+ * Адаптация данных противника для мобильной версии
+ */
+function adaptEnemyForMobile($enemy) {
+    return [
+        'name' => $enemy['name'],
+        'cr' => $enemy['challenge_rating'],
+        'challenge_rating' => $enemy['challenge_rating'],
+        'hp' => $enemy['hit_points'],
+        'hit_points' => $enemy['hit_points'],
+        'ac' => $enemy['armor_class'],
+        'armor_class' => $enemy['armor_class'],
+        'abilities' => $enemy['abilities'],
+        'actions' => array_map(function($action) {
+            return is_array($action) ? ($action['name'] ?? 'Атака') : $action;
+        }, $enemy['actions']),
+        'description' => $enemy['description'] ?? 'Описание не определено',
+        'tactics' => $enemy['tactics'] ?? 'Тактика не определена',
+        'type' => $enemy['type'],
+        'environment' => $enemy['environment'] ?? 'Различные',
+        'speed' => $enemy['speed'] ?? '30 ft'
+    ];
+}
 
 /**
  * Запрос к AI для мобильной версии

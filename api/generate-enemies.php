@@ -28,9 +28,14 @@ class EnemyGenerator {
             throw new Exception('Количество противников должно быть от 1 до 20');
         }
         
+        // Если threat_level пустой или 'random', генерируем случайный
+        if (empty($threat_level) || $threat_level === 'random') {
+            $threat_level = $this->getRandomThreatLevel();
+        }
+        
         // Проверяем, является ли threat_level числовым значением (конкретный CR)
-        if (!in_array($threat_level, ['easy', 'medium', 'hard', 'deadly']) && !is_numeric($threat_level)) {
-            throw new Exception('Неверный уровень угрозы. Должен быть easy, medium, hard, deadly или конкретный CR (0, 1, 2, 3...)');
+        if (!in_array($threat_level, ['easy', 'medium', 'hard', 'deadly', 'random']) && !is_numeric($threat_level)) {
+            throw new Exception('Неверный уровень угрозы. Должен быть easy, medium, hard, deadly, random или конкретный CR (0, 1, 2, 3...)');
         }
         
         // Определяем CR на основе уровня угрозы
@@ -51,6 +56,14 @@ class EnemyGenerator {
             error_log("EnemyGenerator: Фильтруем монстров. CR range: " . json_encode($cr_range));
             $filtered_monsters = $this->filterMonsters($monsters, $cr_range, $enemy_type, $environment);
             error_log("EnemyGenerator: После фильтрации найдено монстров: " . count($filtered_monsters));
+            
+            // Если не найдено монстров, пробуем расширить диапазон
+            if (empty($filtered_monsters)) {
+                error_log("EnemyGenerator: Не найдены монстры, расширяем диапазон CR");
+                $expanded_range = $this->expandCRRange($cr_range);
+                $filtered_monsters = $this->filterMonsters($monsters, $expanded_range, $enemy_type, $environment);
+                error_log("EnemyGenerator: После расширения найдено монстров: " . count($filtered_monsters));
+            }
             
             if (empty($filtered_monsters)) {
                 throw new Exception('Не найдены подходящие противники для указанных параметров');
@@ -265,6 +278,49 @@ class EnemyGenerator {
             }
         }
         
+        // Обработка специальных случаев
+        $cr_map = [
+            '0' => 0,
+            '1/8' => 0.125,
+            '1/4' => 0.25,
+            '1/2' => 0.5,
+            '1' => 1,
+            '2' => 2,
+            '3' => 3,
+            '4' => 4,
+            '5' => 5,
+            '6' => 6,
+            '7' => 7,
+            '8' => 8,
+            '9' => 9,
+            '10' => 10,
+            '11' => 11,
+            '12' => 12,
+            '13' => 13,
+            '14' => 14,
+            '15' => 15,
+            '16' => 16,
+            '17' => 17,
+            '18' => 18,
+            '19' => 19,
+            '20' => 20,
+            '21' => 21,
+            '22' => 22,
+            '23' => 23,
+            '24' => 24,
+            '25' => 25,
+            '26' => 26,
+            '27' => 27,
+            '28' => 28,
+            '29' => 29,
+            '30' => 30
+        ];
+        
+        if (isset($cr_map[$cr_string])) {
+            return $cr_map[$cr_string];
+        }
+        
+        error_log("EnemyGenerator: Не удалось распарсить CR: $cr_string");
         return 0;
     }
     
@@ -449,6 +505,30 @@ class EnemyGenerator {
         
         error_log("EnemyGenerator: HTTP Error for $url: $http_code, response size: " . strlen($response));
         return null;
+    }
+
+    /**
+     * Получение случайного уровня угрозы
+     */
+    private function getRandomThreatLevel() {
+        $levels = ['easy', 'medium', 'hard', 'deadly'];
+        return $levels[array_rand($levels)];
+    }
+
+    /**
+     * Расширение диапазона CR если не найдены монстры
+     */
+    private function expandCRRange($cr_range) {
+        $expanded = $cr_range;
+        
+        // Расширяем диапазон на 2 в каждую сторону
+        if ($expanded['min'] > 0) {
+            $expanded['min'] = max(0, $expanded['min'] - 2);
+        }
+        $expanded['max'] = min(30, $expanded['max'] + 2);
+        
+        error_log("EnemyGenerator: Расширенный CR диапазон: " . json_encode($expanded));
+        return $expanded;
     }
 }
 
