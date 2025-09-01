@@ -1386,7 +1386,7 @@ function openPotionModal() {
                             <option value="common">Обычное</option>
                             <option value="uncommon">Необычное</option>
                             <option value="rare">Редкое</option>
-                            <option value="very_rare">Очень редкое</option>
+                            <option value="very rare">Очень редкое</option>
                             <option value="legendary">Легендарное</option>
                         </select>
                     </div>

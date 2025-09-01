@@ -1,7 +1,7 @@
 <?php
 /**
  * API для генерации зелий D&D
- * Генерирует зелья различных типов и редкости
+ * Использует официальную D&D 5e API для получения реальных зелий
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -13,352 +13,420 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
+require_once __DIR__ . '/../config.php';
+
 class PotionGenerator {
-    private $potions = [
-        'common' => [
-            'Зелье лечения' => [
-                'description' => 'Восстанавливает 2d4+2 хитов',
-                'rarity' => 'Обычное',
-                'type' => 'Восстановление',
-                'value' => '50 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье прыгучести' => [
-                'description' => 'Увеличивает прыжок в 3 раза на 1 минуту',
-                'rarity' => 'Обычное',
-                'type' => 'Усиление',
-                'value' => '50 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье сопротивления огню' => [
-                'description' => 'Дает сопротивление к огненному урону на 1 час',
-                'rarity' => 'Обычное',
-                'type' => 'Защита',
-                'value' => '50 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье сопротивления холоду' => [
-                'description' => 'Дает сопротивление к холодному урону на 1 час',
-                'rarity' => 'Обычное',
-                'type' => 'Защита',
-                'value' => '50 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье сопротивления электричеству' => [
-                'description' => 'Дает сопротивление к электрическому урону на 1 час',
-                'rarity' => 'Обычное',
-                'type' => 'Защита',
-                'value' => '50 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье ясновидения' => [
-                'description' => 'Позволяет видеть в темноте на 60 футов на 1 час',
-                'rarity' => 'Обычное',
-                'type' => 'Прорицание',
-                'value' => '50 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье выносливости' => [
-                'description' => 'Увеличивает выносливость на 1d4+1 на 1 час',
-                'rarity' => 'Обычное',
-                'type' => 'Усиление',
-                'value' => '50 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ]
-        ],
-        'uncommon' => [
-            'Зелье невидимости' => [
-                'description' => 'Делает невидимым на 1 час или до атаки',
-                'rarity' => 'Необычное',
-                'type' => 'Иллюзия',
-                'value' => '100 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье полета' => [
-                'description' => 'Позволяет летать со скоростью 60 футов на 1 час',
-                'rarity' => 'Необычное',
-                'type' => 'Трансмутация',
-                'value' => '100 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье гигантской силы' => [
-                'description' => 'Увеличивает силу до 21 на 1 час',
-                'rarity' => 'Необычное',
-                'type' => 'Усиление',
-                'value' => '100 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье сопротивления яду' => [
-                'description' => 'Дает сопротивление к ядовитому урону на 1 час',
-                'rarity' => 'Необычное',
-                'type' => 'Защита',
-                'value' => '100 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье скорости' => [
-                'description' => 'Увеличивает скорость на 10 футов на 1 минуту',
-                'rarity' => 'Необычное',
-                'type' => 'Усиление',
-                'value' => '100 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье понимания языков' => [
-                'description' => 'Позволяет понимать все разговорные языки на 1 час',
-                'rarity' => 'Необычное',
-                'type' => 'Прорицание',
-                'value' => '100 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье изменения размера' => [
-                'description' => 'Уменьшает или увеличивает размер в 2 раза на 1 час',
-                'rarity' => 'Необычное',
-                'type' => 'Трансмутация',
-                'value' => '100 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ]
-        ],
-        'rare' => [
-            'Зелье великого лечения' => [
-                'description' => 'Восстанавливает 8d4+8 хитов',
-                'rarity' => 'Редкое',
-                'type' => 'Восстановление',
-                'value' => '500 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье долголетия' => [
-                'description' => 'Увеличивает возраст на 1d6+6 лет',
-                'rarity' => 'Редкое',
-                'type' => 'Трансмутация',
-                'value' => '500 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье сопротивления магии' => [
-                'description' => 'Дает преимущество к спасброскам от заклинаний на 1 час',
-                'rarity' => 'Редкое',
-                'type' => 'Защита',
-                'value' => '500 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье неуязвимости' => [
-                'description' => 'Дает сопротивление ко всем видам урона на 1 минуту',
-                'rarity' => 'Редкое',
-                'type' => 'Защита',
-                'value' => '500 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ],
-            'Зелье героизма' => [
-                'description' => 'Дает иммунитет к страху и временные хиты на 1 час',
-                'rarity' => 'Редкое',
-                'type' => 'Усиление',
-                'value' => '500 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое']
-            ]
-        ],
-        'very_rare' => [
-            'Зелье истинного воскрешения' => [
-                'description' => 'Воскрешает мертвого существа с полным восстановлением',
-                'rarity' => 'Очень редкое',
-                'type' => 'Некромантия',
-                'value' => '50000 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое', 'Легендарное']
-            ],
-            'Зелье бессмертия' => [
-                'description' => 'Делает существо неуязвимым к старению на 100 лет',
-                'rarity' => 'Очень редкое',
-                'type' => 'Трансмутация',
-                'value' => '50000 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое', 'Легендарное']
-            ],
-            'Зелье абсолютной защиты' => [
-                'description' => 'Дает иммунитет ко всем видам урона на 1 час',
-                'rarity' => 'Очень редкое',
-                'type' => 'Защита',
-                'value' => '50000 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое', 'Легендарное']
-            ],
-            'Зелье всеведения' => [
-                'description' => 'Дает знание всех языков и понимание всех существ на 1 час',
-                'rarity' => 'Очень редкое',
-                'type' => 'Прорицание',
-                'value' => '50000 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое', 'Легендарное']
-            ],
-            'Зелье божественной силы' => [
-                'description' => 'Увеличивает все характеристики до 24 на 1 час',
-                'rarity' => 'Очень редкое',
-                'type' => 'Усиление',
-                'value' => '50000 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое', 'Легендарное']
-            ]
-        ],
-        'legendary' => [
-            'Зелье вечной жизни' => [
-                'description' => 'Делает существо бессмертным (не стареет, не умирает от старости)',
-                'rarity' => 'Легендарное',
-                'type' => 'Трансмутация',
-                'value' => '100000 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое', 'Легендарное', 'Уникальное']
-            ],
-            'Зелье абсолютного могущества' => [
-                'description' => 'Дает 20 уровень во всех классах на 24 часа',
-                'rarity' => 'Легендарное',
-                'type' => 'Усиление',
-                'value' => '100000 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое', 'Легендарное', 'Уникальное']
-            ],
-            'Зелье творения' => [
-                'description' => 'Позволяет создать любой неживой предмет размером до 10x10x10 футов',
-                'rarity' => 'Легендарное',
-                'type' => 'Трансмутация',
-                'value' => '100000 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое', 'Легендарное', 'Уникальное']
-            ],
-            'Зелье времени' => [
-                'description' => 'Позволяет путешествовать во времени на 1d100 лет назад или вперед',
-                'rarity' => 'Легендарное',
-                'type' => 'Прорицание',
-                'value' => '100000 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое', 'Легендарное', 'Уникальное']
-            ],
-            'Зелье судьбы' => [
-                'description' => 'Позволяет изменить результат любого броска костей в прошлом или будущем',
-                'rarity' => 'Легендарное',
-                'type' => 'Прорицание',
-                'value' => '100000 золотых',
-                'weight' => '0.5 фунта',
-                'properties' => ['Питье', 'Магическое', 'Легендарное', 'Уникальное']
-            ]
-        ]
-    ];
-
-    private $potionTypes = [
-        'Восстановление' => '🩹',
-        'Усиление' => '💪',
-        'Защита' => '🛡️',
-        'Иллюзия' => '👁️',
-        'Трансмутация' => '🔄',
-        'Некромантия' => '💀',
-        'Прорицание' => '🔮'
-    ];
-
-    private $rarityColors = [
-        'Обычное' => '#9b9b9b',
-        'Необычное' => '#4caf50',
-        'Редкое' => '#2196f3',
-        'Очень редкое' => '#9c27b0',
-        'Легендарное' => '#ff9800'
-    ];
-
-    public function generateRandomPotion($rarity = null, $type = null) {
-        $availablePotions = [];
-        
-        // Если указана редкость, фильтруем по ней
-        if ($rarity && isset($this->potions[$rarity])) {
-            $availablePotions = $this->potions[$rarity];
-        } else {
-            // Собираем все зелья
-            foreach ($this->potions as $rarityPotions) {
-                $availablePotions = array_merge($availablePotions, $rarityPotions);
-            }
+    private $dnd5e_api_url = 'https://www.dnd5eapi.co/api';
+    private $cache_dir;
+    private $max_retries = 3;
+    private $retry_delay = 1000; // миллисекунды
+    
+    public function __construct() {
+        $this->cache_dir = __DIR__ . '/../logs/cache';
+        if (!is_dir($this->cache_dir)) {
+            mkdir($this->cache_dir, 0755, true);
         }
-        
-        // Если указан тип, фильтруем по нему
-        if ($type) {
-            $filteredPotions = [];
-            foreach ($availablePotions as $name => $data) {
-                if ($data['type'] === $type) {
-                    $filteredPotions[$name] = $data;
+    }
+    
+    /**
+     * Генерация случайных зелий
+     */
+    public function generateRandomPotions($count = 1, $rarity = null, $type = null) {
+        try {
+            // Получаем список всех магических предметов из D&D API
+            $magic_items = $this->getMagicItemsListWithRetry();
+            
+            if (empty($magic_items)) {
+                throw new Exception('База данных магических предметов недоступна');
+            }
+            
+            // Фильтруем только зелья
+            $potions = $this->filterPotions($magic_items);
+            
+            if (empty($potions)) {
+                throw new Exception('Зелья не найдены в базе данных D&D');
+            }
+            
+            // Фильтруем по редкости и типу
+            $filtered_potions = $this->filterPotionsByParams($potions, $rarity, $type);
+            
+            if (empty($filtered_potions)) {
+                throw new Exception('Не найдены зелья с указанными параметрами');
+            }
+            
+            // Выбираем случайные зелья
+            $selected_potions = $this->selectRandomPotions($filtered_potions, $count);
+            
+            // Получаем детальную информацию о каждом зелье
+            $result = [];
+            foreach ($selected_potions as $potion) {
+                $potion_details = $this->getPotionDetails($potion['index']);
+                if ($potion_details) {
+                    $result[] = $this->formatPotionData($potion_details);
                 }
             }
-            $availablePotions = $filteredPotions;
+            
+            if (empty($result)) {
+                throw new Exception('Не удалось получить детали зелий');
+            }
+            
+            return $result;
+            
+        } catch (Exception $e) {
+            throw new Exception('Ошибка генерации зелий: ' . $e->getMessage());
         }
-        
-        // Если нет доступных зелий после фильтрации, возвращаем случайное
-        if (empty($availablePotions)) {
-            $rarityKey = array_rand($this->potions);
-            $availablePotions = $this->potions[$rarityKey];
-        }
-        
-        $potionName = array_rand($availablePotions);
-        $potionData = $availablePotions[$potionName];
-        
-        return [
-            'name' => $potionName,
-            'description' => $potionData['description'],
-            'rarity' => $potionData['rarity'],
-            'type' => $potionData['type'],
-            'value' => $potionData['value'],
-            'weight' => $potionData['weight'],
-            'properties' => $potionData['properties'],
-            'icon' => $this->potionTypes[$potionData['type']] ?? '🧪',
-            'color' => $this->rarityColors[$potionData['rarity']] ?? '#9b9b9b'
-        ];
     }
-
-    public function generateMultiplePotions($count = 1, $rarity = null, $type = null) {
-        $potions = [];
-        for ($i = 0; $i < $count; $i++) {
-            $potions[] = $this->generateRandomPotion($rarity, $type);
+    
+    /**
+     * Получение списка магических предметов с retry
+     */
+    private function getMagicItemsListWithRetry() {
+        $cache_file = $this->cache_dir . '/magic_items_list.json';
+        $cache_time = 3600; // 1 час
+        
+        // Проверяем кэш
+        if (file_exists($cache_file) && (time() - filemtime($cache_file)) < $cache_time) {
+            $cached_data = json_decode(file_get_contents($cache_file), true);
+            if ($cached_data && isset($cached_data['results'])) {
+                return $cached_data['results'];
+            }
         }
+        
+        // Пробуем получить с retry
+        for ($attempt = 1; $attempt <= $this->max_retries; $attempt++) {
+            try {
+                error_log("PotionGenerator: Попытка $attempt получить список магических предметов");
+                $magic_items = $this->getMagicItemsList();
+                
+                if ($magic_items && isset($magic_items['results']) && !empty($magic_items['results'])) {
+                    // Сохраняем в кэш
+                    file_put_contents($cache_file, json_encode($magic_items));
+                    return $magic_items['results'];
+                }
+            } catch (Exception $e) {
+                error_log("PotionGenerator: Попытка $attempt не удалась: " . $e->getMessage());
+                if ($attempt < $this->max_retries) {
+                    usleep($this->retry_delay * 1000);
+                }
+            }
+        }
+        
+        throw new Exception('Не удалось получить список магических предметов после ' . $this->max_retries . ' попыток');
+    }
+    
+    /**
+     * Получение списка магических предметов
+     */
+    private function getMagicItemsList() {
+        $url = $this->dnd5e_api_url . '/magic-items';
+        error_log("PotionGenerator: Запрос к D&D API: $url");
+        
+        $response = $this->makeRequest($url);
+        error_log("PotionGenerator: Ответ от D&D API получен: " . ($response ? 'да' : 'нет'));
+        
+        if ($response && isset($response['results'])) {
+            error_log("PotionGenerator: Найдено магических предметов: " . count($response['results']));
+            return $response;
+        }
+        
+        throw new Exception('API D&D недоступен или возвращает неверную структуру');
+    }
+    
+    /**
+     * Фильтрация зелий из списка магических предметов
+     */
+    private function filterPotions($magic_items) {
+        $potions = [];
+        
+        foreach ($magic_items as $item) {
+            $name = strtolower($item['name']);
+            // Ищем зелья по названию
+            if (strpos($name, 'potion') !== false || 
+                strpos($name, 'elixir') !== false || 
+                strpos($name, 'philter') !== false ||
+                strpos($name, 'oil') !== false) {
+                $potions[] = $item;
+            }
+        }
+        
+        error_log("PotionGenerator: Найдено зелий: " . count($potions));
         return $potions;
     }
-
-    public function getPotionByType($type) {
-        $foundPotions = [];
-        foreach ($this->potions as $rarity => $rarityPotions) {
-            foreach ($rarityPotions as $name => $data) {
-                if ($data['type'] === $type) {
-                    $foundPotions[] = [
-                        'name' => $name,
-                        'description' => $data['description'],
-                        'rarity' => $data['rarity'],
-                        'type' => $data['type'],
-                        'value' => $data['value'],
-                        'weight' => $data['weight'],
-                        'properties' => $data['properties'],
-                        'icon' => $this->potionTypes[$data['type']] ?? '🧪',
-                        'color' => $this->rarityColors[$data['rarity']] ?? '#9b9b9b'
-                    ];
+    
+    /**
+     * Фильтрация зелий по параметрам
+     */
+    private function filterPotionsByParams($potions, $rarity, $type) {
+        $filtered = [];
+        
+        foreach ($potions as $potion) {
+            $include = true;
+            
+            // Фильтр по редкости
+            if ($rarity && $rarity !== '') {
+                $potion_rarity = strtolower($potion['rarity'] ?? '');
+                if ($potion_rarity !== strtolower($rarity)) {
+                    $include = false;
                 }
             }
+            
+            // Фильтр по типу (если есть)
+            if ($type && $type !== '') {
+                // Здесь можно добавить логику фильтрации по типу
+                // Пока пропускаем все
+            }
+            
+            if ($include) {
+                $filtered[] = $potion;
+            }
         }
-        return $foundPotions;
+        
+        return $filtered;
     }
-
+    
+    /**
+     * Выбор случайных зелий
+     */
+    private function selectRandomPotions($potions, $count) {
+        if (count($potions) <= $count) {
+            return $potions;
+        }
+        
+        $selected = [];
+        $available = array_values($potions);
+        
+        for ($i = 0; $i < $count; $i++) {
+            $index = array_rand($available);
+            $selected[] = $available[$index];
+            unset($available[$index]);
+        }
+        
+        return $selected;
+    }
+    
+    /**
+     * Получение детальной информации о зелье
+     */
+    private function getPotionDetails($potion_index) {
+        $cache_file = $this->cache_dir . '/potion_' . md5($potion_index) . '.json';
+        $cache_time = 86400; // 24 часа
+        
+        // Проверяем кэш
+        if (file_exists($cache_file) && (time() - filemtime($cache_file)) < $cache_time) {
+            $cached_data = json_decode(file_get_contents($cache_file), true);
+            if ($cached_data) {
+                return $cached_data;
+            }
+        }
+        
+        // Получаем с API
+        $url = $this->dnd5e_api_url . '/magic-items/' . $potion_index;
+        $response = $this->makeRequest($url);
+        
+        if ($response) {
+            // Сохраняем в кэш
+            file_put_contents($cache_file, json_encode($response));
+            return $response;
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Форматирование данных зелья
+     */
+    private function formatPotionData($potion_data) {
+        $rarity = $potion_data['rarity'] ?? 'Unknown';
+        $rarity_color = $this->getRarityColor($rarity);
+        $type_icon = $this->getTypeIcon($potion_data);
+        
+        return [
+            'name' => $potion_data['name'] ?? 'Unknown Potion',
+            'description' => is_array($potion_data['desc']) 
+                ? implode(' ', $potion_data['desc']) 
+                : ($potion_data['desc'] ?? 'Описание недоступно'),
+            'rarity' => ucfirst($rarity),
+            'type' => $this->determinePotionType($potion_data),
+            'value' => $this->getPotionValue($potion_data),
+            'weight' => $this->getPotionWeight($potion_data),
+            'properties' => $this->getPotionProperties($potion_data),
+            'icon' => $type_icon,
+            'color' => $rarity_color
+        ];
+    }
+    
+    /**
+     * Определение цвета редкости
+     */
+    private function getRarityColor($rarity) {
+        $colors = [
+            'common' => '#9b9b9b',
+            'uncommon' => '#4caf50',
+            'rare' => '#2196f3',
+            'very rare' => '#9c27b0',
+            'legendary' => '#ff9800'
+        ];
+        
+        return $colors[strtolower($rarity)] ?? '#9b9b9b';
+    }
+    
+    /**
+     * Определение иконки типа зелья
+     */
+    private function getTypeIcon($potion_data) {
+        $name = strtolower($potion_data['name'] ?? '');
+        $desc = strtolower($potion_data['desc'] ?? '');
+        
+        if (strpos($name, 'healing') !== false || strpos($desc, 'heal') !== false) {
+            return '🩹';
+        } elseif (strpos($name, 'strength') !== false || strpos($desc, 'strength') !== false) {
+            return '💪';
+        } elseif (strpos($name, 'protection') !== false || strpos($desc, 'protection') !== false) {
+            return '🛡️';
+        } elseif (strpos($name, 'invisibility') !== false || strpos($desc, 'invisible') !== false) {
+            return '👁️';
+        } elseif (strpos($name, 'flying') !== false || strpos($desc, 'fly') !== false) {
+            return '🔄';
+        } elseif (strpos($name, 'poison') !== false || strpos($desc, 'poison') !== false) {
+            return '💀';
+        } else {
+            return '🔮';
+        }
+    }
+    
+    /**
+     * Определение типа зелья
+     */
+    private function determinePotionType($potion_data) {
+        $name = strtolower($potion_data['name'] ?? '');
+        $desc = strtolower($potion_data['desc'] ?? '');
+        
+        if (strpos($name, 'healing') !== false || strpos($desc, 'heal') !== false) {
+            return 'Восстановление';
+        } elseif (strpos($name, 'strength') !== false || strpos($desc, 'strength') !== false) {
+            return 'Усиление';
+        } elseif (strpos($name, 'protection') !== false || strpos($desc, 'protection') !== false) {
+            return 'Защита';
+        } elseif (strpos($name, 'invisibility') !== false || strpos($desc, 'invisible') !== false) {
+            return 'Иллюзия';
+        } elseif (strpos($name, 'flying') !== false || strpos($desc, 'fly') !== false) {
+            return 'Трансмутация';
+        } elseif (strpos($name, 'poison') !== false || strpos($desc, 'poison') !== false) {
+            return 'Некромантия';
+        } else {
+            return 'Прорицание';
+        }
+    }
+    
+    /**
+     * Получение стоимости зелья
+     */
+    private function getPotionValue($potion_data) {
+        // Пытаемся получить стоимость из API
+        if (isset($potion_data['equipment_category'])) {
+            // Здесь можно добавить логику получения стоимости
+            return 'Стоимость неизвестна';
+        }
+        
+        return 'Стоимость неизвестна';
+    }
+    
+    /**
+     * Получение веса зелья
+     */
+    private function getPotionWeight($potion_data) {
+        // Пытаемся получить вес из API
+        if (isset($potion_data['weight'])) {
+            return $potion_data['weight'] . ' фунтов';
+        }
+        
+        return '0.5 фунта';
+    }
+    
+    /**
+     * Получение свойств зелья
+     */
+    private function getPotionProperties($potion_data) {
+        $properties = ['Питье', 'Магическое'];
+        
+        // Добавляем свойства на основе данных API
+        if (isset($potion_data['rarity'])) {
+            $properties[] = ucfirst($potion_data['rarity']);
+        }
+        
+        return $properties;
+    }
+    
+    /**
+     * Выполнение HTTP запроса
+     */
+    private function makeRequest($url) {
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'GET',
+                'timeout' => 10,
+                'user_agent' => 'DnD-Copilot/1.0'
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false
+            ]
+        ]);
+        
+        $response = @file_get_contents($url, false, $context);
+        
+        if ($response === false) {
+            $error = error_get_last();
+            throw new Exception('HTTP запрос не удался: ' . ($error['message'] ?? 'Неизвестная ошибка'));
+        }
+        
+        $data = json_decode($response, true);
+        
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception('Ошибка парсинга JSON: ' . json_last_error_msg());
+        }
+        
+        return $data;
+    }
+    
+    /**
+     * Получение доступных редкостей
+     */
     public function getAvailableRarities() {
-        return array_keys($this->potions);
+        return ['common', 'uncommon', 'rare', 'very rare', 'legendary'];
     }
-
+    
+    /**
+     * Получение доступных типов
+     */
     public function getAvailableTypes() {
-        return array_keys($this->potionTypes);
+        return ['Восстановление', 'Усиление', 'Защита', 'Иллюзия', 'Трансмутация', 'Некромантия', 'Прорицание'];
+    }
+    
+    /**
+     * Получение зелий по типу
+     */
+    public function getPotionsByType($type) {
+        try {
+            $magic_items = $this->getMagicItemsListWithRetry();
+            $potions = $this->filterPotions($magic_items);
+            
+            $filtered = [];
+            foreach ($potions as $potion) {
+                $potion_details = $this->getPotionDetails($potion['index']);
+                if ($potion_details) {
+                    $formatted = $this->formatPotionData($potion_details);
+                    if ($formatted['type'] === $type) {
+                        $filtered[] = $formatted;
+                    }
+                }
+            }
+            
+            return $filtered;
+            
+        } catch (Exception $e) {
+            throw new Exception('Ошибка получения зелий по типу: ' . $e->getMessage());
+        }
     }
 }
 
@@ -374,14 +442,14 @@ try {
     switch ($action) {
         case 'random':
             if ($count > 10) $count = 10; // Ограничиваем количество
-            $result = $generator->generateMultiplePotions($count, $rarity, $type);
+            $result = $generator->generateRandomPotions($count, $rarity, $type);
             break;
             
         case 'by_type':
             if (!$type) {
                 throw new Exception('Тип зелья не указан');
             }
-            $result = $generator->getPotionByType($type);
+            $result = $generator->getPotionsByType($type);
             break;
             
         case 'rarities':
