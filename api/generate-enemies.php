@@ -6,7 +6,7 @@ if (php_sapi_name() !== 'cli') {
 require_once __DIR__ . '/../config.php';
 
 class EnemyGenerator {
-    private $dnd5e_api_url = 'https://www.dnd5eapi.co/api';
+    private $dnd5e_api_url = 'http://www.dnd5eapi.co/api';
     private $deepseek_api_key;
     private $cache_dir;
     private $max_retries = 3;
@@ -236,11 +236,8 @@ class EnemyGenerator {
      */
     private function generateSingleEnemy($monster, $use_ai) {
         try {
-            // Получаем детальную информацию о монстре
-            $monster_details = $this->getMonsterDetails($monster['url']);
-            if (!$monster_details) {
-                return null;
-            }
+            // Монстр уже содержит детальную информацию
+            $monster_details = $monster;
             
             // Генерируем базовые характеристики
             $enemy = [
@@ -248,10 +245,10 @@ class EnemyGenerator {
                 'type' => $monster_details['type'],
                 'challenge_rating' => $monster_details['challenge_rating'],
                 'hit_points' => $monster_details['hit_points'],
-                'armor_class' => $monster_details['armor_class'],
-                'speed' => $monster_details['speed'],
-                'abilities' => $monster_details['abilities'],
-                'actions' => $monster_details['actions'],
+                'armor_class' => $this->formatArmorClass($monster_details['armor_class']),
+                'speed' => $monster_details['speed'] ?? 'Не определено',
+                'abilities' => $monster_details['abilities'] ?? [],
+                'actions' => $monster_details['actions'] ?? [],
                 'special_abilities' => $monster_details['special_abilities'] ?? [],
                 'environment' => $monster_details['environment'] ?? 'Не определена',
                 'cr_numeric' => $this->parseCR($monster_details['challenge_rating'])
@@ -275,7 +272,8 @@ class EnemyGenerator {
      * Получение детальной информации о монстре
      */
     private function getMonsterDetails($monster_url) {
-        $url = $this->dnd5e_api_url . '/monsters/' . basename($monster_url);
+        // URL приходит в формате "/api/2014/monsters/aboleth"
+        $url = 'http://www.dnd5eapi.co' . $monster_url;
         return $this->makeRequest($url);
     }
     
@@ -285,28 +283,82 @@ class EnemyGenerator {
     private function filterMonsters($monsters, $cr_range, $enemy_type, $environment) {
         $filtered = [];
         
-        foreach ($monsters as $monster) {
-            // Проверяем CR
-            if (!$this->checkCRRange($monster['challenge_rating'], $cr_range)) {
+        // API возвращает объект с ключами count и results
+        if (!isset($monsters['results']) || !is_array($monsters['results'])) {
+            error_log("EnemyGenerator: Неверная структура данных API: " . json_encode($monsters));
+            return [];
+        }
+        
+        // Берем только первые 50 монстров для производительности
+        $sample_monsters = array_slice($monsters['results'], 0, 50);
+        
+        foreach ($sample_monsters as $monster) {
+            try {
+                // Получаем детальную информацию о монстре
+                if (!isset($monster['url'])) {
+                    error_log("EnemyGenerator: Монстр не содержит URL: " . json_encode($monster));
+                    continue;
+                }
+                
+                $monster_details = $this->getMonsterDetails($monster['url']);
+                if (!$monster_details) {
+                    continue;
+                }
+                
+                // Проверяем CR
+                if (!isset($monster_details['challenge_rating'])) {
+                    error_log("EnemyGenerator: Монстр не содержит CR: " . json_encode($monster_details));
+                    continue;
+                }
+                
+                error_log("EnemyGenerator: Проверяем монстра {$monster_details['name']} с CR {$monster_details['challenge_rating']} против диапазона " . json_encode($cr_range));
+                
+                if (!$this->checkCRRange($monster_details['challenge_rating'], $cr_range)) {
+                    error_log("EnemyGenerator: Монстр {$monster_details['name']} не прошел проверку CR");
+                    continue;
+                }
+                
+                // Проверяем тип
+                if (!isset($monster_details['type'])) {
+                    error_log("EnemyGenerator: Монстр не содержит тип: " . json_encode($monster_details));
+                    continue;
+                }
+                
+                error_log("EnemyGenerator: Проверяем тип {$monster_details['type']} против запрошенного {$enemy_type}");
+                
+                if ($enemy_type && !$this->checkType($monster_details['type'], $enemy_type)) {
+                    error_log("EnemyGenerator: Монстр {$monster_details['name']} не прошел проверку типа");
+                    continue;
+                }
+                
+                // Проверяем среду (необязательно - пропускаем если нет информации)
+                if ($environment && isset($monster_details['environment'])) {
+                    if (!$this->checkEnvironment($monster_details, $environment)) {
+                        error_log("EnemyGenerator: Монстр {$monster_details['name']} не прошел проверку среды");
+                        continue;
+                    }
+                }
+                // Если среда не указана или у монстра нет информации о среде, пропускаем проверку
+                
+                // Проверяем совместимость
+                if (!$this->checkCompatibility($monster_details, $cr_range)) {
+                    error_log("EnemyGenerator: Монстр {$monster_details['name']} не прошел проверку совместимости");
+                    continue;
+                }
+                
+                error_log("EnemyGenerator: Монстр {$monster_details['name']} прошел все проверки!");
+                
+                $filtered[] = $monster_details;
+                
+                // Ограничиваем количество проверенных монстров
+                if (count($filtered) >= 10) {
+                    break;
+                }
+                
+            } catch (Exception $e) {
+                error_log("EnemyGenerator: Ошибка получения деталей монстра {$monster['name']}: " . $e->getMessage());
                 continue;
             }
-            
-            // Проверяем тип
-            if ($enemy_type && !$this->checkType($monster['type'], $enemy_type)) {
-                continue;
-            }
-            
-            // Проверяем среду
-            if ($environment && !$this->checkEnvironment($monster, $environment)) {
-                continue;
-            }
-            
-            // Проверяем совместимость
-            if (!$this->checkCompatibility($monster, $cr_range)) {
-                continue;
-            }
-            
-            $filtered[] = $monster;
         }
         
         return $filtered;
@@ -388,6 +440,21 @@ class EnemyGenerator {
         }
         
         return strpos($monster_env, $requested_env) !== false;
+    }
+    
+    /**
+     * Форматирование класса брони
+     */
+    private function formatArmorClass($ac) {
+        if (is_array($ac)) {
+            if (isset($ac[0]['value'])) {
+                return $ac[0]['value'];
+            } elseif (isset($ac[0])) {
+                return $ac[0];
+            }
+            return 'Не определено';
+        }
+        return $ac;
     }
     
     /**
@@ -484,55 +551,44 @@ class EnemyGenerator {
     private function makeRequest($url) {
         error_log("EnemyGenerator: makeRequest для URL: $url");
         
-        if (!function_exists('curl_init')) {
-            throw new Exception('cURL не доступен на сервере');
-        }
-        
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/1.0');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        // Используем file_get_contents вместо cURL
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'GET',
+                'header' => [
+                    'User-Agent: DnD-Copilot/1.0',
+                    'Accept: application/json'
+                ],
+                'timeout' => 30
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false
+            ]
+        ]);
         
         $start_time = microtime(true);
-        $response = curl_exec($ch);
+        $response = @file_get_contents($url, false, $context);
         $end_time = microtime(true);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        curl_close($ch);
         
         $request_time = round(($end_time - $start_time) * 1000, 2);
-        error_log("EnemyGenerator: Запрос завершен за {$request_time}ms, HTTP: $http_code");
+        error_log("EnemyGenerator: Запрос завершен за {$request_time}ms");
         
-        if ($error) {
-            error_log("EnemyGenerator: CURL Error for $url: $error");
-            throw new Exception("Ошибка сети: $error");
+        if ($response === false) {
+            $error = error_get_last();
+            $error_msg = $error ? $error['message'] : 'Неизвестная ошибка';
+            error_log("EnemyGenerator: file_get_contents failed: $error_msg");
+            throw new Exception("Не удалось получить данные от API: $error_msg");
         }
         
-        if ($http_code === 200 && $response) {
-            error_log("EnemyGenerator: Успешный ответ, размер: " . strlen($response) . " байт");
-            $decoded = json_decode($response, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                error_log("EnemyGenerator: JSON успешно декодирован");
-                return $decoded;
-            } else {
-                error_log("EnemyGenerator: JSON decode error for $url: " . json_last_error_msg());
-                throw new Exception("Ошибка разбора ответа API");
-            }
-        }
-        
-        error_log("EnemyGenerator: HTTP Error for $url: $http_code, response size: " . strlen($response));
-        
-        if ($http_code === 0) {
-            throw new Exception("API недоступен. Проверьте подключение к интернету.");
-        } elseif ($http_code >= 400 && $http_code < 500) {
-            throw new Exception("Ошибка запроса к API (HTTP $http_code)");
-        } elseif ($http_code >= 500) {
-            throw new Exception("Ошибка сервера API (HTTP $http_code)");
+        error_log("EnemyGenerator: Успешный ответ, размер: " . strlen($response) . " байт");
+        $decoded = json_decode($response, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            error_log("EnemyGenerator: JSON успешно декодирован");
+            return $decoded;
         } else {
-            throw new Exception("Неожиданный ответ API (HTTP $http_code)");
+            error_log("EnemyGenerator: JSON decode error for $url: " . json_last_error_msg());
+            throw new Exception("Ошибка разбора ответа API");
         }
     }
     
@@ -540,32 +596,31 @@ class EnemyGenerator {
      * Выполнение AI запроса
      */
     private function makeAIRequest($url, $data) {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->deepseek_api_key
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'POST',
+                'header' => [
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $this->deepseek_api_key,
+                    'User-Agent: DnD-Copilot/1.0'
+                ],
+                'content' => json_encode($data),
+                'timeout' => 30
+            ]
         ]);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         
-        $response = curl_exec($ch);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        curl_close($ch);
+        $response = @file_get_contents($url, false, $context);
         
-        if ($error) {
-            throw new Exception("Ошибка AI API: $error");
-        }
-        
-        if ($http_code !== 200) {
-            throw new Exception("AI API вернул HTTP $http_code");
+        if ($response === false) {
+            $error = error_get_last();
+            $error_msg = $error ? $error['message'] : 'Неизвестная ошибка';
+            error_log("EnemyGenerator: AI API request failed: $error_msg");
+            throw new Exception("Не удалось получить ответ от AI API: $error_msg");
         }
         
         $result = json_decode($response, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
+            error_log("EnemyGenerator: AI API JSON decode error: " . json_last_error_msg());
             throw new Exception("Ошибка парсинга AI API ответа");
         }
         
