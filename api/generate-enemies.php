@@ -38,6 +38,7 @@ class EnemyGenerator {
         
         try {
             $enemies = [];
+            error_log("EnemyGenerator: Начинаем генерацию противников. threat_level: $threat_level, count: $count");
             
             // Получаем список монстров из API
             $monsters = $this->getMonstersList();
@@ -47,7 +48,9 @@ class EnemyGenerator {
             }
             
             // Фильтруем монстров по CR и типу
+            error_log("EnemyGenerator: Фильтруем монстров. CR range: " . json_encode($cr_range));
             $filtered_monsters = $this->filterMonsters($monsters, $cr_range, $enemy_type, $environment);
+            error_log("EnemyGenerator: После фильтрации найдено монстров: " . count($filtered_monsters));
             
             if (empty($filtered_monsters)) {
                 throw new Exception('Не найдены подходящие противники для указанных параметров');
@@ -186,13 +189,21 @@ class EnemyGenerator {
      */
     private function getMonstersList() {
         $url = $this->dnd5e_api_url . '/monsters';
+        error_log("EnemyGenerator: Запрос к D&D API: $url");
+        
         $response = $this->makeRequest($url);
+        error_log("EnemyGenerator: Ответ от D&D API получен: " . ($response ? 'да' : 'нет'));
         
         if ($response && isset($response['results'])) {
+            error_log("EnemyGenerator: Найдено монстров: " . count($response['results']));
             return $response['results'];
         }
         
-        throw new Exception('API D&D недоступен');
+        if ($response) {
+            error_log("EnemyGenerator: Структура ответа: " . json_encode(array_keys($response)));
+        }
+        
+        throw new Exception('API D&D недоступен или возвращает неверную структуру');
     }
     
     /**
@@ -399,45 +410,67 @@ class EnemyGenerator {
      * Выполнение HTTP запроса
      */
     private function makeRequest($url) {
+        error_log("EnemyGenerator: makeRequest для URL: $url");
+        
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/1.0');
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         
+        $start_time = microtime(true);
         $response = curl_exec($ch);
+        $end_time = microtime(true);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
+        $info = curl_getinfo($ch);
         curl_close($ch);
         
+        $request_time = round(($end_time - $start_time) * 1000, 2);
+        error_log("EnemyGenerator: Запрос завершен за {$request_time}ms, HTTP: $http_code");
+        
         if ($error) {
-            error_log("CURL Error for $url: $error");
+            error_log("EnemyGenerator: CURL Error for $url: $error");
             return null;
         }
         
         if ($http_code === 200 && $response) {
+            error_log("EnemyGenerator: Успешный ответ, размер: " . strlen($response) . " байт");
             $decoded = json_decode($response, true);
             if (json_last_error() === JSON_ERROR_NONE) {
+                error_log("EnemyGenerator: JSON успешно декодирован");
                 return $decoded;
             } else {
-                error_log("JSON decode error for $url: " . json_last_error_msg());
+                error_log("EnemyGenerator: JSON decode error for $url: " . json_last_error_msg());
                 return null;
             }
         }
         
-        error_log("HTTP Error for $url: $http_code");
+        error_log("EnemyGenerator: HTTP Error for $url: $http_code, response size: " . strlen($response));
         return null;
     }
 }
 
 // Обработка запроса
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $generator = new EnemyGenerator();
-    $result = $generator->generateEnemies($_POST);
+    error_log("EnemyGenerator: Получен POST запрос с данными: " . json_encode($_POST));
     
-    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    try {
+        $generator = new EnemyGenerator();
+        $result = $generator->generateEnemies($_POST);
+        
+        error_log("EnemyGenerator: Результат генерации: " . json_encode($result));
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    } catch (Exception $e) {
+        error_log("EnemyGenerator: Критическая ошибка: " . $e->getMessage());
+        echo json_encode([
+            'success' => false,
+            'error' => 'Критическая ошибка: ' . $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
+    }
 } else {
+    error_log("EnemyGenerator: Неподдерживаемый метод: " . $_SERVER['REQUEST_METHOD']);
     echo json_encode([
         'success' => false,
         'error' => 'Метод не поддерживается'
