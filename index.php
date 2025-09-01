@@ -529,7 +529,6 @@ function openCharacterModal() {
         e.preventDefault();
         
         const formData = new FormData(this);
-        formData.append('use_ai', 'on'); // AI всегда включен
         const submitBtn = this.querySelector('button[type="submit"]');
         const resultDiv = document.getElementById('characterResult');
         const progressDiv = document.getElementById('characterProgress');
@@ -670,13 +669,7 @@ function openEnemyModal() {
                         </select>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="enemy-ai">Использовать AI</label>
-                        <select id="enemy-ai" name="use_ai">
-                            <option value="on">Включить AI</option>
-                            <option value="off">Отключить AI</option>
-                        </select>
-                    </div>
+
                 </div>
                 
 
@@ -765,7 +758,6 @@ function openEnemyModal() {
         e.preventDefault();
         
         const formData = new FormData(this);
-        formData.append('use_ai', 'on'); // AI всегда включен
         const submitBtn = this.querySelector('button[type="submit"]');
         const resultDiv = document.getElementById('enemyResult');
         
@@ -773,12 +765,7 @@ function openEnemyModal() {
         submitBtn.disabled = true;
         resultDiv.innerHTML = '<div class="loading">Создание противников...</div>';
         
-        // Добавляем таймаут для показа fallback сообщения
-        const timeoutId = setTimeout(() => {
-            if (resultDiv.innerHTML.includes('Создание противников...')) {
-                resultDiv.innerHTML = '<div class="loading">Используем резервные данные...</div>';
-            }
-        }, 5000);
+
         
         fetch('api/generate-enemies.php', {
             method: 'POST',
@@ -795,10 +782,7 @@ function openEnemyModal() {
             if (data.success && data.enemies) {
                 let resultHtml = formatEnemiesFromApi(data.enemies);
                 
-                // Добавляем индикатор fallback данных
-                if (data.fallback) {
-                    resultHtml = '<div class="fallback-notice">⚠️ Используются резервные данные (API недоступен)</div>' + resultHtml;
-                }
+
                 
                 resultDiv.innerHTML = resultHtml;
                 
@@ -829,7 +813,6 @@ function openEnemyModal() {
             resultDiv.innerHTML = '<div class="error">' + errorMessage + '</div>';
         })
         .finally(() => {
-            clearTimeout(timeoutId);
             submitBtn.innerHTML = '<span class="btn-icon">&#128127;</span><span class="btn-text">Создать противников</span>';
             submitBtn.disabled = false;
         });
