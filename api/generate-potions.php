@@ -17,10 +17,9 @@ require_once __DIR__ . '/../config.php';
 
 class PotionGenerator {
     private $dnd5e_api_url = 'https://www.dnd5eapi.co/api';
-    private $deepseek_api_key;
     
     public function __construct() {
-        $this->deepseek_api_key = getApiKey('deepseek');
+        // Инициализация без AI
     }
     
     /**
@@ -30,7 +29,8 @@ class PotionGenerator {
         $count = (int)($params['count'] ?? 1);
         $rarity = $params['rarity'] ?? '';
         $type = $params['type'] ?? '';
-        $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
+        
+        error_log("PotionGenerator: Начинаем генерацию зелий. count=$count, rarity=$rarity, type=$type");
         
         // Валидация параметров
         if ($count < 1 || $count > 10) {
@@ -39,49 +39,49 @@ class PotionGenerator {
         
         try {
             // Получаем список всех магических предметов
+            error_log("PotionGenerator: Получаем список магических предметов...");
             $magic_items = $this->getMagicItemsList();
             
             // Фильтруем только зелья
+            error_log("PotionGenerator: Фильтруем зелья...");
             $potions = $this->filterPotions($magic_items);
             
             if (empty($potions)) {
+                error_log("PotionGenerator: Зелья не найдены");
                 throw new Exception('Не найдены зелья в базе данных D&D');
             }
             
-            // Фильтруем по редкости и типу
-            $filtered_potions = $this->filterByParams($potions, $rarity, $type);
-            
-            if (empty($filtered_potions)) {
-                throw new Exception('Не найдены подходящие зелья для указанных параметров');
-            }
-            
-            // Выбираем случайные зелья
-            $selected_potions = $this->selectRandomPotions($filtered_potions, $count);
+            // Выбираем случайные зелья (без фильтрации по параметрам для начала)
+            error_log("PotionGenerator: Выбираем случайные зелья...");
+            $selected_potions = $this->selectRandomPotions($potions, $count);
             
             // Получаем детальную информацию о каждом зелье
+            error_log("PotionGenerator: Получаем детали зелий...");
             $detailed_potions = [];
             foreach ($selected_potions as $potion) {
-                $detailed_potion = $this->getPotionDetails($potion, $use_ai);
+                error_log("PotionGenerator: Получаем детали для зелья: " . $potion['name']);
+                $detailed_potion = $this->getPotionDetails($potion);
                 if ($detailed_potion) {
                     $detailed_potions[] = $detailed_potion;
                 }
             }
             
             if (empty($detailed_potions)) {
+                error_log("PotionGenerator: Не удалось получить детали зелий");
                 throw new Exception('Не удалось получить детальную информацию о зельях');
             }
+            
+            error_log("PotionGenerator: Успешно сгенерировано зелий: " . count($detailed_potions));
             
             return [
                 'success' => true,
                 'data' => $detailed_potions,
                 'count' => count($detailed_potions),
-                'filters' => [
-                    'rarity' => $rarity ?: 'любая',
-                    'type' => $type ?: 'любой'
-                ]
+                'total_available' => count($potions)
             ];
             
         } catch (Exception $e) {
+            error_log("PotionGenerator: Ошибка генерации зелий: " . $e->getMessage());
             return [
                 'success' => false,
                 'error' => $e->getMessage()
@@ -94,12 +94,16 @@ class PotionGenerator {
      */
     private function getMagicItemsList() {
         $url = $this->dnd5e_api_url . '/magic-items';
+        error_log("PotionGenerator: Запрос к D&D API: $url");
+        
         $response = $this->makeRequest($url);
         
         if ($response && isset($response['results'])) {
+            error_log("PotionGenerator: Получено магических предметов: " . count($response['results']));
             return $response['results'];
         }
         
+        error_log("PotionGenerator: Ошибка получения магических предметов");
         throw new Exception('Не удалось получить список магических предметов из D&D API');
     }
     
@@ -111,44 +115,21 @@ class PotionGenerator {
         
         foreach ($magic_items as $item) {
             $name = strtolower($item['name']);
-            if (strpos($name, 'potion') !== false) {
+            // Ищем зелья по различным ключевым словам
+            if (strpos($name, 'potion') !== false || 
+                strpos($name, 'elixir') !== false || 
+                strpos($name, 'philter') !== false ||
+                strpos($name, 'oil') !== false) {
                 $potions[] = $item;
             }
         }
         
+        error_log("PotionGenerator: Найдено зелий: " . count($potions));
+        if (count($potions) > 0) {
+            error_log("PotionGenerator: Примеры зелий: " . implode(', ', array_slice(array_column($potions, 'name'), 0, 5)));
+        }
+        
         return $potions;
-    }
-    
-    /**
-     * Фильтрация зелий по параметрам
-     */
-    private function filterByParams($potions, $rarity, $type) {
-        $filtered = $potions;
-        
-        // Если указана редкость, фильтруем по ней
-        if ($rarity && $rarity !== '') {
-            $filtered = array_filter($filtered, function($potion) use ($rarity) {
-                // Получаем детали зелья для проверки редкости
-                $details = $this->getPotionDetails($potion, false);
-                if ($details && isset($details['rarity'])) {
-                    return strtolower($details['rarity']) === strtolower($rarity);
-                }
-                return false;
-            });
-        }
-        
-        // Если указан тип, фильтруем по нему
-        if ($type && $type !== '') {
-            $filtered = array_filter($filtered, function($potion) use ($type) {
-                $details = $this->getPotionDetails($potion, false);
-                if ($details && isset($details['type'])) {
-                    return $details['type'] === $type;
-                }
-                return false;
-            });
-        }
-        
-        return array_values($filtered);
     }
     
     /**
@@ -175,7 +156,7 @@ class PotionGenerator {
     /**
      * Получение детальной информации о зелье
      */
-    private function getPotionDetails($potion, $use_ai) {
+    private function getPotionDetails($potion) {
         $url = $this->dnd5e_api_url . $potion['url'];
         $response = $this->makeRequest($url);
         
@@ -195,11 +176,6 @@ class PotionGenerator {
             'color' => $this->getPotionColor($response['rarity']['name'] ?? 'Common'),
             'properties' => $this->getPotionProperties($response)
         ];
-        
-        // Добавляем AI-описание если включено
-        if ($use_ai && $this->deepseek_api_key) {
-            $result['ai_description'] = $this->generateAIDescription($result);
-        }
         
         return $result;
     }
@@ -320,69 +296,11 @@ class PotionGenerator {
     }
     
     /**
-     * Генерация AI-описания
-     */
-    private function generateAIDescription($potion) {
-        $prompt = "Опиши зелье '{$potion['name']}' ({$potion['rarity']} редкость, {$potion['type']}). " .
-                 "Дополни описание практическими советами для мастера D&D. " .
-                 "Ответ должен быть кратким (2-3 предложения) и полезным.";
-        
-        try {
-            $response = $this->callDeepSeek($prompt);
-            if ($response) {
-                return trim($response);
-            }
-        } catch (Exception $e) {
-            error_log("Ошибка AI генерации описания зелья: " . $e->getMessage());
-        }
-        
-        return null;
-    }
-    
-    /**
-     * Вызов DeepSeek API
-     */
-    private function callDeepSeek($prompt) {
-        if (!$this->deepseek_api_key) {
-            return null;
-        }
-        
-        $data = [
-            'model' => 'deepseek-chat',
-            'messages' => [
-                ['role' => 'system', 'content' => 'Ты помощник мастера D&D. Давай краткие и практичные описания зелий.'],
-                ['role' => 'user', 'content' => $prompt]
-            ],
-            'max_tokens' => 150,
-            'temperature' => 0.7
-        ];
-        
-        $ch = curl_init('https://api.deepseek.com/v1/chat/completions');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->deepseek_api_key
-        ]);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-        
-        $response = curl_exec($ch);
-        curl_close($ch);
-        
-        $result = json_decode($response, true);
-        
-        if (isset($result['choices'][0]['message']['content'])) {
-            return trim($result['choices'][0]['message']['content']);
-        }
-        
-        return null;
-    }
-    
-    /**
      * Выполнение HTTP запроса
      */
     private function makeRequest($url) {
+        error_log("PotionGenerator: Выполняем запрос к: $url");
+        
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
@@ -396,21 +314,24 @@ class PotionGenerator {
         curl_close($ch);
         
         if ($error) {
-            error_log("CURL Error for $url: $error");
+            error_log("PotionGenerator: CURL Error for $url: $error");
             return null;
         }
+        
+        error_log("PotionGenerator: HTTP Code for $url: $http_code");
         
         if ($http_code === 200 && $response) {
             $decoded = json_decode($response, true);
             if (json_last_error() === JSON_ERROR_NONE) {
+                error_log("PotionGenerator: Успешно декодирован JSON для $url");
                 return $decoded;
             } else {
-                error_log("JSON decode error for $url: " . json_last_error_msg());
+                error_log("PotionGenerator: JSON decode error for $url: " . json_last_error_msg());
                 return null;
             }
         }
         
-        error_log("HTTP Error for $url: $http_code");
+        error_log("PotionGenerator: HTTP Error for $url: $http_code");
         return null;
     }
 }

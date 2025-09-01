@@ -1558,11 +1558,7 @@ function formatPotionsFromApi(potions) {
             `<span class="potion-property">${prop}</span>`
         ).join('');
         
-        // Добавляем AI-описание если есть
         let descriptionHtml = `<p class="potion-description">${potion.description}</p>`;
-        if (potion.ai_description) {
-            descriptionHtml += `<p class="potion-ai-description" style="font-style: italic; color: var(--text-secondary); margin-top: var(--space-2);">🤖 ${potion.ai_description}</p>`;
-        }
         
         html += `
             <div class="potion-card" style="border-left: 4px solid ${potion.color}">
