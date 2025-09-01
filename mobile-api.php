@@ -548,8 +548,7 @@ function getClassEquipment($characterClass) {
     $equipment[] = 'Трутница';
     
     // Зелья
-    $potions = ['Зелье лечения', 'Зелье невидимости', 'Зелье прыгучести', 'Зелье сопротивления огню'];
-    $equipment[] = $potions[array_rand($potions)];
+                    $equipment[] = 'Зелье (генерируется отдельно)';
     
     // Деньги
     $gold = rand(5, 25);
