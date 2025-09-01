@@ -5,7 +5,6 @@ if (php_sapi_name() !== 'cli') {
 }
 require_once __DIR__ . '/../config.php';
 
-
 class EnemyGenerator {
     private $dnd5e_api_url = 'https://www.dnd5eapi.co/api';
     private $deepseek_api_key;
@@ -25,8 +24,8 @@ class EnemyGenerator {
         $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
         
         // Валидация параметров
-        if ($count < 1 || $count > 10) {
-            throw new Exception('Количество противников должно быть от 1 до 10');
+        if ($count < 1 || $count > 20) {
+            throw new Exception('Количество противников должно быть от 1 до 20');
         }
         
         $valid_threat_levels = ['easy', 'medium', 'hard', 'deadly'];
@@ -40,22 +39,44 @@ class EnemyGenerator {
         try {
             $enemies = [];
             
-            for ($i = 0; $i < $count; $i++) {
-                $enemy = $this->generateSingleEnemy($cr_range, $enemy_type, $environment, $use_ai);
+            // Получаем список монстров из API
+            $monsters = $this->getMonstersList();
+            
+            if (empty($monsters)) {
+                throw new Exception('База данных монстров недоступна');
+            }
+            
+            // Фильтруем монстров по CR и типу
+            $filtered_monsters = $this->filterMonsters($monsters, $cr_range, $enemy_type, $environment);
+            
+            if (empty($filtered_monsters)) {
+                throw new Exception('Не найдены подходящие противники для указанных параметров');
+            }
+            
+            // Если нужно много противников, выбираем один тип и генерируем несколько
+            if ($count > 1) {
+                $selected_monster = $filtered_monsters[array_rand($filtered_monsters)];
+                $enemies = $this->generateMultipleEnemies($selected_monster, $count, $use_ai);
+            } else {
+                // Для одного противника выбираем случайного
+                $selected_monster = $filtered_monsters[array_rand($filtered_monsters)];
+                $enemy = $this->generateSingleEnemy($selected_monster, $use_ai);
                 if ($enemy) {
                     $enemies[] = $enemy;
                 }
             }
             
             if (empty($enemies)) {
-                throw new Exception('Не удалось найти подходящих противников');
+                throw new Exception('Не удалось сгенерировать противников');
             }
             
             return [
                 'success' => true,
                 'enemies' => $enemies,
                 'threat_level' => $threat_level,
-                'count' => count($enemies)
+                'threat_level_display' => $this->getThreatLevelDisplay($threat_level),
+                'count' => count($enemies),
+                'cr_range' => $cr_range
             ];
             
         } catch (Exception $e) {
@@ -72,48 +93,53 @@ class EnemyGenerator {
     private function getCRRange($threat_level) {
         switch ($threat_level) {
             case 'easy':
-                return ['min' => 0, 'max' => 2]; // CR 0-2 (1/8, 1/4, 1/2, 1, 2)
+                return ['min' => 0, 'max' => 3, 'display' => 'Легкий (CR 0-3)'];
             case 'medium':
-                return ['min' => 1, 'max' => 5]; // CR 1-5
+                return ['min' => 1, 'max' => 7, 'display' => 'Средний (CR 1-7)'];
             case 'hard':
-                return ['min' => 3, 'max' => 10]; // CR 3-10
+                return ['min' => 5, 'max' => 12, 'display' => 'Сложный (CR 5-12)'];
             case 'deadly':
-                return ['min' => 8, 'max' => 20]; // CR 8-20
+                return ['min' => 10, 'max' => 20, 'display' => 'Смертельный (CR 10-20)'];
             default:
-                return ['min' => 1, 'max' => 5];
+                return ['min' => 1, 'max' => 5, 'display' => 'Средний (CR 1-5)'];
         }
+    }
+    
+    /**
+     * Получение отображения уровня угрозы
+     */
+    private function getThreatLevelDisplay($threat_level) {
+        $displays = [
+            'easy' => 'Легкий',
+            'medium' => 'Средний', 
+            'hard' => 'Сложный',
+            'deadly' => 'Смертельный'
+        ];
+        return $displays[$threat_level] ?? 'Неизвестно';
+    }
+    
+    /**
+     * Генерация нескольких противников одного типа
+     */
+    private function generateMultipleEnemies($monster, $count, $use_ai) {
+        $enemies = [];
+        
+        for ($i = 0; $i < $count; $i++) {
+            $enemy = $this->generateSingleEnemy($monster, $use_ai);
+            if ($enemy) {
+                // Добавляем номер для различения
+                $enemy['name'] = $enemy['name'] . ' ' . ($i + 1);
+                $enemies[] = $enemy;
+            }
+        }
+        
+        return $enemies;
     }
     
     /**
      * Генерация одного противника
      */
-    private function generateSingleEnemy($cr_range, $enemy_type, $environment, $use_ai) {
-        // Получаем данные монстров из API
-        $monsters = $this->getMonstersList();
-        
-        if (empty($monsters)) {
-            throw new Exception('База данных монстров недоступна');
-        }
-        
-        // Фильтруем монстров по CR и типу
-        $filtered_monsters = $this->filterMonsters($monsters, $cr_range, $enemy_type, $environment);
-        
-        if (empty($filtered_monsters)) {
-            // Если не найдено подходящих, берем случайного монстра из подходящего CR
-            $filtered_monsters = array_filter($monsters, function($monster) use ($cr_range) {
-                $cr = $this->parseCR($monster['challenge_rating'] ?? '0');
-                return $cr >= $cr_range['min'] && $cr <= $cr_range['max'];
-            });
-            
-            if (empty($filtered_monsters)) {
-                // Если все еще нет подходящих, берем любого монстра
-                $filtered_monsters = $monsters;
-            }
-        }
-        
-        // Выбираем случайного монстра
-        $monster = $filtered_monsters[array_rand($filtered_monsters)];
-        
+    private function generateSingleEnemy($monster, $use_ai) {
         // Получаем детальную информацию о монстре
         $monster_details = $this->getMonsterDetails($monster['index']);
         
@@ -131,12 +157,15 @@ class EnemyGenerator {
             'speed' => $monster_details['speed'] ?? '30 ft',
             'abilities' => $monster_details['abilities'] ?? [],
             'actions' => $monster_details['actions'] ?? [],
-            'special_abilities' => $monster_details['special_abilities'] ?? []
+            'special_abilities' => $monster_details['special_abilities'] ?? [],
+            'environment' => $this->getEnvironment($monster_details),
+            'cr_numeric' => $this->parseCR($monster_details['challenge_rating'] ?? '0')
         ];
         
         // Добавляем AI-описание если включено
         if ($use_ai) {
             $enemy['description'] = $this->generateEnemyDescription($enemy);
+            $enemy['tactics'] = $this->generateTactics($enemy);
         }
         
         return $enemy;
@@ -153,11 +182,8 @@ class EnemyGenerator {
             return $response['results'];
         }
         
-        // API недоступен - возвращаем ошибку
-        return [];
+        throw new Exception('API D&D недоступен');
     }
-    
-
     
     /**
      * Фильтрация монстров по параметрам
@@ -199,8 +225,7 @@ class EnemyGenerator {
             return $response;
         }
         
-        // API недоступен - возвращаем ошибку
-        return null;
+        throw new Exception('Не удалось получить детали монстра');
     }
     
     /**
@@ -226,11 +251,6 @@ class EnemyGenerator {
      * Проверка соответствия CR диапазону
      */
     private function checkCRRange($cr, $cr_range) {
-        // Для дробных CR (1/8, 1/4, 1/2) используем специальную логику
-        if ($cr <= 0.5) {
-            return $cr_range['min'] <= 0.5 && $cr_range['max'] >= 0.5;
-        }
-        
         return $cr >= $cr_range['min'] && $cr <= $cr_range['max'];
     }
     
@@ -280,52 +300,11 @@ class EnemyGenerator {
             return 'Подземелье/Холмы';
         } elseif (strpos($name, 'wolf') !== false || strpos($name, 'bear') !== false) {
             return 'Лес/Холмы';
+        } elseif (strpos($name, 'shark') !== false || strpos($name, 'fish') !== false) {
+            return 'Водная';
         } else {
             return 'Различные';
         }
-    }
-    
-    /**
-     * Извлечение боевых параметров
-     */
-    private function extractCombatStats($monster_details) {
-        $stats = [];
-        
-        if (isset($monster_details['armor_class'])) {
-            $stats['Класс доспеха'] = $monster_details['armor_class'][0]['value'] ?? '10';
-        }
-        
-        if (isset($monster_details['hit_points'])) {
-            $stats['Хиты'] = $monster_details['hit_points']['average'] ?? '10';
-        }
-        
-        if (isset($monster_details['speed'])) {
-            $speed_parts = [];
-            foreach ($monster_details['speed'] as $type => $value) {
-                $speed_parts[] = "$type: $value";
-            }
-            $stats['Скорость'] = implode(', ', $speed_parts);
-        }
-        
-        return $stats;
-    }
-    
-    /**
-     * Извлечение действий
-     */
-    private function extractActions($monster_details) {
-        $actions = [];
-        
-        if (isset($monster_details['actions'])) {
-            foreach ($monster_details['actions'] as $action) {
-                $actions[] = [
-                    'name' => $action['name'],
-                    'description' => $action['desc'] ?? 'Нет описания'
-                ];
-            }
-        }
-        
-        return $actions;
     }
     
     /**

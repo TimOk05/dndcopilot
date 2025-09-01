@@ -627,10 +627,10 @@ function openEnemyModal() {
                         <label for="enemy-threat">Уровень угрозы</label>
                         <select id="enemy-threat" name="threat_level" required>
                             <option value="">Выберите уровень угрозы</option>
-                            <option value="easy">Легкий (1-4 уровень)</option>
-                            <option value="medium">Средний (5-10 уровень)</option>
-                            <option value="hard">Сложный (11-16 уровень)</option>
-                            <option value="deadly">Смертельный (17-20 уровень)</option>
+                            <option value="easy">Легкий (CR 0-3)</option>
+                            <option value="medium">Средний (CR 1-7)</option>
+                            <option value="hard">Сложный (CR 5-12)</option>
+                            <option value="deadly">Смертельный (CR 10-20)</option>
                         </select>
                     </div>
                     
@@ -2170,8 +2170,13 @@ function formatEnemiesFromApi(enemies) {
         // Заголовок противника
         out += '<div class="enemy-header">';
         out += '<h3>' + (enemy.name || 'Без имени') + '</h3>';
-        out += '<div class="enemy-subtitle">CR ' + (enemy.challenge_rating || enemy.cr || '?') + '</div>';
+        out += '<div class="enemy-cr">CR ' + (enemy.challenge_rating || enemy.cr || '?') + '</div>';
         out += '</div>';
+        
+        // Добавляем информацию об уровне угрозы если доступна
+        if (enemy.threat_level_display) {
+            out += '<div class="enemy-threat-level">' + enemy.threat_level_display + '</div>';
+        }
         
         // Основная информация
         out += '<div class="enemy-section">';
@@ -2179,8 +2184,7 @@ function formatEnemiesFromApi(enemies) {
         out += '<div class="section-content">';
         out += '<div class="info-grid">';
         out += '<div class="info-item"><strong>Тип:</strong> ' + (enemy.type || 'Не определен') + '</div>';
-        out += '<div class="info-item"><strong>Размер:</strong> ' + (enemy.size || 'Не определен') + '</div>';
-        out += '<div class="info-item"><strong>Мировоззрение:</strong> ' + (enemy.alignment || 'Не определено') + '</div>';
+        out += '<div class="info-item"><strong>Среда:</strong> ' + (enemy.environment || 'Не определена') + '</div>';
         out += '</div>';
         out += '</div></div>';
         
@@ -2201,12 +2205,12 @@ function formatEnemiesFromApi(enemies) {
             out += '<div class="section-title collapsed" onclick="toggleSection(this)">📊 Характеристики <span class="toggle-icon">▶</span></div>';
             out += '<div class="section-content collapsed">';
             out += '<div class="abilities-grid">';
-            out += '<div class="ability-item">СИЛ: ' + (enemy.abilities.str || '?') + '</div>';
-            out += '<div class="ability-item">ЛОВ: ' + (enemy.abilities.dex || '?') + '</div>';
-            out += '<div class="ability-item">ТЕЛ: ' + (enemy.abilities.con || '?') + '</div>';
-            out += '<div class="ability-item">ИНТ: ' + (enemy.abilities.int || '?') + '</div>';
-            out += '<div class="ability-item">МДР: ' + (enemy.abilities.wis || '?') + '</div>';
-            out += '<div class="ability-item">ХАР: ' + (enemy.abilities.cha || '?') + '</div>';
+            out += '<div class="ability-item"><strong>СИЛ:</strong> ' + (enemy.abilities.str || '?') + '</div>';
+            out += '<div class="ability-item"><strong>ЛОВ:</strong> ' + (enemy.abilities.dex || '?') + '</div>';
+            out += '<div class="ability-item"><strong>ТЕЛ:</strong> ' + (enemy.abilities.con || '?') + '</div>';
+            out += '<div class="ability-item"><strong>ИНТ:</strong> ' + (enemy.abilities.int || '?') + '</div>';
+            out += '<div class="ability-item"><strong>МДР:</strong> ' + (enemy.abilities.wis || '?') + '</div>';
+            out += '<div class="ability-item"><strong>ХАР:</strong> ' + (enemy.abilities.cha || '?') + '</div>';
             out += '</div>';
             out += '</div></div>';
         }
@@ -2219,7 +2223,11 @@ function formatEnemiesFromApi(enemies) {
             out += '<ul class="actions-list">';
             enemy.actions.forEach(action => {
                 if (action && typeof action === 'object') {
-                    out += '<li>' + (action.name || 'Неизвестное действие') + ': ' + (action.description || 'Нет описания') + '</li>';
+                    out += '<li><strong>' + (action.name || 'Неизвестное действие') + '</strong>';
+                    if (action.description) {
+                        out += ': ' + action.description;
+                    }
+                    out += '</li>';
                 } else if (typeof action === 'string') {
                     out += '<li>' + action + '</li>';
                 }
@@ -2236,7 +2244,11 @@ function formatEnemiesFromApi(enemies) {
             out += '<ul class="abilities-list">';
             enemy.special_abilities.forEach(ability => {
                 if (ability && typeof ability === 'object') {
-                    out += '<li>' + (ability.name || 'Неизвестная способность') + ': ' + (ability.description || 'Нет описания') + '</li>';
+                    out += '<li><strong>' + (ability.name || 'Неизвестная способность') + '</strong>';
+                    if (ability.description) {
+                        out += ': ' + ability.description;
+                    }
+                    out += '</li>';
                 } else if (typeof ability === 'string') {
                     out += '<li>' + ability + '</li>';
                 }
@@ -2817,13 +2829,12 @@ document.querySelector('form').onsubmit = function(e) {
                     <div class="enemy-note-title">${enemyData.name}</div>
                     <div class="enemy-note-info">
                         <div><strong>Тип:</strong> ${enemyData.type || 'Не указан'}</div>
-                        <div><strong>Размер:</strong> ${enemyData.size || 'Не указан'}</div>
-                        <div><strong>Мировоззрение:</strong> ${enemyData.alignment || 'Не указано'}</div>
+
                         <div><strong>CR:</strong> ${enemyData.challenge_rating || 'Не указан'}</div>
                         <div><strong>Хиты:</strong> ${enemyData.hit_points || 'Не указаны'}</div>
                         <div><strong>КД:</strong> ${enemyData.armor_class || 'Не указан'}</div>
-                        <div><strong>Скорость:</strong> ${enemyData.speed || 'Не указана'}</div>
-                        <div><strong>Инициатива:</strong> ${enemyData.initiative || '0'}</div>
+                                                <div><strong>Скорость:</strong> ${enemyData.speed || 'Не указана'}</div>
+                        ${enemyData.environment ? `<div><strong>Среда:</strong> ${enemyData.environment}</div>` : ''}
                         <div><strong>Характеристики:</strong></div>
                         <div style="margin-left: 20px;">
                             <div>СИЛ: ${enemyData.abilities?.str || '0'}</div>
@@ -2833,9 +2844,10 @@ document.querySelector('form').onsubmit = function(e) {
                             <div>МДР: ${enemyData.abilities?.wis || '0'}</div>
                             <div>ХАР: ${enemyData.abilities?.cha || '0'}</div>
                         </div>
-                        ${enemyData.actions ? `<div><strong>Действия:</strong> ${Object.entries(enemyData.actions).map(([key, value]) => `${key}: ${value}`).join(', ')}</div>` : ''}
-                        ${enemyData.special_abilities ? `<div><strong>Особые способности:</strong> ${Object.entries(enemyData.special_abilities).map(([key, value]) => `${key}: ${value}`).join(', ')}</div>` : ''}
+                        ${enemyData.actions && enemyData.actions.length > 0 ? `<div><strong>Действия:</strong> ${enemyData.actions.map(action => typeof action === 'string' ? action : (action.name || 'Неизвестное действие')).join(', ')}</div>` : ''}
+                        ${enemyData.special_abilities && enemyData.special_abilities.length > 0 ? `<div><strong>Особые способности:</strong> ${enemyData.special_abilities.map(ability => typeof ability === 'string' ? ability : (ability.name || 'Неизвестная способность')).join(', ')}</div>` : ''}
                         ${enemyData.description ? `<div><strong>Описание:</strong> ${enemyData.description}</div>` : ''}
+                        ${enemyData.tactics ? `<div><strong>Тактика:</strong> ${enemyData.tactics}</div>` : ''}
                     </div>
                 </div>
             `;

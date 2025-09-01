@@ -210,60 +210,68 @@ function generateMobileCharacter($race, $characterClass, $level) {
  */
 function generateMobileEnemy($cr) {
     try {
-        // Загружаем данные противников из fallback-data
-        require_once 'api/fallback-data.php';
-        $fallbackData = new FallbackData();
-        $enemiesData = $fallbackData->getAllData();
+        // Используем основной API генерации противников
+        require_once 'api/generate-enemies.php';
+        $generator = new EnemyGenerator();
         
-        if (!$enemiesData || !isset($enemiesData['enemies'])) {
-            throw new Exception('База данных противников недоступна');
+        // Преобразуем CR в уровень угрозы
+        $threat_level = getThreatLevelFromCR($cr);
+        
+        $params = [
+            'threat_level' => $threat_level,
+            'count' => 1,
+            'enemy_type' => '',
+            'environment' => '',
+            'use_ai' => true
+        ];
+        
+        $result = $generator->generateEnemies($params);
+        
+        if (!$result['success']) {
+            throw new Exception($result['error']);
         }
-    
-    // Фильтруем по CR
-        $filteredEnemies = array_filter($enemiesData['enemies'], function($enemy) use ($cr) {
-            return isset($enemy['cr']) && $enemy['cr'] == $cr;
-    });
-    
-    if (empty($filteredEnemies)) {
-            // Если нет точного совпадения, ищем ближайший CR
-            $availableCRs = array_unique(array_column($enemiesData['enemies'], 'cr'));
-            sort($availableCRs);
-            
-            $closestCR = $availableCRs[0];
-            foreach ($availableCRs as $availableCR) {
-                if ($availableCR >= $cr) {
-                    $closestCR = $availableCR;
-                    break;
-                }
-            }
-            
-            $filteredEnemies = array_filter($enemiesData['enemies'], function($enemy) use ($closestCR) {
-                return isset($enemy['cr']) && $enemy['cr'] == $closestCR;
-        });
-    }
-    
-    if (empty($filteredEnemies)) {
-            throw new Exception('Не найдены подходящие противники');
-    }
-    
-        // Выбираем случайного противника
-    $enemy = $filteredEnemies[array_rand($filteredEnemies)];
-    
-        // Генерируем дополнительные данные
-        $enemy['description'] = generateEnemyDescription($enemy);
-        $enemy['tactics'] = generateEnemyTactics($enemy);
+        
+        $enemy = $result['enemies'][0];
+        
+        // Адаптируем данные для мобильной версии
+        $mobileEnemy = [
+            'name' => $enemy['name'],
+            'cr' => $enemy['challenge_rating'],
+            'hp' => $enemy['hit_points'],
+            'ac' => $enemy['armor_class'],
+            'abilities' => $enemy['abilities'],
+            'actions' => array_map(function($action) {
+                return $action['name'] ?? 'Атака';
+            }, $enemy['actions']),
+            'description' => $enemy['description'] ?? 'Описание не определено',
+            'tactics' => $enemy['tactics'] ?? 'Тактика не определена',
+            'type' => $enemy['type'],
+            'environment' => $enemy['environment'] ?? 'Различные'
+        ];
         
         logMessage('INFO', 'Mobile enemy generated successfully', [
             'cr' => $cr,
             'name' => $enemy['name']
         ]);
         
-        return $enemy;
+        return $mobileEnemy;
         
     } catch (Exception $e) {
         logMessage('ERROR', 'Mobile enemy generation failed: ' . $e->getMessage());
         throw $e;
     }
+}
+
+/**
+ * Преобразование CR в уровень угрозы
+ */
+function getThreatLevelFromCR($cr) {
+    $cr = (int)$cr;
+    
+    if ($cr <= 3) return 'easy';
+    if ($cr <= 7) return 'medium';
+    if ($cr <= 12) return 'hard';
+    return 'deadly';
 }
 
 /**
@@ -688,3 +696,4 @@ function generateEnemyTactics($enemy) {
     return $tactics[$type] ?? $tactics['unknown'];
 }
 ?>
+
