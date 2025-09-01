@@ -815,7 +815,7 @@
                         <option value="common">Обычное</option>
                         <option value="uncommon">Необычное</option>
                         <option value="rare">Редкое</option>
-                        <option value="very_rare">Очень редкое</option>
+                        <option value="very rare">Очень редкое</option>
                         <option value="legendary">Легендарное</option>
                     </select>
                 </div>
@@ -1177,7 +1177,7 @@
             if (rarity) params.append('rarity', rarity);
             if (type) params.append('type', type);
 
-            fetch(`api/generate-potions.php?${params.toString()}`)
+            fetch(`api/generate-potions-simple.php?${params.toString()}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {

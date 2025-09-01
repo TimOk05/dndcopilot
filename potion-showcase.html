@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Генератор зелий D&D - Демонстрация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        .controls {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .control-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .control-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .control-item label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4ecdc4;
+        }
+        
+        .control-item input,
+        .control-item select {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        .control-item input:focus,
+        .control-item select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.3);
+        }
+        
+        .generate-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .potion-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .potion-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--rarity-color);
+        }
+        
+        .potion-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .potion-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .potion-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+        
+        .potion-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #4ecdc4;
+            flex: 1;
+        }
+        
+        .potion-rarity {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--rarity-color);
+            color: white;
+        }
+        
+        .potion-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .potion-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .detail-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+            color: #4ecdc4;
+        }
+        
+        .potion-properties {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .property-tag {
+            padding: 4px 8px;
+            background: rgba(78, 205, 196, 0.2);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: #4ecdc4;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #4ecdc4;
+        }
+        
+        .error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            color: #ff6b6b;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stats-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4ecdc4;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .control-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .results {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Генератор зелий D&D</h1>
+            <p>Создавайте магические зелья различных типов и редкости</p>
+        </div>
+        
+        <div class="stats-section">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #4ecdc4;">📊 Статистика зелий</h2>
+            <div id="statsContent" class="stats-grid">
+                <div class="loading">Загрузка статистики...</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <div class="control-item">
+                    <label for="count">Количество зелий</label>
+                    <input type="number" id="count" value="3" min="1" max="10">
+                </div>
+                
+                <div class="control-item">
+                    <label for="rarity">Редкость</label>
+                    <select id="rarity">
+                        <option value="">Любая редкость</option>
+                        <option value="common">Обычное</option>
+                        <option value="uncommon">Необычное</option>
+                        <option value="rare">Редкое</option>
+                        <option value="very rare">Очень редкое</option>
+                        <option value="legendary">Легендарное</option>
+                    </select>
+                </div>
+                
+                <div class="control-item">
+                    <label for="type">Тип зелья</label>
+                    <select id="type">
+                        <option value="">Любой тип</option>
+                        <option value="Восстановление">🩹 Восстановление</option>
+                        <option value="Усиление">💪 Усиление</option>
+                        <option value="Защита">🛡️ Защита</option>
+                        <option value="Иллюзия">👁️ Иллюзия</option>
+                        <option value="Трансмутация">🔄 Трансмутация</option>
+                        <option value="Некромантия">💀 Некромантия</option>
+                        <option value="Прорицание">🔮 Прорицание</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="generate-btn" onclick="generatePotions()">
+                🧪 Создать зелья
+            </button>
+        </div>
+        
+        <div id="results" class="results">
+            <!-- Результаты будут здесь -->
+        </div>
+    </div>
+
+    <script>
+        // Загружаем статистику при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStats();
+        });
+        
+        async function loadStats() {
+            try {
+                const response = await fetch('api/generate-potions-simple.php?action=stats');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayStats(data.data);
+                } else {
+                    document.getElementById('statsContent').innerHTML = 
+                        `<div class="error">Ошибка загрузки статистики: ${data.error}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('statsContent').innerHTML = 
+                    `<div class="error">Ошибка сети: ${error.message}</div>`;
+            }
+        }
+        
+        function displayStats(stats) {
+            const statsContent = document.getElementById('statsContent');
+            
+            let html = `
+                <div class="stat-card">
+                    <div class="stat-number">${stats.total_potions}</div>
+                    <div class="stat-label">Всего зелий</div>
+                </div>
+            `;
+            
+            // Добавляем статистику по редкости
+            Object.entries(stats.rarity_distribution).forEach(([rarity, count]) => {
+                html += `
+                    <div class="stat-card">
+                        <div class="stat-number">${count}</div>
+                        <div class="stat-label">${rarity}</div>
+                    </div>
+                `;
+            });
+            
+            statsContent.innerHTML = html;
+        }
+        
+        async function generatePotions() {
+            const count = document.getElementById('count').value;
+            const rarity = document.getElementById('rarity').value;
+            const type = document.getElementById('type').value;
+            
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="loading">Создание зелий...</div>';
+            
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'random');
+                params.append('count', count);
+                if (rarity) params.append('rarity', rarity);
+                if (type) params.append('type', type);
+                
+                const response = await fetch(`api/generate-potions-simple.php?${params.toString()}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayPotions(data.data);
+                } else {
+                    resultsDiv.innerHTML = `<div class="error">Ошибка: ${data.error}</div>`;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Ошибка сети: ${error.message}</div>`;
+            }
+        }
+        
+        function displayPotions(potions) {
+            const resultsDiv = document.getElementById('results');
+            
+            if (potions.length === 0) {
+                resultsDiv.innerHTML = '<div class="error">Не найдены зелья с указанными параметрами</div>';
+                return;
+            }
+            
+            let html = '';
+            
+            potions.forEach(potion => {
+                const rarityColor = getRarityColor(potion.rarity);
+                
+                html += `
+                    <div class="potion-card" style="--rarity-color: ${rarityColor}">
+                        <div class="potion-header">
+                            <div class="potion-icon">${potion.icon}</div>
+                            <div class="potion-name">${potion.name}</div>
+                            <div class="potion-rarity">${potion.rarity}</div>
+                        </div>
+                        
+                        <div class="potion-description">${potion.description}</div>
+                        
+                        <div class="potion-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Тип</div>
+                                <div class="detail-value">${potion.type}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Стоимость</div>
+                                <div class="detail-value">${potion.value}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Вес</div>
+                                <div class="detail-value">${potion.weight}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="potion-properties">
+                            ${potion.properties.map(prop => `<span class="property-tag">${prop}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function getRarityColor(rarity) {
+            const colors = {
+                'Common': '#9b9b9b',
+                'Uncommon': '#4caf50',
+                'Rare': '#2196f3',
+                'Very Rare': '#9c27b0',
+                'Legendary': '#ff9800'
+            };
+            
+            return colors[rarity] || '#9b9b9b';
+        }
+    </script>
+</body>
+</html>
