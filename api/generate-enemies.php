@@ -338,9 +338,12 @@ class EnemyGenerator {
         
         // Берем больше монстров для поиска подходящих с полной информацией
         $sample_monsters = array_slice($monsters['results'], 0, 100);
+        error_log("EnemyGenerator: Проверяем " . count($sample_monsters) . " монстров из списка");
         
         foreach ($sample_monsters as $monster) {
             try {
+                error_log("EnemyGenerator: Обрабатываем монстра: " . ($monster['name'] ?? 'Без имени'));
+                
                 // Получаем детальную информацию о монстре
                 if (!isset($monster['url'])) {
                     error_log("EnemyGenerator: Монстр не содержит URL: " . json_encode($monster));
@@ -349,14 +352,17 @@ class EnemyGenerator {
                 
                 $monster_details = $this->getMonsterDetails($monster['url']);
                 if (!$monster_details) {
+                    error_log("EnemyGenerator: Не удалось получить детали для монстра: " . ($monster['name'] ?? 'Без имени'));
                     continue;
                 }
                 
                 // Проверяем полноту данных
                 if (!$this->hasCompleteData($monster_details)) {
-                    error_log("EnemyGenerator: Монстр {$monster_details['name']} не имеет полных данных, пропускаем");
+                    error_log("EnemyGenerator: Монстр {$monster_details['name']} не прошел проверку полноты данных");
                     continue;
                 }
+                
+                error_log("EnemyGenerator: Монстр {$monster_details['name']} прошел проверку полноты данных");
                 
                 // Проверяем CR
                 if (!isset($monster_details['challenge_rating'])) {
@@ -414,6 +420,7 @@ class EnemyGenerator {
             }
         }
         
+        error_log("EnemyGenerator: Итоговое количество подходящих монстров: " . count($filtered));
         return $filtered;
     }
     
@@ -573,17 +580,38 @@ class EnemyGenerator {
      * Проверка полноты данных монстра
      */
     private function hasCompleteData($monster) {
-        $required_fields = ['name', 'type', 'challenge_rating', 'hit_points', 'armor_class'];
+        // Проверяем только самые важные поля
+        $required_fields = ['name', 'type', 'challenge_rating'];
         
         foreach ($required_fields as $field) {
             if (!isset($monster[$field]) || empty($monster[$field])) {
+                error_log("EnemyGenerator: Монстр не имеет обязательного поля '$field'");
                 return false;
             }
         }
         
-        // Проверяем, что характеристики не пустые
+        // Хиты и класс брони могут быть не указаны у некоторых монстров
+        if (!isset($monster['hit_points']) || empty($monster['hit_points'])) {
+            error_log("EnemyGenerator: Монстр {$monster['name']} не имеет хитов, используем значение по умолчанию");
+            $monster['hit_points'] = 'Не определено';
+        }
+        
+        if (!isset($monster['armor_class']) || empty($monster['armor_class'])) {
+            error_log("EnemyGenerator: Монстр {$monster['name']} не имеет класса брони, используем значение по умолчанию");
+            $monster['armor_class'] = 'Не определено';
+        }
+        
+        // Характеристики могут быть не указаны у некоторых монстров
         if (!isset($monster['abilities']) || empty($monster['abilities'])) {
-            return false;
+            error_log("EnemyGenerator: Монстр {$monster['name']} не имеет характеристик, используем значения по умолчанию");
+            $monster['abilities'] = [
+                'str' => 10,
+                'dex' => 10,
+                'con' => 10,
+                'int' => 10,
+                'wis' => 10,
+                'cha' => 10
+            ];
         }
         
         return true;
