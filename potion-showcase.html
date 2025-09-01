@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧪 Генератор зелий D&D - Демонстрация</title>
+    <title>🧪 Генератор зелий D&D - Поиск по характеристикам</title>
     <style>
         * {
             margin: 0;
@@ -20,7 +20,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
         
@@ -86,6 +86,34 @@
             box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.3);
         }
         
+        .search-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
         .generate-btn {
             background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
             color: white;
@@ -96,24 +124,38 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            width: 100%;
-            max-width: 300px;
-            margin: 0 auto;
-            display: block;
+            flex: 1;
+            min-width: 200px;
         }
         
-        .generate-btn:hover {
+        .search-btn {
+            background: linear-gradient(45deg, #45b7d1, #9c27b0);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .generate-btn:hover,
+        .search-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
         
-        .generate-btn:active {
+        .generate-btn:active,
+        .search-btn:active {
             transform: translateY(0);
         }
         
         .results {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 20px;
         }
         
@@ -177,6 +219,31 @@
             margin-bottom: 20px;
             line-height: 1.6;
             opacity: 0.9;
+        }
+        
+        .potion-effects {
+            margin-bottom: 20px;
+        }
+        
+        .effects-title {
+            font-weight: 600;
+            color: #4ecdc4;
+            margin-bottom: 10px;
+        }
+        
+        .effects-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .effect-tag {
+            padding: 4px 8px;
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: #ff6b6b;
         }
         
         .potion-details {
@@ -268,6 +335,16 @@
             opacity: 0.8;
         }
         
+        .search-results-info {
+            background: rgba(78, 205, 196, 0.1);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            color: #4ecdc4;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -280,6 +357,10 @@
             .results {
                 grid-template-columns: 1fr;
             }
+            
+            .button-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -287,7 +368,7 @@
     <div class="container">
         <div class="header">
             <h1>🧪 Генератор зелий D&D</h1>
-            <p>Создавайте магические зелья различных типов и редкости</p>
+            <p>Поиск и создание магических зелий по характеристикам</p>
         </div>
         
         <div class="stats-section">
@@ -298,6 +379,18 @@
         </div>
         
         <div class="controls">
+            <div class="search-section">
+                <input type="text" id="searchQuery" class="search-input" placeholder="🔍 Поиск зелий по названию или описанию...">
+                <div class="button-group">
+                    <button class="search-btn" onclick="searchPotions()">
+                        🔍 Найти зелья
+                    </button>
+                    <button class="generate-btn" onclick="generatePotions()">
+                        🧪 Создать зелья
+                    </button>
+                </div>
+            </div>
+            
             <div class="control-group">
                 <div class="control-item">
                     <label for="count">Количество зелий</label>
@@ -327,13 +420,32 @@
                         <option value="Трансмутация">🔄 Трансмутация</option>
                         <option value="Некромантия">💀 Некромантия</option>
                         <option value="Прорицание">🔮 Прорицание</option>
+                        <option value="Эвокация">⚡ Эвокация</option>
+                    </select>
+                </div>
+                
+                <div class="control-item">
+                    <label for="effect">Эффект</label>
+                    <select id="effect">
+                        <option value="">Любой эффект</option>
+                        <option value="heal">Heal - Лечение</option>
+                        <option value="damage">Damage - Урон</option>
+                        <option value="advantage">Advantage - Преимущество</option>
+                        <option value="resistance">Resistance - Сопротивление</option>
+                        <option value="invisible">Invisible - Невидимость</option>
+                        <option value="fly">Fly - Полет</option>
+                        <option value="strength">Strength - Сила</option>
+                        <option value="poison">Poison - Яд</option>
+                        <option value="fire">Fire - Огонь</option>
+                        <option value="cold">Cold - Холод</option>
+                        <option value="lightning">Lightning - Молния</option>
                     </select>
                 </div>
             </div>
-            
-            <button class="generate-btn" onclick="generatePotions()">
-                🧪 Создать зелья
-            </button>
+        </div>
+        
+        <div id="searchResultsInfo" class="search-results-info" style="display: none;">
+            <!-- Информация о результатах поиска -->
         </div>
         
         <div id="results" class="results">
@@ -349,7 +461,7 @@
         
         async function loadStats() {
             try {
-                const response = await fetch('api/generate-potions-simple.php?action=stats');
+                const response = await fetch('api/generate-potions.php?action=stats');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -391,8 +503,12 @@
             const count = document.getElementById('count').value;
             const rarity = document.getElementById('rarity').value;
             const type = document.getElementById('type').value;
+            const effect = document.getElementById('effect').value;
             
             const resultsDiv = document.getElementById('results');
+            const searchInfo = document.getElementById('searchResultsInfo');
+            
+            searchInfo.style.display = 'none';
             resultsDiv.innerHTML = '<div class="loading">Создание зелий...</div>';
             
             try {
@@ -401,8 +517,9 @@
                 params.append('count', count);
                 if (rarity) params.append('rarity', rarity);
                 if (type) params.append('type', type);
+                if (effect) params.append('effect', effect);
                 
-                const response = await fetch(`api/generate-potions-simple.php?${params.toString()}`);
+                const response = await fetch(`api/generate-potions.php?${params.toString()}`);
                 const data = await response.json();
                 
                 if (data.success) {
@@ -415,18 +532,63 @@
             }
         }
         
+        async function searchPotions() {
+            const query = document.getElementById('searchQuery').value.trim();
+            const rarity = document.getElementById('rarity').value;
+            const type = document.getElementById('type').value;
+            const effect = document.getElementById('effect').value;
+            
+            if (!query && !rarity && !type && !effect) {
+                alert('Введите поисковый запрос или выберите фильтры');
+                return;
+            }
+            
+            const resultsDiv = document.getElementById('results');
+            const searchInfo = document.getElementById('searchResultsInfo');
+            
+            resultsDiv.innerHTML = '<div class="loading">Поиск зелий...</div>';
+            
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'search');
+                if (query) params.append('query', query);
+                if (rarity) params.append('rarity', rarity);
+                if (type) params.append('type', type);
+                if (effect) params.append('effect', effect);
+                
+                const response = await fetch(`api/generate-potions.php?${params.toString()}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    if (data.total_found > 0) {
+                        searchInfo.innerHTML = `Найдено ${data.total_found} зелий, показано ${data.count}`;
+                        searchInfo.style.display = 'block';
+                    } else {
+                        searchInfo.style.display = 'none';
+                    }
+                    displayPotions(data.data);
+                } else {
+                    searchInfo.style.display = 'none';
+                    resultsDiv.innerHTML = `<div class="error">Ошибка: ${data.error}</div>`;
+                }
+            } catch (error) {
+                searchInfo.style.display = 'none';
+                resultsDiv.innerHTML = `<div class="error">Ошибка сети: ${error.message}</div>`;
+            }
+        }
+        
         function displayPotions(potions) {
             const resultsDiv = document.getElementById('results');
             
             if (potions.length === 0) {
-                resultsDiv.innerHTML = '<div class="error">Не найдены зелья с указанными параметрами</div>';
+                resultsDiv.innerHTML = '<div class="error">Зелья не найдены</div>';
                 return;
             }
             
             let html = '';
             
             potions.forEach(potion => {
-                const rarityColor = getRarityColor(potion.rarity);
+                const rarityColor = potion.color;
                 
                 html += `
                     <div class="potion-card" style="--rarity-color: ${rarityColor}">
@@ -437,6 +599,15 @@
                         </div>
                         
                         <div class="potion-description">${potion.description}</div>
+                        
+                        ${potion.effects && potion.effects.length > 0 ? `
+                            <div class="potion-effects">
+                                <div class="effects-title">Эффекты:</div>
+                                <div class="effects-list">
+                                    ${potion.effects.map(effect => `<span class="effect-tag">${effect}</span>`).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
                         
                         <div class="potion-details">
                             <div class="detail-item">
@@ -463,17 +634,12 @@
             resultsDiv.innerHTML = html;
         }
         
-        function getRarityColor(rarity) {
-            const colors = {
-                'Common': '#9b9b9b',
-                'Uncommon': '#4caf50',
-                'Rare': '#2196f3',
-                'Very Rare': '#9c27b0',
-                'Legendary': '#ff9800'
-            };
-            
-            return colors[rarity] || '#9b9b9b';
-        }
+        // Обработка Enter в поиске
+        document.getElementById('searchQuery').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchPotions();
+            }
+        });
     </script>
 </body>
 </html>
