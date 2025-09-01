@@ -81,42 +81,24 @@ class CharacterGeneratorV3 {
             $gender = $params['gender'] ?? 'random';
             $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
             
-            // Получаем данные расы и класса из D&D API
+            // Получаем данные расы и класса из D&D API с fallback
             logMessage('INFO', "Начинаем получение данных расы: {$race}");
-            $race_data = $this->dnd_api_service->getRaceData($race);
+            $race_data = $this->getRaceDataWithFallback($race);
             logMessage('INFO', "Получены данные расы: " . json_encode($race_data, JSON_UNESCAPED_UNICODE));
             
-            if (isset($race_data['error'])) {
-                logMessage('ERROR', "Ошибка получения данных расы: {$race_data['message']}");
-                throw new Exception("Ошибка получения данных расы: {$race_data['message']}");
-            }
-            
             logMessage('INFO', "Начинаем получение данных класса: {$class}");
-            $class_data = $this->dnd_api_service->getClassData($class);
+            $class_data = $this->getClassDataWithFallback($class);
             logMessage('INFO', "Получены данные класса: " . json_encode($class_data, JSON_UNESCAPED_UNICODE));
-            
-            if (isset($class_data['error'])) {
-                logMessage('ERROR', "Ошибка получения данных класса: {$class_data['message']}");
-                throw new Exception("Ошибка получения данных класса: {$class_data['message']}");
-            }
             
             // Генерируем характеристики
             $abilities = $this->generateAbilities($race_data, $level);
             
-            // Получаем заклинания, снаряжение и способности из API
-            $spells = $this->dnd_api_service->getSpellsForClass($class, $level);
-            if (isset($spells['error'])) {
-                logMessage('WARNING', "Ошибка получения заклинаний: {$spells['message']}");
-                $spells = [];
-            }
+            // Получаем заклинания, снаряжение и способности с fallback
+            $spells = $this->getSpellsWithFallback($class, $level);
             
-            $equipment = $this->getEquipmentData($class);
+            $equipment = $this->getEquipmentWithFallback($class);
             
-            $features = $this->dnd_api_service->getClassFeatures($class, $level);
-            if (isset($features['error'])) {
-                logMessage('WARNING', "Ошибка получения способностей: {$features['message']}");
-                $features = [];
-            }
+            $features = $this->getFeaturesWithFallback($class, $level);
             
             // Создаем персонажа
             $character = [
@@ -146,11 +128,11 @@ class CharacterGeneratorV3 {
                 'subraces' => $race_data['subraces'] ?? []
             ];
             
-            // Генерируем описание и предысторию
-            $description = $this->generateDescription($character, $use_ai);
+            // Генерируем описание и предысторию с fallback
+            $description = $this->generateDescriptionWithFallback($character, $use_ai);
             $character['description'] = $this->cleanTextForJson($description);
             
-            $background = $this->generateBackground($character, $use_ai);
+            $background = $this->generateBackgroundWithFallback($character, $use_ai);
             $character['background'] = $this->cleanTextForJson($background);
             
             logMessage('INFO', 'Character generated successfully with API data', [
@@ -604,6 +586,62 @@ class CharacterGeneratorV3 {
                 'traits' => ['Темновидение', 'Устойчивость к яду'],
                 'languages' => ['Общий', 'Дварфийский'],
                 'subraces' => ['Горный дварф', 'Холмовой дварф']
+            ],
+            'halfling' => [
+                'name' => 'Полурослик',
+                'speed' => 25,
+                'ability_bonuses' => ['dex' => 2],
+                'traits' => ['Удача', 'Храбрость', 'Скрытность'],
+                'languages' => ['Общий', 'Полуросличий'],
+                'subraces' => ['Легконогий', 'Крепкий']
+            ],
+            'orc' => [
+                'name' => 'Орк',
+                'speed' => 30,
+                'ability_bonuses' => ['str' => 2, 'con' => 1],
+                'traits' => ['Агрессивный', 'Мощное телосложение'],
+                'languages' => ['Общий', 'Орчий'],
+                'subraces' => []
+            ],
+            'tiefling' => [
+                'name' => 'Тифлинг',
+                'speed' => 30,
+                'ability_bonuses' => ['int' => 1, 'cha' => 2],
+                'traits' => ['Темновидение', 'Адское наследие'],
+                'languages' => ['Общий', 'Адский'],
+                'subraces' => []
+            ],
+            'dragonborn' => [
+                'name' => 'Драконорожденный',
+                'speed' => 30,
+                'ability_bonuses' => ['str' => 2, 'cha' => 1],
+                'traits' => ['Драконье происхождение', 'Дыхание дракона'],
+                'languages' => ['Общий', 'Драконий'],
+                'subraces' => []
+            ],
+            'gnome' => [
+                'name' => 'Гном',
+                'speed' => 25,
+                'ability_bonuses' => ['int' => 2],
+                'traits' => ['Темновидение', 'Гномья хитрость'],
+                'languages' => ['Общий', 'Гномий'],
+                'subraces' => ['Лесной гном', 'Скальный гном']
+            ],
+            'half-elf' => [
+                'name' => 'Полуэльф',
+                'speed' => 30,
+                'ability_bonuses' => ['cha' => 2, 'str' => 1, 'dex' => 1],
+                'traits' => ['Темновидение', 'Двойственное наследие'],
+                'languages' => ['Общий', 'Эльфийский'],
+                'subraces' => []
+            ],
+            'half-orc' => [
+                'name' => 'Полуорк',
+                'speed' => 30,
+                'ability_bonuses' => ['str' => 2, 'con' => 1],
+                'traits' => ['Темновидение', 'Свирепость'],
+                'languages' => ['Общий', 'Орчий'],
+                'subraces' => []
             ]
         ];
         
@@ -639,6 +677,56 @@ class CharacterGeneratorV3 {
                 'name' => 'Плут',
                 'hit_die' => 8,
                 'proficiencies' => ['Легкие доспехи', 'Простое оружие', 'Короткие мечи', 'Длинные мечи', 'Рапиры']
+            ],
+            'cleric' => [
+                'name' => 'Жрец',
+                'hit_die' => 8,
+                'proficiencies' => ['Все доспехи', 'Щиты', 'Простое оружие']
+            ],
+            'ranger' => [
+                'name' => 'Следопыт',
+                'hit_die' => 10,
+                'proficiencies' => ['Легкие доспехи', 'Средние доспехи', 'Щиты', 'Простое оружие', 'Воинское оружие']
+            ],
+            'barbarian' => [
+                'name' => 'Варвар',
+                'hit_die' => 12,
+                'proficiencies' => ['Легкие доспехи', 'Средние доспехи', 'Щиты', 'Простое оружие', 'Воинское оружие']
+            ],
+            'bard' => [
+                'name' => 'Бард',
+                'hit_die' => 8,
+                'proficiencies' => ['Легкие доспехи', 'Простое оружие', 'Рапиры', 'Длинные мечи', 'Короткие мечи']
+            ],
+            'druid' => [
+                'name' => 'Друид',
+                'hit_die' => 8,
+                'proficiencies' => ['Легкие доспехи', 'Средние доспехи', 'Щиты', 'Простое оружие', 'Посохи']
+            ],
+            'monk' => [
+                'name' => 'Монах',
+                'hit_die' => 8,
+                'proficiencies' => ['Простое оружие', 'Короткие мечи']
+            ],
+            'paladin' => [
+                'name' => 'Паладин',
+                'hit_die' => 10,
+                'proficiencies' => ['Все доспехи', 'Щиты', 'Простое оружие', 'Воинское оружие']
+            ],
+            'sorcerer' => [
+                'name' => 'Чародей',
+                'hit_die' => 6,
+                'proficiencies' => ['Кинжалы', 'Посохи', 'Легкие доспехи']
+            ],
+            'warlock' => [
+                'name' => 'Колдун',
+                'hit_die' => 8,
+                'proficiencies' => ['Легкие доспехи', 'Простое оружие']
+            ],
+            'artificer' => [
+                'name' => 'Артифисер',
+                'hit_die' => 8,
+                'proficiencies' => ['Легкие доспехи', 'Средние доспехи', 'Щиты', 'Простое оружие']
             ]
         ];
         
@@ -685,7 +773,17 @@ class CharacterGeneratorV3 {
         $fallback_equipment = [
             'fighter' => ['Кольчуга', 'Длинный меч', 'Щит', 'Рюкзак', 'Спальный мешок'],
             'wizard' => ['Посох', 'Книга заклинаний', 'Компонентный мешочек', 'Рюкзак'],
-            'rogue' => ['Кожаные доспехи', 'Короткий меч', 'Лук', 'Рюкзак']
+            'rogue' => ['Кожаные доспехи', 'Короткий меч', 'Лук', 'Рюкзак'],
+            'cleric' => ['Кольчуга', 'Булава', 'Щит', 'Священный символ', 'Рюкзак'],
+            'ranger' => ['Кожаные доспехи', 'Длинный лук', 'Короткий меч', 'Рюкзак'],
+            'barbarian' => ['Кожаные доспехи', 'Боевой топор', 'Рюкзак'],
+            'bard' => ['Кожаные доспехи', 'Рапира', 'Лютня', 'Рюкзак'],
+            'druid' => ['Кожаные доспехи', 'Посох', 'Священный символ', 'Рюкзак'],
+            'monk' => ['Простая одежда', 'Короткий меч', 'Рюкзак'],
+            'paladin' => ['Кольчуга', 'Длинный меч', 'Щит', 'Священный символ', 'Рюкзак'],
+            'sorcerer' => ['Кожаные доспехи', 'Кинжал', 'Компонентный мешочек', 'Рюкзак'],
+            'warlock' => ['Кожаные доспехи', 'Кинжал', 'Компонентный мешочек', 'Рюкзак'],
+            'artificer' => ['Кожаные доспехи', 'Кинжал', 'Инструменты', 'Рюкзак']
         ];
         
         return $fallback_equipment[$class] ?? $fallback_equipment['fighter'];
@@ -708,7 +806,17 @@ class CharacterGeneratorV3 {
         $fallback_features = [
             'fighter' => ['Боевой стиль', 'Second Wind'],
             'wizard' => ['Магическое восстановление', 'Школа магии'],
-            'rogue' => ['Скрытность', 'Expertise']
+            'rogue' => ['Скрытность', 'Expertise'],
+            'cleric' => ['Божественный домен', 'Божественное вмешательство'],
+            'ranger' => ['Любимый враг', 'Естественный исследователь'],
+            'barbarian' => ['Ярость', 'Защита без доспехов'],
+            'bard' => ['Бардовское вдохновение', 'Песнь отдыха'],
+            'druid' => ['Друидский', 'Дикий облик'],
+            'monk' => ['Боевые искусства', 'Ки'],
+            'paladin' => ['Божественное чувство', 'Божественное здоровье'],
+            'sorcerer' => ['Магическое происхождение', 'Гибкость заклинаний'],
+            'warlock' => ['Пакт', 'Мистический арканум'],
+            'artificer' => ['Магическое изобретение', 'Инфузия']
         ];
         
         return $fallback_features[$class] ?? $fallback_features['fighter'];
@@ -722,7 +830,7 @@ class CharacterGeneratorV3 {
             try {
                 $description = $this->ai_service->generateCharacterDescription($character, true);
                 if (!isset($description['error'])) {
-                    return $this->cleanTextForJson($description);
+                    return $description;
                 }
             } catch (Exception $e) {
                 logMessage('WARNING', "AI description generation failed: " . $e->getMessage());
@@ -737,7 +845,14 @@ class CharacterGeneratorV3 {
         $descriptions = [
             'Человек' => "{$gender} {$race} с решительным взглядом и уверенной походкой. {$class} с опытом и навыками.",
             'Эльф' => "Грациозный {$race} с острыми чертами лица. {$class} с врожденным чувством магии.",
-            'Дварф' => "Крепкий {$race} с густой бородой и сильными руками. {$class} с традициями предков."
+            'Дварф' => "Крепкий {$race} с густой бородой и сильными руками. {$class} с традициями предков.",
+            'Полурослик' => "Маленький {$race} с кудрявыми волосами и добродушным выражением лица. {$class} с ловкостью и хитростью.",
+            'Орк' => "Мощный {$race} с зеленой кожей и клыками. {$class} с первобытной силой и яростью.",
+            'Тифлинг' => "Темнокожий {$race} с рогами и хвостом. {$class} с адским наследием и тайной.",
+            'Драконорожденный' => "Величественный {$race} с чешуей и дыханием дракона. {$class} с древней силой предков.",
+            'Гном' => "Низкорослый {$race} с острым умом и хитростью. {$class} с врожденными способностями.",
+            'Полуэльф' => "Грациозный {$race} с острыми чертами лица. {$class} с двойственным наследием.",
+            'Полуорк' => "Мощный {$race} с зеленой кожей и клыками. {$class} с первобытной силой и яростью."
         ];
         
         return $descriptions[$race] ?? $descriptions['Человек'];
@@ -751,7 +866,7 @@ class CharacterGeneratorV3 {
             try {
                 $background = $this->ai_service->generateCharacterBackground($character, true);
                 if (!isset($background['error'])) {
-                    return $this->cleanTextForJson($background);
+                    return $background;
                 }
             } catch (Exception $e) {
                 logMessage('WARNING', "AI background generation failed: " . $e->getMessage());
@@ -766,7 +881,18 @@ class CharacterGeneratorV3 {
         $backgrounds = [
             'Кузнец' => "Родился в семье кузнецов. Изучал ремесло, но жажда приключений привела к изучению {$class}.",
             'Торговец' => "Путешествовал по миру, торгуя товарами. Научился защищаться и стал {$class}.",
-            'Охотник' => "Проводил дни в лесах, выслеживая добычу. Навыки охоты помогли стать {$class}."
+            'Охотник' => "Проводил дни в лесах, выслеживая добычу. Навыки охоты помогли стать {$class}.",
+            'Фермер' => "Работал на земле, выращивая урожай. Однажды понял, что может вырастить не только растения.",
+            'Стражник' => "Служил в городской страже, защищая мирных жителей. Опыт пригодился в приключениях.",
+            'Солдат' => "Служил в армии, участвовал во многих битвах. Военный опыт пригодился в приключениях.",
+            'Ученый' => "Изучал древние тексты и артефакты. Однажды понял, что лучший способ изучения - личное участие.",
+            'Авантюрист' => "Всегда мечтал о приключениях. Оставил родной дом в поисках славы и богатства.",
+            'Рыбак' => "Проводил дни на воде, ловя рыбу. Навыки навигации пригодились в приключениях.",
+            'Плотник' => "Работал с деревом, создавая мебель и строения. Теперь использует навыки для создания оружия.",
+            'Каменщик' => "Строил дома и крепости. Опыт работы с камнем пригодился в бою.",
+            'Повар' => "Готовил пищу для многих людей. Научился понимать их характеры и слабости.",
+            'Трактирщик' => "Слушал истории путешественников. Теперь сам создает легенды.",
+            'Ткач' => "Создавал ткани и одежду. Навыки точности пригодились в бою."
         ];
         
         return $backgrounds[$occupation] ?? $backgrounds['Кузнец'];
