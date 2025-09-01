@@ -28,9 +28,9 @@ class EnemyGenerator {
             throw new Exception('Количество противников должно быть от 1 до 20');
         }
         
-        $valid_threat_levels = ['easy', 'medium', 'hard', 'deadly'];
-        if (!in_array($threat_level, $valid_threat_levels)) {
-            throw new Exception('Неверный уровень угрозы');
+        // Проверяем, является ли threat_level числовым значением (конкретный CR)
+        if (!in_array($threat_level, ['easy', 'medium', 'hard', 'deadly']) && !is_numeric($threat_level)) {
+            throw new Exception('Неверный уровень угрозы. Должен быть easy, medium, hard, deadly или конкретный CR (0, 1, 2, 3...)');
         }
         
         // Определяем CR на основе уровня угрозы
@@ -76,7 +76,8 @@ class EnemyGenerator {
                 'threat_level' => $threat_level,
                 'threat_level_display' => $this->getThreatLevelDisplay($threat_level),
                 'count' => count($enemies),
-                'cr_range' => $cr_range
+                'cr_range' => $cr_range,
+                'cr_numeric' => is_numeric($threat_level) ? (int)$threat_level : null
             ];
             
         } catch (Exception $e) {
@@ -103,7 +104,7 @@ class EnemyGenerator {
             default:
                 // Если передан конкретный CR, возвращаем его как диапазон
                 if (is_numeric($threat_level)) {
-                    $cr = (int)$threat_level;
+                    $cr = (float)$threat_level;
                     return ['min' => $cr, 'max' => $cr, 'display' => "CR $cr"];
                 }
                 return ['min' => 1, 'max' => 5, 'display' => 'Средний (CR 1-5)'];
@@ -114,6 +115,10 @@ class EnemyGenerator {
      * Получение отображения уровня угрозы
      */
     private function getThreatLevelDisplay($threat_level) {
+        if (is_numeric($threat_level)) {
+            return "CR $threat_level";
+        }
+        
         $displays = [
             'easy' => 'Легкий',
             'medium' => 'Средний', 
