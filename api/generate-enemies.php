@@ -255,13 +255,38 @@ class EnemyGenerator {
     private function generateMultipleEnemies($monster, $count, $use_ai) {
         $enemies = [];
         
-        for ($i = 0; $i < $count; $i++) {
-            $enemy = $this->generateSingleEnemy($monster, $use_ai);
-            if ($enemy) {
-                // Добавляем номер для различения
-                $enemy['name'] = $enemy['name'] . ' ' . ($i + 1);
-                $enemies[] = $enemy;
+        // Генерируем одного противника как шаблон
+        $base_enemy = $this->generateSingleEnemy($monster, $use_ai);
+        if (!$base_enemy) {
+            return [];
+        }
+        
+        if ($count === 1) {
+            // Для одного противника возвращаем как есть
+            $enemies[] = $base_enemy;
+        } else {
+            // Для нескольких противников создаем группу
+            $group_enemy = $base_enemy;
+            $group_enemy['name'] = $base_enemy['name'] . ' (x' . $count . ')';
+            $group_enemy['count'] = $count;
+            $group_enemy['is_group'] = true;
+            
+            // Добавляем информацию о группе
+            $group_enemy['group_info'] = [
+                'base_name' => $base_enemy['name'],
+                'count' => $count,
+                'individual_enemies' => []
+            ];
+            
+            // Создаем отдельные записи для каждого противника в группе
+            for ($i = 0; $i < $count; $i++) {
+                $individual_enemy = $base_enemy;
+                $individual_enemy['name'] = $base_enemy['name'] . ' ' . ($i + 1);
+                $individual_enemy['group_index'] = $i + 1;
+                $group_enemy['group_info']['individual_enemies'][] = $individual_enemy;
             }
+            
+            $enemies[] = $group_enemy;
         }
         
         return $enemies;
@@ -373,10 +398,69 @@ class EnemyGenerator {
                 continue;
             }
             
+            // Проверяем совместимость типа и среды с уровнем сложности
+            if (!$this->checkCompatibility($monster, $cr_range, $enemy_type, $environment)) {
+                continue;
+            }
+            
             $filtered[] = $monster;
         }
         
         return $filtered;
+    }
+    
+    /**
+     * Проверка совместимости типа и среды с уровнем сложности
+     */
+    private function checkCompatibility($monster, $cr_range, $enemy_type, $environment) {
+        $cr = $this->parseCR($monster['challenge_rating']);
+        $type = strtolower($monster['type'] ?? '');
+        
+        // Проверяем совместимость типа с CR
+        if ($enemy_type && $enemy_type !== '') {
+            switch (strtolower($enemy_type)) {
+                case 'dragon':
+                    // Драконы должны иметь CR не менее 1
+                    if ($cr < 1) return false;
+                    break;
+                case 'giant':
+                    // Великаны должны иметь CR не менее 3
+                    if ($cr < 3) return false;
+                    break;
+                case 'undead':
+                    // Нежить может быть любой сложности
+                    break;
+                case 'humanoid':
+                    // Гуманоиды могут быть любой сложности
+                    break;
+                case 'beast':
+                    // Звери обычно имеют низкий CR
+                    if ($cr > 8) return false;
+                    break;
+            }
+        }
+        
+        // Проверяем совместимость среды с CR
+        if ($environment && $environment !== '') {
+            switch ($environment) {
+                case 'underdark':
+                    // Подземелье - сложная среда, минимальный CR 1
+                    if ($cr < 1) return false;
+                    break;
+                case 'mountain':
+                    // Горы - средняя сложность, минимальный CR 0
+                    break;
+                case 'urban':
+                    // Город - может быть любой сложности
+                    break;
+                case 'arctic':
+                case 'desert':
+                    // Экстремальные среды - минимальный CR 0
+                    break;
+            }
+        }
+        
+        return true;
     }
     
     /**
@@ -682,7 +766,7 @@ class EnemyGenerator {
 }
 
 // Обработка запроса
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     error_log("EnemyGenerator: Получен POST запрос с данными: " . json_encode($_POST));
     
     try {
@@ -698,7 +782,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'error' => 'Критическая ошибка: ' . $e->getMessage()
         ], JSON_UNESCAPED_UNICODE);
     }
-} else {
+} elseif (isset($_SERVER['REQUEST_METHOD'])) {
     error_log("EnemyGenerator: Неподдерживаемый метод: " . $_SERVER['REQUEST_METHOD']);
     echo json_encode([
         'success' => false,

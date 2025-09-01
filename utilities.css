@@ -996,3 +996,278 @@
         display: block !important;
     }
 }
+
+
+/* ===== ENEMY GENERATOR STYLES ===== */
+
+.enemy-generator {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.enemy-form {
+    background: var(--bg-secondary);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-4);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+    color: var(--text-primary);
+}
+
+.form-group select,
+.form-group input {
+    padding: var(--space-2);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: var(--text-sm);
+}
+
+.form-group select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.enemy-block {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.enemy-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.enemy-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: var(--text-xl);
+}
+
+.enemy-cr {
+    background: var(--accent-primary);
+    color: var(--text-on-accent);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: var(--text-sm);
+}
+
+.enemy-group-info {
+    background: var(--accent-secondary);
+    color: var(--text-on-accent);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-size: var(--text-sm);
+    margin-top: var(--space-2);
+}
+
+.enemy-threat-level {
+    background: var(--accent-tertiary);
+    color: var(--text-on-accent);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-3);
+    display: inline-block;
+}
+
+.enemy-section {
+    margin-bottom: var(--space-3);
+}
+
+.section-title {
+    background: var(--bg-tertiary);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: background-color 0.2s ease;
+}
+
+.section-title:hover {
+    background: var(--bg-quaternary);
+}
+
+.section-title.collapsed .toggle-icon::after {
+    content: '▶';
+}
+
+.section-title:not(.collapsed) .toggle-icon::after {
+    content: '▼';
+}
+
+.section-content {
+    padding: var(--space-3);
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+    margin-top: var(--space-2);
+}
+
+.section-content.collapsed {
+    display: none;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-2);
+}
+
+.info-item {
+    padding: var(--space-2);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-secondary);
+}
+
+.abilities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-2);
+}
+
+.ability-item {
+    padding: var(--space-2);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-secondary);
+    text-align: center;
+}
+
+.actions-list,
+.abilities-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.actions-list li,
+.abilities-list li {
+    padding: var(--space-2);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-2);
+    border: 1px solid var(--border-secondary);
+}
+
+.save-enemy-section {
+    margin-top: var(--space-3);
+    text-align: center;
+}
+
+.save-enemy-btn {
+    background: var(--accent-primary);
+    color: var(--text-on-accent);
+    border: none;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.save-enemy-btn:hover {
+    background: var(--accent-primary-hover);
+}
+
+.save-enemies-section {
+    margin-top: var(--space-4);
+    text-align: center;
+    padding: var(--space-4);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+}
+
+.save-enemies-btn {
+    background: var(--accent-secondary);
+    color: var(--text-on-accent);
+    border: none;
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: var(--text-lg);
+    transition: background-color 0.2s ease;
+}
+
+.save-enemies-btn:hover {
+    background: var(--accent-secondary-hover);
+}
+
+.enemy-separator {
+    border: none;
+    height: 1px;
+    background: var(--border-primary);
+    margin: var(--space-4) 0;
+}
+
+.generate-btn {
+    background: var(--accent-primary);
+    color: var(--text-on-accent);
+    border: none;
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: var(--text-lg);
+    transition: background-color 0.2s ease;
+    width: 100%;
+}
+
+.generate-btn:hover {
+    background: var(--accent-primary-hover);
+}
+
+.generate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.loading {
+    text-align: center;
+    padding: var(--space-4);
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.fallback-notice {
+    background: var(--accent-tertiary);
+    color: var(--text-on-accent);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-4);
+    text-align: center;
+    font-weight: 600;
+}
