@@ -33,33 +33,50 @@ class PotionGenerator {
      */
     public function generateRandomPotions($count = 1, $rarity = null, $type = null) {
         try {
+            error_log("PotionGenerator: Начинаем генерацию зелий. count=$count, rarity=$rarity, type=$type");
+            
             // Получаем список всех магических предметов из D&D API
+            error_log("PotionGenerator: Получаем список магических предметов...");
             $magic_items = $this->getMagicItemsListWithRetry();
             
             if (empty($magic_items)) {
+                error_log("PotionGenerator: Список магических предметов пуст");
                 throw new Exception('База данных магических предметов недоступна');
             }
             
+            error_log("PotionGenerator: Получено магических предметов: " . count($magic_items));
+            
             // Фильтруем только зелья
+            error_log("PotionGenerator: Фильтруем зелья...");
             $potions = $this->filterPotions($magic_items);
             
             if (empty($potions)) {
+                error_log("PotionGenerator: Зелья не найдены");
                 throw new Exception('Зелья не найдены в базе данных D&D');
             }
             
+            error_log("PotionGenerator: Найдено зелий: " . count($potions));
+            
             // Фильтруем по редкости и типу
+            error_log("PotionGenerator: Фильтруем по параметрам...");
             $filtered_potions = $this->filterPotionsByParams($potions, $rarity, $type);
             
             if (empty($filtered_potions)) {
+                error_log("PotionGenerator: После фильтрации зелья не найдены");
                 throw new Exception('Не найдены зелья с указанными параметрами');
             }
             
+            error_log("PotionGenerator: После фильтрации осталось зелий: " . count($filtered_potions));
+            
             // Выбираем случайные зелья
+            error_log("PotionGenerator: Выбираем случайные зелья...");
             $selected_potions = $this->selectRandomPotions($filtered_potions, $count);
             
             // Получаем детальную информацию о каждом зелье
+            error_log("PotionGenerator: Получаем детали зелий...");
             $result = [];
             foreach ($selected_potions as $potion) {
+                error_log("PotionGenerator: Получаем детали для зелья: " . $potion['name']);
                 $potion_details = $this->getPotionDetails($potion['index']);
                 if ($potion_details) {
                     $result[] = $this->formatPotionData($potion_details);
@@ -67,12 +84,15 @@ class PotionGenerator {
             }
             
             if (empty($result)) {
+                error_log("PotionGenerator: Не удалось получить детали зелий");
                 throw new Exception('Не удалось получить детали зелий');
             }
             
+            error_log("PotionGenerator: Успешно сгенерировано зелий: " . count($result));
             return $result;
             
         } catch (Exception $e) {
+            error_log("PotionGenerator: Ошибка генерации зелий: " . $e->getMessage());
             throw new Exception('Ошибка генерации зелий: ' . $e->getMessage());
         }
     }
@@ -84,12 +104,20 @@ class PotionGenerator {
         $cache_file = $this->cache_dir . '/magic_items_list.json';
         $cache_time = 3600; // 1 час
         
+        error_log("PotionGenerator: Проверяем кэш магических предметов: $cache_file");
+        
         // Проверяем кэш
         if (file_exists($cache_file) && (time() - filemtime($cache_file)) < $cache_time) {
+            error_log("PotionGenerator: Используем кэшированные данные");
             $cached_data = json_decode(file_get_contents($cache_file), true);
             if ($cached_data && isset($cached_data['results'])) {
+                error_log("PotionGenerator: Кэш содержит " . count($cached_data['results']) . " предметов");
                 return $cached_data['results'];
+            } else {
+                error_log("PotionGenerator: Кэш поврежден или пуст");
             }
+        } else {
+            error_log("PotionGenerator: Кэш не найден или устарел");
         }
         
         // Пробуем получить с retry
@@ -99,18 +127,24 @@ class PotionGenerator {
                 $magic_items = $this->getMagicItemsList();
                 
                 if ($magic_items && isset($magic_items['results']) && !empty($magic_items['results'])) {
+                    error_log("PotionGenerator: Успешно получено " . count($magic_items['results']) . " предметов");
                     // Сохраняем в кэш
                     file_put_contents($cache_file, json_encode($magic_items));
+                    error_log("PotionGenerator: Данные сохранены в кэш");
                     return $magic_items['results'];
+                } else {
+                    error_log("PotionGenerator: Получены неверные данные от API");
                 }
             } catch (Exception $e) {
                 error_log("PotionGenerator: Попытка $attempt не удалась: " . $e->getMessage());
                 if ($attempt < $this->max_retries) {
+                    error_log("PotionGenerator: Ждем " . ($this->retry_delay / 1000) . " секунд перед следующей попыткой");
                     usleep($this->retry_delay * 1000);
                 }
             }
         }
         
+        error_log("PotionGenerator: Все попытки исчерпаны");
         throw new Exception('Не удалось получить список магических предметов после ' . $this->max_retries . ' попыток');
     }
     
@@ -361,6 +395,8 @@ class PotionGenerator {
      * Выполнение HTTP запроса
      */
     private function makeRequest($url) {
+        error_log("PotionGenerator: Выполняем HTTP запрос к: $url");
+        
         $context = stream_context_create([
             'http' => [
                 'method' => 'GET',
@@ -373,19 +409,30 @@ class PotionGenerator {
             ]
         ]);
         
+        $start_time = microtime(true);
         $response = @file_get_contents($url, false, $context);
+        $end_time = microtime(true);
+        
+        error_log("PotionGenerator: HTTP запрос выполнен за " . round(($end_time - $start_time) * 1000, 2) . " мс");
         
         if ($response === false) {
             $error = error_get_last();
-            throw new Exception('HTTP запрос не удался: ' . ($error['message'] ?? 'Неизвестная ошибка'));
+            $error_msg = $error['message'] ?? 'Неизвестная ошибка';
+            error_log("PotionGenerator: HTTP запрос не удался: $error_msg");
+            throw new Exception('HTTP запрос не удался: ' . $error_msg);
         }
+        
+        error_log("PotionGenerator: Получен ответ длиной " . strlen($response) . " символов");
         
         $data = json_decode($response, true);
         
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new Exception('Ошибка парсинга JSON: ' . json_last_error_msg());
+            $json_error = json_last_error_msg();
+            error_log("PotionGenerator: Ошибка парсинга JSON: $json_error");
+            throw new Exception('Ошибка парсинга JSON: ' . $json_error);
         }
         
+        error_log("PotionGenerator: JSON успешно распарсен");
         return $data;
     }
     
@@ -431,6 +478,8 @@ class PotionGenerator {
 }
 
 // Обработка запросов
+error_log("PotionGenerator: Получен запрос. action=" . ($_GET['action'] ?? 'random') . ", count=" . ($_GET['count'] ?? 1) . ", rarity=" . ($_GET['rarity'] ?? 'null') . ", type=" . ($_GET['type'] ?? 'null'));
+
 $generator = new PotionGenerator();
 
 $action = $_GET['action'] ?? 'random';
@@ -439,9 +488,12 @@ $rarity = $_GET['rarity'] ?? null;
 $type = $_GET['type'] ?? null;
 
 try {
+    error_log("PotionGenerator: Обрабатываем действие: $action");
+    
     switch ($action) {
         case 'random':
             if ($count > 10) $count = 10; // Ограничиваем количество
+            error_log("PotionGenerator: Генерируем $count случайных зелий");
             $result = $generator->generateRandomPotions($count, $rarity, $type);
             break;
             
@@ -449,14 +501,17 @@ try {
             if (!$type) {
                 throw new Exception('Тип зелья не указан');
             }
+            error_log("PotionGenerator: Получаем зелья типа: $type");
             $result = $generator->getPotionsByType($type);
             break;
             
         case 'rarities':
+            error_log("PotionGenerator: Получаем доступные редкости");
             $result = $generator->getAvailableRarities();
             break;
             
         case 'types':
+            error_log("PotionGenerator: Получаем доступные типы");
             $result = $generator->getAvailableTypes();
             break;
             
@@ -464,6 +519,7 @@ try {
             throw new Exception('Неизвестное действие');
     }
     
+    error_log("PotionGenerator: Действие выполнено успешно");
     echo json_encode([
         'success' => true,
         'data' => $result,
@@ -471,6 +527,7 @@ try {
     ], JSON_UNESCAPED_UNICODE);
     
 } catch (Exception $e) {
+    error_log("PotionGenerator: Ошибка при выполнении действия: " . $e->getMessage());
     http_response_code(400);
     echo json_encode([
         'success' => false,

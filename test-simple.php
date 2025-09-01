@@ -1,49 +1,47 @@
 <?php
-// Простой тест
-echo "Тест запущен\n";
+// Простой тест API зелий
+echo "Тестируем API зелий...\n";
 
-// Проверяем, что файл config.php существует
+// Тест 1: Проверяем доступность config.php
 if (file_exists('config.php')) {
-    echo "config.php найден\n";
+    echo "✓ config.php найден\n";
     require_once 'config.php';
-    echo "config.php загружен\n";
 } else {
-    echo "config.php не найден\n";
+    echo "✗ config.php не найден\n";
+    exit;
 }
 
-// Проверяем, что файл generate-enemies.php существует
-if (file_exists('api/generate-enemies.php')) {
-    echo "generate-enemies.php найден\n";
+// Тест 2: Проверяем папку cache
+$cache_dir = __DIR__ . '/logs/cache';
+if (is_dir($cache_dir)) {
+    echo "✓ Папка cache существует\n";
 } else {
-    echo "generate-enemies.php не найден\n";
+    echo "✗ Папка cache не существует\n";
 }
 
-// Проверяем подключение к интернету
-$test_url = 'https://www.dnd5eapi.co/api/monsters';
-echo "Тестируем подключение к: $test_url\n";
+// Тест 3: Тестируем API напрямую
+echo "\nТестируем API generate-potions.php...\n";
 
-$ch = curl_init($test_url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+$url = 'http://localhost:8000/api/generate-potions.php?action=rarities';
+echo "URL: $url\n";
 
-$response = curl_exec($ch);
-$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-$error = curl_error($ch);
-curl_close($ch);
+$context = stream_context_create([
+    'http' => [
+        'method' => 'GET',
+        'timeout' => 30
+    ]
+]);
 
-if ($error) {
-    echo "CURL ошибка: $error\n";
-} else {
-    echo "HTTP код: $http_code\n";
-    if ($http_code === 200) {
-        echo "Подключение успешно\n";
-        $data = json_decode($response, true);
-        if ($data && isset($data['results'])) {
-            echo "Найдено монстров: " . count($data['results']) . "\n";
-        }
-    } else {
-        echo "HTTP ошибка\n";
+$response = file_get_contents($url, false, $context);
+
+if ($response === false) {
+    echo "✗ Ошибка при запросе к API\n";
+    $error = error_get_last();
+    if ($error) {
+        echo "Детали ошибки: " . print_r($error, true) . "\n";
     }
+} else {
+    echo "✓ Ответ получен:\n";
+    echo $response . "\n";
 }
 ?>

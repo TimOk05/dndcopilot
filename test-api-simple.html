@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тест API</title>
+</head>
+<body>
+    <h1>Тест API зелий</h1>
+    
+    <button onclick="testAPI()">Тест API</button>
+    <div id="result"></div>
+    
+    <script>
+        async function testAPI() {
+            try {
+                document.getElementById('result').innerHTML = 'Тестируем...';
+                
+                const response = await fetch('api/generate-potions.php?action=rarities');
+                console.log('Status:', response.status);
+                
+                const text = await response.text();
+                console.log('Response text:', text);
+                
+                try {
+                    const data = JSON.parse(text);
+                    document.getElementById('result').innerHTML = 
+                        `<h3>Успешно!</h3>
+                         <pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } catch (e) {
+                    document.getElementById('result').innerHTML = 
+                        `<h3>Ошибка парсинга JSON</h3>
+                         <p>Статус: ${response.status}</p>
+                         <p>Ответ: ${text}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    `<h3>Ошибка сети</h3>
+                     <p>${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
