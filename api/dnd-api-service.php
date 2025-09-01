@@ -10,7 +10,7 @@ class DndApiService {
         'dnd5eapi' => 'https://www.dnd5eapi.co/api'
     ];
     
-    private $cache_duration = 3600; // 1 час
+    private $cache_duration = 7200; // 2 часа - увеличен для лучшей производительности
     private $cache_dir;
     
     public function __construct() {
@@ -28,20 +28,42 @@ class DndApiService {
      */
     private function checkInternetConnection() {
         $test_url = 'https://www.google.com';
-        $ch = curl_init($test_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_NOBODY, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         
-        $result = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // Пробуем cURL
+        if (function_exists('curl_init')) {
+            $ch = curl_init($test_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_NOBODY, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            
+            $result = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            if ($result !== false && $httpCode === 200) {
+                logMessage('INFO', 'Интернет соединение доступно (cURL)');
+                return;
+            }
+        }
         
-        if ($result === false || $httpCode !== 200) {
-            logMessage('WARNING', 'Интернет соединение недоступно или ограничено');
+        // Пробуем file_get_contents
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'HEAD',
+                'timeout' => 5
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false
+            ]
+        ]);
+        
+        $result = @file_get_contents($test_url, false, $context);
+        if ($result !== false) {
+            logMessage('INFO', 'Интернет соединение доступно (file_get_contents)');
         } else {
-            logMessage('INFO', 'Интернет соединение доступно');
+            logMessage('WARNING', 'Интернет соединение недоступно или ограничено');
         }
     }
     
@@ -241,13 +263,31 @@ class DndApiService {
      * Выполнение API запроса
      */
     private function makeApiRequest($url) {
-        if (!function_exists('curl_init')) {
-            logMessage('ERROR', 'cURL не доступен');
-            return null;
-        }
-        
         logMessage('INFO', "Начинаем API запрос к: {$url}");
         
+        // Пробуем cURL сначала
+        if (function_exists('curl_init')) {
+            $result = $this->makeCurlRequest($url);
+            if ($result !== null) {
+                return $result;
+            }
+        }
+        
+        // Fallback на file_get_contents
+        logMessage('INFO', "cURL недоступен, используем file_get_contents");
+        $result = $this->makeFileGetContentsRequest($url);
+        if ($result !== null) {
+            return $result;
+        }
+        
+        logMessage('ERROR', "Все методы HTTP запросов недоступны для URL: {$url}");
+        return null;
+    }
+    
+    /**
+     * Запрос через cURL
+     */
+    private function makeCurlRequest($url) {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -266,7 +306,7 @@ class DndApiService {
         $info = curl_getinfo($ch);
         curl_close($ch);
         
-        logMessage('INFO', "API запрос завершен: {$url}, HTTP: {$httpCode}, Время: {$info['total_time']}s");
+        logMessage('INFO', "cURL запрос завершен: {$url}, HTTP: {$httpCode}, Время: {$info['total_time']}s");
         
         if ($response === false) {
             logMessage('ERROR', "cURL error: {$error} for URL: {$url}");
@@ -274,7 +314,7 @@ class DndApiService {
         }
         
         if ($httpCode !== 200) {
-            logMessage('WARNING', "API request failed: {$url}, HTTP: {$httpCode}, Response: " . substr($response, 0, 200));
+            logMessage('WARNING', "cURL request failed: {$url}, HTTP: {$httpCode}, Response: " . substr($response, 0, 200));
             return null;
         }
         
@@ -284,7 +324,65 @@ class DndApiService {
             return null;
         }
         
-        logMessage('INFO', "API request successful: {$url}, Data keys: " . implode(', ', array_keys($data)));
+        logMessage('INFO', "cURL request successful: {$url}, Data keys: " . implode(', ', array_keys($data)));
+        return $data;
+    }
+    
+    /**
+     * Запрос через file_get_contents
+     */
+    private function makeFileGetContentsRequest($url) {
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'GET',
+                'header' => [
+                    'User-Agent: DnD-Copilot/2.0',
+                    'Accept: application/json',
+                    'Content-Type: application/json'
+                ],
+                'timeout' => 15
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false
+            ]
+        ]);
+        
+        $start_time = microtime(true);
+        $response = @file_get_contents($url, false, $context);
+        $end_time = microtime(true);
+        $duration = round($end_time - $start_time, 2);
+        
+        if ($response === false) {
+            logMessage('ERROR', "file_get_contents failed for URL: {$url}");
+            return null;
+        }
+        
+        // Получаем HTTP код из заголовков
+        $httpCode = 200;
+        if (isset($http_response_header)) {
+            foreach ($http_response_header as $header) {
+                if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $header, $matches)) {
+                    $httpCode = (int)$matches[1];
+                    break;
+                }
+            }
+        }
+        
+        logMessage('INFO', "file_get_contents запрос завершен: {$url}, HTTP: {$httpCode}, Время: {$duration}s");
+        
+        if ($httpCode !== 200) {
+            logMessage('WARNING', "file_get_contents request failed: {$url}, HTTP: {$httpCode}");
+            return null;
+        }
+        
+        $data = json_decode($response, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            logMessage('ERROR', "JSON decode error: " . json_last_error_msg() . " for URL: {$url}");
+            return null;
+        }
+        
+        logMessage('INFO', "file_get_contents request successful: {$url}, Data keys: " . implode(', ', array_keys($data)));
         return $data;
     }
     
@@ -468,39 +566,125 @@ class DndApiService {
     }
     
     /**
-     * Кэширование данных
+     * Кэширование данных с улучшенной обработкой
      */
     private function cacheData($key, $data) {
-        $filename = $this->cache_dir . md5($key) . '.json';
-        $cache_data = [
-            'timestamp' => time(),
-            'data' => $data
-        ];
-        file_put_contents($filename, json_encode($cache_data, JSON_UNESCAPED_UNICODE));
+        try {
+            $filename = $this->cache_dir . md5($key) . '.json';
+            $cache_data = [
+                'timestamp' => time(),
+                'data' => $data,
+                'checksum' => md5(json_encode($data, JSON_UNESCAPED_UNICODE))
+            ];
+            
+            // Создаем временный файл для атомарной записи
+            $temp_filename = $filename . '.tmp';
+            $result = file_put_contents($temp_filename, json_encode($cache_data, JSON_UNESCAPED_UNICODE));
+            
+            if ($result !== false) {
+                // Атомарно переименовываем временный файл
+                if (rename($temp_filename, $filename)) {
+                    logMessage('INFO', "Данные успешно закэшированы: {$key}");
+                    return true;
+                }
+            }
+            
+            // Очищаем временный файл при ошибке
+            if (file_exists($temp_filename)) {
+                unlink($temp_filename);
+            }
+            
+            logMessage('ERROR', "Ошибка кэширования данных: {$key}");
+            return false;
+            
+        } catch (Exception $e) {
+            logMessage('ERROR', "Исключение при кэшировании: {$key} - " . $e->getMessage());
+            return false;
+        }
     }
     
     /**
-     * Получение кэшированных данных
+     * Получение кэшированных данных с улучшенной валидацией
      */
     private function getCachedData($key) {
-        $filename = $this->cache_dir . md5($key) . '.json';
-        
-        if (!file_exists($filename)) {
+        try {
+            $filename = $this->cache_dir . md5($key) . '.json';
+            
+            if (!file_exists($filename)) {
+                return null;
+            }
+            
+            $file_content = file_get_contents($filename);
+            if ($file_content === false) {
+                logMessage('WARNING', "Не удалось прочитать кэш файл: {$key}");
+                return null;
+            }
+            
+            $cache_data = json_decode($file_content, true);
+            if (!$cache_data || !isset($cache_data['timestamp']) || !isset($cache_data['data'])) {
+                logMessage('WARNING', "Некорректные данные кэша: {$key}");
+                $this->clearCacheFile($filename);
+                return null;
+            }
+            
+            // Проверяем срок действия кэша
+            if (time() - $cache_data['timestamp'] > $this->cache_duration) {
+                logMessage('INFO', "Кэш устарел: {$key}");
+                $this->clearCacheFile($filename);
+                return null;
+            }
+            
+            // Проверяем целостность данных
+            if (isset($cache_data['checksum'])) {
+                $current_checksum = md5(json_encode($cache_data['data'], JSON_UNESCAPED_UNICODE));
+                if ($cache_data['checksum'] !== $current_checksum) {
+                    logMessage('WARNING', "Нарушена целостность кэша: {$key}");
+                    $this->clearCacheFile($filename);
+                    return null;
+                }
+            }
+            
+            logMessage('INFO', "Данные получены из кэша: {$key}");
+            return $cache_data['data'];
+            
+        } catch (Exception $e) {
+            logMessage('ERROR', "Исключение при чтении кэша: {$key} - " . $e->getMessage());
             return null;
         }
-        
-        $cache_data = json_decode(file_get_contents($filename), true);
-        if (!$cache_data) {
-            return null;
+    }
+    
+    /**
+     * Очистка кэш файла
+     */
+    private function clearCacheFile($filename) {
+        try {
+            if (file_exists($filename)) {
+                unlink($filename);
+                logMessage('INFO', "Кэш файл очищен: " . basename($filename));
+            }
+        } catch (Exception $e) {
+            logMessage('ERROR', "Ошибка очистки кэш файла: " . basename($filename) . " - " . $e->getMessage());
         }
-        
-        // Проверяем срок действия кэша
-        if (time() - $cache_data['timestamp'] > $this->cache_duration) {
-            unlink($filename);
-            return null;
+    }
+    
+    /**
+     * Очистка всего кэша
+     */
+    public function clearAllCache() {
+        try {
+            $files = glob($this->cache_dir . '*.json');
+            $count = 0;
+            foreach ($files as $file) {
+                if (unlink($file)) {
+                    $count++;
+                }
+            }
+            logMessage('INFO', "Очищено кэш файлов: {$count}");
+            return $count;
+        } catch (Exception $e) {
+            logMessage('ERROR', "Ошибка очистки кэша: " . $e->getMessage());
+            return 0;
         }
-        
-        return $cache_data['data'];
     }
 }
 ?>

@@ -7,7 +7,7 @@
 class AiService {
     private $api_keys = [];
     private $preferred_api = 'deepseek'; // deepseek, openai, google
-    private $cache_duration = 1800; // 30 минут
+    private $cache_duration = 3600; // 1 час - увеличен для лучшей производительности
     private $cache_dir;
     
     public function __construct() {
@@ -450,39 +450,125 @@ class AiService {
     }
     
     /**
-     * Кэширование данных
+     * Кэширование данных с улучшенной обработкой
      */
     private function cacheData($key, $data) {
-        $filename = $this->cache_dir . md5($key) . '.json';
-        $cache_data = [
-            'timestamp' => time(),
-            'data' => $data
-        ];
-        file_put_contents($filename, json_encode($cache_data, JSON_UNESCAPED_UNICODE));
+        try {
+            $filename = $this->cache_dir . md5($key) . '.json';
+            $cache_data = [
+                'timestamp' => time(),
+                'data' => $data,
+                'checksum' => md5(json_encode($data, JSON_UNESCAPED_UNICODE))
+            ];
+            
+            // Создаем временный файл для атомарной записи
+            $temp_filename = $filename . '.tmp';
+            $result = file_put_contents($temp_filename, json_encode($cache_data, JSON_UNESCAPED_UNICODE));
+            
+            if ($result !== false) {
+                // Атомарно переименовываем временный файл
+                if (rename($temp_filename, $filename)) {
+                    logMessage('INFO', "AI данные успешно закэшированы: {$key}");
+                    return true;
+                }
+            }
+            
+            // Очищаем временный файл при ошибке
+            if (file_exists($temp_filename)) {
+                unlink($temp_filename);
+            }
+            
+            logMessage('ERROR', "Ошибка кэширования AI данных: {$key}");
+            return false;
+            
+        } catch (Exception $e) {
+            logMessage('ERROR', "Исключение при кэшировании AI данных: {$key} - " . $e->getMessage());
+            return false;
+        }
     }
     
     /**
-     * Получение кэшированных данных
+     * Получение кэшированных данных с улучшенной валидацией
      */
     private function getCachedData($key) {
-        $filename = $this->cache_dir . md5($key) . '.json';
-        
-        if (!file_exists($filename)) {
+        try {
+            $filename = $this->cache_dir . md5($key) . '.json';
+            
+            if (!file_exists($filename)) {
+                return null;
+            }
+            
+            $file_content = file_get_contents($filename);
+            if ($file_content === false) {
+                logMessage('WARNING', "Не удалось прочитать AI кэш файл: {$key}");
+                return null;
+            }
+            
+            $cache_data = json_decode($file_content, true);
+            if (!$cache_data || !isset($cache_data['timestamp']) || !isset($cache_data['data'])) {
+                logMessage('WARNING', "Некорректные AI кэш данные: {$key}");
+                $this->clearAiCacheFile($filename);
+                return null;
+            }
+            
+            // Проверяем срок действия кэша
+            if (time() - $cache_data['timestamp'] > $this->cache_duration) {
+                logMessage('INFO', "AI кэш устарел: {$key}");
+                $this->clearAiCacheFile($filename);
+                return null;
+            }
+            
+            // Проверяем целостность данных
+            if (isset($cache_data['checksum'])) {
+                $current_checksum = md5(json_encode($cache_data['data'], JSON_UNESCAPED_UNICODE));
+                if ($cache_data['checksum'] !== $current_checksum) {
+                    logMessage('WARNING', "Нарушена целостность AI кэша: {$key}");
+                    $this->clearAiCacheFile($filename);
+                    return null;
+                }
+            }
+            
+            logMessage('INFO', "AI данные получены из кэша: {$key}");
+            return $cache_data['data'];
+            
+        } catch (Exception $e) {
+            logMessage('ERROR', "Исключение при чтении AI кэша: {$key} - " . $e->getMessage());
             return null;
         }
-        
-        $cache_data = json_decode(file_get_contents($filename), true);
-        if (!$cache_data) {
-            return null;
+    }
+    
+    /**
+     * Очистка AI кэш файла
+     */
+    private function clearAiCacheFile($filename) {
+        try {
+            if (file_exists($filename)) {
+                unlink($filename);
+                logMessage('INFO', "AI кэш файл очищен: " . basename($filename));
+            }
+        } catch (Exception $e) {
+            logMessage('ERROR', "Ошибка очистки AI кэш файла: " . basename($filename) . " - " . $e->getMessage());
         }
-        
-        // Проверяем срок действия кэша
-        if (time() - $cache_data['timestamp'] > $this->cache_duration) {
-            unlink($filename);
-            return null;
+    }
+    
+    /**
+     * Очистка всего AI кэша
+     */
+    public function clearAllAiCache() {
+        try {
+            $files = glob($this->cache_dir . '*.json');
+            $count = 0;
+            foreach ($files as $file) {
+                if (unlink($file)) {
+                    $count++;
+                }
+            }
+            logMessage('INFO', "Очищено AI кэш файлов: {$count}");
+            return $count;
+        } catch (Exception $e) {
+            logMessage('ERROR', "Ошибка очистки AI кэша: " . $e->getMessage());
+            return 0;
         }
-        
-        return $cache_data['data'];
     }
     
 
