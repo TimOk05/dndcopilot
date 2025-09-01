@@ -1162,6 +1162,11 @@ class EnemyGenerator {
             return null;
         }
         
+        // Проверяем доступность cURL
+        if (!function_exists('curl_init')) {
+            return null;
+        }
+        
         $data = [
             'model' => 'deepseek-chat',
             'messages' => [
@@ -1172,38 +1177,31 @@ class EnemyGenerator {
             'temperature' => 0.8
         ];
         
-        // Используем file_get_contents вместо cURL
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'header' => [
-                    'Content-Type: application/json',
-                    'Authorization: Bearer ' . $this->deepseek_api_key
-                ],
-                'content' => json_encode($data),
-                'timeout' => 10
-            ]
+        $ch = curl_init('https://api.deepseek.com/v1/chat/completions');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->deepseek_api_key
         ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         
-        try {
-            $response = file_get_contents('https://api.deepseek.com/v1/chat/completions', false, $context);
-            
-            if ($response === false) {
-                error_log("AI API request failed: file_get_contents returned false");
-                return null;
-            }
-            
-            $result = json_decode($response, true);
-            
-            if (isset($result['choices'][0]['message']['content'])) {
-                return trim($result['choices'][0]['message']['content']);
-            }
-            
-            return null;
-        } catch (Exception $e) {
-            error_log("AI API request failed: " . $e->getMessage());
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        
+        if ($response === false || $httpCode !== 200) {
             return null;
         }
+        
+        $result = json_decode($response, true);
+        
+        if (isset($result['choices'][0]['message']['content'])) {
+            return trim($result['choices'][0]['message']['content']);
+        }
+        
+        return null;
     }
     
     /**
