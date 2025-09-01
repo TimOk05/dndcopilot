@@ -28,7 +28,7 @@ class EnemyGenerator {
         $count = (int)($params['count'] ?? 1);
         $enemy_type = $params['enemy_type'] ?? '';
         $environment = $params['environment'] ?? '';
-        $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
+        $use_ai = true; // AI всегда включен
         
         // Валидация параметров
         if ($count < 1 || $count > 20) {
@@ -105,65 +105,6 @@ class EnemyGenerator {
             
         } catch (Exception $e) {
             error_log("EnemyGenerator: Ошибка генерации: " . $e->getMessage());
-            
-            // Пробуем использовать fallback данные
-            try {
-                require_once __DIR__ . '/fallback-data.php';
-                $fallback_enemies = FallbackData::getEnemies();
-                
-                // Фильтруем fallback данные по параметрам
-                $filtered_fallback = [];
-                foreach ($fallback_enemies as $enemy) {
-                    $cr = $enemy['cr'];
-                    if ($this->checkCRRange($cr, $cr_range)) {
-                        if (!$enemy_type || strpos(strtolower($enemy['type']), strtolower($enemy_type)) !== false) {
-                            $filtered_fallback[] = $enemy;
-                        }
-                    }
-                }
-                
-                if (!empty($filtered_fallback)) {
-                    // Выбираем случайных противников из fallback
-                    $selected = array_rand($filtered_fallback, min($count, count($filtered_fallback)));
-                    if (!is_array($selected)) {
-                        $selected = [$selected];
-                    }
-                    
-                    $enemies = [];
-                    foreach ($selected as $index) {
-                        $enemy = $filtered_fallback[$index];
-                        $enemies[] = [
-                            'name' => $enemy['name'],
-                            'type' => $enemy['type'],
-                            'challenge_rating' => $enemy['cr'],
-                            'hit_points' => $enemy['hp'],
-                            'armor_class' => $enemy['ac'],
-                            'speed' => '30 ft',
-                            'abilities' => $enemy['abilities'],
-                            'actions' => $enemy['actions'],
-                            'special_abilities' => [],
-                            'environment' => 'Не определена',
-                            'cr_numeric' => $enemy['cr'],
-                            'description' => $enemy['description'],
-                            'tactics' => $enemy['tactics']
-                        ];
-                    }
-                    
-                    return [
-                        'success' => true,
-                        'enemies' => $enemies,
-                        'threat_level' => $threat_level,
-                        'threat_level_display' => $this->getThreatLevelDisplay($threat_level),
-                        'count' => count($enemies),
-                        'cr_range' => $cr_range,
-                        'cr_numeric' => is_numeric($threat_level) ? (int)$threat_level : null,
-                        'fallback' => true
-                    ];
-                }
-            } catch (Exception $fallback_error) {
-                error_log("EnemyGenerator: Fallback также не сработал: " . $fallback_error->getMessage());
-            }
-            
             return [
                 'success' => false,
                 'error' => $e->getMessage()
@@ -255,13 +196,36 @@ class EnemyGenerator {
     private function generateMultipleEnemies($monster, $count, $use_ai) {
         $enemies = [];
         
-        for ($i = 0; $i < $count; $i++) {
-            $enemy = $this->generateSingleEnemy($monster, $use_ai);
-            if ($enemy) {
-                // Добавляем номер для различения
-                $enemy['name'] = $enemy['name'] . ' ' . ($i + 1);
-                $enemies[] = $enemy;
+        // Генерируем одного противника как шаблон
+        $base_enemy = $this->generateSingleEnemy($monster, $use_ai);
+        if (!$base_enemy) {
+            return [];
+        }
+        
+        if ($count === 1) {
+            // Для одного противника возвращаем как есть
+            $enemies[] = $base_enemy;
+        } else {
+            // Для нескольких противников создаем группу
+            $group_enemy = $base_enemy;
+            $group_enemy['name'] = $base_enemy['name'] . ' (x' . $count . ')';
+            $group_enemy['count'] = $count;
+            $group_enemy['is_group'] = true;
+            $group_enemy['group_info'] = [
+                'base_name' => $base_enemy['name'],
+                'count' => $count,
+                'individual_enemies' => []
+            ];
+            
+            // Создаем индивидуальных противников для группы
+            for ($i = 1; $i <= $count; $i++) {
+                $individual = $base_enemy;
+                $individual['name'] = $base_enemy['name'] . ' ' . $i;
+                $individual['group_index'] = $i;
+                $group_enemy['group_info']['individual_enemies'][] = $individual;
             }
+            
+            $enemies[] = $group_enemy;
         }
         
         return $enemies;
@@ -271,83 +235,48 @@ class EnemyGenerator {
      * Генерация одного противника
      */
     private function generateSingleEnemy($monster, $use_ai) {
-        // Получаем детальную информацию о монстре с кэшированием
-        $monster_details = $this->getMonsterDetailsWithCache($monster['index']);
-        
-        if (!$monster_details) {
-            throw new Exception('Не удалось получить информацию о монстре: ' . ($monster['name'] ?? 'Unknown'));
-        }
-        
-        // Формируем результат
-        $enemy = [
-            'name' => $monster_details['name'],
-            'type' => $monster_details['type'] ?? 'Unknown',
-            'challenge_rating' => $monster_details['challenge_rating'] ?? '0',
-            'hit_points' => $monster_details['hit_points'] ?? 0,
-            'armor_class' => $monster_details['armor_class'] ?? 10,
-            'speed' => $monster_details['speed'] ?? '30 ft',
-            'abilities' => $monster_details['abilities'] ?? [],
-            'actions' => $monster_details['actions'] ?? [],
-            'special_abilities' => $monster_details['special_abilities'] ?? [],
-            'environment' => $this->getEnvironment($monster_details),
-            'cr_numeric' => $this->parseCR($monster_details['challenge_rating'] ?? '0')
-        ];
-        
-        // Добавляем AI-описание если включено
-        if ($use_ai) {
-            $enemy['description'] = $this->generateEnemyDescription($enemy);
-            $enemy['tactics'] = $this->generateTactics($enemy);
-        }
-        
-        return $enemy;
-    }
-    
-    /**
-     * Получение детальной информации о монстре с кэшированием
-     */
-    private function getMonsterDetailsWithCache($monsterIndex) {
-        $cache_file = $this->cache_dir . '/monster_' . md5($monsterIndex) . '.json';
-        $cache_time = 86400; // 24 часа
-        
-        // Проверяем кэш
-        if (file_exists($cache_file) && (time() - filemtime($cache_file)) < $cache_time) {
-            $cached_data = json_decode(file_get_contents($cache_file), true);
-            if ($cached_data) {
-                return $cached_data;
+        try {
+            // Получаем детальную информацию о монстре
+            $monster_details = $this->getMonsterDetails($monster['url']);
+            if (!$monster_details) {
+                return null;
             }
+            
+            // Генерируем базовые характеристики
+            $enemy = [
+                'name' => $monster_details['name'],
+                'type' => $monster_details['type'],
+                'challenge_rating' => $monster_details['challenge_rating'],
+                'hit_points' => $monster_details['hit_points'],
+                'armor_class' => $monster_details['armor_class'],
+                'speed' => $monster_details['speed'],
+                'abilities' => $monster_details['abilities'],
+                'actions' => $monster_details['actions'],
+                'special_abilities' => $monster_details['special_abilities'] ?? [],
+                'environment' => $monster_details['environment'] ?? 'Не определена',
+                'cr_numeric' => $this->parseCR($monster_details['challenge_rating'])
+            ];
+            
+            // Если AI включен, генерируем описание и тактику
+            if ($use_ai) {
+                $enemy['description'] = $this->generateDescription($monster_details);
+                $enemy['tactics'] = $this->generateTactics($monster_details);
+            }
+            
+            return $enemy;
+            
+        } catch (Exception $e) {
+            error_log("EnemyGenerator: Ошибка генерации противника: " . $e->getMessage());
+            return null;
         }
-        
-        // Получаем с API
-        $monster_details = $this->getMonsterDetails($monsterIndex);
-        
-        if ($monster_details) {
-            // Сохраняем в кэш
-            file_put_contents($cache_file, json_encode($monster_details));
-        }
-        
-        return $monster_details;
     }
     
     /**
-     * Получение списка монстров
+     * Получение детальной информации о монстре
      */
-    private function getMonstersList() {
-        $url = $this->dnd5e_api_url . '/monsters';
-        error_log("EnemyGenerator: Запрос к D&D API: $url");
-        
-        $response = $this->makeRequest($url);
-        error_log("EnemyGenerator: Ответ от D&D API получен: " . ($response ? 'да' : 'нет'));
-        
-        if ($response && isset($response['results'])) {
-            error_log("EnemyGenerator: Найдено монстров: " . count($response['results']));
-            return $response['results'];
-        }
-        
-        if ($response) {
-            error_log("EnemyGenerator: Структура ответа: " . json_encode(array_keys($response)));
-        }
-        
-        throw new Exception('API D&D недоступен или возвращает неверную структуру');
+    private function getMonsterDetails($monster_url) {
+        $url = $this->dnd5e_api_url . '/monsters/' . basename($monster_url);
+        return $this->makeRequest($url);
     }
     
     /**
@@ -358,18 +287,22 @@ class EnemyGenerator {
         
         foreach ($monsters as $monster) {
             // Проверяем CR
-            $cr = $this->parseCR($monster['challenge_rating']);
-            if (!$this->checkCRRange($cr, $cr_range)) {
+            if (!$this->checkCRRange($monster['challenge_rating'], $cr_range)) {
                 continue;
             }
             
-            // Проверяем тип (если указан)
-            if ($enemy_type && $enemy_type !== '' && strpos(strtolower($monster['type']), strtolower($enemy_type)) === false) {
+            // Проверяем тип
+            if ($enemy_type && !$this->checkType($monster['type'], $enemy_type)) {
                 continue;
             }
             
-            // Проверяем среду (если указана)
-            if ($environment && $environment !== '' && !$this->checkEnvironment($monster, $environment)) {
+            // Проверяем среду
+            if ($environment && !$this->checkEnvironment($monster, $environment)) {
+                continue;
+            }
+            
+            // Проверяем совместимость
+            if (!$this->checkCompatibility($monster, $cr_range)) {
                 continue;
             }
             
@@ -380,30 +313,94 @@ class EnemyGenerator {
     }
     
     /**
-     * Получение детальной информации о монстре
+     * Проверка совместимости типа и среды с уровнем сложности
      */
-    private function getMonsterDetails($monsterIndex) {
-        $url = $this->dnd5e_api_url . '/monsters/' . $monsterIndex;
-        $response = $this->makeRequest($url);
+    private function checkCompatibility($monster, $cr_range) {
+        $cr = $this->parseCR($monster['challenge_rating']);
+        $type = strtolower($monster['type']);
         
-        if ($response) {
-            return $response;
+        // Драконы требуют минимальный CR 1
+        if (strpos($type, 'dragon') !== false && $cr_range['min'] < 1) {
+            return false;
         }
         
-        throw new Exception('Не удалось получить детали монстра');
+        // Великаны требуют минимальный CR 3
+        if (strpos($type, 'giant') !== false && $cr_range['min'] < 3) {
+            return false;
+        }
+        
+        // Звери ограничены максимальным CR 8
+        if (strpos($type, 'beast') !== false && $cr_range['max'] > 8) {
+            return false;
+        }
+        
+        // Подземелье требует минимальный CR 1
+        if (isset($monster['environment']) && strpos(strtolower($monster['environment']), 'underdark') !== false && $cr_range['min'] < 1) {
+            return false;
+        }
+        
+        return true;
     }
     
     /**
-     * Парсинг Challenge Rating в числовое значение
+     * Проверка диапазона CR
      */
-    private function parseCR($cr_string) {
-        if (is_numeric($cr_string)) {
-            return (float)$cr_string;
+    private function checkCRRange($cr, $range) {
+        $cr_value = $this->parseCR($cr);
+        return $cr_value >= $range['min'] && $cr_value <= $range['max'];
+    }
+    
+    /**
+     * Проверка типа
+     */
+    private function checkType($monster_type, $requested_type) {
+        return strpos(strtolower($monster_type), strtolower($requested_type)) !== false;
+    }
+    
+    /**
+     * Проверка среды
+     */
+    private function checkEnvironment($monster, $requested_environment) {
+        if (!isset($monster['environment'])) {
+            return false;
         }
         
-        // Обработка дробных CR (например, "1/8", "1/4", "1/2")
-        if (strpos($cr_string, '/') !== false) {
-            $parts = explode('/', $cr_string);
+        $monster_env = strtolower($monster['environment']);
+        $requested_env = strtolower($requested_environment);
+        
+        // Маппинг сред
+        $environment_mapping = [
+            'forest' => ['forest', 'grassland', 'hill'],
+            'mountain' => ['mountain', 'hill'],
+            'desert' => ['desert'],
+            'swamp' => ['swamp', 'marsh'],
+            'underdark' => ['underdark', 'cave'],
+            'water' => ['aquatic', 'coastal'],
+            'urban' => ['urban', 'city']
+        ];
+        
+        if (isset($environment_mapping[$requested_env])) {
+            foreach ($environment_mapping[$requested_env] as $env) {
+                if (strpos($monster_env, $env) !== false) {
+                    return true;
+                }
+            }
+        }
+        
+        return strpos($monster_env, $requested_env) !== false;
+    }
+    
+    /**
+     * Парсинг CR в числовое значение
+     */
+    private function parseCR($cr) {
+        if (is_numeric($cr)) {
+            return (float)$cr;
+        }
+        
+        // Обработка дробных CR (например, "1/4", "1/2")
+        if (strpos($cr, '/') !== false) {
+            $parts = explode('/', $cr);
             if (count($parts) === 2 && is_numeric($parts[0]) && is_numeric($parts[1])) {
                 return (float)$parts[0] / (float)$parts[1];
             }
@@ -414,191 +411,71 @@ class EnemyGenerator {
             '0' => 0,
             '1/8' => 0.125,
             '1/4' => 0.25,
-            '1/2' => 0.5,
-            '1' => 1,
-            '2' => 2,
-            '3' => 3,
-            '4' => 4,
-            '5' => 5,
-            '6' => 6,
-            '7' => 7,
-            '8' => 8,
-            '9' => 9,
-            '10' => 10,
-            '11' => 11,
-            '12' => 12,
-            '13' => 13,
-            '14' => 14,
-            '15' => 15,
-            '16' => 16,
-            '17' => 17,
-            '18' => 18,
-            '19' => 19,
-            '20' => 20,
-            '21' => 21,
-            '22' => 22,
-            '23' => 23,
-            '24' => 24,
-            '25' => 25,
-            '26' => 26,
-            '27' => 27,
-            '28' => 28,
-            '29' => 29,
-            '30' => 30
+            '1/2' => 0.5
         ];
         
-        if (isset($cr_map[$cr_string])) {
-            return $cr_map[$cr_string];
-        }
-        
-        error_log("EnemyGenerator: Не удалось распарсить CR: $cr_string");
-        return 0;
+        return $cr_map[$cr] ?? 0;
     }
     
     /**
-     * Проверка соответствия CR диапазону
+     * Генерация описания с помощью AI
      */
-    private function checkCRRange($cr, $cr_range) {
-        return $cr >= $cr_range['min'] && $cr <= $cr_range['max'];
-    }
-    
-    /**
-     * Проверка среды обитания
-     */
-    private function checkEnvironment($monster_details, $environment) {
-        // Простая проверка по названию монстра
-        $name = strtolower($monster_details['name']);
-        $type = strtolower($monster_details['type']);
-        
-        $environment_keywords = [
-            'arctic' => ['ice', 'snow', 'frost', 'arctic'],
-            'coastal' => ['sea', 'coast', 'beach', 'water'],
-            'desert' => ['desert', 'sand', 'dune'],
-            'forest' => ['forest', 'wood', 'tree'],
-            'grassland' => ['grass', 'plain', 'field'],
-            'hill' => ['hill', 'mountain'],
-            'mountain' => ['mountain', 'peak', 'cliff'],
-            'swamp' => ['swamp', 'marsh', 'bog'],
-            'underdark' => ['underdark', 'cave', 'underground'],
-            'urban' => ['city', 'town', 'urban']
-        ];
-        
-        if (isset($environment_keywords[$environment])) {
-            foreach ($environment_keywords[$environment] as $keyword) {
-                if (strpos($name, $keyword) !== false || strpos($type, $keyword) !== false) {
-                    return true;
-                }
-            }
-        }
-        
-        return false;
-    }
-    
-    /**
-     * Получение среды обитания
-     */
-    private function getEnvironment($monster_details) {
-        // Определяем среду по типу и названию
-        $name = strtolower($monster_details['name']);
-        $type = strtolower($monster_details['type']);
-        
-        if (strpos($name, 'dragon') !== false || strpos($type, 'dragon') !== false) {
-            return 'Горы/Подземелье';
-        } elseif (strpos($name, 'goblin') !== false || strpos($name, 'orc') !== false) {
-            return 'Подземелье/Холмы';
-        } elseif (strpos($name, 'wolf') !== false || strpos($name, 'bear') !== false) {
-            return 'Лес/Холмы';
-        } elseif (strpos($name, 'shark') !== false || strpos($name, 'fish') !== false) {
-            return 'Водная';
-        } else {
-            return 'Различные';
+    private function generateDescription($monster) {
+        try {
+            $prompt = "Опиши кратко монстра {$monster['name']} ({$monster['type']}) с CR {$monster['challenge_rating']}. " .
+                     "Опиши его внешний вид, характер и поведение. Ответ должен быть на русском языке, 2-3 предложения.";
+            
+            return $this->generateWithAI($prompt);
+        } catch (Exception $e) {
+            error_log("EnemyGenerator: Ошибка генерации описания: " . $e->getMessage());
+            return "Монстр {$monster['name']} - {$monster['type']} с уровнем сложности {$monster['challenge_rating']}.";
         }
     }
     
     /**
      * Генерация тактики с помощью AI
      */
-    private function generateTactics($enemy) {
-        $prompt = "Опиши тактику боя для {$enemy['name']} (CR {$enemy['challenge_rating']}, {$enemy['type']}). " .
-                 "Включи основные действия, предпочтения в бою, слабости и как лучше использовать этого противника. " .
-                 "Ответ должен быть кратким (2-3 предложения) и практичным для мастера D&D.";
-        
+    private function generateTactics($monster) {
         try {
-            $response = $this->callDeepSeek($prompt);
-            return $response ?: 'Тактика не определена';
+            $prompt = "Опиши тактику боя для монстра {$monster['name']} ({$monster['type']}) с CR {$monster['challenge_rating']}. " .
+                     "Как он должен действовать в бою? Ответ должен быть на русском языке, 2-3 предложения.";
+            
+            return $this->generateWithAI($prompt);
         } catch (Exception $e) {
-            return 'Тактика не определена';
-        }
-    }
-
-    /**
-     * Генерация описания противника с помощью AI
-     */
-    private function generateEnemyDescription($enemy) {
-        $prompt = "Опиши противника {$enemy['name']} (CR {$enemy['challenge_rating']}, {$enemy['type']}). " .
-                 "Включи основные характеристики, слабости и как лучше использовать этого противника. " .
-                 "Ответ должен быть кратким (2-3 предложения) и практичным для мастера D&D. " .
-                 "Не используй специальные символы, звездочки или скобки.";
-        
-        try {
-            $response = $this->callDeepSeek($prompt);
-            if ($response) {
-                // Очищаем ответ от лишних символов
-                $response = str_replace(['*', '(', ')', '[', ']', '_'], '', $response);
-                $response = preg_replace('/\s+/', ' ', $response); // Убираем лишние пробелы
-                return trim($response);
-            }
-            return 'Описание не определено';
-        } catch (Exception $e) {
-            return 'Описание не определено';
+            error_log("EnemyGenerator: Ошибка генерации тактики: " . $e->getMessage());
+            return "Монстр использует стандартную тактику для своего типа и уровня сложности.";
         }
     }
     
     /**
-     * Вызов DeepSeek API
+     * Генерация текста с помощью AI
      */
-    private function callDeepSeek($prompt) {
-        if (!$this->deepseek_api_key) {
+    private function generateWithAI($prompt) {
+        try {
+            $url = 'https://api.deepseek.com/v1/chat/completions';
+            $data = [
+                'model' => 'deepseek-chat',
+                'messages' => [
+                    [
+                        'role' => 'user',
+                        'content' => $prompt
+                    ]
+                ],
+                'max_tokens' => 150,
+                'temperature' => 0.7
+            ];
+            
+            $result = $this->makeAIRequest($url, $data);
+            
+            if (isset($result['choices'][0]['message']['content'])) {
+                return trim($result['choices'][0]['message']['content']);
+            }
+            
             return null;
+        } catch (Exception $e) {
+            error_log("EnemyGenerator: Ошибка AI генерации: " . $e->getMessage());
+            throw $e;
         }
-        
-        $data = [
-            'model' => 'deepseek-chat',
-            'messages' => [
-                ['role' => 'system', 'content' => 'Ты помощник мастера D&D. Давай краткие и практичные советы.'],
-                ['role' => 'user', 'content' => $prompt]
-            ],
-            'max_tokens' => 200,
-            'temperature' => 0.7
-        ];
-        
-        $ch = curl_init('https://api.deepseek.com/v1/chat/completions');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->deepseek_api_key
-        ]);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        
-        $response = curl_exec($ch);
-        $error = curl_error($ch);
-        curl_close($ch);
-        
-        if ($error) {
-            error_log("EnemyGenerator: DeepSeek API error: $error");
-            return null;
-        }
-        
-        $result = json_decode($response, true);
-        
-        if (isset($result['choices'][0]['message']['content'])) {
-            return trim($result['choices'][0]['message']['content']);
-        }
-        
-        return null;
     }
     
     /**
@@ -606,6 +483,10 @@ class EnemyGenerator {
      */
     private function makeRequest($url) {
         error_log("EnemyGenerator: makeRequest для URL: $url");
+        
+        if (!function_exists('curl_init')) {
+            throw new Exception('cURL не доступен на сервере');
+        }
         
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -620,7 +501,6 @@ class EnemyGenerator {
         $end_time = microtime(true);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
-        $info = curl_getinfo($ch);
         curl_close($ch);
         
         $request_time = round(($end_time - $start_time) * 1000, 2);
@@ -655,7 +535,43 @@ class EnemyGenerator {
             throw new Exception("Неожиданный ответ API (HTTP $http_code)");
         }
     }
-
+    
+    /**
+     * Выполнение AI запроса
+     */
+    private function makeAIRequest($url, $data) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->deepseek_api_key
+        ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+        
+        if ($error) {
+            throw new Exception("Ошибка AI API: $error");
+        }
+        
+        if ($http_code !== 200) {
+            throw new Exception("AI API вернул HTTP $http_code");
+        }
+        
+        $result = json_decode($response, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception("Ошибка парсинга AI API ответа");
+        }
+        
+        return $result;
+    }
+    
     /**
      * Получение случайного уровня угрозы
      */
@@ -663,7 +579,7 @@ class EnemyGenerator {
         $levels = ['easy', 'medium', 'hard', 'deadly'];
         return $levels[array_rand($levels)];
     }
-
+    
     /**
      * Расширение диапазона CR если не найдены монстры
      */
@@ -679,10 +595,18 @@ class EnemyGenerator {
         error_log("EnemyGenerator: Расширенный CR диапазон: " . json_encode($expanded));
         return $expanded;
     }
+    
+    /**
+     * Получение списка монстров
+     */
+    private function getMonstersList() {
+        $url = $this->dnd5e_api_url . '/monsters';
+        return $this->makeRequest($url);
+    }
 }
 
 // Обработка запроса
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     error_log("EnemyGenerator: Получен POST запрос с данными: " . json_encode($_POST));
     
     try {
@@ -695,14 +619,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log("EnemyGenerator: Критическая ошибка: " . $e->getMessage());
         echo json_encode([
             'success' => false,
-            'error' => 'Критическая ошибка: ' . $e->getMessage()
+            'error' => $e->getMessage()
         ], JSON_UNESCAPED_UNICODE);
     }
-} else {
-    error_log("EnemyGenerator: Неподдерживаемый метод: " . $_SERVER['REQUEST_METHOD']);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Метод не поддерживается'
-    ]);
 }
 ?>

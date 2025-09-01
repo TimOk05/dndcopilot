@@ -529,7 +529,6 @@ function openCharacterModal() {
         e.preventDefault();
         
         const formData = new FormData(this);
-        formData.append('use_ai', 'on'); // AI всегда включен
         const submitBtn = this.querySelector('button[type="submit"]');
         const resultDiv = document.getElementById('characterResult');
         const progressDiv = document.getElementById('characterProgress');
@@ -669,6 +668,8 @@ function openEnemyModal() {
                             <option value="urban">Город</option>
                         </select>
                     </div>
+                    
+
                 </div>
                 
 
@@ -685,12 +686,78 @@ function openEnemyModal() {
     
     document.getElementById('modal-save').style.display = 'none';
     
+    // Динамическое обновление доступных типов и сред в зависимости от уровня сложности
+    function updateAvailableOptions() {
+        const threatLevel = document.getElementById('enemy-threat').value;
+        const typeSelect = document.getElementById('enemy-type');
+        const environmentSelect = document.getElementById('enemy-environment');
+        
+        // Сбрасываем выбор
+        typeSelect.value = '';
+        environmentSelect.value = '';
+        
+        // Определяем доступные типы для каждого уровня сложности
+        const availableTypes = {
+            'easy': ['humanoid', 'beast', 'undead'],
+            'medium': ['humanoid', 'beast', 'undead', 'giant'],
+            'hard': ['humanoid', 'beast', 'undead', 'giant', 'dragon'],
+            'deadly': ['humanoid', 'undead', 'giant', 'dragon']
+        };
+        
+        // Определяем доступные среды для каждого уровня сложности
+        const availableEnvironments = {
+            'easy': ['arctic', 'coastal', 'desert', 'forest', 'grassland', 'hill', 'urban'],
+            'medium': ['arctic', 'coastal', 'desert', 'forest', 'grassland', 'hill', 'mountain', 'swamp', 'urban'],
+            'hard': ['arctic', 'coastal', 'desert', 'forest', 'grassland', 'hill', 'mountain', 'swamp', 'underdark', 'urban'],
+            'deadly': ['mountain', 'swamp', 'underdark', 'urban']
+        };
+        
+        // Обновляем доступные типы
+        Array.from(typeSelect.options).forEach(option => {
+            if (option.value === '') return; // Пропускаем "Любой тип"
+            
+            if (threatLevel && availableTypes[threatLevel]) {
+                option.disabled = !availableTypes[threatLevel].includes(option.value);
+                if (option.disabled) {
+                    option.style.display = 'none';
+                } else {
+                    option.style.display = 'block';
+                }
+            } else {
+                option.disabled = false;
+                option.style.display = 'block';
+            }
+        });
+        
+        // Обновляем доступные среды
+        Array.from(environmentSelect.options).forEach(option => {
+            if (option.value === '') return; // Пропускаем "Любая среда"
+            
+            if (threatLevel && availableEnvironments[threatLevel]) {
+                option.disabled = !availableEnvironments[threatLevel].includes(option.value);
+                if (option.disabled) {
+                    option.style.display = 'none';
+                } else {
+                    option.style.display = 'block';
+                }
+            } else {
+                option.disabled = false;
+                option.style.display = 'block';
+            }
+        });
+    }
+    
+    // Добавляем обработчики для динамического обновления
+    document.getElementById('enemy-threat').addEventListener('change', updateAvailableOptions);
+    
+    // Инициализируем доступные опции
+    updateAvailableOptions();
+    
     // Добавляем обработчик формы
     document.getElementById('enemyForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
         const formData = new FormData(this);
-        formData.append('use_ai', 'on'); // AI всегда включен
         const submitBtn = this.querySelector('button[type="submit"]');
         const resultDiv = document.getElementById('enemyResult');
         
@@ -698,12 +765,7 @@ function openEnemyModal() {
         submitBtn.disabled = true;
         resultDiv.innerHTML = '<div class="loading">Создание противников...</div>';
         
-        // Добавляем таймаут для показа fallback сообщения
-        const timeoutId = setTimeout(() => {
-            if (resultDiv.innerHTML.includes('Создание противников...')) {
-                resultDiv.innerHTML = '<div class="loading">Используем резервные данные...</div>';
-            }
-        }, 5000);
+
         
         fetch('api/generate-enemies.php', {
             method: 'POST',
@@ -720,10 +782,7 @@ function openEnemyModal() {
             if (data.success && data.enemies) {
                 let resultHtml = formatEnemiesFromApi(data.enemies);
                 
-                // Добавляем индикатор fallback данных
-                if (data.fallback) {
-                    resultHtml = '<div class="fallback-notice">⚠️ Используются резервные данные (API недоступен)</div>' + resultHtml;
-                }
+
                 
                 resultDiv.innerHTML = resultHtml;
                 
@@ -754,7 +813,6 @@ function openEnemyModal() {
             resultDiv.innerHTML = '<div class="error">' + errorMessage + '</div>';
         })
         .finally(() => {
-            clearTimeout(timeoutId);
             submitBtn.innerHTML = '<span class="btn-icon">&#128127;</span><span class="btn-text">Создать противников</span>';
             submitBtn.disabled = false;
         });
@@ -2464,6 +2522,11 @@ function formatEnemiesFromApi(enemies) {
         out += '<div class="enemy-header">';
         out += '<h3>' + (enemy.name || 'Без имени') + '</h3>';
         out += '<div class="enemy-cr">CR ' + (enemy.challenge_rating || enemy.cr || '?') + '</div>';
+        
+        // Показываем информацию о группе если это группа
+        if (enemy.is_group && enemy.count > 1) {
+            out += '<div class="enemy-group-info">Группа из ' + enemy.count + ' существ</div>';
+        }
         out += '</div>';
         
         // Добавляем информацию об уровне угрозы если доступна
@@ -2569,6 +2632,21 @@ function formatEnemiesFromApi(enemies) {
             out += '<div class="section-content collapsed">';
             out += '<p>' + enemy.tactics + '</p>';
             out += '</div></div>';
+        }
+        
+        // Добавляем кнопку сохранения в заметки
+        if (enemy.is_group && enemy.count > 1) {
+            out += '<div class="save-enemy-section">';
+            out += '<button class="save-enemy-btn" onclick="saveEnemyGroupToNotes(' + JSON.stringify(enemy).replace(/"/g, '&quot;') + ')">';
+            out += '💾 Сохранить группу в заметки';
+            out += '</button>';
+            out += '</div>';
+        } else {
+            out += '<div class="save-enemy-section">';
+            out += '<button class="save-enemy-btn" onclick="saveEnemyToNotes(' + JSON.stringify(enemy).replace(/"/g, '&quot;') + ')">';
+            out += '💾 Сохранить в заметки';
+            out += '</button>';
+            out += '</div>';
         }
         
         out += '</div>';
@@ -3160,6 +3238,150 @@ document.querySelector('form').onsubmit = function(e) {
             .catch(error => {
                 alert('Ошибка сохранения: ' + error.message);
             });
+        }
+
+        // --- Функция сохранения группы противников в заметки ---
+        function saveEnemyGroupToNotes(groupData) {
+            // Создаем отдельные заметки для каждого противника в группе
+            const promises = [];
+            
+            groupData.group_info.individual_enemies.forEach((enemy, index) => {
+                const noteContent = `
+                    <div class="enemy-note">
+                        <div class="enemy-note-title">${enemy.name}</div>
+                        <div class="enemy-note-info">
+                            <div><strong>Тип:</strong> ${enemy.type || 'Не указан'}</div>
+                            <div><strong>CR:</strong> ${enemy.challenge_rating || 'Не указан'}</div>
+                            <div><strong>Хиты:</strong> ${enemy.hit_points || 'Не указаны'}</div>
+                            <div><strong>КД:</strong> ${enemy.armor_class || 'Не указан'}</div>
+                            <div><strong>Скорость:</strong> ${enemy.speed || 'Не указана'}</div>
+                            ${enemy.environment ? `<div><strong>Среда:</strong> ${enemy.environment}</div>` : ''}
+                            <div><strong>Характеристики:</strong></div>
+                            <div style="margin-left: 20px;">
+                                <div>СИЛ: ${enemy.abilities?.str || '0'}</div>
+                                <div>ЛОВ: ${enemy.abilities?.dex || '0'}</div>
+                                <div>ТЕЛ: ${enemy.abilities?.con || '0'}</div>
+                                <div>ИНТ: ${enemy.abilities?.int || '0'}</div>
+                                <div>МДР: ${enemy.abilities?.wis || '0'}</div>
+                                <div>ХАР: ${enemy.abilities?.cha || '0'}</div>
+                            </div>
+                            ${enemy.actions && enemy.actions.length > 0 ? `<div><strong>Действия:</strong> ${enemy.actions.map(action => typeof action === 'string' ? action : (action.name || 'Неизвестное действие')).join(', ')}</div>` : ''}
+                            ${enemy.special_abilities && enemy.special_abilities.length > 0 ? `<div><strong>Особые способности:</strong> ${enemy.special_abilities.map(ability => typeof ability === 'string' ? ability : (ability.name || 'Неизвестная способность')).join(', ')}</div>` : ''}
+                            ${enemy.description ? `<div><strong>Описание:</strong> ${enemy.description}</div>` : ''}
+                            ${enemy.tactics ? `<div><strong>Тактика:</strong> ${enemy.tactics}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                const promise = fetch('', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: 'fast_action=save_note&content=' + encodeURIComponent(noteContent) + '&title=' + encodeURIComponent(enemy.name)
+                }).then(r => r.text());
+                
+                promises.push(promise);
+            });
+            
+            // Ждем сохранения всех заметок
+            Promise.all(promises)
+                .then(() => {
+                    alert(`Группа из ${groupData.count} противников "${groupData.base_name}" сохранена в заметки!`);
+                })
+                .catch(error => {
+                    alert('Ошибка сохранения группы: ' + error.message);
+                });
+        }
+
+        // --- Функция сохранения всех противников в заметки ---
+        function saveAllEnemiesToNotes(enemies) {
+            const promises = [];
+            
+            enemies.forEach(enemy => {
+                if (enemy.is_group && enemy.count > 1) {
+                    // Для группы создаем отдельные заметки
+                    enemy.group_info.individual_enemies.forEach(individualEnemy => {
+                        const noteContent = `
+                            <div class="enemy-note">
+                                <div class="enemy-note-title">${individualEnemy.name}</div>
+                                <div class="enemy-note-info">
+                                    <div><strong>Тип:</strong> ${individualEnemy.type || 'Не указан'}</div>
+                                    <div><strong>CR:</strong> ${individualEnemy.challenge_rating || 'Не указан'}</div>
+                                    <div><strong>Хиты:</strong> ${individualEnemy.hit_points || 'Не указаны'}</div>
+                                    <div><strong>КД:</strong> ${individualEnemy.armor_class || 'Не указан'}</div>
+                                    <div><strong>Скорость:</strong> ${individualEnemy.speed || 'Не указана'}</div>
+                                    ${individualEnemy.environment ? `<div><strong>Среда:</strong> ${individualEnemy.environment}</div>` : ''}
+                                    <div><strong>Характеристики:</strong></div>
+                                    <div style="margin-left: 20px;">
+                                        <div>СИЛ: ${individualEnemy.abilities?.str || '0'}</div>
+                                        <div>ЛОВ: ${individualEnemy.abilities?.dex || '0'}</div>
+                                        <div>ТЕЛ: ${individualEnemy.abilities?.con || '0'}</div>
+                                        <div>ИНТ: ${individualEnemy.abilities?.int || '0'}</div>
+                                        <div>МДР: ${individualEnemy.abilities?.wis || '0'}</div>
+                                        <div>ХАР: ${individualEnemy.abilities?.cha || '0'}</div>
+                                    </div>
+                                    ${individualEnemy.actions && individualEnemy.actions.length > 0 ? `<div><strong>Действия:</strong> ${individualEnemy.actions.map(action => typeof action === 'string' ? action : (action.name || 'Неизвестное действие')).join(', ')}</div>` : ''}
+                                    ${individualEnemy.special_abilities && individualEnemy.special_abilities.length > 0 ? `<div><strong>Особые способности:</strong> ${individualEnemy.special_abilities.map(ability => typeof ability === 'string' ? ability : (ability.name || 'Неизвестная способность')).join(', ')}</div>` : ''}
+                                    ${individualEnemy.description ? `<div><strong>Описание:</strong> ${individualEnemy.description}</div>` : ''}
+                                    ${individualEnemy.tactics ? `<div><strong>Тактика:</strong> ${individualEnemy.tactics}</div>` : ''}
+                                </div>
+                            </div>
+                        `;
+                        
+                        const promise = fetch('', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            body: 'fast_action=save_note&content=' + encodeURIComponent(noteContent) + '&title=' + encodeURIComponent(individualEnemy.name)
+                        }).then(r => r.text());
+                        
+                        promises.push(promise);
+                    });
+                } else {
+                    // Для одиночного противника
+                    const noteContent = `
+                        <div class="enemy-note">
+                            <div class="enemy-note-title">${enemy.name}</div>
+                            <div class="enemy-note-info">
+                                <div><strong>Тип:</strong> ${enemy.type || 'Не указан'}</div>
+                                <div><strong>CR:</strong> ${enemy.challenge_rating || 'Не указан'}</div>
+                                <div><strong>Хиты:</strong> ${enemy.hit_points || 'Не указаны'}</div>
+                                <div><strong>КД:</strong> ${enemy.armor_class || 'Не указан'}</div>
+                                <div><strong>Скорость:</strong> ${enemy.speed || 'Не указана'}</div>
+                                ${enemy.environment ? `<div><strong>Среда:</strong> ${enemy.environment}</div>` : ''}
+                                <div><strong>Характеристики:</strong></div>
+                                <div style="margin-left: 20px;">
+                                    <div>СИЛ: ${enemy.abilities?.str || '0'}</div>
+                                    <div>ЛОВ: ${enemy.abilities?.dex || '0'}</div>
+                                    <div>ТЕЛ: ${enemy.abilities?.con || '0'}</div>
+                                    <div>ИНТ: ${enemy.abilities?.int || '0'}</div>
+                                    <div>МДР: ${enemy.abilities?.wis || '0'}</div>
+                                    <div>ХАР: ${enemy.abilities?.cha || '0'}</div>
+                                </div>
+                                ${enemy.actions && enemy.actions.length > 0 ? `<div><strong>Действия:</strong> ${enemy.actions.map(action => typeof action === 'string' ? action : (action.name || 'Неизвестное действие')).join(', ')}</div>` : ''}
+                                ${enemy.special_abilities && enemy.special_abilities.length > 0 ? `<div><strong>Особые способности:</strong> ${enemy.special_abilities.map(ability => typeof ability === 'string' ? ability : (ability.name || 'Неизвестная способность')).join(', ')}</div>` : ''}
+                                ${enemy.description ? `<div><strong>Описание:</strong> ${enemy.description}</div>` : ''}
+                                ${enemy.tactics ? `<div><strong>Тактика:</strong> ${enemy.tactics}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                    
+                    const promise = fetch('', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: 'fast_action=save_note&content=' + encodeURIComponent(noteContent) + '&title=' + encodeURIComponent(enemy.name)
+                    }).then(r => r.text());
+                    
+                    promises.push(promise);
+                }
+            });
+            
+            // Ждем сохранения всех заметок
+            Promise.all(promises)
+                .then(() => {
+                    alert(`Все противники (${enemies.length} групп) сохранены в заметки!`);
+                })
+                .catch(error => {
+                    alert('Ошибка сохранения: ' + error.message);
+                });
         }
 
 // --- Функция добавления из заметок ---
