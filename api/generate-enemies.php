@@ -8,9 +8,16 @@ require_once __DIR__ . '/../config.php';
 class EnemyGenerator {
     private $dnd5e_api_url = 'https://www.dnd5eapi.co/api';
     private $deepseek_api_key;
+    private $cache_dir;
+    private $max_retries = 3;
+    private $retry_delay = 1000; // миллисекунды
     
     public function __construct() {
         $this->deepseek_api_key = getApiKey('deepseek');
+        $this->cache_dir = __DIR__ . '/../logs/cache';
+        if (!is_dir($this->cache_dir)) {
+            mkdir($this->cache_dir, 0755, true);
+        }
     }
     
     /**
@@ -45,11 +52,11 @@ class EnemyGenerator {
             $enemies = [];
             error_log("EnemyGenerator: Начинаем генерацию противников. threat_level: $threat_level, count: $count");
             
-            // Получаем список монстров из API
-            $monsters = $this->getMonstersList();
+            // Получаем список монстров из API с retry
+            $monsters = $this->getMonstersListWithRetry();
             
             if (empty($monsters)) {
-                throw new Exception('База данных монстров недоступна');
+                throw new Exception('База данных монстров недоступна после нескольких попыток');
             }
             
             // Фильтруем монстров по CR и типу
@@ -102,6 +109,44 @@ class EnemyGenerator {
                 'error' => $e->getMessage()
             ];
         }
+    }
+    
+    /**
+     * Получение списка монстров с retry логикой
+     */
+    private function getMonstersListWithRetry() {
+        $cache_file = $this->cache_dir . '/monsters_list.json';
+        $cache_time = 3600; // 1 час
+        
+        // Проверяем кэш
+        if (file_exists($cache_file) && (time() - filemtime($cache_file)) < $cache_time) {
+            $cached_data = json_decode(file_get_contents($cache_file), true);
+            if ($cached_data && isset($cached_data['results'])) {
+                error_log("EnemyGenerator: Используем кэшированный список монстров");
+                return $cached_data['results'];
+            }
+        }
+        
+        // Пробуем получить с retry
+        for ($attempt = 1; $attempt <= $this->max_retries; $attempt++) {
+            try {
+                error_log("EnemyGenerator: Попытка $attempt получить список монстров");
+                $monsters = $this->getMonstersList();
+                
+                if ($monsters && !empty($monsters)) {
+                    // Сохраняем в кэш
+                    file_put_contents($cache_file, json_encode(['results' => $monsters, 'timestamp' => time()]));
+                    return $monsters;
+                }
+            } catch (Exception $e) {
+                error_log("EnemyGenerator: Попытка $attempt не удалась: " . $e->getMessage());
+                if ($attempt < $this->max_retries) {
+                    usleep($this->retry_delay * 1000); // Задержка перед следующей попыткой
+                }
+            }
+        }
+        
+        throw new Exception('Не удалось получить список монстров после ' . $this->max_retries . ' попыток');
     }
     
     /**
@@ -166,8 +211,8 @@ class EnemyGenerator {
      * Генерация одного противника
      */
     private function generateSingleEnemy($monster, $use_ai) {
-        // Получаем детальную информацию о монстре
-        $monster_details = $this->getMonsterDetails($monster['index']);
+        // Получаем детальную информацию о монстре с кэшированием
+        $monster_details = $this->getMonsterDetailsWithCache($monster['index']);
         
         if (!$monster_details) {
             throw new Exception('Не удалось получить информацию о монстре: ' . ($monster['name'] ?? 'Unknown'));
@@ -195,6 +240,32 @@ class EnemyGenerator {
         }
         
         return $enemy;
+    }
+    
+    /**
+     * Получение детальной информации о монстре с кэшированием
+     */
+    private function getMonsterDetailsWithCache($monsterIndex) {
+        $cache_file = $this->cache_dir . '/monster_' . md5($monsterIndex) . '.json';
+        $cache_time = 86400; // 24 часа
+        
+        // Проверяем кэш
+        if (file_exists($cache_file) && (time() - filemtime($cache_file)) < $cache_time) {
+            $cached_data = json_decode(file_get_contents($cache_file), true);
+            if ($cached_data) {
+                return $cached_data;
+            }
+        }
+        
+        // Получаем с API
+        $monster_details = $this->getMonsterDetails($monsterIndex);
+        
+        if ($monster_details) {
+            // Сохраняем в кэш
+            file_put_contents($cache_file, json_encode($monster_details));
+        }
+        
+        return $monster_details;
     }
     
     /**
@@ -449,9 +520,17 @@ class EnemyGenerator {
             'Content-Type: application/json',
             'Authorization: Bearer ' . $this->deepseek_api_key
         ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         
         $response = curl_exec($ch);
+        $error = curl_error($ch);
         curl_close($ch);
+        
+        if ($error) {
+            error_log("EnemyGenerator: DeepSeek API error: $error");
+            return null;
+        }
         
         $result = json_decode($response, true);
         
@@ -463,7 +542,7 @@ class EnemyGenerator {
     }
     
     /**
-     * Выполнение HTTP запроса
+     * Выполнение HTTP запроса с улучшенной обработкой ошибок
      */
     private function makeRequest($url) {
         error_log("EnemyGenerator: makeRequest для URL: $url");
@@ -474,6 +553,7 @@ class EnemyGenerator {
         curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/1.0');
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         
         $start_time = microtime(true);
         $response = curl_exec($ch);
@@ -488,7 +568,7 @@ class EnemyGenerator {
         
         if ($error) {
             error_log("EnemyGenerator: CURL Error for $url: $error");
-            return null;
+            throw new Exception("Ошибка сети: $error");
         }
         
         if ($http_code === 200 && $response) {
@@ -499,12 +579,21 @@ class EnemyGenerator {
                 return $decoded;
             } else {
                 error_log("EnemyGenerator: JSON decode error for $url: " . json_last_error_msg());
-                return null;
+                throw new Exception("Ошибка разбора ответа API");
             }
         }
         
         error_log("EnemyGenerator: HTTP Error for $url: $http_code, response size: " . strlen($response));
-        return null;
+        
+        if ($http_code === 0) {
+            throw new Exception("API недоступен. Проверьте подключение к интернету.");
+        } elseif ($http_code >= 400 && $http_code < 500) {
+            throw new Exception("Ошибка запроса к API (HTTP $http_code)");
+        } elseif ($http_code >= 500) {
+            throw new Exception("Ошибка сервера API (HTTP $http_code)");
+        } else {
+            throw new Exception("Неожиданный ответ API (HTTP $http_code)");
+        }
     }
 
     /**

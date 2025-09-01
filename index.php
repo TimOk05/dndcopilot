@@ -627,40 +627,11 @@ function openEnemyModal() {
                         <label for="enemy-threat">Уровень угрозы</label>
                         <select id="enemy-threat" name="threat_level" required>
                             <option value="">Выберите уровень угрозы</option>
-                            <option value="0">CR 0 (1/8) - Очень слабый</option>
-                            <option value="0.125">CR 1/8 - Очень слабый</option>
-                            <option value="0.25">CR 1/4 - Слабый</option>
-                            <option value="0.5">CR 1/2 - Слабый</option>
-                            <option value="1">CR 1 - Легкий</option>
-                            <option value="2">CR 2 - Легкий</option>
-                            <option value="3">CR 3 - Легкий</option>
-                            <option value="4">CR 4 - Средний</option>
-                            <option value="5">CR 5 - Средний</option>
-                            <option value="6">CR 6 - Средний</option>
-                            <option value="7">CR 7 - Средний</option>
-                            <option value="8">CR 8 - Сложный</option>
-                            <option value="9">CR 9 - Сложный</option>
-                            <option value="10">CR 10 - Сложный</option>
-                            <option value="11">CR 11 - Сложный</option>
-                            <option value="12">CR 12 - Сложный</option>
-                            <option value="13">CR 13 - Смертельный</option>
-                            <option value="14">CR 14 - Смертельный</option>
-                            <option value="15">CR 15 - Смертельный</option>
-                            <option value="16">CR 16 - Смертельный</option>
-                            <option value="17">CR 17 - Смертельный</option>
-                            <option value="18">CR 18 - Смертельный</option>
-                            <option value="19">CR 19 - Смертельный</option>
-                            <option value="20">CR 20 - Смертельный</option>
-                            <option value="21">CR 21+ - Смертельный</option>
-                            <option value="22">CR 22+ - Смертельный</option>
-                            <option value="23">CR 23+ - Смертельный</option>
-                            <option value="24">CR 24+ - Смертельный</option>
-                            <option value="25">CR 25+ - Смертельный</option>
-                            <option value="26">CR 26+ - Смертельный</option>
-                            <option value="27">CR 27+ - Смертельный</option>
-                            <option value="28">CR 28+ - Смертельный</option>
-                            <option value="29">CR 29+ - Смертельный</option>
-                            <option value="30">CR 30 - Смертельный</option>
+                            <option value="easy">Легкий (CR 0-3)</option>
+                            <option value="medium">Средний (CR 1-7)</option>
+                            <option value="hard">Сложный (CR 5-12)</option>
+                            <option value="deadly">Смертельный (CR 10-20)</option>
+                            <option value="random">Случайный</option>
                         </select>
                     </div>
                     
@@ -730,7 +701,12 @@ function openEnemyModal() {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success && data.enemies) {
                 resultDiv.innerHTML = formatEnemiesFromApi(data.enemies);
@@ -745,7 +721,15 @@ function openEnemyModal() {
         })
         .catch(error => {
             console.error('Error:', error);
-            resultDiv.innerHTML = '<div class="error">Ошибка сети. Попробуйте ещё раз.</div>';
+            let errorMessage = 'Ошибка сети. Попробуйте ещё раз.';
+            
+            if (error.message.includes('HTTP')) {
+                errorMessage = `Ошибка сервера: ${error.message}`;
+            } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                errorMessage = 'API недоступен. Проверьте подключение к интернету.';
+            }
+            
+            resultDiv.innerHTML = '<div class="error">' + errorMessage + '</div>';
         })
         .finally(() => {
             submitBtn.innerHTML = '<span class="btn-icon">&#128127;</span><span class="btn-text">Создать противников</span>';
