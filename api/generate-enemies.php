@@ -101,6 +101,11 @@ class EnemyGenerator {
             case 'deadly':
                 return ['min' => 10, 'max' => 20, 'display' => 'Смертельный (CR 10-20)'];
             default:
+                // Если передан конкретный CR, возвращаем его как диапазон
+                if (is_numeric($threat_level)) {
+                    $cr = (int)$threat_level;
+                    return ['min' => $cr, 'max' => $cr, 'display' => "CR $cr"];
+                }
                 return ['min' => 1, 'max' => 5, 'display' => 'Средний (CR 1-5)'];
         }
     }
