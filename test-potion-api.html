@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест DnD API - Зелья</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Тест DnD API - Зелья</h1>
+    
+    <div class="test-section">
+        <h2>Тест 1: Получение списка магических предметов</h2>
+        <button class="test-button" onclick="testMagicItems()">Получить список</button>
+        <div id="result1" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Тест 2: Получение деталей конкретного предмета</h2>
+        <button class="test-button" onclick="testItemDetails()">Получить детали</button>
+        <div id="result2" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Тест 3: Поиск зелий по типу</h2>
+        <button class="test-button" onclick="testPotionSearch()">Найти зелья</button>
+        <div id="result3" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Тест 4: Проверка доступности API</h2>
+        <button class="test-button" onclick="testAPIAvailability()">Проверить API</button>
+        <div id="result4" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://www.dnd5eapi.co/api';
+
+        async function testMagicItems() {
+            const resultDiv = document.getElementById('result1');
+            resultDiv.textContent = 'Загрузка...';
+            resultDiv.className = 'result';
+
+            try {
+                const response = await fetch(`${API_BASE}/magic-items`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                const items = data.results || [];
+                
+                resultDiv.textContent = `✅ Успешно получено ${items.length} магических предметов\n\nПервые 5 предметов:\n${items.slice(0, 5).map(item => `- ${item.name}`).join('\n')}`;
+                resultDiv.className = 'result success';
+            } catch (error) {
+                resultDiv.textContent = `❌ Ошибка: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testItemDetails() {
+            const resultDiv = document.getElementById('result2');
+            resultDiv.textContent = 'Загрузка...';
+            resultDiv.className = 'result';
+
+            try {
+                // Сначала получаем список, затем детали первого предмета
+                const listResponse = await fetch(`${API_BASE}/magic-items`);
+                if (!listResponse.ok) {
+                    throw new Error(`HTTP ${listResponse.status}: ${listResponse.statusText}`);
+                }
+                
+                const listData = await listResponse.json();
+                const firstItem = listData.results[0];
+                
+                if (!firstItem) {
+                    throw new Error('Нет предметов в списке');
+                }
+
+                const detailResponse = await fetch(`${API_BASE}/magic-items/${firstItem.index}`);
+                if (!detailResponse.ok) {
+                    throw new Error(`HTTP ${detailResponse.status}: ${detailResponse.statusText}`);
+                }
+                
+                const detailData = await detailResponse.json();
+                
+                resultDiv.textContent = `✅ Детали предмета "${detailData.name}":\n\nРедкость: ${detailData.rarity?.name || 'Не указана'}\nОписание: ${detailData.desc?.[0]?.substring(0, 200) || 'Нет описания'}...`;
+                resultDiv.className = 'result success';
+            } catch (error) {
+                resultDiv.textContent = `❌ Ошибка: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testPotionSearch() {
+            const resultDiv = document.getElementById('result3');
+            resultDiv.textContent = 'Загрузка...';
+            resultDiv.className = 'result';
+
+            try {
+                const response = await fetch(`${API_BASE}/magic-items`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                const items = data.results || [];
+                
+                // Ищем предметы, которые могут быть зельями
+                const potionKeywords = ['potion', 'elixir', 'philter', 'oil'];
+                const potionItems = items.filter(item => 
+                    potionKeywords.some(keyword => 
+                        item.name.toLowerCase().includes(keyword)
+                    )
+                );
+                
+                resultDiv.textContent = `✅ Найдено ${potionItems.length} потенциальных зелий:\n\n${potionItems.slice(0, 10).map(item => `- ${item.name}`).join('\n')}`;
+                resultDiv.className = 'result success';
+            } catch (error) {
+                resultDiv.textContent = `❌ Ошибка: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testAPIAvailability() {
+            const resultDiv = document.getElementById('result4');
+            resultDiv.textContent = 'Проверка...';
+            resultDiv.className = 'result';
+
+            try {
+                const startTime = Date.now();
+                const response = await fetch(`${API_BASE}/`);
+                const endTime = Date.now();
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const responseTime = endTime - startTime;
+                resultDiv.textContent = `✅ API доступен\nВремя ответа: ${responseTime}ms\nСтатус: ${response.status} ${response.statusText}`;
+                resultDiv.className = 'result success';
+            } catch (error) {
+                resultDiv.textContent = `❌ API недоступен: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+    </script>
+</body>
+</html>
