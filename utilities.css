@@ -997,45 +997,107 @@
     }
 }
 
-<<<<<<< HEAD
-
-/* ===== ENEMY GENERATOR STYLES ===== */
-
-.enemy-generator {
-=======
 /* ===== POTION GENERATOR ===== */
 
 .potion-generator {
->>>>>>> b86ba888a4274516acb58e29f394e84525f24695
     max-width: 800px;
     margin: 0 auto;
 }
 
-<<<<<<< HEAD
-.enemy-form {
-    background: var(--bg-secondary);
-    padding: var(--space-4);
-    border-radius: var(--radius-lg);
-    margin-bottom: var(--space-4);
-=======
 .potion-form {
     background: var(--bg-secondary);
     border: 1px solid var(--border-primary);
     border-radius: var(--radius-lg);
     padding: var(--space-6);
     margin-bottom: var(--space-6);
->>>>>>> b86ba888a4274516acb58e29f394e84525f24695
+}
+
+.generator-header {
+    text-align: center;
+    margin-bottom: var(--space-6);
+}
+
+.generator-header h2 {
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-2xl);
+}
+
+.generator-subtitle {
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    margin-top: var(--space-4);
+}
+
+.info-btn {
+    background: var(--accent-info);
+    color: white;
+    border: none;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.info-btn:hover {
+    background: var(--accent-info-dark);
+    transform: translateY(-2px);
+}
+
+.info-container {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-top: var(--space-4);
+}
+
+.info-container h3 {
+    color: var(--text-primary);
+    margin-bottom: var(--space-3);
+}
+
+.info-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+.info-container li {
+    margin-bottom: var(--space-2);
+    color: var(--text-secondary);
+}
+
+.potion-stats {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+    text-align: center;
+}
+
+.potion-stats h4 {
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.potion-stats p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-1);
 }
 
 .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--space-4);
-<<<<<<< HEAD
-    margin-bottom: var(--space-4);
-=======
     margin-bottom: var(--space-6);
->>>>>>> b86ba888a4274516acb58e29f394e84525f24695
 }
 
 .form-group {
@@ -1045,9 +1107,14 @@
 
 .form-group label {
     font-weight: 600;
-<<<<<<< HEAD
     margin-bottom: var(--space-2);
     color: var(--text-primary);
+}
+
+.form-group small {
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+    margin-top: var(--space-1);
 }
 
 .form-group select,
@@ -1059,49 +1126,6 @@
     color: var(--text-primary);
     font-size: var(--text-sm);
 }
-
-.form-group select:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.enemy-block {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-primary);
-    border-radius: var(--radius-lg);
-    padding: var(--space-4);
-    margin-bottom: var(--space-4);
-}
-
-.enemy-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-3);
-    padding-bottom: var(--space-3);
-    border-bottom: 1px solid var(--border-primary);
-}
-
-.enemy-header h3 {
-    margin: 0;
-    color: var(--text-primary);
-    font-size: var(--text-xl);
-}
-
-.enemy-cr {
-    background: var(--accent-primary);
-    color: var(--text-on-accent);
-    padding: var(--space-1) var(--space-3);
-    border-radius: var(--radius-full);
-    font-weight: 600;
-    font-size: var(--text-sm);
-}
-
-.enemy-group-info {
-    background: var(--accent-secondary);
-    color: var(--text-on-accent);
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-md);
     font-weight: 500;
     font-size: var(--text-sm);
     margin-top: var(--space-2);

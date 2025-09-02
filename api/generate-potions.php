@@ -39,8 +39,8 @@ class PotionGenerator {
         $effect = $params['effect'] ?? '';
         
         // Валидация параметров
-        if ($count < 1 || $count > 10) {
-            throw new Exception('Количество зелий должно быть от 1 до 10');
+        if ($count < 1 || $count > 20) {
+            throw new Exception('Количество зелий должно быть от 1 до 20');
         }
         
         try {
@@ -51,7 +51,8 @@ class PotionGenerator {
             $filtered_potions = $this->filterPotionsByCriteria($all_potions, $rarity, $type, $effect);
             
             if (empty($filtered_potions)) {
-                throw new Exception('Не найдены зелья с указанными характеристиками');
+                // Если нет точных совпадений, возвращаем случайные зелья
+                $filtered_potions = $this->getRandomPotionsFallback($all_potions, $count);
             }
             
             // Выбираем случайные зелья
@@ -136,7 +137,8 @@ class PotionGenerator {
     private function isPotion($name) {
         $potion_keywords = [
             'potion', 'elixir', 'philter', 'oil', 'tincture', 'essence',
-            'brew', 'concoction', 'draught', 'tonic', 'extract'
+            'brew', 'concoction', 'draught', 'tonic', 'extract', 'salve',
+            'balm', 'unguent', 'ointment', 'decoction', 'infusion'
         ];
         
         foreach ($potion_keywords as $keyword) {
@@ -160,7 +162,20 @@ class PotionGenerator {
             // Фильтр по редкости
             if ($rarity && !empty($potion['rarity'])) {
                 $potion_rarity = strtolower($potion['rarity']['name'] ?? '');
-                if ($potion_rarity !== strtolower($rarity)) {
+                $request_rarity = strtolower($rarity);
+                
+                // Нормализуем названия редкости
+                $rarity_mapping = [
+                    'common' => 'common',
+                    'uncommon' => 'uncommon', 
+                    'rare' => 'rare',
+                    'very rare' => 'very rare',
+                    'very_rare' => 'very rare',
+                    'legendary' => 'legendary'
+                ];
+                
+                $normalized_request = $rarity_mapping[$request_rarity] ?? $request_rarity;
+                if ($potion_rarity !== $normalized_request) {
                     $matches = false;
                 }
             }
@@ -194,6 +209,40 @@ class PotionGenerator {
         }
         
         return $filtered;
+    }
+    
+    /**
+     * Fallback: получение случайных зелий если фильтр не дал результатов
+     */
+    private function getRandomPotionsFallback($all_potions, $count) {
+        $potion_types = ['Восстановление', 'Усиление', 'Защита', 'Иллюзия', 'Трансмутация', 'Некромантия', 'Прорицание', 'Эвокация', 'Универсальное'];
+        $fallback_potions = [];
+        
+        // Пытаемся найти зелья разных типов
+        foreach ($potion_types as $type) {
+            if (count($fallback_potions) >= $count) break;
+            
+            foreach ($all_potions as $potion) {
+                if (count($fallback_potions) >= $count) break;
+                
+                $potion_type = $this->determinePotionType($potion);
+                if ($potion_type === $type && !in_array($potion, $fallback_potions)) {
+                    $fallback_potions[] = $potion;
+                }
+            }
+        }
+        
+        // Если все еще мало зелий, добавляем любые доступные
+        if (count($fallback_potions) < $count) {
+            foreach ($all_potions as $potion) {
+                if (count($fallback_potions) >= $count) break;
+                if (!in_array($potion, $fallback_potions)) {
+                    $fallback_potions[] = $potion;
+                }
+            }
+        }
+        
+        return $fallback_potions;
     }
     
     /**
@@ -269,7 +318,8 @@ class PotionGenerator {
             'icon' => $this->getPotionIcon($type),
             'color' => $this->getPotionColor($potion_data['rarity']['name'] ?? 'Common'),
             'properties' => $this->getPotionProperties($potion_data),
-            'equipment_category' => $potion_data['equipment_category']['name'] ?? 'Adventuring Gear'
+            'equipment_category' => $potion_data['equipment_category']['name'] ?? 'Adventuring Gear',
+            'cost' => $this->getPotionCost($potion_data)
         ];
     }
     
@@ -281,21 +331,21 @@ class PotionGenerator {
         $desc = strtolower(implode(' ', $potion_data['desc'] ?? []));
         
         // Определяем тип по названию и описанию
-        if (strpos($name, 'healing') !== false || strpos($desc, 'heal') !== false || strpos($desc, 'hit point') !== false || strpos($desc, 'regain') !== false) {
+        if (strpos($name, 'healing') !== false || strpos($desc, 'heal') !== false || strpos($desc, 'hit point') !== false || strpos($desc, 'regain') !== false || strpos($desc, 'restore') !== false) {
             return 'Восстановление';
-        } elseif (strpos($name, 'strength') !== false || strpos($name, 'giant') !== false || strpos($desc, 'strength') !== false || strpos($desc, 'advantage') !== false) {
+        } elseif (strpos($name, 'strength') !== false || strpos($name, 'giant') !== false || strpos($desc, 'strength') !== false || strpos($desc, 'advantage') !== false || strpos($desc, 'enhance') !== false) {
             return 'Усиление';
-        } elseif (strpos($name, 'resistance') !== false || strpos($name, 'invulnerability') !== false || strpos($desc, 'resistance') !== false || strpos($desc, 'immune') !== false) {
+        } elseif (strpos($name, 'resistance') !== false || strpos($name, 'invulnerability') !== false || strpos($desc, 'resistance') !== false || strpos($desc, 'immune') !== false || strpos($desc, 'protection') !== false) {
             return 'Защита';
-        } elseif (strpos($name, 'invisibility') !== false || strpos($name, 'disguise') !== false || strpos($desc, 'invisible') !== false || strpos($desc, 'disguise') !== false) {
+        } elseif (strpos($name, 'invisibility') !== false || strpos($name, 'disguise') !== false || strpos($desc, 'invisible') !== false || strpos($desc, 'disguise') !== false || strpos($desc, 'illusion') !== false) {
             return 'Иллюзия';
-        } elseif (strpos($name, 'flying') !== false || strpos($name, 'growth') !== false || strpos($name, 'diminution') !== false || strpos($desc, 'fly') !== false || strpos($desc, 'size') !== false) {
+        } elseif (strpos($name, 'flying') !== false || strpos($name, 'growth') !== false || strpos($name, 'diminution') !== false || strpos($desc, 'fly') !== false || strpos($desc, 'size') !== false || strpos($desc, 'transform') !== false) {
             return 'Трансмутация';
-        } elseif (strpos($name, 'poison') !== false || strpos($desc, 'poison') !== false || strpos($desc, 'damage') !== false) {
+        } elseif (strpos($name, 'poison') !== false || strpos($desc, 'poison') !== false || strpos($desc, 'damage') !== false || strpos($desc, 'harm') !== false) {
             return 'Некромантия';
-        } elseif (strpos($name, 'clairvoyance') !== false || strpos($name, 'mind reading') !== false || strpos($desc, 'see') !== false || strpos($desc, 'vision') !== false) {
+        } elseif (strpos($name, 'clairvoyance') !== false || strpos($name, 'mind reading') !== false || strpos($desc, 'see') !== false || strpos($desc, 'vision') !== false || strpos($desc, 'divination') !== false) {
             return 'Прорицание';
-        } elseif (strpos($name, 'fire') !== false || strpos($name, 'frost') !== false || strpos($name, 'lightning') !== false || strpos($desc, 'fire') !== false || strpos($desc, 'cold') !== false || strpos($desc, 'lightning') !== false) {
+        } elseif (strpos($name, 'fire') !== false || strpos($name, 'frost') !== false || strpos($name, 'lightning') !== false || strpos($desc, 'fire') !== false || strpos($desc, 'cold') !== false || strpos($desc, 'lightning') !== false || strpos($desc, 'energy') !== false) {
             return 'Эвокация';
         } else {
             return 'Универсальное';
@@ -314,7 +364,8 @@ class PotionGenerator {
             $keywords = [
                 'heal', 'damage', 'advantage', 'disadvantage', 'resistance', 'immune',
                 'invisible', 'fly', 'strength', 'poison', 'see', 'vision', 'fire', 'cold',
-                'lightning', 'acid', 'thunder', 'force', 'necrotic', 'radiant', 'psychic'
+                'lightning', 'acid', 'thunder', 'force', 'necrotic', 'radiant', 'psychic',
+                'restore', 'enhance', 'protection', 'illusion', 'transform', 'divination'
             ];
             
             foreach ($keywords as $keyword) {
@@ -353,6 +404,29 @@ class PotionGenerator {
         ];
         
         return $values[$rarity] ?? '100 золотых';
+    }
+    
+    /**
+     * Получение стоимости в стандартном формате D&D
+     */
+    private function getPotionCost($potion_data) {
+        if (isset($potion_data['cost'])) {
+            $cost = $potion_data['cost'];
+            if (isset($cost['quantity']) && isset($cost['unit'])) {
+                $unit_names = [
+                    'cp' => 'медных монет',
+                    'sp' => 'серебряных монет', 
+                    'ep' => 'электрумовых монет',
+                    'gp' => 'золотых монет',
+                    'pp' => 'платиновых монет'
+                ];
+                $unit_name = $unit_names[$cost['unit']] ?? $cost['unit'];
+                return $cost['quantity'] . ' ' . $unit_name;
+            }
+        }
+        
+        // Fallback к базовой стоимости по редкости
+        return $this->getPotionValue($potion_data);
     }
     
     /**

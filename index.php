@@ -1427,26 +1427,27 @@ function openPotionModalSimple() {
     showModal(`
         <div class="potion-generator">
             <div class="generator-header">
-                <h2>🧪 Генератор зелий</h2>
-                <p class="generator-subtitle">Создайте магические зелья различных типов и редкости</p>
+                <h2>🧪 Генератор зелий D&D</h2>
+                <p class="generator-subtitle">Создавайте магические зелья используя официальную D&D 5e API</p>
             </div>
             
             <form id="potionForm" class="potion-form">
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="potion-count">Количество зелий</label>
-                        <input type="number" id="potion-count" name="count" min="1" max="10" value="1" required>
+                        <input type="number" id="potion-count" name="count" min="1" max="20" value="3" required>
+                        <small>От 1 до 20 зелий</small>
                     </div>
                     
                     <div class="form-group">
                         <label for="potion-rarity">Редкость</label>
                         <select id="potion-rarity" name="rarity">
                             <option value="">Любая редкость</option>
-                            <option value="common">Обычное</option>
-                            <option value="uncommon">Необычное</option>
-                            <option value="rare">Редкое</option>
-                            <option value="very rare">Очень редкое</option>
-                            <option value="legendary">Легендарное</option>
+                            <option value="common">⚪ Обычное (Common)</option>
+                            <option value="uncommon">🟢 Необычное (Uncommon)</option>
+                            <option value="rare">🔵 Редкое (Rare)</option>
+                            <option value="very rare">🟣 Очень редкое (Very Rare)</option>
+                            <option value="legendary">🟠 Легендарное (Legendary)</option>
                         </select>
                     </div>
                     
@@ -1461,17 +1462,36 @@ function openPotionModalSimple() {
                             <option value="Трансмутация">🔄 Трансмутация</option>
                             <option value="Некромантия">💀 Некромантия</option>
                             <option value="Прорицание">🔮 Прорицание</option>
+                            <option value="Эвокация">⚡ Эвокация</option>
                         </select>
                     </div>
                 </div>
                 
-                <button type="submit" class="generate-btn">
-                    <span class="btn-icon">🧪</span>
-                    <span class="btn-text">Создать зелья</span>
-                </button>
+                <div class="form-actions">
+                    <button type="submit" class="generate-btn">
+                        <span class="btn-icon">🧪</span>
+                        <span class="btn-text">Создать зелья</span>
+                    </button>
+                    
+                    <button type="button" class="info-btn" onclick="showPotionInfo()">
+                        <span class="btn-icon">ℹ️</span>
+                        <span class="btn-text">Информация</span>
+                    </button>
+                </div>
             </form>
             
             <div id="potionResult" class="result-container"></div>
+            
+            <div id="potionInfo" class="info-container" style="display: none;">
+                <h3>ℹ️ О генераторе зелий</h3>
+                <p>Этот генератор использует официальную D&D 5e API для создания реальных зелий из игры.</p>
+                <ul>
+                    <li>🎯 <strong>Точность:</strong> Все зелья соответствуют официальным правилам D&D</li>
+                    <li>🔍 <strong>Фильтрация:</strong> Выбирайте по редкости и типу</li>
+                    <li>💾 <strong>Сохранение:</strong> Сохраняйте понравившиеся зелья в заметки</li>
+                    <li>📱 <strong>Адаптивность:</strong> Работает на всех устройствах</li>
+                </ul>
+            </div>
         </div>
     `);
     
@@ -1489,7 +1509,7 @@ function openPotionModalSimple() {
         submitBtn.disabled = true;
         resultDiv.innerHTML = '<div class="loading">Создание зелий...</div>';
         
-        // Используем упрощенный API
+        // Используем улучшенный API
         const params = new URLSearchParams();
         params.append('action', 'random');
         params.append('count', formData.get('count'));
@@ -1512,6 +1532,19 @@ function openPotionModalSimple() {
             if (data.success && data.data) {
                 let resultHtml = formatPotionsFromApi(data.data);
                 resultDiv.innerHTML = resultHtml;
+                
+                // Показываем статистику
+                if (data.filters) {
+                    const statsHtml = `
+                        <div class="potion-stats">
+                            <h4>📊 Результаты поиска</h4>
+                            <p>Найдено: <strong>${data.count}</strong> зелий</p>
+                            ${data.filters.rarity ? `<p>Редкость: <strong>${data.filters.rarity}</strong></p>` : ''}
+                            ${data.filters.type ? `<p>Тип: <strong>${data.filters.type}</strong></p>` : ''}
+                        </div>
+                    `;
+                    resultDiv.insertAdjacentHTML('afterbegin', statsHtml);
+                }
                 
                 // Автоматическая прокрутка к результату
                 setTimeout(() => {
@@ -1541,6 +1574,20 @@ function openPotionModalSimple() {
             submitBtn.disabled = false;
         });
     });
+}
+
+// Функция показа информации о генераторе зелий
+function showPotionInfo() {
+    const infoDiv = document.getElementById('potionInfo');
+    const resultDiv = document.getElementById('potionResult');
+    
+    if (infoDiv.style.display === 'none') {
+        infoDiv.style.display = 'block';
+        resultDiv.style.display = 'none';
+    } else {
+        infoDiv.style.display = 'none';
+        resultDiv.style.display = 'block';
+    }
 }
 
 
@@ -1575,14 +1622,14 @@ function formatPotionsFromApi(potions) {
                     ${descriptionHtml}
                     <div class="potion-details">
                         <span class="potion-type">${potion.icon} ${potion.type}</span>
-                        <span class="potion-value">💰 ${potion.value}</span>
+                        <span class="potion-value">💰 ${potion.cost || potion.value}</span>
                         <span class="potion-weight">⚖️ ${potion.weight}</span>
                     </div>
                     <div class="potion-properties">
                         ${effectsHtml}
                     </div>
                     <div class="potion-actions" style="margin-top: var(--space-4); text-align: center;">
-                        <button class="fast-btn" onclick="savePotionAsNote('${potion.name}', \`${potion.description}\`, '${potion.rarity}', '${potion.type}', '${potion.value}', '${potion.weight}', '${effectsHtml ? effectsHtml.replace(/<[^>]*>/g, '') : ''}')" style="background: var(--accent-success);">
+                        <button class="fast-btn" onclick="savePotionAsNote('${potion.name}', \`${potion.description}\`, '${potion.rarity}', '${potion.type}', '${potion.cost || potion.value}', '${potion.weight}', '${effectsHtml ? effectsHtml.replace(/<[^>]*>/g, '') : ''}')" style="background: var(--accent-success);">
                             💾 Сохранить в заметки
                         </button>
                     </div>
