@@ -1,22 +1,6 @@
 class PotionGenerator {
     constructor() {
         this.baseUrl = 'https://www.dnd5eapi.co/api';
-        this.potionTypes = {
-            healing: 'healing',
-            poison: 'poison', 
-            buff: 'buff',
-            utility: 'utility',
-            all: 'all'
-        };
-
-        this.rarityLevels = {
-            common: 'common',
-            uncommon: 'uncommon',
-            rare: 'rare',
-            very_rare: 'very-rare',
-            legendary: 'legendary'
-        };
-
         this.initializeEventListeners();
     }
 
@@ -77,7 +61,9 @@ class PotionGenerator {
 
     async fetchPotions(options) {
         try {
-            // Сначала получаем все зелья
+            console.log('Запрос зелий с параметрами:', options);
+            
+            // Получаем все магические предметы
             const response = await fetch(`${this.baseUrl}/magic-items`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -85,14 +71,17 @@ class PotionGenerator {
 
             const data = await response.json();
             const magicItems = data.results || [];
+            console.log(`Получено ${magicItems.length} магических предметов`);
 
             // Фильтруем зелья по типу и редкости
             let filteredPotions = await this.filterPotions(magicItems, options);
+            console.log(`Отфильтровано ${filteredPotions.length} зелий`);
             
             // Если не хватает зелий, добавляем случайные
             if (filteredPotions.length < options.count) {
                 const additionalPotions = await this.getRandomPotions(magicItems, options.count - filteredPotions.length);
                 filteredPotions = [...filteredPotions, ...additionalPotions];
+                console.log(`Добавлено ${additionalPotions.length} случайных зелий`);
             }
 
             // Ограничиваем количество
@@ -147,17 +136,23 @@ class PotionGenerator {
             switch (options.type) {
                 case 'healing':
                     return name.includes('healing') || name.includes('cure') || 
-                           description.includes('heal') || description.includes('cure');
+                           description.includes('heal') || description.includes('cure') ||
+                           name.includes('health') || description.includes('health');
                 case 'poison':
                     return name.includes('poison') || description.includes('poison') ||
-                           description.includes('damage') || description.includes('harm');
+                           description.includes('damage') || description.includes('harm') ||
+                           name.includes('toxin') || description.includes('toxin');
                 case 'buff':
                     return name.includes('strength') || name.includes('power') ||
                            description.includes('enhance') || description.includes('boost') ||
-                           description.includes('advantage');
+                           description.includes('advantage') || name.includes('giant') ||
+                           description.includes('giant') || name.includes('heroism') ||
+                           description.includes('heroism');
                 case 'utility':
                     return name.includes('utility') || name.includes('tool') ||
-                           description.includes('use') || description.includes('tool');
+                           description.includes('use') || description.includes('tool') ||
+                           name.includes('invisibility') || description.includes('invisibility') ||
+                           name.includes('flying') || description.includes('flying');
                 default:
                     return true;
             }
@@ -210,11 +205,14 @@ class PotionGenerator {
         const cost = potion.cost ? `${potion.cost.quantity} ${potion.cost.unit}` : 'Не указана';
         const description = potion.desc?.join(' ') || 'Описание отсутствует';
 
+        // Очищаем название редкости для CSS класса
+        const rarityClass = rarity.toLowerCase().replace(/\s+/g, '-');
+
         return `
             <div class="potion-card">
                 <h3 class="potion-name">${potion.name}</h3>
                 <div class="potion-details">
-                    <p><strong>Редкость:</strong> <span class="rarity-${rarity.toLowerCase().replace(' ', '-')}">${rarity}</span></p>
+                    <p><strong>Редкость:</strong> <span class="rarity-${rarityClass}">${rarity}</span></p>
                     <p><strong>Стоимость:</strong> ${cost}</p>
                 </div>
                 <div class="potion-description">
@@ -254,5 +252,7 @@ class PotionGenerator {
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Инициализация генератора зелий...');
     new PotionGenerator();
+    console.log('Генератор зелий готов к работе!');
 });
