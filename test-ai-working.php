@@ -72,11 +72,18 @@ $openai_key = getApiKey('openai');
 $google_key = getApiKey('google');
 
 echo "<table border='1' style='border-collapse: collapse; width: 100%;'>";
-echo "<tr><th>Сервис</th><th>API ключ</th><th>Статус</th></tr>";
-echo "<tr><td>DeepSeek</td><td>" . (empty($deepseek_key) ? 'Не настроен' : substr($deepseek_key, 0, 10) . '...') . "</td><td>" . (empty($deepseek_key) ? '❌' : '✅') . "</td></tr>";
-echo "<tr><td>OpenAI</td><td>" . (empty($openai_key) ? 'Не настроен' : substr($openai_key, 0, 10) . '...') . "</td><td>" . (empty($openai_key) ? '❌' : '✅') . "</td></tr>";
-echo "<tr><td>Google</td><td>" . (empty($google_key) ? 'Не настроен' : substr($google_key, 0, 10) . '...') . "</td><td>" . (empty($google_key) ? '❌' : '✅') . "</td></tr>";
+echo "<tr><th>Сервис</th><th>API ключ</th><th>Статус</th><th>Комментарий</th></tr>";
+echo "<tr><td>DeepSeek</td><td>" . (empty($deepseek_key) ? 'Не настроен' : substr($deepseek_key, 0, 10) . '...') . "</td><td>" . (empty($deepseek_key) ? '❌' : '✅') . "</td><td>" . (empty($deepseek_key) ? 'Основной API не настроен' : 'Основной рабочий API') . "</td></tr>";
+echo "<tr><td>OpenAI</td><td>" . (empty($openai_key) ? 'Не настроен' : substr($openai_key, 0, 10) . '...') . "</td><td>" . (empty($openai_key) ? '❌' : '✅') . "</td><td>Временно отключен</td></tr>";
+echo "<tr><td>Google</td><td>" . (empty($google_key) ? 'Не настроен' : substr($google_key, 0, 10) . '...') . "</td><td>" . (empty($google_key) ? '❌' : '✅') . "</td><td>Не нужен</td></tr>";
 echo "</table>";
+
+echo "<div style='background: #e3f2fd; border: 1px solid #2196f3; padding: 10px; margin: 10px 0;'>";
+echo "<strong>ℹ️ Информация об API:</strong><br>";
+echo "• <strong>DeepSeek</strong> - основной рабочий API для генерации контента<br>";
+echo "• <strong>OpenAI</strong> - временно отключен (не нужен для работы)<br>";
+echo "• <strong>Google</strong> - не используется в проекте<br>";
+echo "</div>";
 
 // Проверяем системные требования
 echo "<h2>4. Проверка системных требований</h2>";
@@ -126,12 +133,17 @@ if (isset($description['error']) || isset($background['error'])) {
     echo "1. Убедитесь, что у вас есть действующий API ключ DeepSeek<br>";
     echo "2. Проверьте подключение к интернету<br>";
     echo "3. Убедитесь, что PHP поддерживает cURL и OpenSSL<br>";
-    echo "4. Проверьте логи в logs/app.log для детальной информации";
+    echo "4. Проверьте логи в logs/app.log для детальной информации<br>";
+    echo "<br><strong>Примечание:</strong> OpenAI и Google API не нужны для работы системы";
     echo "</div>";
 } else {
     echo "<div style='background: #e8f5e8; border: 1px solid #4caf50; padding: 10px; margin: 10px 0;'>";
     echo "<strong>🎉 AI API работает корректно!</strong><br>";
-    echo "Все тесты прошли успешно. AI генерация доступна.";
+    echo "Все тесты прошли успешно. AI генерация доступна через DeepSeek API.<br>";
+    echo "<br><strong>Статус API:</strong><br>";
+    echo "• ✅ DeepSeek - работает и генерирует контент<br>";
+    echo "• ❌ OpenAI - не нужен для работы<br>";
+    echo "• ❌ Google - не используется в проекте";
     echo "</div>";
 }
 

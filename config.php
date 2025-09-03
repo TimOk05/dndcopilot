@@ -10,9 +10,9 @@ define('DB_PASS', '');
 // API ключи
 function getApiKey($service) {
     $apiKeys = [
-        'deepseek' => 'sk-1e898ddba737411e948af435d767e893', // Реальный API ключ DeepSeek
-        'openai' => '',   // Добавьте ваш API ключ OpenAI здесь
-        'google' => ''    // Добавьте ваш API ключ Google здесь
+        'deepseek' => 'sk-1e898ddba737411e948af435d767e893', // ✅ Работающий API ключ DeepSeek
+        'openai' => '',   // ❌ OpenAI временно отключен
+        'google' => ''    // ❌ Google не нужен
     ];
     
     return $apiKeys[$service] ?? '';

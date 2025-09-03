@@ -17,10 +17,17 @@ class AiService {
             'google' => getApiKey('google')
         ];
         
+        // Устанавливаем DeepSeek как единственный рабочий API
+        $this->preferred_api = 'deepseek';
+        
         $this->cache_dir = __DIR__ . '/../cache/ai/';
         if (!is_dir($this->cache_dir)) {
             mkdir($this->cache_dir, 0755, true);
         }
+        
+        // Логируем доступные API
+        $available_apis = array_filter($this->api_keys);
+        logMessage('INFO', 'AI сервис инициализирован. Доступные API: ' . implode(', ', array_keys($available_apis)));
     }
     
     /**
@@ -289,23 +296,35 @@ class AiService {
      * Вызов AI API с fallback на разные сервисы
      */
     private function callAiApi($prompt) {
-        // Пробуем предпочтительный API
-        $response = $this->callSpecificApi($this->preferred_api, $prompt);
-        if ($response) {
-            return $response;
+        // Получаем список доступных API
+        $available_apis = array_filter($this->api_keys);
+        
+        if (empty($available_apis)) {
+            logMessage('ERROR', 'AI API: Нет доступных API ключей');
+            return null;
         }
         
-        // Пробуем другие API
-        $apis = ['deepseek', 'openai', 'google'];
-        foreach ($apis as $api) {
-            if ($api !== $this->preferred_api) {
-                $response = $this->callSpecificApi($api, $prompt);
+        // Пробуем предпочтительный API (DeepSeek)
+        if (isset($available_apis['deepseek'])) {
+            $response = $this->callSpecificApi('deepseek', $prompt);
+            if ($response) {
+                logMessage('INFO', 'AI API: Успешно использован DeepSeek');
+                return $response;
+            }
+        }
+        
+        // Пробуем другие доступные API
+        foreach ($available_apis as $api_name => $api_key) {
+            if ($api_name !== 'deepseek') {
+                $response = $this->callSpecificApi($api_name, $prompt);
                 if ($response) {
+                    logMessage('INFO', "AI API: Успешно использован {$api_name}");
                     return $response;
                 }
             }
         }
         
+        logMessage('ERROR', 'AI API: Все доступные API недоступны');
         return null;
     }
     
@@ -315,8 +334,11 @@ class AiService {
     private function callSpecificApi($api_name, $prompt) {
         $api_key = $this->api_keys[$api_name] ?? '';
         if (!$api_key) {
+            logMessage('WARNING', "AI API: API ключ для {$api_name} не настроен");
             return null;
         }
+        
+        logMessage('INFO', "AI API: Попытка вызова {$api_name}");
         
         switch ($api_name) {
             case 'deepseek':
@@ -326,6 +348,7 @@ class AiService {
             case 'google':
                 return $this->callGoogleApi($prompt, $api_key);
             default:
+                logMessage('WARNING', "AI API: Неизвестный API: {$api_name}");
                 return null;
         }
     }
