@@ -1,5 +1,48 @@
 <?php
 /**
+ * Генератор зелий для D&D 5e
+ * Использует D&D 5e API для получения реальных данных
+ */
+
+// Включаем отображение ошибок для отладки
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Устанавливаем обработчик ошибок
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    $log_message = "[" . date('Y-m-d H:i:s') . "] PHP Error [$errno]: $errstr in $errfile on line $errline\n";
+    file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+    return false; // Позволяем стандартной обработке ошибок продолжиться
+});
+
+// Устанавливаем обработчик исключений
+set_exception_handler(function($exception) {
+    $log_message = "[" . date('Y-m-d H:i:s') . "] Uncaught Exception: " . $exception->getMessage() . " in " . $exception->getFile() . " on line " . $exception->getLine() . "\n";
+    file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+    
+    if (!defined('TESTING_MODE')) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'Критическая ошибка: ' . $exception->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
+    }
+});
+
+// Устанавливаем обработчик фатальных ошибок
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        $log_message = "[" . date('Y-m-d H:i:s') . "] Fatal Error: " . $error['message'] . " in " . $error['file'] . " on line " . $error['line'] . "\n";
+        file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+    }
+});
+
+// Логируем начало выполнения
+$log_message = "[" . date('Y-m-d H:i:s') . "] generate-potions.php начал выполнение\n";
+file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+
+/**
  * API для генерации зелий D&D через официальную D&D 5e API
  * Использует https://www.dnd5eapi.co/api для получения реальных зелий
  * Поддерживает поиск по характеристикам: редкость, тип, эффект
