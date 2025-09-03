@@ -34,6 +34,15 @@ class AiService {
             ];
         }
         
+        // Проверяем доступность API ключей
+        if (empty($this->api_keys['deepseek']) && empty($this->api_keys['openai']) && empty($this->api_keys['google'])) {
+            return [
+                'error' => 'AI API ключи не настроены',
+                'message' => 'Проверьте настройки API ключей в config.php',
+                'details' => 'Добавьте API ключи для DeepSeek, OpenAI или Google'
+            ];
+        }
+        
         $cache_key = "desc_" . md5(json_encode($character));
         $cached = $this->getCachedData($cache_key);
         if ($cached) {
@@ -48,11 +57,16 @@ class AiService {
             return $response;
         }
         
-        // НЕ возвращаем fallback - только ошибку
+        // Возвращаем детальную ошибку для диагностики
         return [
             'error' => 'AI API недоступен',
-            'message' => 'Не удалось получить описание персонажа от AI API. Проверьте подключение к интернету и настройки SSL.',
-            'details' => 'Система не может сгенерировать описание без работающего AI API'
+            'message' => 'Не удалось получить описание персонажа от AI API',
+            'details' => 'Проверьте: 1) Подключение к интернету, 2) API ключи, 3) SSL настройки',
+            'debug_info' => [
+                'available_apis' => array_keys(array_filter($this->api_keys)),
+                'preferred_api' => $this->preferred_api,
+                'curl_available' => function_exists('curl_init')
+            ]
         ];
     }
     
@@ -385,7 +399,7 @@ class AiService {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Увеличиваем таймаут
         curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/2.0');
         
         // Критически важные настройки SSL для обхода проблем
@@ -398,24 +412,31 @@ class AiService {
         curl_setopt($ch, CURLOPT_CAINFO, null);
         curl_setopt($ch, CURLOPT_CAPATH, null);
         
+        // Добавляем заголовки
         $headers = ['Content-Type: application/json'];
         if ($api_key) {
             $headers[] = 'Authorization: Bearer ' . $api_key;
         }
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         
+        // Выполняем запрос
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
+        $info = curl_getinfo($ch);
         curl_close($ch);
         
+        // Логируем детальную информацию
+        logMessage('INFO', "AI API запрос к: {$url}, HTTP код: {$httpCode}");
+        
         if ($response === false) {
-            logMessage('WARNING', "AI API cURL ошибка: {$error} для URL: {$url}");
+            logMessage('ERROR', "AI API cURL ошибка: {$error} для URL: {$url}");
             return null;
         }
         
         if ($httpCode !== 200) {
-            logMessage('WARNING', "AI API HTTP ошибка: {$httpCode} для URL: {$url}, ответ: {$response}");
+            logMessage('ERROR', "AI API HTTP ошибка: {$httpCode} для URL: {$url}");
+            logMessage('ERROR', "AI API ответ: {$response}");
             return null;
         }
         
@@ -424,6 +445,7 @@ class AiService {
         // Проверяем, что JSON декодировался корректно
         if (json_last_error() !== JSON_ERROR_NONE) {
             logMessage('ERROR', 'AI API вернул неверный JSON: ' . json_last_error_msg());
+            logMessage('ERROR', 'AI API сырой ответ: ' . substr($response, 0, 500));
             return null;
         }
         
@@ -437,6 +459,7 @@ class AiService {
         
         if (!$ai_text) {
             logMessage('WARNING', 'AI API не вернул текстовый ответ');
+            logMessage('DEBUG', 'AI API структура ответа: ' . json_encode($result, JSON_UNESCAPED_UNICODE));
             return null;
         }
         

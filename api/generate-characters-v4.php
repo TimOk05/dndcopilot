@@ -57,7 +57,7 @@ class CharacterGeneratorV4 {
     
     public function __construct() {
         $this->dnd_api_service = new DndApiService();
-        $this->ai_service = new AlternativeAiService(); // Используем альтернативный сервис
+        $this->ai_service = new AiService(); // Используем основной AI сервис
         $this->loadData();
     }
     

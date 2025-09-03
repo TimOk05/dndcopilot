@@ -890,16 +890,30 @@ class EnemyGenerator {
      */
     private function generateDescription($monster) {
         try {
-            $prompt = "Опиши кратко монстра {$monster['name']} ({$monster['type']}) с CR {$monster['challenge_rating']}. " .
-                     "Опиши его внешний вид, характер и поведение. Ответ должен быть на русском языке, 2-3 предложения.";
+            // Создаем объект персонажа для AI сервиса
+            $enemy_data = [
+                'name' => $monster['name'],
+                'type' => $monster['type'],
+                'challenge_rating' => $monster['challenge_rating']
+            ];
             
-            // Используем альтернативный AI сервис
-            require_once __DIR__ . '/ai-service-alternative.php';
-            $ai_service = new AlternativeAiService();
-            return $ai_service->generateWithFallback($prompt, 'description');
+            // Используем основной AI сервис для генерации описания
+            require_once __DIR__ . '/ai-service.php';
+            $ai_service = new AiService();
+            
+            // Используем метод генерации описания персонажа, но передаем данные монстра
+            $result = $ai_service->generateCharacterDescription($enemy_data, true);
+            
+            // Если получили ошибку, возвращаем её
+            if (isset($result['error'])) {
+                return $result;
+            }
+            
+            // Если получили успешный результат, возвращаем его
+            return $result;
+            
         } catch (Exception $e) {
             logMessage('ERROR', "EnemyGenerator: Ошибка генерации описания: " . $e->getMessage());
-            // НЕ возвращаем fallback - возвращаем ошибку
             return [
                 'error' => 'AI API недоступен',
                 'message' => 'Не удалось сгенерировать описание монстра',
@@ -913,16 +927,30 @@ class EnemyGenerator {
      */
     private function generateTactics($monster) {
         try {
-            $prompt = "Опиши тактику боя для монстра {$monster['name']} ({$monster['type']}) с CR {$monster['challenge_rating']}. " .
-                     "Как он должен действовать в бою? Ответ должен быть на русском языке, 2-3 предложения.";
+            // Создаем объект противника для AI сервиса
+            $enemy_data = [
+                'name' => $monster['name'],
+                'type' => $monster['type'],
+                'challenge_rating' => $monster['challenge_rating']
+            ];
             
-            // Используем альтернативный AI сервис
-            require_once __DIR__ . '/ai-service-alternative.php';
-            $ai_service = new AlternativeAiService();
-            return $ai_service->generateWithFallback($prompt, 'tactics');
+            // Используем основной AI сервис для генерации тактики
+            require_once __DIR__ . '/ai-service.php';
+            $ai_service = new AiService();
+            
+            // Используем метод генерации тактики противника
+            $result = $ai_service->generateEnemyTactics($enemy_data, true);
+            
+            // Если получили ошибку, возвращаем её
+            if (isset($result['error'])) {
+                return $result;
+            }
+            
+            // Если получили успешный результат, возвращаем его
+            return $result;
+            
         } catch (Exception $e) {
             logMessage('ERROR', "EnemyGenerator: Ошибка генерации тактики: " . $e->getMessage());
-            // НЕ возвращаем fallback - возвращаем ошибку
             return [
                 'error' => 'AI API недоступен',
                 'message' => 'Не удалось сгенерировать тактику монстра',
