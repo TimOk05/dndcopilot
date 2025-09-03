@@ -1,200 +1,190 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест API зелий D&D</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
-        .result { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 4px; }
-        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
-        input, select { padding: 8px; margin: 5px; }
-        .error { color: red; background: #ffe6e6; padding: 10px; border-radius: 4px; }
-        .success { color: green; background: #e6ffe6; padding: 10px; border-radius: 4px; }
-    </style>
-</head>
-<body>
-    <h1>🧪 Тест API зелий D&D (Новая версия)</h1>
-    
-    <div class="test-section">
-        <h3>Случайные зелья</h3>
-        <label>Количество: <input type="number" id="count" value="3" min="1" max="10"></label>
-        <label>Редкость: 
-            <select id="rarity">
-                <option value="">Любая</option>
-                <option value="common">Обычное</option>
-                <option value="uncommon">Необычное</option>
-                <option value="rare">Редкое</option>
-                <option value="very rare">Очень редкое</option>
-                <option value="legendary">Легендарное</option>
-            </select>
-        </label>
-        <label>Тип: 
-            <select id="type">
-                <option value="">Любой</option>
-                <option value="Восстановление">Восстановление</option>
-                <option value="Усиление">Усиление</option>
-                <option value="Защита">Защита</option>
-                <option value="Иллюзия">Иллюзия</option>
-                <option value="Трансмутация">Трансмутация</option>
-                <option value="Некромантия">Некромантия</option>
-                <option value="Прорицание">Прорицание</option>
-            </select>
-        </label>
-        <br>
-        <button onclick="testRandomPotions()">🎲 Сгенерировать зелья</button>
-        <div id="randomResult" class="result"></div>
-    </div>
-    
-    <div class="test-section">
-        <h3>Доступные редкости</h3>
-        <button onclick="testRarities()">📋 Получить редкости</button>
-        <div id="raritiesResult" class="result"></div>
-    </div>
-    
-    <div class="test-section">
-        <h3>Доступные типы</h3>
-        <button onclick="testTypes()">🔍 Получить типы</button>
-        <div id="typesResult" class="result"></div>
-    </div>
-    
-    <div class="test-section">
-        <h3>Зелья по типу</h3>
-        <label>Тип: 
-            <select id="typeFilter">
-                <option value="Восстановление">Восстановление</option>
-                <option value="Усиление">Усиление</option>
-                <option value="Защита">Защита</option>
-                <option value="Иллюзия">Иллюзия</option>
-                <option value="Трансмутация">Трансмутация</option>
-                <option value="Некромантия">Некромантия</option>
-                <option value="Прорицание">Прорицание</option>
-            </select>
-        </label>
-        <button onclick="testPotionsByType()">🔍 Найти по типу</button>
-        <div id="typeResult" class="result"></div>
-    </div>
+<?php
+/**
+ * Тест API зелий D&D
+ * Проверяет доступность D&D 5e API и генерацию зелий
+ */
 
-    <script>
-        async function testRandomPotions() {
-            const count = document.getElementById('count').value;
-            const rarity = document.getElementById('rarity').value;
-            const type = document.getElementById('type').value;
-            
-            const params = new URLSearchParams();
-            params.append('action', 'random');
-            params.append('count', count);
-            if (rarity) params.append('rarity', rarity);
-            if (type) params.append('type', type);
-            
-            try {
-                document.getElementById('randomResult').innerHTML = '<div class="loading">Загрузка...</div>';
-                
-                const response = await fetch(`api/generate-potions.php?${params.toString()}`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    let html = '<div class="success">✅ Успешно получено зелий: ' + data.data.length + '</div>';
-                    html += '<h4>Результат:</h4>';
-                    data.data.forEach((potion, index) => {
-                        html += `
-                            <div style="border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 4px; border-left: 4px solid ${potion.color}">
-                                <h5>${potion.icon} ${potion.name}</h5>
-                                <p><strong>Редкость:</strong> <span style="color: ${potion.color}">${potion.rarity}</span></p>
-                                <p><strong>Тип:</strong> ${potion.icon} ${potion.type}</p>
-                                <p><strong>Описание:</strong> ${potion.description}</p>
-                                <p><strong>Стоимость:</strong> ${potion.value}</p>
-                                <p><strong>Вес:</strong> ${potion.weight}</p>
-                                <p><strong>Свойства:</strong> ${potion.properties.join(', ')}</p>
-                            </div>
-                        `;
-                    });
-                    document.getElementById('randomResult').innerHTML = html;
+require_once 'config.php';
+
+echo "<h1>🧪 Тест API зелий D&D</h1>";
+echo "<p><strong>Время выполнения теста:</strong> " . date('Y-m-d H:i:s') . "</p>";
+
+// Проверяем системные требования
+echo "<h2>🔧 Проверка системных требований</h2>";
+
+$curl_available = function_exists('curl_init');
+$openssl_available = function_exists('openssl_encrypt');
+$json_available = function_exists('json_encode');
+
+echo "<p><strong>cURL:</strong> " . ($curl_available ? "✅ Доступен" : "❌ Недоступен") . "</p>";
+echo "<p><strong>OpenSSL:</strong> " . ($openssl_available ? "✅ Доступен" : "❌ Недоступен") . "</p>";
+echo "<p><strong>JSON:</strong> " . ($openssl_available ? "✅ Доступен" : "❌ Недоступен") . "</p>";
+
+if (!$curl_available) {
+    echo "<p style='color: red;'>❌ cURL недоступен. Генерация зелий невозможна.</p>";
+    exit;
+}
+
+// Проверяем подключение к D&D API
+echo "<h2>🌐 Проверка подключения к D&D API</h2>";
+
+$dnd_api_url = 'https://www.dnd5eapi.co/api';
+$test_url = $dnd_api_url . '/magic-items';
+
+echo "<p><strong>Тестируемый URL:</strong> <a href='$test_url' target='_blank'>$test_url</a></p>";
+
+// Тестируем подключение
+$ch = curl_init($test_url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/1.0');
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+$response = curl_exec($ch);
+$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$error = curl_error($ch);
+$curl_info = curl_getinfo($ch);
+curl_close($ch);
+
+echo "<p><strong>HTTP код:</strong> $http_code</p>";
+echo "<p><strong>Ошибка cURL:</strong> " . ($error ?: "Нет") . "</p>";
+echo "<p><strong>Время ответа:</strong> " . round($curl_info['total_time'], 3) . " сек</p>";
+
+if ($error) {
+    echo "<p style='color: red;'>❌ Ошибка cURL: $error</p>";
+} elseif ($http_code !== 200) {
+    echo "<p style='color: red;'>❌ HTTP ошибка: $http_code</p>";
                 } else {
-                    document.getElementById('randomResult').innerHTML = `<div class="error">❌ Ошибка: ${data.error}</div>`;
-                }
-            } catch (error) {
-                document.getElementById('randomResult').innerHTML = `<div class="error">❌ Ошибка сети: ${error.message}</div>`;
-            }
+    echo "<p style='color: green;'>✅ Подключение к D&D API успешно</p>";
+}
+
+// Анализируем ответ
+if ($response) {
+    $data = json_decode($response, true);
+    if (json_last_error() === JSON_ERROR_NONE) {
+        echo "<p style='color: green;'>✅ JSON ответ успешно декодирован</p>";
+        
+        if (isset($data['count'])) {
+            echo "<p><strong>Всего магических предметов:</strong> " . $data['count'] . "</p>";
         }
         
-        async function testRarities() {
-            try {
-                document.getElementById('raritiesResult').innerHTML = '<div class="loading">Загрузка...</div>';
-                
-                const response = await fetch('api/generate-potions.php?action=rarities');
-                const data = await response.json();
-                
-                if (data.success) {
-                    document.getElementById('raritiesResult').innerHTML = `
-                        <div class="success">✅ Успешно получены редкости</div>
-                        <h4>Доступные редкости:</h4>
-                        <ul>${data.data.map(rarity => `<li>${rarity}</li>`).join('')}</ul>
-                    `;
-                } else {
-                    document.getElementById('raritiesResult').innerHTML = `<div class="error">❌ Ошибка: ${data.error}</div>`;
-                }
-            } catch (error) {
-                document.getElementById('raritiesResult').innerHTML = `<div class="error">❌ Ошибка сети: ${error.message}</div>`;
-            }
-        }
-        
-        async function testTypes() {
-            try {
-                document.getElementById('typesResult').innerHTML = '<div class="loading">Загрузка...</div>';
-                
-                const response = await fetch('api/generate-potions.php?action=types');
-                const data = await response.json();
-                
-                if (data.success) {
-                    document.getElementById('typesResult').innerHTML = `
-                        <div class="success">✅ Успешно получены типы</div>
-                        <h4>Доступные типы:</h4>
-                        <ul>${data.data.map(type => `<li>${type}</li>`).join('')}</ul>
-                    `;
-                } else {
-                    document.getElementById('typesResult').innerHTML = `<div class="error">❌ Ошибка: ${data.error}</div>`;
-                }
-            } catch (error) {
-                document.getElementById('typesResult').innerHTML = `<div class="error">❌ Ошибка сети: ${error.message}</div>`;
-            }
-        }
-        
-        async function testPotionsByType() {
-            const type = document.getElementById('typeFilter').value;
+        if (isset($data['results']) && is_array($data['results'])) {
+            echo "<p><strong>Получено результатов:</strong> " . count($data['results']) . "</p>";
             
-            try {
-                document.getElementById('typeResult').innerHTML = '<div class="loading">Загрузка...</div>';
+            // Показываем первые несколько предметов
+            echo "<h3>📋 Первые магические предметы:</h3>";
+            echo "<ul>";
+            for ($i = 0; $i < min(5, count($data['results'])); $i++) {
+                $item = $data['results'][$i];
+                echo "<li><strong>" . htmlspecialchars($item['name']) . "</strong> - <a href='{$item['url']}' target='_blank'>API ссылка</a></li>";
+            }
+            echo "</ul>";
+            
+            // Ищем зелья
+            echo "<h3>🧪 Поиск зелий:</h3>";
+            $potions = [];
+            foreach ($data['results'] as $item) {
+                $name = strtolower($item['name']);
+                $potion_keywords = ['potion', 'elixir', 'philter', 'oil', 'tincture', 'essence', 'brew', 'concoction', 'draught', 'tonic', 'extract'];
                 
-                const response = await fetch(`api/generate-potions.php?action=by_type&type=${encodeURIComponent(type)}`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    let html = `<div class="success">✅ Успешно найдены зелья типа "${type}"</div>`;
-                    html += `<h4>Зелья типа "${type}":</h4>`;
-                    if (data.data.length > 0) {
-                        data.data.forEach((potion, index) => {
-                            html += `
-                                <div style="border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 4px; border-left: 4px solid ${potion.color}">
-                                    <h5>${potion.icon} ${potion.name}</h5>
-                                    <p><strong>Редкость:</strong> <span style="color: ${potion.color}">${potion.rarity}</span></p>
-                                    <p><strong>Описание:</strong> ${potion.description}</p>
-                                    <p><strong>Стоимость:</strong> ${potion.value}</p>
-                                </div>
-                            `;
-                        });
-                    } else {
-                        html += '<p>Зелья данного типа не найдены.</p>';
+                foreach ($potion_keywords as $keyword) {
+                    if (strpos($name, $keyword) !== false) {
+                        $potions[] = $item;
+                        break;
                     }
-                    document.getElementById('typeResult').innerHTML = html;
-                } else {
-                    document.getElementById('typeResult').innerHTML = `<div class="error">❌ Ошибка: ${data.error}</div>`;
                 }
-            } catch (error) {
-                document.getElementById('typeResult').innerHTML = `<div class="error">❌ Ошибка сети: ${error.message}</div>`;
+            }
+            
+            echo "<p><strong>Найдено зелий:</strong> " . count($potions) . "</p>";
+            
+            if (!empty($potions)) {
+                echo "<ul>";
+                foreach (array_slice($potions, 0, 5) as $potion) {
+                    echo "<li><strong>" . htmlspecialchars($potion['name']) . "</strong> - <a href='{$potion['url']}' target='_blank'>API ссылка</a></li>";
+                }
+                echo "</ul>";
             }
         }
-    </script>
-</body>
-</html>
+    } else {
+        echo "<p style='color: red;'>❌ Ошибка декодирования JSON: " . json_last_error_msg() . "</p>";
+        echo "<p><strong>Сырой ответ:</strong></p>";
+        echo "<pre>" . htmlspecialchars(substr($response, 0, 500)) . "...</pre>";
+    }
+} else {
+    echo "<p style='color: red;'>❌ Пустой ответ от API</p>";
+}
+
+// Тестируем генератор зелий
+echo "<h2>🧪 Тест генератора зелий</h2>";
+
+try {
+    require_once 'api/generate-potions.php';
+    $generator = new PotionGenerator();
+    
+    echo "<p style='color: green;'>✅ Класс PotionGenerator загружен</p>";
+    
+    // Тестируем генерацию
+    $params = ['count' => 1];
+    $result = $generator->generatePotions($params);
+    
+    if ($result['success']) {
+        echo "<p style='color: green;'>✅ Генерация зелий успешна</p>";
+        echo "<p><strong>Сгенерировано зелий:</strong> " . $result['count'] . "</p>";
+        
+        if (isset($result['data'][0])) {
+            $potion = $result['data'][0];
+            echo "<h3>🎯 Пример зелья:</h3>";
+            echo "<ul>";
+            echo "<li><strong>Название:</strong> " . htmlspecialchars($potion['name']) . "</li>";
+            echo "<li><strong>Редкость:</strong> " . htmlspecialchars($potion['rarity']) . "</li>";
+            echo "<li><strong>Тип:</strong> " . htmlspecialchars($potion['type']) . "</li>";
+            echo "<li><strong>Описание:</strong> " . htmlspecialchars($potion['description']) . "</li>";
+            echo "</ul>";
+        }
+                } else {
+        echo "<p style='color: red;'>❌ Ошибка генерации зелий: " . htmlspecialchars($result['error']) . "</p>";
+    }
+    
+} catch (Exception $e) {
+    echo "<p style='color: red;'>❌ Ошибка загрузки генератора зелий: " . htmlspecialchars($e->getMessage()) . "</p>";
+}
+
+// Проверяем кеш
+echo "<h2>💾 Проверка кеша</h2>";
+
+$cache_file = 'logs/cache/potions_cache.json';
+if (file_exists($cache_file)) {
+    $cache_size = filesize($cache_file);
+    $cache_time = filemtime($cache_file);
+    echo "<p><strong>Файл кеша:</strong> Существует</p>";
+    echo "<p><strong>Размер:</strong> " . round($cache_size / 1024, 2) . " KB</p>";
+    echo "<p><strong>Время изменения:</strong> " . date('Y-m-d H:i:s', $cache_time) . "</p>";
+    
+    $cache_data = json_decode(file_get_contents($cache_file), true);
+    if (json_last_error() === JSON_ERROR_NONE) {
+        echo "<p style='color: green;'>✅ Кеш корректно декодируется</p>";
+        if (isset($cache_data['potions'])) {
+            echo "<p><strong>Зелий в кеше:</strong> " . count($cache_data['potions']) . "</p>";
+        }
+    } else {
+        echo "<p style='color: red;'>❌ Ошибка декодирования кеша</p>";
+    }
+} else {
+    echo "<p style='color: orange;'>⚠️ Файл кеша не найден</p>";
+}
+
+echo "<h2>📝 Рекомендации</h2>";
+
+if (!$curl_available) {
+    echo "<p style='color: red;'>❌ Установите cURL расширение для PHP</p>";
+} elseif ($http_code !== 200) {
+    echo "<p style='color: orange;'>⚠️ Проблемы с подключением к D&D API. Проверьте интернет-соединение.</p>";
+} elseif (empty($potions)) {
+    echo "<p style='color: orange;'>⚠️ Зелья не найдены в API. Возможно, изменилась структура данных.</p>";
+} else {
+    echo "<p style='color: green;'>✅ API зелий работает корректно</p>";
+}
+
+echo "<p><strong>Тест завершен:</strong> " . date('Y-m-d H:i:s') . "</p>";
+?>

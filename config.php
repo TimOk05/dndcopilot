@@ -184,6 +184,11 @@ function verifyCSRFToken($token) {
 
 // Настройки CORS
 function setCORSHeaders() {
+    // Не устанавливаем заголовки в режиме тестирования
+    if (defined('TESTING_MODE')) {
+        return;
+    }
+    
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
@@ -216,13 +221,15 @@ function initApp() {
     // Настраиваем временную зону
     date_default_timezone_set('Europe/Moscow');
     
-    // Устанавливаем заголовки безопасности
-    header('X-Content-Type-Options: nosniff');
-    header('X-Frame-Options: DENY');
-    header('X-XSS-Protection: 1; mode=block');
-    
-    // Настраиваем CORS
-    setCORSHeaders();
+    // Устанавливаем заголовки безопасности только если не в режиме тестирования
+    if (!defined('TESTING_MODE')) {
+        header('X-Content-Type-Options: nosniff');
+        header('X-Frame-Options: DENY');
+        header('X-XSS-Protection: 1; mode=block');
+        
+        // Настраиваем CORS
+        setCORSHeaders();
+    }
     
     // Логируем запуск приложения
     logMessage('INFO', 'Application started', [

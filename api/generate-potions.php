@@ -5,12 +5,15 @@
  * Поддерживает поиск по характеристикам: редкость, тип, эффект
  */
 
-header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+// Заголовки только если это прямой HTTP запрос
+if (!defined('TESTING_MODE')) {
+    header('Content-Type: application/json; charset=utf-8');
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type');
+}
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
@@ -116,18 +119,83 @@ class PotionGenerator {
     private function fetchPotionsFromAPI() {
         $potions = [];
         
-        // Получаем список всех магических предметов
-        $magic_items = $this->getMagicItemsList();
-        
-        // Фильтруем только зелья
-        foreach ($magic_items as $item) {
-            $name = strtolower($item['name']);
-            if ($this->isPotion($name)) {
-                $potions[] = $item;
+        try {
+            // Получаем список всех магических предметов
+            $magic_items = $this->getMagicItemsList();
+            
+            // Фильтруем только зелья
+            foreach ($magic_items as $item) {
+                $name = strtolower($item['name']);
+                if ($this->isPotion($name)) {
+                    $potions[] = $item;
+                }
             }
+            
+            if (!empty($potions)) {
+                return $potions;
+            }
+        } catch (Exception $e) {
+            error_log("Ошибка получения зелий из API: " . $e->getMessage());
         }
         
-        return $potions;
+        // Fallback: возвращаем базовые зелья, если API недоступен
+        return $this->getFallbackPotions();
+    }
+    
+    /**
+     * Fallback: базовые зелья D&D
+     */
+    private function getFallbackPotions() {
+        return [
+            [
+                'name' => 'Potion of Healing',
+                'url' => '/api/magic-items/potion-of-healing',
+                'rarity' => ['name' => 'Common'],
+                'desc' => ['A character who drinks the magical red fluid in this vial regains 2d4 + 2 hit points. Drinking or administering a potion takes an action.']
+            ],
+            [
+                'name' => 'Potion of Greater Healing',
+                'url' => '/api/magic-items/potion-of-greater-healing',
+                'rarity' => ['name' => 'Uncommon'],
+                'desc' => ['You regain 4d4 + 4 hit points when you drink this potion. The potion\'s red liquid glimmers when agitated.']
+            ],
+            [
+                'name' => 'Potion of Superior Healing',
+                'url' => '/api/magic-items/potion-of-superior-healing',
+                'rarity' => ['name' => 'Rare'],
+                'desc' => ['You regain 8d4 + 8 hit points when you drink this potion. The potion\'s red liquid glimmers when agitated.']
+            ],
+            [
+                'name' => 'Potion of Supreme Healing',
+                'url' => '/api/magic-items/potion-of-supreme-healing',
+                'rarity' => ['name' => 'Very Rare'],
+                'desc' => ['You regain 10d4 + 20 hit points when you drink this potion. The potion\'s red liquid glimmers when agitated.']
+            ],
+            [
+                'name' => 'Potion of Invisibility',
+                'url' => '/api/magic-items/potion-of-invisibility',
+                'rarity' => ['name' => 'Very Rare'],
+                'desc' => ['This potion\'s container looks empty but feels as though it holds liquid. When you drink it, you become invisible for 1 hour. Anything you wear or carry is invisible with you.']
+            ],
+            [
+                'name' => 'Potion of Flying',
+                'url' => '/api/magic-items/potion-of-flying',
+                'rarity' => ['name' => 'Very Rare'],
+                'desc' => ['When you drink this potion, you gain a flying speed equal to your walking speed for 1 hour and can hover. If you\'re in the air when the potion wears off, you fall unless you have some other means of staying aloft.']
+            ],
+            [
+                'name' => 'Potion of Giant Strength',
+                'url' => '/api/magic-items/potion-of-giant-strength',
+                'rarity' => ['name' => 'Rare'],
+                'desc' => ['When you drink this potion, your Strength score changes to 21 for 1 hour. The potion has no effect on you if your Strength is already 21 or higher.']
+            ],
+            [
+                'name' => 'Potion of Fire Breath',
+                'url' => '/api/magic-items/potion-of-fire-breath',
+                'rarity' => ['name' => 'Uncommon'],
+                'desc' => ['After drinking this potion, you can use a bonus action to exhale fire at a target within 30 feet of you. The target takes 4d6 fire damage, or half as much damage on a successful Dexterity saving throw.']
+            ]
+        ];
     }
     
     /**
@@ -443,26 +511,164 @@ class PotionGenerator {
      * Выполнение HTTP запроса
      */
     private function makeRequest($url) {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/1.0');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        
-        $response = curl_exec($ch);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        curl_close($ch);
-        
-        if ($error) {
+        // Парсим URL
+        $parsed = parse_url($url);
+        if (!$parsed) {
             return null;
         }
         
-        if ($http_code === 200 && $response) {
-            $decoded = json_decode($response, true);
+        $host = $parsed['host'];
+        $port = isset($parsed['port']) ? $parsed['port'] : ($parsed['scheme'] === 'https' ? 443 : 80);
+        $path = isset($parsed['path']) ? $parsed['path'] : '/';
+        if (isset($parsed['query'])) {
+            $path .= '?' . $parsed['query'];
+        }
+        
+        // Для HTTPS используем другой подход
+        if ($parsed['scheme'] === 'https') {
+            return $this->makeHttpsRequest($host, $path);
+        }
+        
+        // Используем fsockopen для HTTP
+        $fp = @fsockopen($host, $port, $errno, $errstr, 30);
+        if (!$fp) {
+            return null;
+        }
+        
+        // Формируем HTTP запрос
+        $request = "GET $path HTTP/1.1\r\n";
+        $request .= "Host: $host\r\n";
+        $request .= "User-Agent: DnD-Copilot/1.0\r\n";
+        $request .= "Connection: close\r\n";
+        $request .= "\r\n";
+        
+        // Отправляем запрос
+        fwrite($fp, $request);
+        
+        // Читаем ответ
+        $response = '';
+        while (!feof($fp)) {
+            $response .= fgets($fp, 1024);
+        }
+        fclose($fp);
+        
+        // Парсим HTTP ответ
+        $parts = explode("\r\n\r\n", $response, 2);
+        if (count($parts) < 2) {
+            return null;
+        }
+        
+        $headers = $parts[0];
+        $body = $parts[1];
+        
+        // Проверяем HTTP код
+        if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $headers, $matches)) {
+            $http_code = (int)$matches[1];
+            if ($http_code !== 200) {
+                return null;
+            }
+        }
+        
+        // Декодируем JSON
+        if ($body) {
+            $decoded = json_decode($body, true);
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $decoded;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Выполнение HTTPS запроса через fsockopen
+     */
+    private function makeHttpsRequest($host, $path) {
+        // Пробуем разные варианты подключения
+        $connection_methods = [
+            ['ssl://' . $host, 443],
+            ['tls://' . $host, 443],
+            [$host, 443]
+        ];
+        
+        $fp = null;
+        $last_error = '';
+        
+        foreach ($connection_methods as $method) {
+            $fp = @fsockopen($method[0], $method[1], $errno, $errstr, 10);
+            if ($fp) {
+                break;
+            }
+            $last_error = "$errstr ($errno)";
+        }
+        
+        if (!$fp) {
+            // Логируем ошибку для отладки
+            error_log("Не удалось подключиться к $host:443 - $last_error");
+            return null;
+        }
+        
+        // Устанавливаем таймаут
+        stream_set_timeout($fp, 30);
+        
+        // Формируем HTTPS запрос
+        $request = "GET $path HTTP/1.1\r\n";
+        $request .= "Host: $host\r\n";
+        $request .= "User-Agent: DnD-Copilot/1.0\r\n";
+        $request .= "Accept: application/json\r\n";
+        $request .= "Connection: close\r\n";
+        $request .= "\r\n";
+        
+        // Отправляем запрос
+        fwrite($fp, $request);
+        
+        // Читаем ответ
+        $response = '';
+        $start_time = time();
+        
+        while (!feof($fp) && (time() - $start_time) < 30) {
+            $chunk = fgets($fp, 1024);
+            if ($chunk === false) {
+                break;
+            }
+            $response .= $chunk;
+        }
+        
+        fclose($fp);
+        
+        // Проверяем, получили ли мы ответ
+        if (empty($response)) {
+            error_log("Пустой ответ от $host$path");
+            return null;
+        }
+        
+        // Парсим HTTP ответ
+        $parts = explode("\r\n\r\n", $response, 2);
+        if (count($parts) < 2) {
+            error_log("Неверный формат HTTP ответа от $host$path");
+            return null;
+        }
+        
+        $headers = $parts[0];
+        $body = $parts[1];
+        
+        // Проверяем HTTP код
+        if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $headers, $matches)) {
+            $http_code = (int)$matches[1];
+            if ($http_code !== 200) {
+                error_log("HTTP ошибка $http_code от $host$path");
+                return null;
+            }
+        }
+        
+        // Декодируем JSON
+        if ($body) {
+            $decoded = json_decode($body, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return $decoded;
+            } else {
+                error_log("Ошибка JSON от $host$path: " . json_last_error_msg());
+                return null;
             }
         }
         
@@ -554,73 +760,75 @@ class PotionGenerator {
     }
 }
 
-// Обработка запроса
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        $generator = new PotionGenerator();
-        $result = $generator->generatePotions($_POST);
-        
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    } catch (Exception $e) {
-        echo json_encode([
-            'success' => false,
-            'error' => 'Критическая ошибка: ' . $e->getMessage()
-        ], JSON_UNESCAPED_UNICODE);
-    }
-} elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $action = $_GET['action'] ?? 'random';
-    
-    try {
-        $generator = new PotionGenerator();
-        
-        switch ($action) {
-            case 'rarities':
-                $result = ['Common', 'Uncommon', 'Rare', 'Very Rare', 'Legendary'];
-                break;
-                
-            case 'types':
-                $result = ['Восстановление', 'Усиление', 'Защита', 'Иллюзия', 'Трансмутация', 'Некромантия', 'Прорицание', 'Эвокация', 'Универсальное'];
-                break;
-                
-            case 'effects':
-                $result = ['Heal', 'Damage', 'Advantage', 'Disadvantage', 'Resistance', 'Immune', 'Invisible', 'Fly', 'Strength', 'Poison', 'See', 'Vision', 'Fire', 'Cold', 'Lightning', 'Acid', 'Thunder', 'Force', 'Necrotic', 'Radiant', 'Psychic'];
-                break;
-                
-            case 'stats':
-                $result = $generator->getStats();
-                break;
-                
-            case 'search':
-                $result = $generator->searchPotions($_GET);
-                break;
-                
-            case 'random':
-                $result = $generator->generatePotions($_GET);
-                break;
-                
-            default:
-                throw new Exception('Неизвестное действие');
-        }
-        
-        if (in_array($action, ['random', 'search', 'stats'])) {
+// Обработка запроса только если это прямой HTTP запрос
+if (!defined('TESTING_MODE') && isset($_SERVER['REQUEST_METHOD'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        try {
+            $generator = new PotionGenerator();
+            $result = $generator->generatePotions($_POST);
+            
             echo json_encode($result, JSON_UNESCAPED_UNICODE);
-        } else {
+        } catch (Exception $e) {
             echo json_encode([
-                'success' => true,
-                'data' => $result
+                'success' => false,
+                'error' => 'Критическая ошибка: ' . $e->getMessage()
             ], JSON_UNESCAPED_UNICODE);
         }
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $action = $_GET['action'] ?? 'random';
         
-    } catch (Exception $e) {
+        try {
+            $generator = new PotionGenerator();
+            
+            switch ($action) {
+                case 'rarities':
+                    $result = ['Common', 'Uncommon', 'Rare', 'Very Rare', 'Legendary'];
+                    break;
+                    
+                case 'types':
+                    $result = ['Восстановление', 'Усиление', 'Защита', 'Иллюзия', 'Трансмутация', 'Некромантия', 'Прорицание', 'Эвокация', 'Универсальное'];
+                    break;
+                    
+                case 'effects':
+                    $result = ['Heal', 'Damage', 'Advantage', 'Disadvantage', 'Resistance', 'Immune', 'Invisible', 'Fly', 'Strength', 'Poison', 'See', 'Vision', 'Fire', 'Cold', 'Lightning', 'Acid', 'Thunder', 'Force', 'Necrotic', 'Radiant', 'Psychic'];
+                    break;
+                    
+                case 'stats':
+                    $result = $generator->getStats();
+                    break;
+                    
+                case 'search':
+                    $result = $generator->searchPotions($_GET);
+                    break;
+                    
+                case 'random':
+                    $result = $generator->generatePotions($_GET);
+                    break;
+                    
+                default:
+                    throw new Exception('Неизвестное действие');
+            }
+            
+            if (in_array($action, ['random', 'search', 'stats'])) {
+                echo json_encode($result, JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode([
+                    'success' => true,
+                    'data' => $result
+                ], JSON_UNESCAPED_UNICODE);
+            }
+            
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], JSON_UNESCAPED_UNICODE);
+        }
+    } else {
         echo json_encode([
             'success' => false,
-            'error' => $e->getMessage()
-        ], JSON_UNESCAPED_UNICODE);
+            'error' => 'Метод не поддерживается'
+        ]);
     }
-} else {
-    echo json_encode([
-        'success' => false,
-        'error' => 'Метод не поддерживается'
-    ]);
 }
 ?>
