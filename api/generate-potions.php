@@ -333,7 +333,13 @@ class PotionGenerator {
         
         try {
             $url = 'https://www.dnd5eapi.co/api/magic-items';
-            $response = $this->makeHttpsRequest($url);
+            
+            // Разбиваем URL на host и path для makeHttpsRequest
+            $parsed_url = parse_url($url);
+            $host = $parsed_url['host'];
+            $path = $parsed_url['path'] . (isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '');
+            
+            $response = $this->makeHttpsRequest($host, $path);
             
             if ($response) {
                 $data = json_decode($response, true);
