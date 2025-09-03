@@ -122,21 +122,44 @@ class PotionGenerator {
      * Получение всех зелий из кеша или API
      */
     private function getAllPotions() {
-        // Проверяем кеш
-        if ($this->isCacheValid()) {
-            $cached_data = $this->loadFromCache();
-            if ($cached_data && isset($cached_data['potions'])) {
-                return $cached_data['potions'];
+        $log_message = "[" . date('Y-m-d H:i:s') . "] getAllPotions вызван\n";
+        file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+        
+        $potions = [];
+        
+        try {
+            // Получаем список всех магических предметов
+            $log_message = "[" . date('Y-m-d H:i:s') . "] Вызываем getMagicItemsList\n";
+            file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+            
+            $magic_items = $this->getMagicItemsList();
+            
+            $log_message = "[" . date('Y-m-d H:i:s') . "] Получено магических предметов: " . count($magic_items) . "\n";
+            file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+            
+            // Фильтруем только зелья
+            foreach ($magic_items as $item) {
+                $name = strtolower($item['name']);
+                if ($this->isPotion($name)) {
+                    $potions[] = $item;
+                }
             }
+            
+            $log_message = "[" . date('Y-m-d H:i:s') . "] Найдено зелий: " . count($potions) . "\n";
+            file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+            
+            if (!empty($potions)) {
+                return $potions;
+            }
+        } catch (Exception $e) {
+            $log_message = "[" . date('Y-m-d H:i:s') . "] Ошибка в getAllPotions: " . $e->getMessage() . "\n";
+            file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
         }
         
-        // Получаем данные из API
-        $potions = $this->fetchPotionsFromAPI();
+        $log_message = "[" . date('Y-m-d H:i:s') . "] getAllPotions возвращает пустой массив\n";
+        file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
         
-        // Сохраняем в кеш
-        $this->saveToCache($potions);
-        
-        return $potions;
+        return [];
     }
     
     /**
@@ -238,14 +261,67 @@ class PotionGenerator {
      * Получение списка магических предметов из D&D API
      */
     private function getMagicItemsList() {
-        $url = $this->dnd5e_api_url . '/magic-items';
-        $response = $this->makeRequest($url);
+        $log_message = "[" . date('Y-m-d H:i:s') . "] getMagicItemsList вызван\n";
+        file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
         
-        if ($response && isset($response['results'])) {
-            return $response['results'];
+        $cache_file = __DIR__ . '/../cache/magic_items.json';
+        
+        // Проверяем кеш
+        if (file_exists($cache_file)) {
+            $cache_time = filemtime($cache_file);
+            $current_time = time();
+            
+            // Кеш действителен 1 час
+            if (($current_time - $cache_time) < 3600) {
+                $log_message = "[" . date('Y-m-d H:i:s') . "] Загружаем из кеша\n";
+                file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+                
+                $cached_data = json_decode(file_get_contents($cache_file), true);
+                if ($cached_data && isset($cached_data['results'])) {
+                    $log_message = "[" . date('Y-m-d H:i:s') . "] Из кеша загружено: " . count($cached_data['results']) . " предметов\n";
+                    file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+                    return $cached_data['results'];
+                }
+            }
         }
         
-        throw new Exception('Не удалось получить список магических предметов из D&D API');
+        $log_message = "[" . date('Y-m-d H:i:s') . "] Загружаем из API\n";
+        file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+        
+        try {
+            $url = 'https://www.dnd5eapi.co/api/magic-items';
+            $response = $this->makeHttpsRequest($url);
+            
+            if ($response) {
+                $data = json_decode($response, true);
+                if ($data && isset($data['results'])) {
+                    $log_message = "[" . date('Y-m-d H:i:s') . "] Из API загружено: " . count($data['results']) . " предметов\n";
+                    file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+                    
+                    // Сохраняем в кеш
+                    if (!is_dir(dirname($cache_file))) {
+                        mkdir(dirname($cache_file), 0755, true);
+                    }
+                    file_put_contents($cache_file, json_encode($data));
+                    
+                    return $data['results'];
+                } else {
+                    $log_message = "[" . date('Y-m-d H:i:s') . "] Ошибка: неверный формат ответа API\n";
+                    file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+                }
+            } else {
+                $log_message = "[" . date('Y-m-d H:i:s') . "] Ошибка: пустой ответ от API\n";
+                file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+            }
+        } catch (Exception $e) {
+            $log_message = "[" . date('Y-m-d H:i:s') . "] Исключение в getMagicItemsList: " . $e->getMessage() . "\n";
+            file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+        }
+        
+        $log_message = "[" . date('Y-m-d H:i:s') . "] getMagicItemsList возвращает пустой массив\n";
+        file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+        
+        return [];
     }
     
     /**
