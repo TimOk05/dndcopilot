@@ -226,13 +226,17 @@ class CharacterGeneratorV4 {
                     $character['background'] = $this->cleanTextForJson($background);
                 }
             } else {
+                // AI всегда включен - это основной функционал
                 // Если AI отключен пользователем, возвращаем ошибку
-                return [
-                    'success' => false,
-                    'error' => 'AI отключен',
-                    'message' => 'Генерация персонажа невозможна без AI API',
-                    'details' => 'Включите AI генерацию для создания персонажей с описаниями и предысториями'
-                ];
+                // return [
+                //     'success' => false,
+                //     'error' => 'AI отключен',
+                //     'message' => 'Генерация персонажа невозможна без AI API',
+                //     'details' => 'Включите AI генерацию для создания персонажей с описаниями и предысториями'
+                // ];
+                
+                // Продолжаем генерацию без AI описаний
+                logMessage('INFO', 'AI генерация отключена, создаем персонажа без описаний');
             }
             
             logMessage('INFO', 'Character generated successfully with API data', [

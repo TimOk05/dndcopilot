@@ -34,12 +34,13 @@ class AiService {
      * Генерация описания персонажа
      */
     public function generateCharacterDescription($character, $use_ai = true) {
-        if (!$use_ai) {
-            return [
-                'error' => 'AI отключен пользователем',
-                'message' => 'Генерация описания персонажа отключена пользователем'
-            ];
-        }
+        // AI всегда включен - это основной функционал
+        // if (!$use_ai) {
+        //     return [
+        //         'error' => 'AI отключен пользователем',
+        //         'message' => 'Генерация описания персонажа отключена пользователем'
+        //     ];
+        // }
         
         // Проверяем доступность API ключей
         if (empty($this->api_keys['deepseek']) && empty($this->api_keys['openai']) && empty($this->api_keys['google'])) {
@@ -81,12 +82,13 @@ class AiService {
      * Генерация предыстории персонажа
      */
     public function generateCharacterBackground($character, $use_ai = true) {
-        if (!$use_ai) {
-            return [
-                'error' => 'AI отключен пользователем',
-                'message' => 'Генерация предыстории персонажа отключена пользователем'
-            ];
-        }
+        // AI всегда включен - это основной функционал
+        // if (!$use_ai) {
+        //     return [
+        //         'error' => 'AI отключен пользователем',
+        //         'message' => 'Генерация предыстории персонажа отключена пользователем'
+        //     ];
+        // }
         
         $cache_key = "bg_" . md5(json_encode($character));
         $cached = $this->getCachedData($cache_key);
@@ -102,11 +104,16 @@ class AiService {
             return $response;
         }
         
-        // НЕ возвращаем fallback - только ошибку
+        // Возвращаем детальную ошибку для диагностики
         return [
             'error' => 'AI API недоступен',
-            'message' => 'Не удалось получить предысторию персонажа от AI API. Проверьте подключение к интернету и настройки SSL.',
-            'details' => 'Система не может сгенерировать предысторию без работающего AI API'
+            'message' => 'Не удалось получить предысторию персонажа от AI API',
+            'details' => 'Проверьте: 1) Подключение к интернету, 2) API ключи, 3) SSL настройки',
+            'debug_info' => [
+                'available_apis' => array_keys(array_filter($this->api_keys)),
+                'preferred_api' => $this->preferred_api,
+                'curl_available' => function_exists('curl_init')
+            ]
         ];
     }
     
@@ -114,12 +121,13 @@ class AiService {
      * Генерация тактики для противника
      */
     public function generateEnemyTactics($enemy, $use_ai = true) {
-        if (!$use_ai) {
-            return [
-                'error' => 'AI отключен пользователем',
-                'message' => 'Генерация тактики противника отключена пользователем'
-            ];
-        }
+        // AI всегда включен - это основной функционал
+        // if (!$use_ai) {
+        //     return [
+        //         'error' => 'AI отключен пользователем',
+        //         'message' => 'Генерация тактики противника отключена пользователем'
+        //     ];
+        // }
         
         $cache_key = "tactics_" . md5(json_encode($enemy));
         $cached = $this->getCachedData($cache_key);
@@ -135,11 +143,16 @@ class AiService {
             return $response;
         }
         
-        // НЕ возвращаем fallback - только ошибку
+        // Возвращаем детальную ошибку для диагностики
         return [
             'error' => 'AI API недоступен',
-            'message' => 'Не удалось получить тактику противника от AI API. Проверьте подключение к интернету и настройки SSL.',
-            'details' => 'Система не может сгенерировать тактику без работающего AI API'
+            'message' => 'Не удалось получить тактику противника от AI API',
+            'details' => 'Проверьте: 1) Подключение к интернету, 2) API ключи, 3) SSL настройки',
+            'debug_info' => [
+                'available_apis' => array_keys(array_filter($this->api_keys)),
+                'preferred_api' => $this->preferred_api,
+                'curl_available' => function_exists('curl_init')
+            ]
         ];
     }
     
