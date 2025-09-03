@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест API зелий</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🧪 Тест API зелий через браузер</h1>
+
+    <div class="test-section">
+        <h2>Тест 1: Простая генерация зелий</h2>
+        <button onclick="testSimpleGeneration()">Сгенерировать 1 зелье</button>
+        <div id="result1"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Тест 2: Генерация с параметрами</h2>
+        <button onclick="testGenerationWithParams()">Сгенерировать 2 зелья</button>
+        <div id="result2"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Тест 3: Проверка ошибок</h2>
+        <button onclick="testErrorHandling()">Тест обработки ошибок</button>
+        <div id="result3"></div>
+    </div>
+
+    <script>
+        async function testSimpleGeneration() {
+            const resultDiv = document.getElementById('result1');
+            resultDiv.innerHTML = '<div class="result">Тестируем...</div>';
+
+            try {
+                const response = await fetch('api/generate-potions.php?action=random&count=1');
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            ✅ Успешно! Сгенерировано зелий: ${data.count}
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            ❌ Ошибка: ${data.error}
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        ❌ Ошибка сети: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function testGenerationWithParams() {
+            const resultDiv = document.getElementById('result2');
+            resultDiv.innerHTML = '<div class="result">Тестируем...</div>';
+
+            try {
+                const response = await fetch('api/generate-potions.php?action=random&count=2&rarity=Uncommon');
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            ✅ Успешно! Сгенерировано зелий: ${data.count}
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            ❌ Ошибка: ${data.error}
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        ❌ Ошибка сети: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function testErrorHandling() {
+            const resultDiv = document.getElementById('result3');
+            resultDiv.innerHTML = '<div class="result">Тестируем...</div>';
+
+            try {
+                // Тестируем неверный параметр
+                const response = await fetch('api/generate-potions.php?action=random&count=999');
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            ✅ Успешно (неожиданно для count=999)
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            ✅ Ошибка корректно обработана: ${data.error}
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        ❌ Ошибка сети: ${error.message}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+
+</html>
