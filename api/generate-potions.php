@@ -36,14 +36,16 @@ class PotionGenerator {
      * Генерация зелий через D&D API с фильтрацией по характеристикам
      */
     public function generatePotions($params) {
-        error_log("generatePotions вызван с параметрами: " . json_encode($params));
+        $log_message = "[" . date('Y-m-d H:i:s') . "] generatePotions вызван с параметрами: " . json_encode($params) . "\n";
+        file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
         
         $count = (int)($params['count'] ?? 1);
         $rarity = $params['rarity'] ?? '';
         $type = $params['type'] ?? '';
         $effect = $params['effect'] ?? '';
         
-        error_log("Параметры после обработки: count=$count, rarity=$rarity, type=$type, effect=$effect");
+        $log_message = "[" . date('Y-m-d H:i:s') . "] Параметры после обработки: count=$count, rarity=$rarity, type=$type, effect=$effect\n";
+        file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
         
         // Валидация параметров
         if ($count < 1 || $count > 10) {
@@ -53,11 +55,13 @@ class PotionGenerator {
         try {
             // Получаем все зелья из кеша или API
             $all_potions = $this->getAllPotions();
-            error_log("Получено зелий из getAllPotions: " . count($all_potions));
+            $log_message = "[" . date('Y-m-d H:i:s') . "] Получено зелий из getAllPotions: " . count($all_potions) . "\n";
+            file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
             
             // Фильтруем зелья по параметрам
             $filtered_potions = $this->filterPotionsByCriteria($all_potions, $rarity, $type, $effect);
-            error_log("После фильтрации осталось зелий: " . count($filtered_potions));
+            $log_message = "[" . date('Y-m-d H:i:s') . "] После фильтрации осталось зелий: " . count($filtered_potions) . "\n";
+            file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
             
             if (empty($filtered_potions)) {
                 throw new Exception('Не найдены зелья с указанными характеристиками');
@@ -65,22 +69,28 @@ class PotionGenerator {
             
             // Выбираем случайные зелья
             $selected_potions = $this->selectRandomPotions($filtered_potions, $count);
-            error_log("Выбрано случайных зелий: " . count($selected_potions));
+            $log_message = "[" . date('Y-m-d H:i:s') . "] Выбрано случайных зелий: " . count($selected_potions) . "\n";
+            file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
             
             // Получаем детальную информацию о каждом зелье
             $detailed_potions = [];
             foreach ($selected_potions as $potion) {
-                error_log("Получаем детали для зелья: " . $potion['name']);
+                $log_message = "[" . date('Y-m-d H:i:s') . "] Получаем детали для зелья: " . $potion['name'] . "\n";
+                file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+                
                 $detailed_potion = $this->getPotionDetails($potion);
                 if ($detailed_potion) {
                     $detailed_potions[] = $detailed_potion;
-                    error_log("Детали получены успешно для: " . $potion['name']);
+                    $log_message = "[" . date('Y-m-d H:i:s') . "] Детали получены успешно для: " . $potion['name'] . "\n";
+                    file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
                 } else {
-                    error_log("Не удалось получить детали для: " . $potion['name']);
+                    $log_message = "[" . date('Y-m-d H:i:s') . "] Не удалось получить детали для: " . $potion['name'] . "\n";
+                    file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
                 }
             }
             
-            error_log("Итого получено детальных зелий: " . count($detailed_potions));
+            $log_message = "[" . date('Y-m-d H:i:s') . "] Итого получено детальных зелий: " . count($detailed_potions) . "\n";
+            file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
             
             if (empty($detailed_potions)) {
                 throw new Exception('Не удалось получить детальную информацию о зельях');
@@ -98,7 +108,9 @@ class PotionGenerator {
             ];
             
         } catch (Exception $e) {
-            error_log("Ошибка в generatePotions: " . $e->getMessage());
+            $log_message = "[" . date('Y-m-d H:i:s') . "] Ошибка в generatePotions: " . $e->getMessage() . "\n";
+            file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+            
             return [
                 'success' => false,
                 'error' => $e->getMessage()
@@ -803,7 +815,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_GET['action'] ?? 'random';
         
         // Логируем параметры для отладки
-        error_log("GET запрос к generate-potions.php: action=$action, params=" . json_encode($_GET));
+        $log_message = "[" . date('Y-m-d H:i:s') . "] GET запрос к generate-potions.php: action=$action, params=" . json_encode($_GET) . "\n";
+        file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
     
     try {
         $generator = new PotionGenerator();
@@ -830,10 +843,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 break;
                 
             case 'random':
-                    error_log("Вызываем generatePotions с параметрами: " . json_encode($_GET));
-                $result = $generator->generatePotions($_GET);
-                    error_log("Результат generatePotions: " . json_encode($result));
-                break;
+                    $log_message = "[" . date('Y-m-d H:i:s') . "] Вызываем generatePotions с параметрами: " . json_encode($_GET) . "\n";
+                    file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+                    
+                    $result = $generator->generatePotions($_GET);
+                    
+                    $log_message = "[" . date('Y-m-d H:i:s') . "] Результат generatePotions: " . json_encode($result) . "\n";
+                    file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+                    break;
                 
             default:
                 throw new Exception('Неизвестное действие');
