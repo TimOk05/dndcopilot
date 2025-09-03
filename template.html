@@ -732,8 +732,8 @@
             width: 100%;
             text-align: center;
         }
-        
         /* Адаптивность для мобильных устройств */
+        
         @media (max-width: 768px) {
             .fast-bar .button-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -4666,6 +4666,159 @@
                 gap: 4px;
             }
         }
+        /* Убираем расширенные настройки из CSS */
+        
+        .advanced-settings {
+            display: none;
+        }
+        /* Стили для секции генерации персонажей */
+        
+        .character-generator-section {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px var(--shadow-secondary);
+        }
+        
+        .character-generator-section h2 {
+            color: var(--accent-primary);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-family: 'UnifrakturCook', cursive;
+        }
+        
+        .character-form {
+            margin-bottom: 20px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            color: var(--text-secondary);
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        
+        .form-group select,
+        .form-group input {
+            padding: 12px;
+            border: 2px solid var(--border-tertiary);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group select:focus,
+        .form-group input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(166, 124, 82, 0.1);
+            outline: none;
+        }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow-primary);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .character-result {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--accent-primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 16px var(--shadow-primary);
+        }
+        
+        .character-result h3 {
+            color: var(--accent-primary);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            font-family: 'UnifrakturCook', cursive;
+        }
+        
+        .character-content {
+            line-height: 1.6;
+        }
+        
+        .character-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-secondary);
+        }
+        
+        .section-title {
+            color: var(--accent-secondary);
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .section-content {
+            color: var(--text-primary);
+        }
+        
+        .character-description,
+        .character-background {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 3px solid var(--accent-primary);
+        }
+        
+        .character-description h4,
+        .character-background h4 {
+            color: var(--accent-primary);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .character-description p,
+        .character-background p {
+            margin: 0;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+        /* Улучшенный интерфейс чата */
     </style>
 </head>
 
@@ -4724,6 +4877,67 @@
                 <small>Горячие клавиши: F1 (кости) | F2 (персонажи) | F3 (инициатива) | F4 (противники) | Ctrl+Enter (отправить)</small>
             </div>
         </div>
+
+        <!-- Форма генерации персонажей -->
+        <div class="character-generator-section">
+            <h2>🎭 Генератор персонажей</h2>
+            <form class="character-form" id="characterForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="race">Раса:</label>
+                        <select name="race" id="race" required>
+                            <option value="human">Человек</option>
+                            <option value="elf">Эльф</option>
+                            <option value="dwarf">Дварф</option>
+                            <option value="halfling">Полурослик</option>
+                            <option value="orc">Орк</option>
+                            <option value="tiefling">Тифлинг</option>
+                            <option value="dragonborn">Драконорожденный</option>
+                            <option value="gnome">Гном</option>
+                            <option value="half-elf">Полуэльф</option>
+                            <option value="half-orc">Полуорк</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="class">Класс:</label>
+                        <select name="class" id="class" required>
+                            <option value="fighter">Воин</option>
+                            <option value="wizard">Волшебник</option>
+                            <option value="rogue">Плут</option>
+                            <option value="cleric">Жрец</option>
+                            <option value="ranger">Следопыт</option>
+                            <option value="barbarian">Варвар</option>
+                            <option value="bard">Бард</option>
+                            <option value="druid">Друид</option>
+                            <option value="monk">Монах</option>
+                            <option value="paladin">Паладин</option>
+                            <option value="sorcerer">Чародей</option>
+                            <option value="warlock">Колдун</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="level">Уровень:</label>
+                        <input type="number" name="level" id="level" min="1" max="20" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Пол:</label>
+                        <select name="gender" id="gender">
+                            <option value="male">Мужской</option>
+                            <option value="female">Женский</option>
+                            <option value="other">Другой</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="generate-btn">🎲 Сгенерировать персонажа</button>
+            </form>
+
+            <!-- Результат генерации персонажа -->
+            <div id="characterResult" class="character-result" style="display: none;">
+                <h3>🎭 Сгенерированный персонаж</h3>
+                <div id="characterContent"></div>
+            </div>
+        </div>
+
         <div class="chat-box">
             {{chat_messages}}
         </div>
@@ -5006,6 +5220,189 @@
                     console.error('Ошибка очистки чата:', error);
                     alert('Ошибка соединения с сервером');
                 });
+        }
+
+        // Обработка формы генерации персонажей
+        document.addEventListener('DOMContentLoaded', function() {
+            const characterForm = document.getElementById('characterForm');
+            if (characterForm) {
+                characterForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    generateCharacter();
+                });
+            }
+        });
+
+        // Функция генерации персонажа
+        function generateCharacter() {
+            const form = document.getElementById('characterForm');
+            const formData = new FormData(form);
+
+            // Показываем индикатор загрузки
+            const generateBtn = document.querySelector('.generate-btn');
+            const originalText = generateBtn.textContent;
+            generateBtn.textContent = '🎲 Генерирую...';
+            generateBtn.disabled = true;
+
+            // Отправляем запрос на генерацию персонажа
+            fetch('api/generate-characters-v4.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Восстанавливаем кнопку
+                    generateBtn.textContent = originalText;
+                    generateBtn.disabled = false;
+
+                    if (data.success) {
+                        displayCharacter(data.character);
+                    } else {
+                        showCharacterError(data.error || 'Ошибка генерации персонажа');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка генерации персонажа:', error);
+                    generateBtn.textContent = originalText;
+                    generateBtn.disabled = false;
+                    showCharacterError('Ошибка соединения с сервером');
+                });
+        }
+
+        // Функция отображения персонажа
+        function displayCharacter(character) {
+            const resultDiv = document.getElementById('characterResult');
+            const contentDiv = document.getElementById('characterContent');
+
+            let html = `
+                <div class="character-section">
+                    <div class="section-title">🎭 Основная информация</div>
+                    <div class="section-content">
+                        <p><strong>Имя:</strong> ${character.name}</p>
+                        <p><strong>Раса:</strong> ${character.race}</p>
+                        <p><strong>Класс:</strong> ${character.class}</p>
+                        <p><strong>Уровень:</strong> ${character.level}</p>
+                        <p><strong>Пол:</strong> ${character.gender}</p>
+                        <p><strong>Мировоззрение:</strong> ${character.alignment}</p>
+                        <p><strong>Профессия:</strong> ${character.occupation}</p>
+                    </div>
+                </div>
+                
+                <div class="character-section">
+                    <div class="section-title">⚔️ Характеристики</div>
+                    <div class="section-content">
+                        <div class="info-grid">
+                            <div class="info-item"><strong>Сила:</strong> ${character.abilities.str}</div>
+                            <div class="info-item"><strong>Ловкость:</strong> ${character.abilities.dex}</div>
+                            <div class="info-item"><strong>Телосложение:</strong> ${character.abilities.con}</div>
+                            <div class="info-item"><strong>Интеллект:</strong> ${character.abilities.int}</div>
+                            <div class="info-item"><strong>Мудрость:</strong> ${character.abilities.wis}</div>
+                            <div class="info-item"><strong>Харизма:</strong> ${character.abilities.cha}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="character-section">
+                    <div class="section-title">🛡️ Боевые характеристики</div>
+                    <div class="section-content">
+                        <p><strong>Хиты:</strong> ${character.hit_points}</p>
+                        <p><strong>Класс брони:</strong> ${character.armor_class}</p>
+                        <p><strong>Скорость:</strong> ${character.speed} футов</p>
+                        <p><strong>Инициатива:</strong> ${character.initiative}</p>
+                        <p><strong>Бонус мастерства:</strong> +${character.proficiency_bonus}</p>
+                        <p><strong>Бонус атаки:</strong> +${character.attack_bonus}</p>
+                        <p><strong>Урон:</strong> ${character.damage}</p>
+                        <p><strong>Основное оружие:</strong> ${character.main_weapon}</p>
+                    </div>
+                </div>
+            `;
+
+            // Добавляем описание персонажа, если есть
+            if (character.description) {
+                html += `
+                    <div class="character-description">
+                        <h4>📝 Описание персонажа</h4>
+                        <p>${character.description}</p>
+                    </div>
+                `;
+            }
+
+            // Добавляем предысторию персонажа, если есть
+            if (character.background) {
+                html += `
+                    <div class="character-background">
+                        <h4>📖 Предыстория персонажа</h4>
+                        <p>${character.background}</p>
+                    </div>
+                `;
+            }
+
+            // Добавляем остальные характеристики
+            if (character.proficiencies && character.proficiencies.length > 0) {
+                html += `
+                    <div class="character-section">
+                        <div class="section-title">🎯 Владения</div>
+                        <div class="section-content">
+                            <div class="proficiencies-list">
+                                ${character.proficiencies.map(prof => `<span class="proficiency-tag">${prof}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (character.spells && character.spells.length > 0) {
+                html += `
+                    <div class="character-section">
+                        <div class="section-title">✨ Заклинания</div>
+                        <div class="section-content">
+                            <ul class="spell-list">
+                                ${character.spells.map(spell => `<li>${spell}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (character.equipment && character.equipment.length > 0) {
+                html += `
+                    <div class="character-section">
+                        <div class="section-title">🎒 Снаряжение</div>
+                        <div class="section-content">
+                            <ul class="equipment-list">
+                                ${character.equipment.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            contentDiv.innerHTML = html;
+            resultDiv.style.display = 'block';
+            
+            // Плавно прокручиваем к результату
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Функция показа ошибки генерации персонажа
+        function showCharacterError(error) {
+            const resultDiv = document.getElementById('characterResult');
+            const contentDiv = document.getElementById('characterContent');
+            
+            contentDiv.innerHTML = `
+                <div class="character-section" style="border-left-color: var(--accent-danger);">
+                    <div class="section-title" style="color: var(--accent-danger);">❌ Ошибка генерации</div>
+                    <div class="section-content">
+                        <p style="color: var(--accent-danger);">${error}</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: var(--text-secondary);">
+                            Проверьте подключение к интернету и попробуйте снова.
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
