@@ -92,10 +92,12 @@ function handleError($errno, $errstr, $errfile, $errline) {
 // Устанавливаем обработчик ошибок
 set_error_handler('handleError');
 
-// Настройки сессии
-ini_set('session.cookie_httponly', 1);
-ini_set('session.use_only_cookies', 1);
-ini_set('session.cookie_secure', isset($_SERVER['HTTPS']));
+// Настройки сессии только если не в режиме тестирования
+if (!defined('TESTING_MODE')) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.cookie_secure', isset($_SERVER['HTTPS']));
+}
 
 // Функция для проверки авторизации
 function isAuthenticated() {

@@ -7,10 +7,10 @@
 
 // Заголовки только если это прямой HTTP запрос
 if (!defined('TESTING_MODE')) {
-    header('Content-Type: application/json; charset=utf-8');
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type');
+header('Content-Type: application/json; charset=utf-8');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
 }
 
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -36,10 +36,14 @@ class PotionGenerator {
      * Генерация зелий через D&D API с фильтрацией по характеристикам
      */
     public function generatePotions($params) {
+        error_log("generatePotions вызван с параметрами: " . json_encode($params));
+        
         $count = (int)($params['count'] ?? 1);
         $rarity = $params['rarity'] ?? '';
         $type = $params['type'] ?? '';
         $effect = $params['effect'] ?? '';
+        
+        error_log("Параметры после обработки: count=$count, rarity=$rarity, type=$type, effect=$effect");
         
         // Валидация параметров
         if ($count < 1 || $count > 10) {
@@ -49,9 +53,11 @@ class PotionGenerator {
         try {
             // Получаем все зелья из кеша или API
             $all_potions = $this->getAllPotions();
+            error_log("Получено зелий из getAllPotions: " . count($all_potions));
             
             // Фильтруем зелья по параметрам
             $filtered_potions = $this->filterPotionsByCriteria($all_potions, $rarity, $type, $effect);
+            error_log("После фильтрации осталось зелий: " . count($filtered_potions));
             
             if (empty($filtered_potions)) {
                 throw new Exception('Не найдены зелья с указанными характеристиками');
@@ -59,15 +65,22 @@ class PotionGenerator {
             
             // Выбираем случайные зелья
             $selected_potions = $this->selectRandomPotions($filtered_potions, $count);
+            error_log("Выбрано случайных зелий: " . count($selected_potions));
             
             // Получаем детальную информацию о каждом зелье
             $detailed_potions = [];
             foreach ($selected_potions as $potion) {
+                error_log("Получаем детали для зелья: " . $potion['name']);
                 $detailed_potion = $this->getPotionDetails($potion);
                 if ($detailed_potion) {
                     $detailed_potions[] = $detailed_potion;
+                    error_log("Детали получены успешно для: " . $potion['name']);
+                } else {
+                    error_log("Не удалось получить детали для: " . $potion['name']);
                 }
             }
+            
+            error_log("Итого получено детальных зелий: " . count($detailed_potions));
             
             if (empty($detailed_potions)) {
                 throw new Exception('Не удалось получить детальную информацию о зельях');
@@ -85,6 +98,7 @@ class PotionGenerator {
             ];
             
         } catch (Exception $e) {
+            error_log("Ошибка в generatePotions: " . $e->getMessage());
             return [
                 'success' => false,
                 'error' => $e->getMessage()
@@ -120,19 +134,19 @@ class PotionGenerator {
         $potions = [];
         
         try {
-            // Получаем список всех магических предметов
-            $magic_items = $this->getMagicItemsList();
-            
-            // Фильтруем только зелья
-            foreach ($magic_items as $item) {
-                $name = strtolower($item['name']);
-                if ($this->isPotion($name)) {
-                    $potions[] = $item;
-                }
+        // Получаем список всех магических предметов
+        $magic_items = $this->getMagicItemsList();
+        
+        // Фильтруем только зелья
+        foreach ($magic_items as $item) {
+            $name = strtolower($item['name']);
+            if ($this->isPotion($name)) {
+                $potions[] = $item;
             }
-            
+        }
+        
             if (!empty($potions)) {
-                return $potions;
+        return $potions;
             }
         } catch (Exception $e) {
             error_log("Ошибка получения зелий из API: " . $e->getMessage());
@@ -773,73 +787,78 @@ class PotionGenerator {
 
 // Обработка запроса только если это прямой HTTP запрос
 if (!defined('TESTING_MODE') && isset($_SERVER['REQUEST_METHOD'])) {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        try {
-            $generator = new PotionGenerator();
-            $result = $generator->generatePotions($_POST);
-            
-            echo json_encode($result, JSON_UNESCAPED_UNICODE);
-        } catch (Exception $e) {
-            echo json_encode([
-                'success' => false,
-                'error' => 'Критическая ошибка: ' . $e->getMessage()
-            ], JSON_UNESCAPED_UNICODE);
-        }
-    } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $action = $_GET['action'] ?? 'random';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        $generator = new PotionGenerator();
+        $result = $generator->generatePotions($_POST);
         
-        try {
-            $generator = new PotionGenerator();
-            
-            switch ($action) {
-                case 'rarities':
-                    $result = ['Common', 'Uncommon', 'Rare', 'Very Rare', 'Legendary'];
-                    break;
-                    
-                case 'types':
-                    $result = ['Восстановление', 'Усиление', 'Защита', 'Иллюзия', 'Трансмутация', 'Некромантия', 'Прорицание', 'Эвокация', 'Универсальное'];
-                    break;
-                    
-                case 'effects':
-                    $result = ['Heal', 'Damage', 'Advantage', 'Disadvantage', 'Resistance', 'Immune', 'Invisible', 'Fly', 'Strength', 'Poison', 'See', 'Vision', 'Fire', 'Cold', 'Lightning', 'Acid', 'Thunder', 'Force', 'Necrotic', 'Radiant', 'Psychic'];
-                    break;
-                    
-                case 'stats':
-                    $result = $generator->getStats();
-                    break;
-                    
-                case 'search':
-                    $result = $generator->searchPotions($_GET);
-                    break;
-                    
-                case 'random':
-                    $result = $generator->generatePotions($_GET);
-                    break;
-                    
-                default:
-                    throw new Exception('Неизвестное действие');
-            }
-            
-            if (in_array($action, ['random', 'search', 'stats'])) {
-                echo json_encode($result, JSON_UNESCAPED_UNICODE);
-            } else {
-                echo json_encode([
-                    'success' => true,
-                    'data' => $result
-                ], JSON_UNESCAPED_UNICODE);
-            }
-            
-        } catch (Exception $e) {
-            echo json_encode([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], JSON_UNESCAPED_UNICODE);
-        }
-    } else {
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    } catch (Exception $e) {
         echo json_encode([
             'success' => false,
-            'error' => 'Метод не поддерживается'
-        ]);
+            'error' => 'Критическая ошибка: ' . $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $action = $_GET['action'] ?? 'random';
+        
+        // Логируем параметры для отладки
+        error_log("GET запрос к generate-potions.php: action=$action, params=" . json_encode($_GET));
+    
+    try {
+        $generator = new PotionGenerator();
+        
+        switch ($action) {
+            case 'rarities':
+                $result = ['Common', 'Uncommon', 'Rare', 'Very Rare', 'Legendary'];
+                break;
+                
+            case 'types':
+                $result = ['Восстановление', 'Усиление', 'Защита', 'Иллюзия', 'Трансмутация', 'Некромантия', 'Прорицание', 'Эвокация', 'Универсальное'];
+                break;
+                
+            case 'effects':
+                $result = ['Heal', 'Damage', 'Advantage', 'Disadvantage', 'Resistance', 'Immune', 'Invisible', 'Fly', 'Strength', 'Poison', 'See', 'Vision', 'Fire', 'Cold', 'Lightning', 'Acid', 'Thunder', 'Force', 'Necrotic', 'Radiant', 'Psychic'];
+                break;
+                
+            case 'stats':
+                $result = $generator->getStats();
+                break;
+                
+            case 'search':
+                $result = $generator->searchPotions($_GET);
+                break;
+                
+            case 'random':
+                    error_log("Вызываем generatePotions с параметрами: " . json_encode($_GET));
+                $result = $generator->generatePotions($_GET);
+                    error_log("Результат generatePotions: " . json_encode($result));
+                break;
+                
+            default:
+                throw new Exception('Неизвестное действие');
+        }
+        
+        if (in_array($action, ['random', 'search', 'stats'])) {
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode([
+                'success' => true,
+                'data' => $result
+            ], JSON_UNESCAPED_UNICODE);
+        }
+        
+    } catch (Exception $e) {
+        echo json_encode([
+            'success' => false,
+            'error' => $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
+    }
+} else {
+    echo json_encode([
+        'success' => false,
+        'error' => 'Метод не поддерживается'
+    ]);
     }
 }
 ?>
