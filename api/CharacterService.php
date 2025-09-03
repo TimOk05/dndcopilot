@@ -145,6 +145,12 @@ class CharacterService {
      * Получение данных расы
      */
     private function getRaceData($race) {
+        // Проверяем доступность cURL
+        if (!function_exists('curl_init')) {
+            logMessage('cURL не доступен', 'ERROR', ['race' => $race]);
+            return null;
+        }
+        
         try {
             $url = $this->dndApiUrl . "/races/$race";
             $response = $this->makeApiRequest($url);
@@ -153,20 +159,24 @@ class CharacterService {
                 return $response;
             }
         } catch (Exception $e) {
-            logMessage('Failed to fetch race data from API', 'WARNING', ['race' => $race, 'error' => $e->getMessage()]);
+            logMessage('Failed to fetch race data from API', 'ERROR', ['race' => $race, 'error' => $e->getMessage()]);
         }
         
-        // API недоступен - возвращаем ошибку
-        return [
-            'error' => 'API недоступен',
-            'message' => "Не удалось получить данные расы '{$race}' из внешних API"
-        ];
+        // API недоступен
+        logMessage('Не удалось получить данные расы', 'ERROR', ['race' => $race]);
+        return null;
     }
     
     /**
      * Получение данных класса
      */
     private function getClassData($class) {
+        // Проверяем доступность cURL
+        if (!function_exists('curl_init')) {
+            logMessage('cURL не доступен', 'ERROR', ['class' => $class]);
+            return null;
+        }
+        
         try {
             $url = $this->dndApiUrl . "/classes/$class";
             $response = $this->makeApiRequest($url);
@@ -175,14 +185,12 @@ class CharacterService {
                 return $response;
             }
         } catch (Exception $e) {
-            logMessage('Failed to fetch class data from API', 'WARNING', ['class' => $class, 'error' => $e->getMessage()]);
+            logMessage('Failed to fetch class data from API', 'ERROR', ['class' => $class, 'error' => $e->getMessage()]);
         }
         
-        // API недоступен - возвращаем ошибку
-        return [
-            'error' => 'API недоступен',
-            'message' => "Не удалось получить данные класса '{$class}' из внешних API"
-        ];
+        // API недоступен
+        logMessage('Не удалось получить данные класса', 'ERROR', ['class' => $class]);
+        return null;
     }
     
     /**
@@ -216,14 +224,8 @@ class CharacterService {
             }
         }
         
-        // Fallback имена
-        $fallbackNames = [
-            'male' => ['Алексей', 'Дмитрий', 'Иван', 'Михаил', 'Сергей', 'Андрей', 'Владимир', 'Николай', 'Петр', 'Александр'],
-            'female' => ['Анна', 'Мария', 'Елена', 'Ольга', 'Татьяна', 'Наталья', 'Ирина', 'Светлана', 'Екатерина', 'Юлия']
-        ];
-        
-        $gender = $gender === 'random' ? (rand(0, 1) ? 'male' : 'female') : $gender;
-        return $fallbackNames[$gender][array_rand($fallbackNames[$gender])];
+        // Имена недоступны
+        return "Неизвестный";
     }
     
     /**
@@ -351,9 +353,8 @@ class CharacterService {
             }
         }
         
-        // Fallback профессии
-        $fallbackOccupations = ['Воин', 'Торговец', 'Ремесленник', 'Фермер', 'Охотник', 'Рыбак', 'Шахтер', 'Кузнец'];
-        return $fallbackOccupations[array_rand($fallbackOccupations)];
+        // Профессии недоступны
+        return "Авантюрист";
     }
     
     /**
@@ -459,41 +460,69 @@ class CharacterService {
     }
     
     /**
-     * Генерация описания через AI
+     * Генерация описания персонажа
      */
     private function generateDescription($character) {
+        // Проверяем доступность OpenSSL для HTTPS запросов
+        if (!OPENSSL_AVAILABLE) {
+            logMessage('ERROR', 'OpenSSL не доступен для AI API');
+            return "AI API недоступен: OpenSSL не поддерживается";
+        }
+        
+        // Проверяем API ключ
         if (!$this->deepseekApiKey) {
-            return "Описание персонажа недоступно";
+            logMessage('ERROR', 'API ключ DeepSeek не найден');
+            return "AI API недоступен: API ключ не найден";
         }
         
         $prompt = $this->buildDescriptionPrompt($character);
         
         try {
             $response = $this->callDeepSeek($prompt);
-            return $response ?: "Описание персонажа недоступно";
+            if ($response) {
+                logMessage('INFO', 'AI описание успешно сгенерировано');
+                return $response;
+            }
         } catch (Exception $e) {
-            logMessage('AI description generation failed', 'WARNING', ['error' => $e->getMessage()]);
-            return "Описание персонажа недоступно";
+            logMessage('ERROR', 'AI генерация описания не удалась: ' . $e->getMessage());
         }
+        
+        // Если AI не сработал
+        logMessage('ERROR', 'AI генерация описания не удалась');
+        return "AI API недоступен: не удалось сгенерировать описание";
     }
     
     /**
-     * Генерация предыстории через AI
+     * Генерация предыстории персонажа
      */
     private function generateBackground($character) {
+        // Проверяем доступность OpenSSL для HTTPS запросов
+        if (!OPENSSL_AVAILABLE) {
+            logMessage('ERROR', 'OpenSSL не доступен для AI API');
+            return "AI API недоступен: OpenSSL не поддерживается";
+        }
+        
+        // Проверяем API ключ
         if (!$this->deepseekApiKey) {
-            return "Предыстория персонажа недоступна";
+            logMessage('ERROR', 'API ключ DeepSeek не найден');
+            return "AI API недоступен: API ключ не найден";
         }
         
         $prompt = $this->buildBackgroundPrompt($character);
         
         try {
             $response = $this->callDeepSeek($prompt);
-            return $response ?: "Предыстория персонажа недоступна";
+            if ($response) {
+                logMessage('INFO', 'AI предыстория успешно сгенерирована');
+                return $response;
+            }
         } catch (Exception $e) {
-            logMessage('AI background generation failed', 'WARNING', ['error' => $e->getMessage()]);
-            return "Предыстория персонажа недоступна";
+            logMessage('ERROR', 'AI генерация предыстории не удалась: ' . $e->getMessage());
         }
+        
+        // Если AI не сработал
+        logMessage('ERROR', 'AI генерация предыстории не удалась');
+        return "AI API недоступен: не удалось сгенерировать предысторию";
     }
     
     /**
@@ -565,6 +594,12 @@ class CharacterService {
      * Выполнение API запроса
      */
     private function makeApiRequest($url) {
+        // Проверяем доступность cURL
+        if (!function_exists('curl_init')) {
+            logMessage('cURL не доступен для API запроса', 'WARNING', ['url' => $url]);
+            return null;
+        }
+        
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, API_TIMEOUT);
@@ -580,7 +615,6 @@ class CharacterService {
         
         return null;
     }
-    
 
 }
 ?>

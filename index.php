@@ -2269,53 +2269,27 @@ function formatNpcBlocks(txt, forcedName = '') {
         </div>`;
     }
     
-    // Генерируем случайные fallback значения
-    const fallbackDescriptions = [
-        'Бывалый авантюрист с богатым опытом путешествий и приключений.',
-        'Местный житель, знающий все тайны и слухи этого региона.',
-        'Загадочный незнакомец, чье прошлое окутано тайной.',
-        'Опытный мастер своего дела, пользующийся уважением среди местных.',
-        'Молодой искатель приключений, жаждущий славы и богатства.'
-    ];
-    
-    const fallbackTraits = [
-        'Любознательный и наблюдательный, всегда интересуется новостями.',
-        'Осторожный и расчетливый, не доверяет незнакомцам.',
-        'Дружелюбный и общительный, легко находит общий язык с людьми.',
-        'Гордый и независимый, ценит свою свободу превыше всего.',
-        'Мудрый и терпеливый, предпочитает действовать обдуманно.'
-    ];
-    
-    const fallbackAppearances = [
-        'Среднего роста с крепким телосложением и уверенной походкой.',
-        'Высокий и стройный, с острыми чертами лица и внимательным взглядом.',
-        'Коренастый и сильный, с широкими плечами и грубыми руками.',
-        'Элегантный и ухоженный, с аккуратной одеждой и хорошими манерами.',
-        'Простой и неприметный, легко растворяется в толпе.'
-    ];
+
     
     // Описание
     if (desc && desc.length > 10) {
         out += `<div class='npc-col-block'><span style='font-size:1.2em;'>📜</span> <b>Описание</b><div class='npc-content'>${firstSentence(desc)}</div></div>`;
     } else if (!desc || desc.length <= 10) {
-        let randomDesc = fallbackDescriptions[Math.floor(Math.random() * fallbackDescriptions.length)];
-        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>📜</span> <b>Описание</b><div class='npc-content'>${randomDesc}</div></div>`;
+        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>📜</span> <b>Описание</b><div class='npc-content'>Описание недоступно</div></div>`;
     }
     
     // Черты характера
     if (trait && trait.length > 5) {
         out += `<div class='npc-col-block'><span style='font-size:1.2em;'>🧠</span> <b>Черты характера</b><div class='npc-content'>${firstSentence(trait)}</div></div>`;
     } else if (!trait || trait.length <= 5) {
-        let randomTrait = fallbackTraits[Math.floor(Math.random() * fallbackTraits.length)];
-        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>🧠</span> <b>Черты характера</b><div class='npc-content'>${randomTrait}</div></div>`;
+        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>🧠</span> <b>Черты характера</b><div class='npc-content'>Черты характера недоступны</div></div>`;
     }
     
     // Внешность
     if (appear && appear.length > 10) {
         out += `<div class='npc-col-block'><span style='font-size:1.2em;'>&#128100;</span> <b>Внешность</b><div class='npc-content'>${firstSentence(appear)}</div></div>`;
     } else if (!appear || appear.length <= 10) {
-        let randomAppear = fallbackAppearances[Math.floor(Math.random() * fallbackAppearances.length)];
-        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>&#128100;</span> <b>Внешность</b><div class='npc-content'>${randomAppear}</div></div>`;
+        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>&#128100;</span> <b>Внешность</b><div class='npc-content'>Внешность недоступна</div></div>`;
     }
     out += `</div>`;
     setTimeout(() => {

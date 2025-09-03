@@ -327,17 +327,8 @@ class CharacterGeneratorV2 {
             }
         }
         
-        // Fallback имена
-        $fallbackNames = [
-            'male' => ['Алексей', 'Дмитрий', 'Иван', 'Михаил', 'Сергей', 'Андрей', 'Владимир', 'Николай', 'Петр', 'Александр'],
-            'female' => ['Анна', 'Елена', 'Мария', 'Ольга', 'Татьяна', 'Ирина', 'Наталья', 'Светлана', 'Екатерина', 'Юлия']
-        ];
-        
-        if ($gender === 'random') {
-            $gender = rand(0, 1) ? 'male' : 'female';
-        }
-        
-        return $fallbackNames[$gender][array_rand($fallbackNames[$gender])];
+        // Имена недоступны
+        return "Неизвестный";
     }
     
     /**

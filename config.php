@@ -194,6 +194,18 @@ function setCORSHeaders() {
     }
 }
 
+// Настройки AI API
+define('DEEPSEEK_API_URL', 'https://api.deepseek.com/v1/chat/completions');
+define('OPENAI_API_URL', 'https://api.openai.com/v1/chat/completions');
+define('GOOGLE_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent');
+define('API_TIMEOUT', 15);
+
+// Настройки D&D API
+define('DND_API_URL', 'https://www.dnd5eapi.co/api');
+
+// Проверка поддержки OpenSSL
+define('OPENSSL_AVAILABLE', extension_loaded('openssl'));
+
 // Инициализация приложения
 function initApp() {
     // Устанавливаем кодировку (проверяем доступность mbstring)

@@ -29,8 +29,8 @@ class AiService {
     public function generateCharacterDescription($character, $use_ai = true) {
         if (!$use_ai) {
             return [
-                'error' => 'AI отключен',
-                'message' => 'Генерация описания персонажа отключена'
+                'error' => 'AI отключен пользователем',
+                'message' => 'Генерация описания персонажа отключена пользователем'
             ];
         }
         
@@ -48,9 +48,11 @@ class AiService {
             return $response;
         }
         
+        // НЕ возвращаем fallback - только ошибку
         return [
             'error' => 'AI API недоступен',
-            'message' => 'Не удалось получить описание персонажа от AI API'
+            'message' => 'Не удалось получить описание персонажа от AI API. Проверьте подключение к интернету и настройки SSL.',
+            'details' => 'Система не может сгенерировать описание без работающего AI API'
         ];
     }
     
@@ -60,8 +62,8 @@ class AiService {
     public function generateCharacterBackground($character, $use_ai = true) {
         if (!$use_ai) {
             return [
-                'error' => 'AI отключен',
-                'message' => 'Генерация предыстории персонажа отключена'
+                'error' => 'AI отключен пользователем',
+                'message' => 'Генерация предыстории персонажа отключена пользователем'
             ];
         }
         
@@ -79,9 +81,11 @@ class AiService {
             return $response;
         }
         
+        // НЕ возвращаем fallback - только ошибку
         return [
             'error' => 'AI API недоступен',
-            'message' => 'Не удалось получить предысторию персонажа от AI API'
+            'message' => 'Не удалось получить предысторию персонажа от AI API. Проверьте подключение к интернету и настройки SSL.',
+            'details' => 'Система не может сгенерировать предысторию без работающего AI API'
         ];
     }
     
@@ -91,8 +95,8 @@ class AiService {
     public function generateEnemyTactics($enemy, $use_ai = true) {
         if (!$use_ai) {
             return [
-                'error' => 'AI отключен',
-                'message' => 'Генерация тактики противника отключена'
+                'error' => 'AI отключен пользователем',
+                'message' => 'Генерация тактики противника отключена пользователем'
             ];
         }
         
@@ -110,9 +114,11 @@ class AiService {
             return $response;
         }
         
+        // НЕ возвращаем fallback - только ошибку
         return [
             'error' => 'AI API недоступен',
-            'message' => 'Не удалось получить тактику противника от AI API'
+            'message' => 'Не удалось получить тактику противника от AI API. Проверьте подключение к интернету и настройки SSL.',
+            'details' => 'Система не может сгенерировать тактику без работающего AI API'
         ];
     }
     
@@ -371,6 +377,7 @@ class AiService {
      */
     private function makeApiRequest($url, $data, $api_key = null) {
         if (!function_exists('curl_init')) {
+            logMessage('WARNING', 'cURL не доступен, AI API не может работать');
             return null;
         }
         
@@ -381,6 +388,16 @@ class AiService {
         curl_setopt($ch, CURLOPT_TIMEOUT, 15);
         curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/2.0');
         
+        // Критически важные настройки SSL для обхода проблем
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
+        curl_setopt($ch, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+        
+        // Дополнительные настройки для Windows
+        curl_setopt($ch, CURLOPT_CAINFO, null);
+        curl_setopt($ch, CURLOPT_CAPATH, null);
+        
         $headers = ['Content-Type: application/json'];
         if ($api_key) {
             $headers[] = 'Authorization: Bearer ' . $api_key;
@@ -389,10 +406,16 @@ class AiService {
         
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
         curl_close($ch);
         
-        if ($response === false || $httpCode !== 200) {
-            logMessage('WARNING', "AI API request failed: {$url}, HTTP: {$httpCode}");
+        if ($response === false) {
+            logMessage('WARNING', "AI API cURL ошибка: {$error} для URL: {$url}");
+            return null;
+        }
+        
+        if ($httpCode !== 200) {
+            logMessage('WARNING', "AI API HTTP ошибка: {$httpCode} для URL: {$url}, ответ: {$response}");
             return null;
         }
         
@@ -400,7 +423,7 @@ class AiService {
         
         // Проверяем, что JSON декодировался корректно
         if (json_last_error() !== JSON_ERROR_NONE) {
-            logMessage('ERROR', 'AI API returned invalid JSON: ' . json_last_error_msg());
+            logMessage('ERROR', 'AI API вернул неверный JSON: ' . json_last_error_msg());
             return null;
         }
         
@@ -413,12 +436,14 @@ class AiService {
         }
         
         if (!$ai_text) {
+            logMessage('WARNING', 'AI API не вернул текстовый ответ');
             return null;
         }
         
         // Очищаем текст от потенциально проблемных символов
         $ai_text = $this->cleanAiResponse($ai_text);
         
+        logMessage('INFO', 'AI API успешно вернул ответ длиной: ' . strlen($ai_text));
         return $ai_text;
     }
     

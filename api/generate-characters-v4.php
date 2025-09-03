@@ -3,6 +3,7 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/dnd-api-service.php';
 require_once __DIR__ . '/ai-service.php';
+require_once __DIR__ . '/ai-service-alternative.php';
 
 class CharacterGeneratorV4 {
     private $dnd_api_service;
@@ -56,7 +57,7 @@ class CharacterGeneratorV4 {
     
     public function __construct() {
         $this->dnd_api_service = new DndApiService();
-        $this->ai_service = new AiService();
+        $this->ai_service = new AlternativeAiService(); // Используем альтернативный сервис
         $this->loadData();
     }
     
@@ -197,22 +198,41 @@ class CharacterGeneratorV4 {
             if ($use_ai) {
                 $description = $this->ai_service->generateCharacterDescription($character, true);
                 if (isset($description['error'])) {
-                    logMessage('WARNING', "AI генерация описания не удалась: " . $description['message']);
-                    $character['description'] = $this->generateBasicDescription($character);
+                    logMessage('ERROR', "AI генерация описания не удалась: " . $description['message']);
+                    // НЕ используем fallback - возвращаем ошибку
+                    return [
+                        'success' => false,
+                        'error' => 'AI API недоступен',
+                        'message' => $description['message'],
+                        'details' => $description['details'] ?? 'Не удалось сгенерировать описание персонажа',
+                        'ai_error' => true
+                    ];
                 } else {
                     $character['description'] = $this->cleanTextForJson($description);
                 }
                 
                 $background = $this->ai_service->generateCharacterBackground($character, true);
                 if (isset($background['error'])) {
-                    logMessage('WARNING', "AI генерация предыстории не удалась: " . $background['message']);
-                    $character['background'] = $this->generateBasicBackground($character);
+                    logMessage('ERROR', "AI генерация предыстории не удалась: " . $background['message']);
+                    // НЕ используем fallback - возвращаем ошибку
+                    return [
+                        'success' => false,
+                        'error' => 'AI API недоступен',
+                        'message' => $background['message'],
+                        'details' => $background['details'] ?? 'Не удалось сгенерировать предысторию персонажа',
+                        'ai_error' => true
+                    ];
                 } else {
                     $character['background'] = $this->cleanTextForJson($background);
                 }
             } else {
-                $character['description'] = $this->generateBasicDescription($character);
-                $character['background'] = $this->generateBasicBackground($character);
+                // Если AI отключен пользователем, возвращаем ошибку
+                return [
+                    'success' => false,
+                    'error' => 'AI отключен',
+                    'message' => 'Генерация персонажа невозможна без AI API',
+                    'details' => 'Включите AI генерацию для создания персонажей с описаниями и предысториями'
+                ];
             }
             
             logMessage('INFO', 'Character generated successfully with API data', [
@@ -611,58 +631,6 @@ class CharacterGeneratorV4 {
         }
         
         return $gender === 'male' ? 'Мужчина' : 'Женщина';
-    }
-    
-    /**
-     * Генерация базового описания (без AI)
-     */
-    private function generateBasicDescription($character) {
-        $race = $character['race'];
-        $class = $character['class'];
-        $gender = $character['gender'];
-        
-        $descriptions = [
-            'Человек' => "{$gender} {$race} с решительным взглядом и уверенной походкой. {$class} с опытом и навыками.",
-            'Эльф' => "Грациозный {$race} с острыми чертами лица. {$class} с врожденным чувством магии.",
-            'Дварф' => "Крепкий {$race} с густой бородой и сильными руками. {$class} с традициями предков.",
-            'Полурослик' => "Маленький {$race} с кудрявыми волосами и добродушным выражением лица. {$class} с ловкостью и хитростью.",
-            'Орк' => "Мощный {$race} с зеленой кожей и клыками. {$class} с первобытной силой и яростью.",
-            'Тифлинг' => "Темнокожий {$race} с рогами и хвостом. {$class} с адским наследием и тайной.",
-            'Драконорожденный' => "Величественный {$race} с чешуей и дыханием дракона. {$class} с древней силой предков.",
-            'Гном' => "Низкорослый {$race} с острым умом и хитростью. {$class} с врожденными способностями.",
-            'Полуэльф' => "Грациозный {$race} с острыми чертами лица. {$class} с двойственным наследием.",
-            'Полуорк' => "Мощный {$race} с зеленой кожей и клыками. {$class} с первобытной силой и яростью."
-        ];
-        
-        return $descriptions[$race] ?? $descriptions['Человек'];
-    }
-    
-    /**
-     * Генерация базовой предыстории (без AI)
-     */
-    private function generateBasicBackground($character) {
-        $occupation = $character['occupation'];
-        $race = $character['race'];
-        $class = $character['class'];
-        
-        $backgrounds = [
-            'Кузнец' => "Родился в семье кузнецов. Изучал ремесло, но жажда приключений привела к изучению {$class}.",
-            'Торговец' => "Путешествовал по миру, торгуя товарами. Научился защищаться и стал {$class}.",
-            'Охотник' => "Проводил дни в лесах, выслеживая добычу. Навыки охоты помогли стать {$class}.",
-            'Фермер' => "Работал на земле, выращивая урожай. Однажды понял, что может вырастить не только растения.",
-            'Стражник' => "Служил в городской страже, защищая мирных жителей. Опыт пригодился в приключениях.",
-            'Солдат' => "Служил в армии, участвовал во многих битвах. Военный опыт пригодился в приключениях.",
-            'Ученый' => "Изучал древние тексты и артефакты. Однажды понял, что лучший способ изучения - личное участие.",
-            'Авантюрист' => "Всегда мечтал о приключениях. Оставил родной дом в поисках славы и богатства.",
-            'Рыбак' => "Проводил дни на воде, ловя рыбу. Навыки навигации пригодились в приключениях.",
-            'Плотник' => "Работал с деревом, создавая мебель и строения. Теперь использует навыки для создания оружия.",
-            'Каменщик' => "Строил дома и крепости. Опыт работы с камнем пригодился в бою.",
-            'Повар' => "Готовил пищу для многих людей. Научился понимать их характеры и слабости.",
-            'Трактирщик' => "Слушал истории путешественников. Теперь сам создает легенды.",
-            'Ткач' => "Создавал ткани и одежду. Навыки точности пригодились в бою."
-        ];
-        
-        return $backgrounds[$occupation] ?? $backgrounds['Кузнец'];
     }
     
     /**
