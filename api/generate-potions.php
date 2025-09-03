@@ -138,64 +138,8 @@ class PotionGenerator {
             error_log("Ошибка получения зелий из API: " . $e->getMessage());
         }
         
-        // Fallback: возвращаем базовые зелья, если API недоступен
-        return $this->getFallbackPotions();
-    }
-    
-    /**
-     * Fallback: базовые зелья D&D
-     */
-    private function getFallbackPotions() {
-        return [
-            [
-                'name' => 'Potion of Healing',
-                'url' => '/api/magic-items/potion-of-healing',
-                'rarity' => ['name' => 'Common'],
-                'desc' => ['A character who drinks the magical red fluid in this vial regains 2d4 + 2 hit points. Drinking or administering a potion takes an action.']
-            ],
-            [
-                'name' => 'Potion of Greater Healing',
-                'url' => '/api/magic-items/potion-of-greater-healing',
-                'rarity' => ['name' => 'Uncommon'],
-                'desc' => ['You regain 4d4 + 4 hit points when you drink this potion. The potion\'s red liquid glimmers when agitated.']
-            ],
-            [
-                'name' => 'Potion of Superior Healing',
-                'url' => '/api/magic-items/potion-of-superior-healing',
-                'rarity' => ['name' => 'Rare'],
-                'desc' => ['You regain 8d4 + 8 hit points when you drink this potion. The potion\'s red liquid glimmers when agitated.']
-            ],
-            [
-                'name' => 'Potion of Supreme Healing',
-                'url' => '/api/magic-items/potion-of-supreme-healing',
-                'rarity' => ['name' => 'Very Rare'],
-                'desc' => ['You regain 10d4 + 20 hit points when you drink this potion. The potion\'s red liquid glimmers when agitated.']
-            ],
-            [
-                'name' => 'Potion of Invisibility',
-                'url' => '/api/magic-items/potion-of-invisibility',
-                'rarity' => ['name' => 'Very Rare'],
-                'desc' => ['This potion\'s container looks empty but feels as though it holds liquid. When you drink it, you become invisible for 1 hour. Anything you wear or carry is invisible with you.']
-            ],
-            [
-                'name' => 'Potion of Flying',
-                'url' => '/api/magic-items/potion-of-flying',
-                'rarity' => ['name' => 'Very Rare'],
-                'desc' => ['When you drink this potion, you gain a flying speed equal to your walking speed for 1 hour and can hover. If you\'re in the air when the potion wears off, you fall unless you have some other means of staying aloft.']
-            ],
-            [
-                'name' => 'Potion of Giant Strength',
-                'url' => '/api/magic-items/potion-of-giant-strength',
-                'rarity' => ['name' => 'Rare'],
-                'desc' => ['When you drink this potion, your Strength score changes to 21 for 1 hour. The potion has no effect on you if your Strength is already 21 or higher.']
-            ],
-            [
-                'name' => 'Potion of Fire Breath',
-                'url' => '/api/magic-items/potion-of-fire-breath',
-                'rarity' => ['name' => 'Uncommon'],
-                'desc' => ['After drinking this potion, you can use a bonus action to exhale fire at a target within 30 feet of you. The target takes 4d6 fire damage, or half as much damage on a successful Dexterity saving throw.']
-            ]
-        ];
+        // Если API недоступен, возвращаем пустой массив
+        return [];
     }
     
     /**
@@ -514,6 +458,7 @@ class PotionGenerator {
         // Парсим URL
         $parsed = parse_url($url);
         if (!$parsed) {
+            error_log("Неверный URL: $url");
             return null;
         }
         
@@ -532,6 +477,7 @@ class PotionGenerator {
         // Используем fsockopen для HTTP
         $fp = @fsockopen($host, $port, $errno, $errstr, 30);
         if (!$fp) {
+            error_log("Не удалось подключиться к $host:$port - $errstr ($errno)");
             return null;
         }
         
@@ -539,6 +485,7 @@ class PotionGenerator {
         $request = "GET $path HTTP/1.1\r\n";
         $request .= "Host: $host\r\n";
         $request .= "User-Agent: DnD-Copilot/1.0\r\n";
+        $request .= "Accept: application/json\r\n";
         $request .= "Connection: close\r\n";
         $request .= "\r\n";
         
@@ -547,14 +494,28 @@ class PotionGenerator {
         
         // Читаем ответ
         $response = '';
-        while (!feof($fp)) {
-            $response .= fgets($fp, 1024);
+        $start_time = time();
+        
+        while (!feof($fp) && (time() - $start_time) < 30) {
+            $chunk = fgets($fp, 1024);
+            if ($chunk === false) {
+                break;
+            }
+            $response .= $chunk;
         }
+        
         fclose($fp);
+        
+        // Проверяем, получили ли мы ответ
+        if (empty($response)) {
+            error_log("Пустой ответ от $host$path");
+            return null;
+        }
         
         // Парсим HTTP ответ
         $parts = explode("\r\n\r\n", $response, 2);
         if (count($parts) < 2) {
+            error_log("Неверный формат HTTP ответа от $host$path");
             return null;
         }
         
@@ -565,6 +526,7 @@ class PotionGenerator {
         if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $headers, $matches)) {
             $http_code = (int)$matches[1];
             if ($http_code !== 200) {
+                error_log("HTTP ошибка $http_code от $host$path");
                 return null;
             }
         }
@@ -574,6 +536,9 @@ class PotionGenerator {
             $decoded = json_decode($body, true);
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $decoded;
+            } else {
+                error_log("Ошибка JSON от $host$path: " . json_last_error_msg());
+                return null;
             }
         }
         
@@ -597,6 +562,7 @@ class PotionGenerator {
         foreach ($connection_methods as $method) {
             $fp = @fsockopen($method[0], $method[1], $errno, $errstr, 10);
             if ($fp) {
+                error_log("Успешное подключение к $method[0]:$method[1]");
                 break;
             }
             $last_error = "$errstr ($errno)";
@@ -605,7 +571,9 @@ class PotionGenerator {
         if (!$fp) {
             // Логируем ошибку для отладки
             error_log("Не удалось подключиться к $host:443 - $last_error");
-            return null;
+            
+            // Попробуем альтернативный метод через file_get_contents
+            return $this->makeHttpsRequestAlternative($host, $path);
         }
         
         // Устанавливаем таймаут
@@ -673,6 +641,49 @@ class PotionGenerator {
         }
         
         return null;
+    }
+    
+    /**
+     * Альтернативный метод HTTPS запроса через file_get_contents
+     */
+    private function makeHttpsRequestAlternative($host, $path) {
+        $url = "https://$host$path";
+        error_log("Пробуем альтернативный метод для $url");
+        
+        // Создаем контекст для HTTPS
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'GET',
+                'header' => [
+                    'User-Agent: DnD-Copilot/1.0',
+                    'Accept: application/json',
+                    'Connection: close'
+                ],
+                'timeout' => 30,
+                'follow_location' => true
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false
+            ]
+        ]);
+        
+        // Пытаемся получить данные
+        $response = @file_get_contents($url, false, $context);
+        if ($response === false) {
+            error_log("file_get_contents не удался для $url");
+            return null;
+        }
+        
+        // Декодируем JSON
+        $decoded = json_decode($response, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            error_log("Альтернативный метод успешен для $url");
+            return $decoded;
+        } else {
+            error_log("Ошибка JSON в альтернативном методе: " . json_last_error_msg());
+            return null;
+        }
     }
     
     /**
