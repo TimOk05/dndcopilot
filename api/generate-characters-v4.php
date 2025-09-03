@@ -194,49 +194,35 @@ class CharacterGeneratorV4 {
                 'subraces' => $race_data['subraces'] ?? []
             ];
             
-            // Генерируем описание и предысторию с AI
-            if ($use_ai) {
-                $description = $this->ai_service->generateCharacterDescription($character, true);
-                if (isset($description['error'])) {
-                    logMessage('ERROR', "AI генерация описания не удалась: " . $description['message']);
-                    // НЕ используем fallback - возвращаем ошибку
-                    return [
-                        'success' => false,
-                        'error' => 'AI API недоступен',
-                        'message' => $description['message'],
-                        'details' => $description['details'] ?? 'Не удалось сгенерировать описание персонажа',
-                        'ai_error' => true
-                    ];
-                } else {
-                    $character['description'] = $this->cleanTextForJson($description);
-                }
-                
-                $background = $this->ai_service->generateCharacterBackground($character, true);
-                if (isset($background['error'])) {
-                    logMessage('ERROR', "AI генерация предыстории не удалась: " . $background['message']);
-                    // НЕ используем fallback - возвращаем ошибку
-                    return [
-                        'success' => false,
-                        'error' => 'AI API недоступен',
-                        'message' => $background['message'],
-                        'details' => $background['details'] ?? 'Не удалось сгенерировать предысторию персонажа',
-                        'ai_error' => true
-                    ];
-                } else {
-                    $character['background'] = $this->cleanTextForJson($background);
-                }
+            // Генерируем описание и предысторию с AI (всегда включено)
+            $description = $this->ai_service->generateCharacterDescription($character, true);
+            if (isset($description['error'])) {
+                logMessage('ERROR', "AI генерация описания не удалась: " . $description['message']);
+                // НЕ используем fallback - возвращаем ошибку
+                return [
+                    'success' => false,
+                    'error' => 'AI API недоступен',
+                    'message' => $description['message'],
+                    'details' => $description['details'] ?? 'Не удалось сгенерировать описание персонажа',
+                    'ai_error' => true
+                ];
             } else {
-                // AI всегда включен - это основной функционал
-                // Если AI отключен пользователем, возвращаем ошибку
-                // return [
-                //     'success' => false,
-                //     'error' => 'AI отключен',
-                //     'message' => 'Генерация персонажа невозможна без AI API',
-                //     'details' => 'Включите AI генерацию для создания персонажей с описаниями и предысториями'
-                // ];
-                
-                // Продолжаем генерацию без AI описаний
-                logMessage('INFO', 'AI генерация отключена, создаем персонажа без описаний');
+                $character['description'] = $this->cleanTextForJson($description);
+            }
+            
+            $background = $this->ai_service->generateCharacterBackground($character, true);
+            if (isset($background['error'])) {
+                logMessage('ERROR', "AI генерация предыстории не удалась: " . $background['message']);
+                // НЕ используем fallback - возвращаем ошибку
+                return [
+                    'success' => false,
+                    'error' => 'AI API недоступен',
+                    'message' => $background['message'],
+                    'details' => $background['details'] ?? 'Не удалось сгенерировать предысторию персонажа',
+                    'ai_error' => true
+                ];
+            } else {
+                $character['background'] = $this->cleanTextForJson($background);
             }
             
             logMessage('INFO', 'Character generated successfully with API data', [
@@ -244,7 +230,7 @@ class CharacterGeneratorV4 {
                 'class' => $class,
                 'level' => $level,
                 'api_data_used' => true,
-                'ai_used' => $use_ai
+                'ai_used' => true // AI всегда включен
             ]);
             
             return [
@@ -252,7 +238,7 @@ class CharacterGeneratorV4 {
                 'character' => $character,
                 'api_info' => [
                     'dnd_api_used' => true,
-                    'ai_api_used' => $use_ai,
+                    'ai_api_used' => true, // AI всегда включен
                     'data_source' => 'External D&D APIs + AI',
                     'cache_info' => 'Enhanced caching system active'
                 ]
