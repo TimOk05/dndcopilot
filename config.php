@@ -92,8 +92,8 @@ function handleError($errno, $errstr, $errfile, $errline) {
 // Устанавливаем обработчик ошибок
 set_error_handler('handleError');
 
-// Настройки сессии только если не в режиме тестирования
-if (!defined('TESTING_MODE')) {
+// Настройки сессии только если не в режиме тестирования и не CLI
+if (!defined('TESTING_MODE') && php_sapi_name() !== 'cli') {
     ini_set('session.cookie_httponly', 1);
     ini_set('session.use_only_cookies', 1);
     ini_set('session.cookie_secure', isset($_SERVER['HTTPS']));
@@ -187,7 +187,7 @@ function verifyCSRFToken($token) {
 // Настройки CORS
 function setCORSHeaders() {
     // Не устанавливаем заголовки в режиме тестирования
-    if (defined('TESTING_MODE')) {
+    if (defined('TESTING_MODE') || php_sapi_name() === 'cli') {
         return;
     }
     
@@ -223,8 +223,8 @@ function initApp() {
     // Настраиваем временную зону
     date_default_timezone_set('Europe/Moscow');
     
-    // Устанавливаем заголовки безопасности только если не в режиме тестирования
-    if (!defined('TESTING_MODE')) {
+    // Устанавливаем заголовки безопасности только если не в режиме тестирования и не CLI
+    if (!defined('TESTING_MODE') && php_sapi_name() !== 'cli') {
         header('X-Content-Type-Options: nosniff');
         header('X-Frame-Options: DENY');
         header('X-XSS-Protection: 1; mode=block');
