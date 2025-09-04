@@ -48,8 +48,8 @@ file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK
  * Поддерживает поиск по характеристикам: редкость, тип, эффект
  */
 
-// Заголовки только если это прямой HTTP запрос
-if (!defined('TESTING_MODE')) {
+// Заголовки только если это прямой HTTP запрос (не CLI)
+if (!defined('TESTING_MODE') && php_sapi_name() !== 'cli') {
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -63,7 +63,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS
 require_once __DIR__ . '/../config.php';
 
 class PotionGenerator {
-    private $dnd5e_api_url = 'https://www.dnd5eapi.co/api';
+    private $dnd5e_api_url = 'http://www.dnd5eapi.co';
     private $cache_file = __DIR__ . '/../logs/cache/potions_cache.json';
     private $cache_duration = 3600; // 1 час
     
@@ -332,14 +332,10 @@ class PotionGenerator {
         file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
         
         try {
-            $url = 'https://www.dnd5eapi.co/api/magic-items';
+            $url = 'http://www.dnd5eapi.co/api/magic-items';
             
-            // Разбиваем URL на host и path для makeHttpsRequest
-            $parsed_url = parse_url($url);
-            $host = $parsed_url['host'];
-            $path = $parsed_url['path'] . (isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '');
-            
-            $response = $this->makeHttpsRequest($host, $path);
+            // Используем file_get_contents для HTTP (работает без SSL)
+            $response = @file_get_contents($url);
             
             if ($response) {
                 $data = json_decode($response, true);
@@ -709,11 +705,13 @@ class PotionGenerator {
         
         $fp = null;
         $last_error = '';
+        $used_method = null;
         
         foreach ($connection_methods as $method) {
             $fp = @fsockopen($method[0], $method[1], $errno, $errstr, 10);
             if ($fp) {
                 error_log("Успешное подключение к $method[0]:$method[1]");
+                $used_method = $method;
                 break;
             }
             $last_error = "$errstr ($errno)";
@@ -727,10 +725,17 @@ class PotionGenerator {
             return $this->makeHttpsRequestAlternative($host, $path);
         }
         
+        // Если подключение есть, но SSL недоступен, используем альтернативный метод
+        if ($used_method && strpos($used_method[0], 'ssl://') === false && strpos($used_method[0], 'tls://') === false) {
+            error_log("SSL недоступен, используем альтернативный метод");
+            fclose($fp);
+            return $this->makeHttpsRequestAlternative($host, $path);
+        }
+        
         // Устанавливаем таймаут
         stream_set_timeout($fp, 30);
         
-        // Формируем HTTPS запрос
+        // Формируем HTTPS запрос (используем HTTP/1.1 для HTTPS)
         $request = "GET $path HTTP/1.1\r\n";
         $request .= "Host: $host\r\n";
         $request .= "User-Agent: DnD-Copilot/1.0\r\n";
@@ -826,15 +831,9 @@ class PotionGenerator {
             return null;
         }
         
-        // Декодируем JSON
-        $decoded = json_decode($response, true);
-        if (json_last_error() === JSON_ERROR_NONE) {
-            error_log("Альтернативный метод успешен для $url");
-            return $decoded;
-        } else {
-            error_log("Ошибка JSON в альтернативном методе: " . json_last_error_msg());
-            return null;
-        }
+        // Возвращаем сырой ответ (как и основной метод)
+        error_log("Альтернативный метод успешен для $url, длина ответа: " . strlen($response));
+        return $response;
     }
     
     /**
@@ -971,11 +970,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $log_message = "[" . date('Y-m-d H:i:s') . "] Вызываем generatePotions с параметрами: " . json_encode($_GET) . "\n";
                     file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
                     
-                    $result = $generator->generatePotions($_GET);
+                $result = $generator->generatePotions($_GET);
                     
                     $log_message = "[" . date('Y-m-d H:i:s') . "] Результат generatePotions: " . json_encode($result) . "\n";
                     file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
-                    break;
+                break;
                 
             default:
                 throw new Exception('Неизвестное действие');
