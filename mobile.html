@@ -580,6 +580,9 @@
                     <button class="btn" onclick="showSection('enemies')">
                         ⚔️ Генератор противников
                     </button>
+                    <button class="btn" onclick="showSection('potions')">
+                        🧪 Генератор зелий
+                    </button>
                     <button class="btn" onclick="showSection('combat')">
                         🗡️ Система боя
                     </button>
@@ -1022,9 +1025,10 @@
                 'home': 0,
                 'characters': 1,
                 'enemies': 2,
-                'combat': 3,
-                'ai-chat': 4,
-                'notes': 5
+                'potions': 3,
+                'combat': 4,
+                'ai-chat': 5,
+                'notes': 6
             };
 
             if (sectionMap[sectionId] !== undefined) {
@@ -1177,7 +1181,7 @@
             if (rarity) params.append('rarity', rarity);
             if (type) params.append('type', type);
 
-            fetch(`api/generate-potions-simple.php?${params.toString()}`)
+            fetch(`api/generate-potions.php?${params.toString()}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {

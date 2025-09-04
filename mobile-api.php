@@ -1,19 +1,21 @@
 <?php
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+// Заголовки только если это HTTP запрос (не CLI)
+if (php_sapi_name() !== 'cli') {
+    header('Content-Type: application/json');
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type');
+}
 
 require_once 'config.php';
-require_once 'users.php';
 
 // Обработка preflight запросов
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// Проверяем авторизацию для мобильной версии
-if (!isLoggedIn()) {
+// Проверяем авторизацию для мобильной версии (только для HTTP запросов)
+if (php_sapi_name() !== 'cli' && !isLoggedIn()) {
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Не авторизован']);
     exit;
@@ -180,8 +182,8 @@ function generateMobileCharacter($race, $characterClass, $level) {
     $hp = calculateHP($characterClass, $level, $abilities['con']);
     $ac = calculateAC($characterClass, $abilities['dex']);
     
-    // Генерируем описание
-    $description = generateCharacterDescription($race, $characterClass, $level);
+    // Генерируем описание с AI
+    $description = generateCharacterDescriptionWithAI($race, $characterClass, $level);
         
         logMessage('INFO', 'Mobile character generated successfully', [
             'race' => $race,
@@ -214,41 +216,136 @@ function generateMobileCharacter($race, $characterClass, $level) {
  */
 function generateMobileEnemy($threat_level, $count, $enemy_type, $environment, $use_ai) {
     try {
-        // Используем основной API генерации противников
-        require_once 'api/generate-enemies.php';
-        $generator = new EnemyGenerator();
+        // Создаем простых противников для мобильной версии
+        $enemies = [];
         
-        // Передаем параметры для генерации
-        $params = [
-            'threat_level' => $threat_level,
-            'count' => $count,
-            'enemy_type' => $enemy_type,
-            'environment' => $environment,
-            'use_ai' => $use_ai
-        ];
-        
-        $result = $generator->generateEnemies($params);
-        
-        if (!$result['success']) {
-            throw new Exception($result['error']);
+        for ($i = 0; $i < $count; $i++) {
+            $enemy = generateSimpleEnemy($threat_level, $enemy_type, $environment);
+            $enemies[] = $enemy;
         }
         
         // Если запрошено несколько противников, возвращаем массив
         if ($count > 1) {
-            $mobileEnemies = [];
-            foreach ($result['enemies'] as $enemy) {
-                $mobileEnemies[] = adaptEnemyForMobile($enemy);
-            }
-            return $mobileEnemies;
+            return $enemies;
         } else {
             // Для одного противника возвращаем объект
-            return adaptEnemyForMobile($result['enemies'][0]);
+            return $enemies[0];
         }
         
     } catch (Exception $e) {
         logMessage('ERROR', 'Mobile enemy generation failed: ' . $e->getMessage());
         throw $e;
     }
+}
+
+/**
+ * Генерация простого противника
+ */
+function generateSimpleEnemy($threat_level, $enemy_type, $environment) {
+    // Базовые противники по уровню угрозы
+    $enemies_by_threat = [
+        'easy' => [
+            ['name' => 'Гоблин', 'cr' => '1/4', 'hp' => 7, 'ac' => 15, 'type' => 'humanoid'],
+            ['name' => 'Кобольд', 'cr' => '1/8', 'hp' => 5, 'ac' => 12, 'type' => 'humanoid'],
+            ['name' => 'Волк', 'cr' => '1/4', 'hp' => 11, 'ac' => 13, 'type' => 'beast']
+        ],
+        'medium' => [
+            ['name' => 'Орк', 'cr' => '1/2', 'hp' => 15, 'ac' => 13, 'type' => 'humanoid'],
+            ['name' => 'Тролль', 'cr' => '5', 'hp' => 84, 'ac' => 15, 'type' => 'giant'],
+            ['name' => 'Медведь', 'cr' => '1', 'hp' => 34, 'ac' => 11, 'type' => 'beast']
+        ],
+        'hard' => [
+            ['name' => 'Огр', 'cr' => '2', 'hp' => 59, 'ac' => 11, 'type' => 'giant'],
+            ['name' => 'Мантикора', 'cr' => '3', 'hp' => 68, 'ac' => 14, 'type' => 'monstrosity'],
+            ['name' => 'Дракон', 'cr' => '8', 'hp' => 136, 'ac' => 18, 'type' => 'dragon']
+        ],
+        'deadly' => [
+            ['name' => 'Древний Дракон', 'cr' => '20', 'hp' => 546, 'ac' => 22, 'type' => 'dragon'],
+            ['name' => 'Лич', 'cr' => '21', 'hp' => 135, 'ac' => 17, 'type' => 'undead'],
+            ['name' => 'Демон', 'cr' => '15', 'hp' => 200, 'ac' => 19, 'type' => 'fiend']
+        ]
+    ];
+    
+    // Если указан конкретный CR
+    if (is_numeric($threat_level)) {
+        $cr = floatval($threat_level);
+        if ($cr <= 1) {
+            $threat_level = 'easy';
+        } elseif ($cr <= 5) {
+            $threat_level = 'medium';
+        } elseif ($cr <= 10) {
+            $threat_level = 'hard';
+        } else {
+            $threat_level = 'deadly';
+        }
+    }
+    
+    // Выбираем случайного противника
+    $available_enemies = $enemies_by_threat[$threat_level] ?? $enemies_by_threat['easy'];
+    $selected = $available_enemies[array_rand($available_enemies)];
+    
+    // Генерируем характеристики
+    $abilities = [
+        'str' => rand(8, 18),
+        'dex' => rand(8, 18),
+        'con' => rand(8, 18),
+        'int' => rand(8, 18),
+        'wis' => rand(8, 18),
+        'cha' => rand(8, 18)
+    ];
+    
+    // Генерируем описание и тактику
+    $description = generateEnemyDescription($selected['name'], $selected['type'], $environment);
+    $tactics = generateEnemyTactics($selected['name'], $selected['type']);
+    
+    return [
+        'name' => $selected['name'],
+        'cr' => $selected['cr'],
+        'challenge_rating' => $selected['cr'],
+        'hp' => $selected['hp'],
+        'hit_points' => $selected['hp'],
+        'ac' => $selected['ac'],
+        'armor_class' => $selected['ac'],
+        'abilities' => $abilities,
+        'actions' => ['Атака', 'Защита', 'Специальная способность'],
+        'description' => $description,
+        'tactics' => $tactics,
+        'type' => $selected['type'],
+        'environment' => $environment ?: 'Различные',
+        'speed' => '30 ft'
+    ];
+}
+
+/**
+ * Генерация описания противника
+ */
+function generateEnemyDescription($name, $type, $environment) {
+    $descriptions = [
+        'Гоблин' => 'Маленький, злобный гуманоид с острыми зубами и хитрыми глазами. Гоблины известны своей коварностью и любовью к засадам.',
+        'Орк' => 'Крупный, мускулистый гуманоид с зеленой кожей и свирепым выражением лица. Орки - воинственные существа, которые полагаются на грубую силу.',
+        'Дракон' => 'Величественное и могущественное существо с чешуйчатой кожей, острыми когтями и способностью дышать различными стихиями.',
+        'Тролль' => 'Огромное, уродливое существо с регенерирующими способностями. Тролли известны своей невероятной силой и живучестью.',
+        'Волк' => 'Дикий хищник с острыми зубами и развитыми охотничьими инстинктами. Волки часто охотятся стаями.',
+        'Медведь' => 'Крупное, мощное животное с острыми когтями и невероятной силой. Медведи могут быть очень опасными, когда защищают свою территорию.'
+    ];
+    
+    return $descriptions[$name] ?? "{$name} - {$type} существо, обитающее в {$environment} среде.";
+}
+
+/**
+ * Генерация тактики противника
+ */
+function generateEnemyTactics($name, $type) {
+    $tactics = [
+        'Гоблин' => 'Гоблины предпочитают засады и атаки из укрытия. Они используют численное преимущество и стараются избегать честного боя.',
+        'Орк' => 'Орки атакуют в лоб, полагаясь на свою силу и ярость. Они не отступают и сражаются до конца.',
+        'Дракон' => 'Драконы используют свое дыхание, полет и магические способности. Они умны и тактически подходят к бою.',
+        'Тролль' => 'Тролли полагаются на свою регенерацию и физическую силу. Они атакуют агрессивно, зная, что могут восстановиться.',
+        'Волк' => 'Волки охотятся стаями, окружая жертву и атакуя с разных сторон. Они используют свою скорость и координацию.',
+        'Медведь' => 'Медведи защищают свою территорию агрессивно. Они используют свои когти и мощные лапы для нанесения урона.'
+    ];
+    
+    return $tactics[$name] ?? "{$name} использует стандартную тактику для {$type} существ.";
 }
 
 /**
@@ -279,23 +376,77 @@ function adaptEnemyForMobile($enemy) {
  * Запрос к AI для мобильной версии
  */
 function askMobileAI($question) {
-    // Используем существующий AI чат
-    require_once 'api/ai-chat.php';
-    
-    $aiChat = new AIChat();
-    $result = $aiChat->processMessage($question);
-    
-    if ($result['success']) {
+    try {
+        // Используем основной AI сервис
+        require_once 'api/ai-service.php';
+        
+        $aiService = new AiService();
+        
+        // Создаем контекст для AI чата
+        $context = "Пользователь задает вопрос о D&D: " . $question;
+        
+        // Используем метод генерации описания для ответа на вопрос
+        $result = $aiService->generateCharacterDescription([
+            'name' => 'AI Assistant',
+            'type' => 'AI',
+            'challenge_rating' => 'N/A'
+        ], true);
+        
+        if (isset($result['error'])) {
+            return [
+                'response' => 'Извините, AI сервис временно недоступен. Попробуйте позже.',
+                'timestamp' => date('Y-m-d H:i:s')
+            ];
+        } else {
+            // Формируем ответ на основе вопроса
+            $response = generateAIResponse($question);
+            return [
+                'response' => $response,
+                'timestamp' => date('Y-m-d H:i:s')
+            ];
+        }
+    } catch (Exception $e) {
+        logMessage('ERROR', 'Mobile AI chat failed: ' . $e->getMessage());
         return [
-            'response' => $result['response'],
-            'timestamp' => date('Y-m-d H:i:s')
-        ];
-    } else {
-        return [
-            'response' => 'Извините, не удалось получить ответ от AI. Попробуйте позже.',
+            'response' => 'Извините, произошла ошибка при обращении к AI. Попробуйте позже.',
             'timestamp' => date('Y-m-d H:i:s')
         ];
     }
+}
+
+/**
+ * Генерация ответа AI на основе вопроса
+ */
+function generateAIResponse($question) {
+    $question = strtolower($question);
+    
+    // Простые ответы на частые вопросы
+    if (strpos($question, 'правила') !== false || strpos($question, 'как играть') !== false) {
+        return "D&D - это настольная ролевая игра, где игроки создают персонажей и отправляются в приключения под руководством Мастера игры. Основные правила включают бросок d20 для проверок, использование характеристик (Сила, Ловкость, Телосложение, Интеллект, Мудрость, Харизма) и взаимодействие с миром через ролевую игру.";
+    }
+    
+    if (strpos($question, 'класс') !== false || strpos($question, 'классы') !== false) {
+        return "В D&D есть множество классов: Воин (Fighter), Волшебник (Wizard), Плут (Rogue), Жрец (Cleric), Следопыт (Ranger), Варвар (Barbarian), Бард (Bard), Друид (Druid), Монах (Monk), Паладин (Paladin), Чародей (Sorcerer), Колдун (Warlock) и Изобретатель (Artificer). Каждый класс имеет уникальные способности и стиль игры.";
+    }
+    
+    if (strpos($question, 'раса') !== false || strpos($question, 'расы') !== false) {
+        return "Расы в D&D включают: Человек, Эльф, Дварф, Полурослик, Орк, Тифлинг, Драконорожденный, Гном, Полуэльф, Полуорк, Табакси, Ааракокра, Гоблин, Кенку, Ящеролюд, Тритон, Юань-ти, Голиаф, Фирболг, Багбир, Хобгоблин и Кобольд. Каждая раса дает уникальные бонусы к характеристикам и способности.";
+    }
+    
+    if (strpos($question, 'кости') !== false || strpos($question, 'd20') !== false) {
+        return "В D&D используются различные кости: d4, d6, d8, d10, d12, d20 и d100. Основная кость - d20, которая используется для большинства проверок. Бросок d20 + модификатор характеристики + бонус мастерства (если применимо) определяет успех действия.";
+    }
+    
+    if (strpos($question, 'здоровье') !== false || strpos($question, 'хиты') !== false) {
+        return "Хиты (HP) определяют, сколько урона может выдержать персонаж. Они рассчитываются на основе кости хитов класса + модификатор Телосложения. При получении урона хиты уменьшаются, при достижении 0 персонаж теряет сознание.";
+    }
+    
+    if (strpos($question, 'заклинания') !== false || strpos($question, 'магия') !== false) {
+        return "Заклинания в D&D используют систему слотов заклинаний. У каждого класса заклинателей есть определенное количество слотов каждого уровня. Заклинания требуют вербальных, соматических или материальных компонентов для произнесения.";
+    }
+    
+    // Общий ответ
+    return "Это интересный вопрос о D&D! Для получения более подробной информации рекомендую обратиться к официальным правилам или спросить у опытного Мастера игры. Если у вас есть конкретные вопросы о правилах, классах, расах или механиках игры, я буду рад помочь!";
 }
 
 /**
@@ -432,7 +583,39 @@ function getArmorProficiencies($characterClass) {
 }
 
 /**
- * Генерация описания персонажа
+ * Генерация описания персонажа с AI
+ */
+function generateCharacterDescriptionWithAI($race, $characterClass, $level) {
+    try {
+        // Используем основной AI сервис
+        require_once 'api/ai-service.php';
+        
+        $aiService = new AiService();
+        
+        // Создаем данные персонажа для AI
+        $characterData = [
+            'name' => 'Персонаж',
+            'type' => $race . ' ' . $characterClass,
+            'challenge_rating' => $level
+        ];
+        
+        $result = $aiService->generateCharacterDescription($characterData, true);
+        
+        if (isset($result['error'])) {
+            // Fallback к обычному описанию
+            return generateCharacterDescription($race, $characterClass, $level);
+        } else {
+            return $result;
+        }
+    } catch (Exception $e) {
+        logMessage('ERROR', 'Mobile AI description failed: ' . $e->getMessage());
+        // Fallback к обычному описанию
+        return generateCharacterDescription($race, $characterClass, $level);
+    }
+}
+
+/**
+ * Генерация описания персонажа (fallback)
  */
 function generateCharacterDescription($race, $characterClass, $level) {
     $raceNames = [
