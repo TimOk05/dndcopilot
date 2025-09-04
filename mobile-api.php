@@ -9,8 +9,8 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 require_once 'config.php';
 
-// Обработка preflight запросов
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+// Обработка preflight запросов (только для HTTP запросов)
+if (php_sapi_name() !== 'cli' && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
