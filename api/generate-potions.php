@@ -9,11 +9,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Инициализируем языковую систему
-require_once __DIR__ . '/../config.php';
-$currentLang = getCurrentLanguage();
-$translations = loadTranslations($currentLang);
-
 // Устанавливаем обработчик ошибок
 set_error_handler(function($errno, $errstr, $errfile, $errline) {
     $log_message = "[" . date('Y-m-d H:i:s') . "] PHP Error [$errno]: $errstr in $errfile on line $errline\n";

@@ -23,12 +23,6 @@ define('APP_NAME', 'DnD AI Assistant');
 define('APP_VERSION', '2.0');
 define('DEBUG_MODE', true);
 
-// Настройки языков
-define('DEFAULT_LANGUAGE', 'ru');
-define('SUPPORTED_LANGUAGES', ['ru', 'en']);
-define('LANGUAGE_COOKIE_NAME', 'dnd_language');
-define('LANGUAGE_COOKIE_DURATION', 365 * 24 * 60 * 60); // 1 год
-
 // Настройки безопасности
 define('SESSION_TIMEOUT', 3600); // 1 час
 define('MAX_LOGIN_ATTEMPTS', 5);
@@ -244,92 +238,6 @@ function initApp() {
         'version' => APP_VERSION,
         'debug_mode' => DEBUG_MODE
     ]);
-}
-
-// Функции для работы с языками
-function getCurrentLanguage() {
-    // Проверяем параметр URL
-    if (isset($_GET['lang']) && in_array($_GET['lang'], SUPPORTED_LANGUAGES)) {
-        setLanguage($_GET['lang']);
-        return $_GET['lang'];
-    }
-    
-    // Проверяем cookie
-    if (isset($_COOKIE[LANGUAGE_COOKIE_NAME]) && in_array($_COOKIE[LANGUAGE_COOKIE_NAME], SUPPORTED_LANGUAGES)) {
-        return $_COOKIE[LANGUAGE_COOKIE_NAME];
-    }
-    
-    // Определяем язык браузера
-    $browserLang = getBrowserLanguage();
-    if (in_array($browserLang, SUPPORTED_LANGUAGES)) {
-        setLanguage($browserLang);
-        return $browserLang;
-    }
-    
-    // Возвращаем язык по умолчанию
-    return DEFAULT_LANGUAGE;
-}
-
-function setLanguage($lang) {
-    if (in_array($lang, SUPPORTED_LANGUAGES)) {
-        setcookie(LANGUAGE_COOKIE_NAME, $lang, time() + LANGUAGE_COOKIE_DURATION, '/');
-        return true;
-    }
-    return false;
-}
-
-function getBrowserLanguage() {
-    if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-        return DEFAULT_LANGUAGE;
-    }
-    
-    $languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    foreach ($languages as $lang) {
-        $lang = trim(explode(';', $lang)[0]);
-        $lang = strtolower(substr($lang, 0, 2));
-        
-        if (in_array($lang, SUPPORTED_LANGUAGES)) {
-            return $lang;
-        }
-    }
-    
-    return DEFAULT_LANGUAGE;
-}
-
-function loadTranslations($lang = null) {
-    if ($lang === null) {
-        $lang = getCurrentLanguage();
-    }
-    
-    $translationsFile = __DIR__ . "/translations/{$lang}.php";
-    if (file_exists($translationsFile)) {
-        return include $translationsFile;
-    }
-    
-    // Fallback на русский язык
-    $fallbackFile = __DIR__ . "/translations/ru.php";
-    if (file_exists($fallbackFile)) {
-        return include $fallbackFile;
-    }
-    
-    return [];
-}
-
-function t($key, $params = []) {
-    static $translations = null;
-    
-    if ($translations === null) {
-        $translations = loadTranslations();
-    }
-    
-    $text = $translations[$key] ?? $key;
-    
-    // Заменяем параметры
-    foreach ($params as $param => $value) {
-        $text = str_replace("{{$param}}", $value, $text);
-    }
-    
-    return $text;
 }
 
 // Запускаем инициализацию

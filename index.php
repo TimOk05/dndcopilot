@@ -1,11 +1,6 @@
 <?php
 session_start();
 require_once 'auth.php';
-require_once 'config.php';
-
-// Инициализируем языковую систему
-$currentLang = getCurrentLanguage();
-$translations = loadTranslations($currentLang);
 
 // Автоматическое определение мобильного устройства и переадресация
 function isMobileDevice() {
@@ -34,12 +29,12 @@ if (!isLoggedIn()) {
 
 // Если это мобильное устройство, перенаправляем на мобильную версию
 if (isMobileDevice()) {
-    header('Location: mobile.php');
+    header('Location: mobile.html');
     exit;
 }
 
 // Получаем имя текущего пользователя
-$currentUser = $_SESSION['username'] ?? t('welcome');
+$currentUser = $_SESSION['username'] ?? 'Пользователь';
 
 
 
@@ -345,17 +340,11 @@ foreach ($_SESSION['notes'] as $i => $note) {
     $notesBlock .= '<div class="note-item" onclick="expandNote(' . $i . ')">' . htmlspecialchars($preview, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '<button class="note-edit" onclick="event.stopPropagation();editNoteTitle(' . $i . ', \'' . htmlspecialchars($nameLine, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '\')">✏️</button><button class="note-remove" onclick="event.stopPropagation();removeNote(' . $i . ')">×</button></div>';
 }
 
-// --- Загрузка переключателя языков ---
-ob_start();
-include 'language-switcher.php';
-$languageSwitcher = ob_get_clean();
-
 // --- Загрузка шаблона и подстановка контента ---
 $template = file_get_contents(__DIR__ . '/template.html');
 $template = str_replace('{{fast_buttons}}', $fastBtns, $template);
 $template = str_replace('{{chat_messages}}', $chatMsgs, $template);
 $template = str_replace('{{notes_block}}', $notesBlock, $template);
-$template = str_replace('{{language_switcher}}', $languageSwitcher, $template);
 echo $template;
 ?>
 <script>

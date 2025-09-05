@@ -5,10 +5,6 @@ require_once __DIR__ . '/dnd-api-service.php';
 require_once __DIR__ . '/ai-service.php';
 require_once __DIR__ . '/ai-service-alternative.php';
 
-// Инициализируем языковую систему
-$currentLang = getCurrentLanguage();
-$translations = loadTranslations($currentLang);
-
 class CharacterGeneratorV4 {
     private $dnd_api_service;
     private $ai_service;
