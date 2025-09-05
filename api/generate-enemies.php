@@ -32,7 +32,7 @@ class EnemyGenerator {
         
         // Валидация параметров
         if ($count < 1 || $count > 20) {
-            throw new Exception(t('enemy_count_range'));
+            throw new Exception('Количество противников должно быть от 1 до 20');
         }
         
         // Если threat_level пустой или 'random', генерируем случайный
@@ -42,7 +42,7 @@ class EnemyGenerator {
         
         // Проверяем, является ли threat_level числовым значением (конкретный CR)
         if (!in_array($threat_level, ['easy', 'medium', 'hard', 'deadly', 'random']) && !is_numeric($threat_level)) {
-            throw new Exception(t('enemy_threat_invalid'));
+            throw new Exception('Неверный уровень угрозы. Должен быть easy, medium, hard, deadly, random или конкретный CR (0, 1, 2, 3...)');
         }
         
         // Определяем CR на основе уровня угрозы
@@ -56,7 +56,7 @@ class EnemyGenerator {
             $monsters = $this->getMonstersListWithRetry();
             
             if (empty($monsters)) {
-                throw new Exception(t('enemy_database_unavailable'));
+                throw new Exception('База данных монстров недоступна после нескольких попыток');
             }
             
             // Фильтруем монстров по CR и типу
@@ -73,7 +73,7 @@ class EnemyGenerator {
             }
             
             if (empty($filtered_monsters)) {
-                throw new Exception(t('enemy_not_found'));
+                throw new Exception('Не найдены подходящие противники для указанных параметров');
             }
             
             // Если нужно много противников, выбираем один тип и генерируем несколько
@@ -90,7 +90,7 @@ class EnemyGenerator {
             }
             
             if (empty($enemies)) {
-                throw new Exception(t('enemy_generation_failed'));
+                throw new Exception('Не удалось сгенерировать противников');
             }
             
             return [
@@ -147,7 +147,7 @@ class EnemyGenerator {
             }
         }
         
-        throw new Exception(t('enemy_api_failed', ['retries' => $this->max_retries]));
+        throw new Exception('Не удалось получить список монстров после ' . $this->max_retries . ' попыток');
     }
     
     /**
@@ -1048,7 +1048,7 @@ class EnemyGenerator {
             $error = error_get_last();
             $error_msg = $error ? $error['message'] : 'Неизвестная ошибка';
             logMessage('ERROR', "EnemyGenerator: file_get_contents failed: $error_msg");
-            throw new Exception(t('enemy_api_error', ['error' => $error_msg]));
+            throw new Exception("Не удалось получить данные от API: $error_msg");
         }
         
         logMessage('INFO', "EnemyGenerator: Успешный ответ, размер: " . strlen($response) . " байт");
@@ -1058,7 +1058,7 @@ class EnemyGenerator {
                 return $decoded;
             } else {
             logMessage('ERROR', "EnemyGenerator: JSON decode error for $url: " . json_last_error_msg());
-                throw new Exception(t('enemy_parse_error'));
+                throw new Exception("Ошибка разбора ответа API");
             }
     }
 

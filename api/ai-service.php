@@ -45,9 +45,9 @@ class AiService {
         // Проверяем доступность API ключей
         if (empty($this->api_keys['deepseek']) && empty($this->api_keys['openai']) && empty($this->api_keys['google'])) {
             return [
-                'error' => t('ai_api_keys_not_set'),
-                'message' => t('ai_check_config'),
-                'details' => t('ai_add_keys')
+                'error' => 'AI API ключи не настроены',
+                'message' => 'Проверьте настройки API ключей в config.php',
+                'details' => 'Добавьте API ключи для DeepSeek, OpenAI или Google'
             ];
         }
         
@@ -67,9 +67,9 @@ class AiService {
         
         // Возвращаем детальную ошибку для диагностики
         return [
-            'error' => t('ai_api_unavailable'),
-            'message' => t('ai_description_failed'),
-            'details' => t('ai_check_connection'),
+            'error' => 'AI API недоступен',
+            'message' => 'Не удалось получить описание персонажа от AI API',
+            'details' => 'Проверьте: 1) Подключение к интернету, 2) API ключи, 3) SSL настройки',
             'debug_info' => [
                 'available_apis' => array_keys(array_filter($this->api_keys)),
                 'preferred_api' => $this->preferred_api,
@@ -106,8 +106,8 @@ class AiService {
         
         // Возвращаем детальную ошибку для диагностики
         return [
-            'error' => t('ai_api_unavailable'),
-            'message' => t('ai_background_failed'),
+            'error' => 'AI API недоступен',
+            'message' => 'Не удалось получить предысторию персонажа от AI API',
             'details' => 'Проверьте: 1) Подключение к интернету, 2) API ключи, 3) SSL настройки',
             'debug_info' => [
                 'available_apis' => array_keys(array_filter($this->api_keys)),
@@ -145,8 +145,8 @@ class AiService {
         
         // Возвращаем детальную ошибку для диагностики
         return [
-            'error' => t('ai_api_unavailable'),
-            'message' => t('ai_tactics_failed'),
+            'error' => 'AI API недоступен',
+            'message' => 'Не удалось получить тактику противника от AI API',
             'details' => 'Проверьте: 1) Подключение к интернету, 2) API ключи, 3) SSL настройки',
             'debug_info' => [
                 'available_apis' => array_keys(array_filter($this->api_keys)),
@@ -182,8 +182,8 @@ class AiService {
         }
         
         return [
-            'error' => t('ai_api_unavailable'),
-            'message' => t('ai_location_failed')
+            'error' => 'AI API недоступен',
+            'message' => 'Не удалось получить описание локации от AI API'
         ];
     }
     
@@ -191,65 +191,65 @@ class AiService {
      * Построение промпта для описания персонажа
      */
     private function buildDescriptionPrompt($character) {
-        $name = $character['name'] ?? t('ai_character_default');
-        $race = $character['race'] ?? t('ai_race_unknown');
-        $class = $character['class'] ?? t('ai_class_unknown');
+        $name = $character['name'] ?? 'Персонаж';
+        $race = $character['race'] ?? 'Неизвестная раса';
+        $class = $character['class'] ?? 'Неизвестный класс';
         $level = $character['level'] ?? 1;
-        $occupation = $character['occupation'] ?? t('ai_occupation_default');
-        $gender = $character['gender'] ?? t('ai_gender_unknown');
-        $alignment = $character['alignment'] ?? t('ai_alignment_default');
+        $occupation = $character['occupation'] ?? 'Авантюрист';
+        $gender = $character['gender'] ?? 'Неизвестно';
+        $alignment = $character['alignment'] ?? 'Нейтральный';
         
         // Добавляем информацию о характеристиках
         $abilities = $character['abilities'] ?? [];
         $ability_desc = '';
         if (!empty($abilities) && is_array($abilities)) {
-            $ability_desc = t('ai_abilities_label');
-            $ability_names = ['str' => 'str', 'dex' => 'dex', 'con' => 'con', 
-                            'int' => 'int', 'wis' => 'wis', 'cha' => 'cha'];
-            $ability_values = [];
+            $ability_desc = "Характеристики: ";
+            $ability_names = ['str' => 'Сила', 'dex' => 'Ловкость', 'con' => 'Телосложение', 
+                            'int' => 'Интеллект', 'wis' => 'Мудрость', 'cha' => 'Харизма'];
             foreach ($abilities as $key => $value) {
                 if (isset($ability_names[$key]) && is_numeric($value)) {
-                    $ability_values[$key] = $value;
+                    $ability_desc .= "{$ability_names[$key]}: {$value}, ";
                 }
             }
-            if (!empty($ability_values)) {
-                $ability_desc .= t('ai_ability_names', $ability_values);
-            }
+            $ability_desc = rtrim($ability_desc, ', ');
         }
         
-        return t('ai_prompt_character_description', [
-            'name' => $name,
-            'race' => $race,
-            'class' => $class,
-            'level' => $level,
-            'occupation' => $occupation,
-            'gender' => $gender,
-            'alignment' => $alignment,
-            'abilities' => $ability_desc
-        ]);
+        return "Опиши внешность и характер персонажа {$name}, {$race} {$class} {$level} уровня. 
+Профессия: {$occupation}. Пол: {$gender}. Мировоззрение: {$alignment}. 
+{$ability_desc}
+
+Создай краткое (2-3 предложения), атмосферное описание, которое передает:
+- Внешние особенности персонажа
+- Характерные черты характера
+- Влияние расы и класса на внешность
+- Профессиональные навыки
+
+Используй богатый, образный язык в стиле фэнтези.";
     }
     
     /**
      * Построение промпта для предыстории персонажа
      */
     private function buildBackgroundPrompt($character) {
-        $name = $character['name'] ?? t('ai_character_default');
-        $race = $character['race'] ?? t('ai_race_unknown');
-        $class = $character['class'] ?? t('ai_class_unknown');
+        $name = $character['name'] ?? 'Персонаж';
+        $race = $character['race'] ?? 'Неизвестная раса';
+        $class = $character['class'] ?? 'Неизвестный класс';
         $level = $character['level'] ?? 1;
-        $occupation = $character['occupation'] ?? t('ai_occupation_default');
-        $gender = $character['gender'] ?? t('ai_gender_unknown');
-        $alignment = $character['alignment'] ?? t('ai_alignment_default');
+        $occupation = $character['occupation'] ?? 'Авантюрист';
+        $gender = $character['gender'] ?? 'Неизвестно';
+        $alignment = $character['alignment'] ?? 'Нейтральный';
         
-        return t('ai_prompt_character_background', [
-            'name' => $name,
-            'race' => $race,
-            'class' => $class,
-            'level' => $level,
-            'occupation' => $occupation,
-            'gender' => $gender,
-            'alignment' => $alignment
-        ]);
+        return "Создай краткую предысторию персонажа {$name}, {$race} {$class} {$level} уровня. 
+Профессия: {$occupation}. Пол: {$gender}. Мировоззрение: {$alignment}.
+
+Включи в предысторию:
+- Ключевое событие из прошлого, которое повлияло на персонажа
+- Мотивацию для приключений
+- Связь между профессией и классом
+- Влияние расы на жизненный путь
+
+Сделай историю интересной и логичной (2-3 предложения). 
+Используй атмосферный язык в стиле D&D.";
     }
     
     /**
@@ -658,4 +658,3 @@ class AiService {
 
 }
 ?>
-

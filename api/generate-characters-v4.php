@@ -11,74 +11,54 @@ class CharacterGeneratorV4 {
     private $occupations = [];
     private $race_names = [];
     
-    // Маппинг рас для локализации
-    private $race_mapping = [
-        'aarakocra' => 'race_aarakocra',
-        'aasimar' => 'race_aasimar',
-        'bugbear' => 'race_bugbear',
-        'dragonborn' => 'race_dragonborn',
-        'dwarf' => 'race_dwarf',
-        'elf' => 'race_elf',
-        'firbolg' => 'race_firbolg',
-        'genasi' => 'race_genasi',
-        'gnome' => 'race_gnome',
-        'goblin' => 'race_goblin',
-        'goliath' => 'race_goliath',
-        'half-elf' => 'race_half_elf',
-        'half-orc' => 'race_half_orc',
-        'halfling' => 'race_halfling',
-        'human' => 'race_human',
-        'kenku' => 'race_kenku',
-        'kobold' => 'race_kobold',
-        'lizardfolk' => 'race_lizardfolk',
-        'orc' => 'race_orc',
-        'tabaxi' => 'race_tabaxi',
-        'tiefling' => 'race_tiefling',
-        'triton' => 'race_triton',
-        'yuan-ti' => 'race_yuan_ti'
+    // Русские названия рас
+    private $race_translations = [
+        'aarakocra' => 'Ааракокра',
+        'aasimar' => 'Аасимар',
+        'bugbear' => 'Багбир',
+        'dragonborn' => 'Драконорожденный',
+        'dwarf' => 'Дварф',
+        'elf' => 'Эльф',
+        'firbolg' => 'Фирболг',
+        'genasi' => 'Генаси',
+        'gnome' => 'Гном',
+        'goblin' => 'Гоблин',
+        'goliath' => 'Голиаф',
+        'half-elf' => 'Полуэльф',
+        'half-orc' => 'Полуорк',
+        'halfling' => 'Полурослик',
+        'human' => 'Человек',
+        'kenku' => 'Кенку',
+        'kobold' => 'Кобольд',
+        'lizardfolk' => 'Людоящер',
+        'orc' => 'Орк',
+        'tabaxi' => 'Табакси',
+        'tiefling' => 'Тифлинг',
+        'triton' => 'Тритон',
+        'yuan-ti' => 'Юань-ти'
     ];
     
-    // Маппинг классов для локализации
-    private $class_mapping = [
-        'barbarian' => 'class_barbarian',
-        'bard' => 'class_bard',
-        'cleric' => 'class_cleric',
-        'druid' => 'class_druid',
-        'fighter' => 'class_fighter',
-        'monk' => 'class_monk',
-        'paladin' => 'class_paladin',
-        'ranger' => 'class_ranger',
-        'rogue' => 'class_rogue',
-        'sorcerer' => 'class_sorcerer',
-        'warlock' => 'class_warlock',
-        'wizard' => 'class_wizard',
-        'artificer' => 'class_artificer'
+    // Русские названия классов
+    private $class_translations = [
+        'barbarian' => 'Варвар',
+        'bard' => 'Бард',
+        'cleric' => 'Жрец',
+        'druid' => 'Друид',
+        'fighter' => 'Воин',
+        'monk' => 'Монах',
+        'paladin' => 'Паладин',
+        'ranger' => 'Следопыт',
+        'rogue' => 'Плут',
+        'sorcerer' => 'Чародей',
+        'warlock' => 'Колдун',
+        'wizard' => 'Волшебник',
+        'artificer' => 'Артифисер'
     ];
     
     public function __construct() {
         $this->dnd_api_service = new DndApiService();
         $this->ai_service = new AiService(); // Используем основной AI сервис
         $this->loadData();
-    }
-    
-    /**
-     * Получение локализованного названия расы
-     */
-    private function getLocalizedRace($race_key) {
-        if (isset($this->race_mapping[$race_key])) {
-            return t($this->race_mapping[$race_key]);
-        }
-        return ucfirst($race_key); // Fallback на оригинальное название
-    }
-    
-    /**
-     * Получение локализованного названия класса
-     */
-    private function getLocalizedClass($class_key) {
-        if (isset($this->class_mapping[$class_key])) {
-            return t($this->class_mapping[$class_key]);
-        }
-        return ucfirst($class_key); // Fallback на оригинальное название
     }
     
     /**
@@ -669,10 +649,9 @@ class CharacterGeneratorV4 {
     private function getRaceDisplayName($race_key, $race_data) {
         $race_key_lower = strtolower($race_key);
         
-        // Используем локализованное название
-        $localized_name = $this->getLocalizedRace($race_key_lower);
-        if ($localized_name !== ucfirst($race_key_lower)) {
-            return $localized_name;
+        // Сначала проверяем переводы
+        if (isset($this->race_translations[$race_key_lower])) {
+            return $this->race_translations[$race_key_lower];
         }
         
         // Если нет перевода, используем данные из API
@@ -690,10 +669,9 @@ class CharacterGeneratorV4 {
     private function getClassDisplayName($class_key, $class_data) {
         $class_key_lower = strtolower($class_key);
         
-        // Используем локализованное название
-        $localized_name = $this->getLocalizedClass($class_key_lower);
-        if ($localized_name !== ucfirst($class_key_lower)) {
-            return $localized_name;
+        // Сначала проверяем переводы
+        if (isset($this->class_translations[$class_key_lower])) {
+            return $this->class_translations[$class_key_lower];
         }
         
         // Если нет перевода, используем данные из API

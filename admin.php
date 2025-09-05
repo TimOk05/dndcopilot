@@ -26,8 +26,7 @@ if (!isAdmin()) {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title id="page-title">Доступ администратора - DnD Copilot</title>
-            <script src="js/language-switcher.js"></script>
+            <title>Доступ администратора - DnD Copilot</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -122,8 +121,8 @@ if (!isAdmin()) {
         <body>
             <div class="admin-login-container">
                 <div class="admin-login-header">
-                    <h1 data-translate="admin_access">🔒 Доступ администратора</h1>
-                    <p data-translate="admin_password_hint">Введите пароль для доступа к админ панели</p>
+                    <h1>🔒 Доступ администратора</h1>
+                    <p>Введите пароль для доступа к админ панели</p>
                 </div>
                 
                 <div class="admin-login-content">
@@ -134,10 +133,10 @@ if (!isAdmin()) {
                         </div>
                         
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
-                        <button type="submit" class="admin-login-btn" data-translate="login_as_admin">Войти как администратор</button>
+                        <button type="submit" class="admin-login-btn">Войти как администратор</button>
                     </form>
                     
-                    <a href="index.php" class="back-link" data-translate="back_to_app">← Вернуться к приложению</a>
+                    <a href="index.php" class="back-link">← Вернуться к приложению</a>
                 </div>
             </div>
 

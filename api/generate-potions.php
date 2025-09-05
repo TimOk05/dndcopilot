@@ -92,7 +92,7 @@ class PotionGenerator {
         
         // Валидация параметров
         if ($count < 1 || $count > 10) {
-            throw new Exception(t('error_invalid_parameters') . ': ' . t('potion_count_range'));
+            throw new Exception('Количество зелий должно быть от 1 до 10');
         }
         
         try {
@@ -107,7 +107,7 @@ class PotionGenerator {
             file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
             
             if (empty($filtered_potions)) {
-                throw new Exception(t('potion_not_found'));
+                throw new Exception('Не найдены зелья с указанными характеристиками');
             }
             
             // Выбираем случайные зелья
@@ -136,7 +136,7 @@ class PotionGenerator {
             file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
             
             if (empty($detailed_potions)) {
-                throw new Exception(t('potion_details_failed'));
+                throw new Exception('Не удалось получить детальную информацию о зельях');
             }
             
             return [
