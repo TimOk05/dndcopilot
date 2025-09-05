@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'auth.php';
+require_once 'api/language-service.php';
 
 // Автоматическое определение мобильного устройства и переадресация
 function isMobileDevice() {
@@ -35,6 +36,9 @@ if (isMobileDevice()) {
 
 // Получаем имя текущего пользователя
 $currentUser = $_SESSION['username'] ?? 'Пользователь';
+
+// Инициализируем языковой сервис
+$language_service = LanguageService::getInstance();
 
 
 

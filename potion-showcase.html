@@ -28,6 +28,31 @@
         .header {
             text-align: center;
             margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .language-switcher {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .language-switcher select {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .language-switcher select option {
+            background: #1a1a2e;
+            color: #fff;
         }
         
         .header h1 {
@@ -366,8 +391,14 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🧪 Генератор зелий D&D</h1>
-            <p>Поиск и создание магических зелий по характеристикам</p>
+            <div class="language-switcher">
+                <select id="language-select" onchange="switchLanguage()">
+                    <option value="en">🇺🇸 English</option>
+                    <option value="ru">🇷🇺 Русский</option>
+                </select>
+            </div>
+            <h1 id="page-title">🧪 Potion Generator D&D</h1>
+            <p id="page-subtitle">Search and create magical potions by characteristics</p>
         </div>
 
         <div class="stats-section">
@@ -453,8 +484,101 @@
     </div>
 
     <script>
+        // Language translations
+        const translations = {
+            en: {
+                'page-title': '🧪 Potion Generator D&D',
+                'page-subtitle': 'Search and create magical potions by characteristics',
+                'stats-title': '📊 Potion Statistics',
+                'loading-stats': 'Loading statistics...',
+                'generate-title': '🎲 Generate Potions',
+                'search-title': '🔍 Search Potions',
+                'count-label': 'Count:',
+                'rarity-label': 'Rarity:',
+                'type-label': 'Type:',
+                'effect-label': 'Effect:',
+                'generate-button': 'Generate Potions',
+                'search-placeholder': 'Search potions...',
+                'search-button': 'Search'
+            },
+            ru: {
+                'page-title': '🧪 Генератор зелий D&D',
+                'page-subtitle': 'Поиск и создание магических зелий по характеристикам',
+                'stats-title': '📊 Статистика зелий',
+                'loading-stats': 'Загрузка статистики...',
+                'generate-title': '🎲 Генерация зелий',
+                'search-title': '🔍 Поиск зелий',
+                'count-label': 'Количество:',
+                'rarity-label': 'Редкость:',
+                'type-label': 'Тип:',
+                'effect-label': 'Эффект:',
+                'generate-button': 'Сгенерировать зелья',
+                'search-placeholder': 'Поиск зелий...',
+                'search-button': 'Поиск'
+            }
+        };
+
+        let currentLanguage = 'en';
+
+        // Initialize language
+        async function initLanguage() {
+            try {
+                const response = await fetch('api/language-switch.php');
+                const data = await response.json();
+                if (data.success) {
+                    currentLanguage = data.current_language;
+                    document.getElementById('language-select').value = currentLanguage;
+                    updateUI();
+                }
+            } catch (error) {
+                console.error('Failed to get current language:', error);
+            }
+        }
+
+        // Switch language
+        async function switchLanguage() {
+            const newLanguage = document.getElementById('language-select').value;
+            try {
+                const response = await fetch('api/language-switch.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        language: newLanguage
+                    })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    currentLanguage = newLanguage;
+                    updateUI();
+                }
+            } catch (error) {
+                console.error('Failed to switch language:', error);
+            }
+        }
+
+        // Update UI with current language
+        function updateUI() {
+            const t = translations[currentLanguage];
+            document.getElementById('page-title').textContent = t['page-title'];
+            document.getElementById('page-subtitle').textContent = t['page-subtitle'];
+
+            // Update other elements if they exist
+            const statsTitle = document.querySelector('.stats-section h2');
+            if (statsTitle) {
+                statsTitle.textContent = t['stats-title'];
+            }
+
+            const loadingStats = document.querySelector('#statsContent .loading');
+            if (loadingStats) {
+                loadingStats.textContent = t['loading-stats'];
+            }
+        }
+
         // Загружаем статистику при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
+            initLanguage();
             loadStats();
         });
 
