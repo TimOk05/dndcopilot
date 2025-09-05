@@ -70,11 +70,13 @@
 <body>
     <!-- Language Switcher -->
     <div class="language-switcher">
-        <label for="language-select">Language:</label>
-        <select id="language-select" onchange="switchLanguage()">
-            <option value="en">English</option>
-            <option value="ru">Русский</option>
-        </select>
+        <form method="POST" action="api/language-switch.php" style="display: inline;">
+            <label for="language-select">Language:</label>
+            <select name="language" id="language-select" onchange="this.form.submit()">
+                <option value="en">English</option>
+                <option value="ru">Русский</option>
+            </select>
+        </form>
     </div>
 
     <h1 id="page-title">🧪 Potion API Test</h1>

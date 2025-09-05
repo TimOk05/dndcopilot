@@ -576,7 +576,12 @@
     <header class="header">
         <div class="logo">DnD Copilot</div>
         <div class="header-controls">
-            <button class="language-toggle" onclick="toggleLanguage()">🌐</button>
+            <form method="POST" action="api/language-switch.php" style="display: inline;">
+                <select name="language" class="language-toggle" onchange="this.form.submit()" style="background: none; border: 2px solid var(--border-primary); border-radius: var(--border-radius); padding: var(--spacing-xs) var(--spacing-sm); color: var(--text-primary); font-size: var(--text-sm); cursor: pointer;">
+                    <option value="en">🇺🇸</option>
+                    <option value="ru">🇷🇺</option>
+                </select>
+            </form>
             <button class="theme-toggle" onclick="cycleTheme()">🎨</button>
         </div>
     </header>

@@ -35,21 +35,42 @@ try {
         
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Переключение языка
-        $input = json_decode(file_get_contents('php://input'), true);
+        $new_language = null;
         
-        if (!$input || !isset($input['language'])) {
+        // Проверяем JSON данные
+        if (isset($_SERVER['CONTENT_TYPE']) && strpos($_SERVER['CONTENT_TYPE'], 'application/json') !== false) {
+            $input = json_decode(file_get_contents('php://input'), true);
+            if ($input && isset($input['language'])) {
+                $new_language = $input['language'];
+            }
+        }
+        
+        // Проверяем POST данные
+        if (!$new_language && isset($_POST['language'])) {
+            $new_language = $_POST['language'];
+        }
+        
+        if (!$new_language) {
             throw new Exception('Language parameter is required');
         }
         
-        $new_language = $input['language'];
-        
         if ($language_service->setLanguage($new_language)) {
-            echo json_encode([
-                'success' => true,
-                'message' => 'Language switched successfully',
-                'current_language' => $new_language,
-                'language_name' => $language_service->getLanguageName($new_language)
-            ], JSON_UNESCAPED_UNICODE);
+            // Если это POST форма (не JSON), делаем редирект
+            if (isset($_POST['language'])) {
+                $referer = $_SERVER['HTTP_REFERER'] ?? '../index.php';
+                // Убираем api/ из пути если есть
+                $referer = str_replace('/api/', '/', $referer);
+                header('Location: ' . $referer);
+                exit;
+            } else {
+                // JSON ответ для AJAX
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Language switched successfully',
+                    'current_language' => $new_language,
+                    'language_name' => $language_service->getLanguageName($new_language)
+                ], JSON_UNESCAPED_UNICODE);
+            }
         } else {
             throw new Exception('Invalid language specified');
         }

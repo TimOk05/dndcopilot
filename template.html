@@ -5343,22 +5343,12 @@
             </div>
 
             <div class="language-toggle">
-                <div class="language-dropdown">
-                    <button id="language-toggle" class="language-btn" title="Switch Language">
-                        <span class="language-icon">🌐</span>
-                        <span class="language-name"><?php echo $language_service->getCurrentLanguage() === 'en' ? 'EN' : 'RU'; ?></span>
-                    </button>
-                    <div class="language-menu" id="language-menu">
-                        <div class="language-option <?php echo $language_service->getCurrentLanguage() === 'en' ? 'active' : ''; ?>" data-language="en">
-                            <span class="language-icon">🇺🇸</span>
-                            <span class="language-name">English</span>
-                        </div>
-                        <div class="language-option <?php echo $language_service->getCurrentLanguage() === 'ru' ? 'active' : ''; ?>" data-language="ru">
-                            <span class="language-icon">🇷🇺</span>
-                            <span class="language-name">Русский</span>
-                        </div>
-                    </div>
-                </div>
+                <form method="POST" action="api/language-switch.php" style="display: inline;">
+                    <select name="language" class="language-btn" onchange="this.form.submit()" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 8px 12px; color: var(--text-primary); cursor: pointer; font-size: 0.9em; font-weight: bold;">
+                        <option value="en" <?php echo $language_service->getCurrentLanguage() === 'en' ? 'selected' : ''; ?>>🇺🇸 EN</option>
+                        <option value="ru" <?php echo $language_service->getCurrentLanguage() === 'ru' ? 'selected' : ''; ?>>🇷🇺 RU</option>
+                    </select>
+                </form>
             </div>
 
             <div class="theme-toggle">

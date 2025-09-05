@@ -392,10 +392,12 @@
     <div class="container">
         <div class="header">
             <div class="language-switcher">
-                <select id="language-select" onchange="switchLanguage()">
-                    <option value="en">🇺🇸 English</option>
-                    <option value="ru">🇷🇺 Русский</option>
-                </select>
+                <form method="POST" action="api/language-switch.php" style="display: inline;">
+                    <select name="language" onchange="this.form.submit()">
+                        <option value="en">🇺🇸 English</option>
+                        <option value="ru">🇷🇺 Русский</option>
+                    </select>
+                </form>
             </div>
             <h1 id="page-title">🧪 Potion Generator D&D</h1>
             <p id="page-subtitle">Search and create magical potions by characteristics</p>
