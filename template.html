@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="DnD Chat">
     <title id="page-title">DnD AI</title>
-    <script src="js/language-switcher.js"></script>
+    <script src="js/simple-lang-switcher.js"></script>
     <!-- Временно убираем manifest.json из-за проблем с синхронизацией -->
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <meta name="theme-color" content="#a67c52">
@@ -5267,7 +5267,7 @@
                     <a href="admin.php" class="admin-link" style="display: block !important; visibility: visible !important; opacity: 1 !important;">🔧</a>
                     <?php endif; ?>
 
-                    <button class="logout-btn btn btn-secondary" onclick="logout()" data-translate="logout">🚪 Выйти</button>
+                    <button class="logout-btn btn btn-secondary" onclick="logout()" data-lang="logout">🚪 Выйти</button>
                 </div>
             </div>
 
@@ -5299,7 +5299,7 @@
 
 
         </div>
-        <h1 class="animate-slide-up" data-translate="app_name">DnD Copilot</h1>
+        <h1 class="animate-slide-up" data-lang="app_name">DnD Copilot</h1>
         <div class="fast-bar animate-fade-in">
             {{fast_buttons}}
             <div class="hotkeys-hint">
@@ -5312,7 +5312,7 @@
         </div>
         <form method="post" id="chatForm" enctype="multipart/form-data">
             <div class="chat-input-container">
-                <input type="text" name="message" id="messageInput" placeholder="Введите сообщение..." data-translate-placeholder="enter_message" autocomplete="off" required>
+                <input type="text" name="message" id="messageInput" placeholder="Введите сообщение..." data-lang="enter_message" autocomplete="off" required>
                 <div class="chat-controls">
                     <label for="pdf-upload" class="pdf-upload-btn" title="Загрузить PDF">
                         📄

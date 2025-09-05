@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'auth.php';
+require_once 'simple-lang.php';
 
 // Автоматическое определение мобильного устройства и переадресация
 function isMobileDevice() {
@@ -34,7 +35,7 @@ if (isMobileDevice()) {
 }
 
 // Получаем имя текущего пользователя
-$currentUser = $_SESSION['username'] ?? t('user_default');
+$currentUser = $_SESSION['username'] ?? 'Пользователь';
 
 
 
@@ -68,15 +69,15 @@ if (isset($_POST['fast_action'])) {
             $sum = array_sum($results);
             // Формируем результат в зависимости от количества костей
             if ($count == 1) {
-                $out = "🎲 " . t('dice_roll', ['dice' => $dice]) . "\n📊 " . t('dice_result', ['result' => $results[0]]);
+                $out = "🎲 " . lang('dice_roll', ['dice' => $dice]) . "\n📊 " . lang('dice_result', ['result' => $results[0]]);
             } else {
-                $out = "🎲 " . t('dice_roll', ['dice' => $dice]) . "\n📊 " . t('dice_results', ['results' => implode(', ', $results)]) . "\n💎 " . t('dice_sum', ['sum' => $sum]);
+                $out = "🎲 " . lang('dice_roll', ['dice' => $dice]) . "\n📊 " . lang('dice_results', ['results' => implode(', ', $results)]) . "\n💎 " . lang('dice_sum', ['sum' => $sum]);
             }
-            if ($label) $out .= "\n💬 " . t('dice_comment', ['comment' => $label]);
+            if ($label) $out .= "\n💬 " . lang('dice_comment', ['comment' => $label]);
             echo nl2br(htmlspecialchars($out));
             exit;
         } else {
-            echo t('invalid_dice_format');
+            echo lang('invalid_dice_format');
             exit;
         }
     }
@@ -85,9 +86,9 @@ if (isset($_POST['fast_action'])) {
         $content = $_POST['content'] ?? '';
         if ($content) {
             $_SESSION['notes'][] = $content;
-            echo t('note_saved');
+            echo lang('note_saved');
         } else {
-            echo t('error_empty_content');
+            echo lang('error_empty_content');
         }
         exit;
     }
@@ -261,11 +262,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message']) && !isset(
 
 // --- Генерация быстрых кнопок ---
 $fastBtns = '<div class="button-grid">';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="' . t('roll_dice') . '" aria-label="' . t('open_dice_generator') . '">🎲 ' . t('dice_roller') . '</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="' . t('create_character') . '" aria-label="' . t('open_character_generator') . '">⚔️ ' . t('characters') . '</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="' . t('create_enemy') . '" aria-label="' . t('open_enemy_generator') . '">👹 ' . t('enemies') . '</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="' . t('create_potion') . '" aria-label="' . t('open_potion_generator') . '">🧪 ' . t('potions') . '</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="' . t('manage_initiative') . '" aria-label="' . t('open_initiative_manager') . '">⚡ ' . t('initiative_tracker') . '</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="' . lang('roll_dice') . '" aria-label="' . lang('roll_dice') . '">🎲 ' . lang('dice_roller') . '</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="' . lang('add_character') . '" aria-label="' . lang('add_character') . '">⚔️ ' . lang('character_generator') . '</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="' . lang('create_enemy') . '" aria-label="' . lang('create_enemy') . '">👹 ' . lang('enemy_generator') . '</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="' . lang('create_potion') . '" aria-label="' . lang('create_potion') . '">🧪 ' . lang('potion_generator') . '</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="' . lang('combat_system') . '" aria-label="' . lang('combat_system') . '">⚡ ' . lang('combat_system') . '</button>';
 $fastBtns .= '<a href="combat.html" class="fast-btn btn btn-primary interactive" style="text-decoration: none; display: inline-block;" data-tooltip="Система боя" aria-label="Перейти к системе боя">⚔️ Система боя</a>';
 $fastBtns .= '</div>';
 

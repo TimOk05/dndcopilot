@@ -2,7 +2,6 @@
 // Конфигурационный файл для DnD приложения
 
 // Подключаем систему локализации
-require_once __DIR__ . '/localization/LocalizationService.php';
 
 // Настройки базы данных (если используется)
 define('DB_HOST', 'localhost');
@@ -245,7 +244,4 @@ function initApp() {
 
 // Запускаем инициализацию
 initApp();
-
-// Инициализируем локализацию
-$localization = LocalizationService::getInstance();
 ?>
