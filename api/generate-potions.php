@@ -66,22 +66,12 @@ class PotionGenerator {
     private $dnd5e_api_url = 'http://www.dnd5eapi.co';
     private $cache_file = __DIR__ . '/../logs/cache/potions_cache.json';
     private $cache_duration = 3600; // 1 час
-    private $language_service;
     
     public function __construct() {
         // Создаем директорию для кеша если не существует
         $cache_dir = dirname($this->cache_file);
         if (!is_dir($cache_dir)) {
             mkdir($cache_dir, 0755, true);
-        }
-        
-        // Инициализируем языковой сервис
-        require_once __DIR__ . '/language-service.php';
-        $this->language_service = LanguageService::getInstance();
-        
-        // Принудительно устанавливаем язык из GET параметра для тестирования
-        if (isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'ru'])) {
-            $this->language_service->setLanguage($_GET['lang']);
         }
     }
     
@@ -427,18 +417,16 @@ class PotionGenerator {
         $type = $this->determinePotionType($potion_data);
         $effects = $this->getPotionEffects($potion_data);
         
-        $rarity = $potion_data['rarity']['name'] ?? 'Unknown';
-        
         return [
             'name' => $potion_data['name'],
-            'rarity' => $this->language_service->translateRarity($rarity),
+            'rarity' => $potion_data['rarity']['name'] ?? 'Unknown',
             'type' => $type,
             'description' => $this->formatDescription($potion_data['desc'] ?? []),
             'effects' => $effects,
             'value' => $this->getPotionValue($potion_data),
-            'weight' => $this->language_service->isRussian() ? '0.5 фунта' : '0.5 lb',
+            'weight' => '0.5 фунта',
             'icon' => $this->getPotionIcon($type),
-            'color' => $this->getPotionColor($rarity),
+            'color' => $this->getPotionColor($potion_data['rarity']['name'] ?? 'Common'),
             'properties' => $this->getPotionProperties($potion_data),
             'equipment_category' => $potion_data['equipment_category']['name'] ?? 'Adventuring Gear'
         ];
@@ -453,23 +441,23 @@ class PotionGenerator {
         
         // Определяем тип по названию и описанию
         if (strpos($name, 'healing') !== false || strpos($desc, 'heal') !== false || strpos($desc, 'hit point') !== false || strpos($desc, 'regain') !== false) {
-            return $this->language_service->translatePotionType('healing');
+            return 'Восстановление';
         } elseif (strpos($name, 'strength') !== false || strpos($name, 'giant') !== false || strpos($desc, 'strength') !== false || strpos($desc, 'advantage') !== false) {
-            return $this->language_service->translatePotionType('enhancement');
+            return 'Усиление';
         } elseif (strpos($name, 'resistance') !== false || strpos($name, 'invulnerability') !== false || strpos($desc, 'resistance') !== false || strpos($desc, 'immune') !== false) {
-            return $this->language_service->translatePotionType('protection');
+            return 'Защита';
         } elseif (strpos($name, 'invisibility') !== false || strpos($name, 'disguise') !== false || strpos($desc, 'invisible') !== false || strpos($desc, 'disguise') !== false) {
-            return $this->language_service->translatePotionType('illusion');
+            return 'Иллюзия';
         } elseif (strpos($name, 'flying') !== false || strpos($name, 'growth') !== false || strpos($name, 'diminution') !== false || strpos($desc, 'fly') !== false || strpos($desc, 'size') !== false) {
-            return $this->language_service->translatePotionType('transmutation');
+            return 'Трансмутация';
         } elseif (strpos($name, 'poison') !== false || strpos($desc, 'poison') !== false || strpos($desc, 'damage') !== false) {
-            return $this->language_service->translatePotionType('necromancy');
+            return 'Некромантия';
         } elseif (strpos($name, 'clairvoyance') !== false || strpos($name, 'mind reading') !== false || strpos($desc, 'see') !== false || strpos($desc, 'vision') !== false) {
-            return $this->language_service->translatePotionType('divination');
+            return 'Прорицание';
         } elseif (strpos($name, 'fire') !== false || strpos($name, 'frost') !== false || strpos($name, 'lightning') !== false || strpos($desc, 'fire') !== false || strpos($desc, 'cold') !== false || strpos($desc, 'lightning') !== false) {
-            return $this->language_service->translatePotionType('evocation');
+            return 'Эвокация';
         } else {
-            return $this->language_service->translatePotionType('universal');
+            return 'Универсальное';
         }
     }
     
@@ -503,7 +491,7 @@ class PotionGenerator {
      */
     private function formatDescription($desc_array) {
         if (empty($desc_array)) {
-            return $this->language_service->translate('description not available');
+            return 'Описание недоступно';
         }
         
         return implode(' ', $desc_array);
@@ -516,15 +504,14 @@ class PotionGenerator {
         $rarity = strtolower($potion_data['rarity']['name'] ?? 'common');
         
         $values = [
-            'common' => '50',
-            'uncommon' => '150',
-            'rare' => '500',
-            'very rare' => '1000',
-            'legendary' => '5000'
+            'common' => '50 золотых',
+            'uncommon' => '150 золотых',
+            'rare' => '500 золотых',
+            'very rare' => '1000 золотых',
+            'legendary' => '5000 золотых'
         ];
         
-        $numeric_value = $values[$rarity] ?? '100';
-        return $this->language_service->translateValue($numeric_value . ' gold pieces', $rarity);
+        return $values[$rarity] ?? '100 золотых';
     }
     
     /**
@@ -565,19 +552,15 @@ class PotionGenerator {
      * Получение свойств зелья
      */
     private function getPotionProperties($potion_data) {
-        $properties = [
-            $this->language_service->translate('potion'),
-            $this->language_service->translate('magical')
-        ];
+        $properties = ['Питье', 'Магическое'];
         
         // Добавляем редкость
-        $rarity = $potion_data['rarity']['name'] ?? 'Unknown';
-        $properties[] = $this->language_service->translateRarity($rarity);
+        $properties[] = $potion_data['rarity']['name'] ?? 'Unknown';
         
         // Добавляем специальные свойства
         $name = strtolower($potion_data['name']);
         if (strpos($name, 'poison') !== false) {
-            $properties[] = $this->language_service->translate('poison');
+            $properties[] = 'Яд';
         }
         
         return $properties;

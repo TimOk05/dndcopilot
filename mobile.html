@@ -188,22 +188,6 @@
             gap: var(--spacing-xs);
         }
         
-        .language-toggle {
-            background: none;
-            border: 2px solid var(--border-primary);
-            border-radius: var(--border-radius);
-            padding: var(--spacing-xs) var(--spacing-sm);
-            color: var(--text-primary);
-            font-size: var(--text-sm);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .language-toggle:hover {
-            background: var(--accent-primary);
-            color: var(--bg-secondary);
-        }
-        
         .theme-toggle {
             background: none;
             border: 2px solid var(--border-primary);
@@ -576,13 +560,8 @@
     <header class="header">
         <div class="logo">DnD Copilot</div>
         <div class="header-controls">
-            <form method="POST" action="api/language-switch.php" style="display: inline;">
-                <select name="language" class="language-toggle" onchange="this.form.submit()" style="background: none; border: 2px solid var(--border-primary); border-radius: var(--border-radius); padding: var(--spacing-xs) var(--spacing-sm); color: var(--text-primary); font-size: var(--text-sm); cursor: pointer;">
-                    <option value="en">🇺🇸</option>
-                    <option value="ru">🇷🇺</option>
-                </select>
-            </form>
             <button class="theme-toggle" onclick="cycleTheme()">🎨</button>
+
         </div>
     </header>
 
@@ -1013,50 +992,6 @@
             setTheme(themes[nextIndex]);
         }
 
-        // Переключение языков
-        let currentLanguage = 'en';
-
-        // Инициализация языка при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
-            // Получаем текущий язык из API
-            fetch('api/language-switch.php')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        currentLanguage = data.current_language;
-                    }
-                })
-                .catch(error => console.error('Failed to get language:', error));
-        });
-
-        async function toggleLanguage() {
-            const newLanguage = currentLanguage === 'en' ? 'ru' : 'en';
-            await switchLanguage(newLanguage);
-        }
-
-        async function switchLanguage(language) {
-            try {
-                const response = await fetch('api/language-switch.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        language: language
-                    })
-                });
-
-                const data = await response.json();
-                if (data.success) {
-                    currentLanguage = language;
-                    // Перезагружаем страницу для применения изменений
-                    window.location.reload();
-                }
-            } catch (error) {
-                console.error('Error switching language:', error);
-            }
-        }
-
         function setTheme(theme) {
             currentTheme = theme;
             document.documentElement.setAttribute('data-theme', theme);
@@ -1246,7 +1181,7 @@
             if (rarity) params.append('rarity', rarity);
             if (type) params.append('type', type);
 
-            fetch(`api/generate-potions.php?${params.toString()}&lang=${currentLanguage}`)
+            fetch(`api/generate-potions.php?${params.toString()}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {

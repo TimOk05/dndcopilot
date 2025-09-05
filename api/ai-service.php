@@ -9,7 +9,6 @@ class AiService {
     private $preferred_api = 'deepseek'; // deepseek, openai, google
     private $cache_duration = 3600; // 1 час - увеличен для лучшей производительности
     private $cache_dir;
-    private $language_service;
     
     public function __construct() {
         $this->api_keys = [
@@ -25,10 +24,6 @@ class AiService {
         if (!is_dir($this->cache_dir)) {
             mkdir($this->cache_dir, 0755, true);
         }
-        
-        // Инициализируем языковой сервис
-        require_once __DIR__ . '/language-service.php';
-        $this->language_service = LanguageService::getInstance();
         
         // Логируем доступные API
         $available_apis = array_filter($this->api_keys);
@@ -378,7 +373,7 @@ class AiService {
         $data = [
             'model' => 'deepseek-chat',
             'messages' => [
-                ['role' => 'system', 'content' => $this->language_service->getAISystemPrompt()],
+                ['role' => 'system', 'content' => 'Ты опытный мастер D&D, создающий атмосферные описания и истории. Отвечай на русском языке.'],
                 ['role' => 'user', 'content' => $prompt]
             ],
             'max_tokens' => 300,
@@ -395,7 +390,7 @@ class AiService {
         $data = [
             'model' => 'gpt-3.5-turbo',
             'messages' => [
-                ['role' => 'system', 'content' => $this->language_service->getAISystemPrompt()],
+                ['role' => 'system', 'content' => 'Ты опытный мастер D&D, создающий атмосферные описания и истории. Отвечай на русском языке.'],
                 ['role' => 'user', 'content' => $prompt]
             ],
             'max_tokens' => 300,
@@ -413,7 +408,7 @@ class AiService {
             'contents' => [
                 [
                     'parts' => [
-                        ['text' => $this->language_service->getAISystemPrompt()],
+                        ['text' => 'Ты опытный мастер D&D, создающий атмосферные описания и истории. Отвечай на русском языке.'],
                         ['text' => $prompt]
                     ]
                 ]

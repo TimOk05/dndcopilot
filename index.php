@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once 'auth.php';
-require_once 'api/language-service.php';
 
 // Автоматическое определение мобильного устройства и переадресация
 function isMobileDevice() {
@@ -36,9 +35,6 @@ if (isMobileDevice()) {
 
 // Получаем имя текущего пользователя
 $currentUser = $_SESSION['username'] ?? 'Пользователь';
-
-// Инициализируем языковой сервис
-$language_service = LanguageService::getInstance();
 
 
 
@@ -1504,7 +1500,7 @@ function openPotionModalSimple() {
             params.append('type', formData.get('type'));
         }
         
-        fetch('api/generate-potions.php?' + params.toString() + '&lang=' + (window.currentLanguage || 'en'))
+        fetch('api/generate-potions.php?' + params.toString())
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
