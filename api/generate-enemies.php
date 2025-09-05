@@ -5,6 +5,10 @@ if (php_sapi_name() !== 'cli') {
 }
 require_once __DIR__ . '/../config.php';
 
+// Инициализируем языковую систему
+$currentLang = getCurrentLanguage();
+$translations = loadTranslations($currentLang);
+
 class EnemyGenerator {
     private $dnd5e_api_url = 'https://www.dnd5eapi.co/api';
     private $deepseek_api_key;
