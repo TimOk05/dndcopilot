@@ -1011,6 +1011,19 @@
         // Переключение языков
         let currentLanguage = 'en';
 
+        // Инициализация языка при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            // Получаем текущий язык из API
+            fetch('api/language-switch.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        currentLanguage = data.current_language;
+                    }
+                })
+                .catch(error => console.error('Failed to get language:', error));
+        });
+
         async function toggleLanguage() {
             const newLanguage = currentLanguage === 'en' ? 'ru' : 'en';
             await switchLanguage(newLanguage);
@@ -1228,7 +1241,7 @@
             if (rarity) params.append('rarity', rarity);
             if (type) params.append('type', type);
 
-            fetch(`api/generate-potions.php?${params.toString()}`)
+            fetch(`api/generate-potions.php?${params.toString()}&lang=${currentLanguage}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {

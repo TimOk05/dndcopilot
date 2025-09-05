@@ -5503,6 +5503,8 @@
         // JS для модального окна и заметок будет добавлен через PHP
 
         // Переключатель языков и темы
+        window.currentLanguage = '<?php echo $language_service->getCurrentLanguage(); ?>';
+
         document.addEventListener('DOMContentLoaded', function() {
             const themeToggle = document.getElementById('theme-toggle');
             const themeIcon = themeToggle.querySelector('.theme-icon');
@@ -5566,6 +5568,9 @@
                         if (languageName) {
                             languageName.textContent = language.toUpperCase();
                         }
+
+                        // Обновляем глобальную переменную
+                        window.currentLanguage = language;
 
                         // Перезагружаем страницу для применения изменений
                         window.location.reload();

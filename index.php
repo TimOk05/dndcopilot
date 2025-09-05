@@ -1504,7 +1504,7 @@ function openPotionModalSimple() {
             params.append('type', formData.get('type'));
         }
         
-        fetch('api/generate-potions.php?' + params.toString())
+        fetch('api/generate-potions.php?' + params.toString() + '&lang=' + (window.currentLanguage || 'en'))
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);

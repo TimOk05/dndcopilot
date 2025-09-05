@@ -78,6 +78,11 @@ class PotionGenerator {
         // Инициализируем языковой сервис
         require_once __DIR__ . '/language-service.php';
         $this->language_service = LanguageService::getInstance();
+        
+        // Принудительно устанавливаем язык из GET параметра для тестирования
+        if (isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'ru'])) {
+            $this->language_service->setLanguage($_GET['lang']);
+        }
     }
     
     /**
@@ -422,16 +427,18 @@ class PotionGenerator {
         $type = $this->determinePotionType($potion_data);
         $effects = $this->getPotionEffects($potion_data);
         
+        $rarity = $potion_data['rarity']['name'] ?? 'Unknown';
+        
         return [
             'name' => $potion_data['name'],
-            'rarity' => $potion_data['rarity']['name'] ?? 'Unknown',
+            'rarity' => $this->language_service->translateRarity($rarity),
             'type' => $type,
             'description' => $this->formatDescription($potion_data['desc'] ?? []),
             'effects' => $effects,
             'value' => $this->getPotionValue($potion_data),
-            'weight' => '0.5 фунта',
+            'weight' => $this->language_service->isRussian() ? '0.5 фунта' : '0.5 lb',
             'icon' => $this->getPotionIcon($type),
-            'color' => $this->getPotionColor($potion_data['rarity']['name'] ?? 'Common'),
+            'color' => $this->getPotionColor($rarity),
             'properties' => $this->getPotionProperties($potion_data),
             'equipment_category' => $potion_data['equipment_category']['name'] ?? 'Adventuring Gear'
         ];

@@ -186,7 +186,7 @@
             resultDiv.innerHTML = `<div class="result">${t['testing']}</div>`;
 
             try {
-                const response = await fetch('api/generate-potions.php?action=random&count=1');
+                const response = await fetch(`api/generate-potions.php?action=random&count=1&lang=${currentLanguage}`);
                 const data = await response.json();
 
                 if (data.success) {
@@ -219,7 +219,7 @@
             resultDiv.innerHTML = `<div class="result">${t['testing']}</div>`;
 
             try {
-                const response = await fetch('api/generate-potions.php?action=random&count=2&rarity=Uncommon');
+                const response = await fetch(`api/generate-potions.php?action=random&count=2&rarity=Uncommon&lang=${currentLanguage}`);
                 const data = await response.json();
 
                 if (data.success) {
@@ -253,7 +253,7 @@
 
             try {
                 // Тестируем неверный параметр
-                const response = await fetch('api/generate-potions.php?action=random&count=999');
+                const response = await fetch(`api/generate-potions.php?action=random&count=999&lang=${currentLanguage}`);
                 const data = await response.json();
 
                 if (data.success) {

@@ -564,6 +564,9 @@
             document.getElementById('page-title').textContent = t['page-title'];
             document.getElementById('page-subtitle').textContent = t['page-subtitle'];
 
+            // Обновляем глобальную переменную для API вызовов
+            window.currentLanguage = currentLanguage;
+
             // Update other elements if they exist
             const statsTitle = document.querySelector('.stats-section h2');
             if (statsTitle) {
@@ -642,7 +645,7 @@
                 if (type) params.append('type', type);
                 if (effect) params.append('effect', effect);
 
-                const response = await fetch(`api/generate-potions.php?${params.toString()}`);
+                const response = await fetch(`api/generate-potions.php?${params.toString()}&lang=${currentLanguage}`);
                 const data = await response.json();
 
                 if (data.success) {
@@ -679,7 +682,7 @@
                 if (type) params.append('type', type);
                 if (effect) params.append('effect', effect);
 
-                const response = await fetch(`api/generate-potions.php?${params.toString()}`);
+                const response = await fetch(`api/generate-potions.php?${params.toString()}&lang=${currentLanguage}`);
                 const data = await response.json();
 
                 if (data.success) {
