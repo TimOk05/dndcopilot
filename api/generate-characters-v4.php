@@ -10,54 +10,16 @@ class CharacterGeneratorV4 {
     private $ai_service;
     private $occupations = [];
     private $race_names = [];
-    
-    // Русские названия рас
-    private $race_translations = [
-        'aarakocra' => 'Ааракокра',
-        'aasimar' => 'Аасимар',
-        'bugbear' => 'Багбир',
-        'dragonborn' => 'Драконорожденный',
-        'dwarf' => 'Дварф',
-        'elf' => 'Эльф',
-        'firbolg' => 'Фирболг',
-        'genasi' => 'Генаси',
-        'gnome' => 'Гном',
-        'goblin' => 'Гоблин',
-        'goliath' => 'Голиаф',
-        'half-elf' => 'Полуэльф',
-        'half-orc' => 'Полуорк',
-        'halfling' => 'Полурослик',
-        'human' => 'Человек',
-        'kenku' => 'Кенку',
-        'kobold' => 'Кобольд',
-        'lizardfolk' => 'Людоящер',
-        'orc' => 'Орк',
-        'tabaxi' => 'Табакси',
-        'tiefling' => 'Тифлинг',
-        'triton' => 'Тритон',
-        'yuan-ti' => 'Юань-ти'
-    ];
-    
-    // Русские названия классов
-    private $class_translations = [
-        'barbarian' => 'Варвар',
-        'bard' => 'Бард',
-        'cleric' => 'Жрец',
-        'druid' => 'Друид',
-        'fighter' => 'Воин',
-        'monk' => 'Монах',
-        'paladin' => 'Паладин',
-        'ranger' => 'Следопыт',
-        'rogue' => 'Плут',
-        'sorcerer' => 'Чародей',
-        'warlock' => 'Колдун',
-        'wizard' => 'Волшебник',
-        'artificer' => 'Артифисер'
-    ];
+    private $language_service;
     
     public function __construct() {
         $this->dnd_api_service = new DndApiService();
         $this->ai_service = new AiService(); // Используем основной AI сервис
+        
+        // Инициализируем языковой сервис
+        require_once __DIR__ . '/language-service.php';
+        $this->language_service = LanguageService::getInstance();
+        
         $this->loadData();
     }
     
@@ -649,18 +611,15 @@ class CharacterGeneratorV4 {
     private function getRaceDisplayName($race_key, $race_data) {
         $race_key_lower = strtolower($race_key);
         
-        // Сначала проверяем переводы
-        if (isset($this->race_translations[$race_key_lower])) {
-            return $this->race_translations[$race_key_lower];
-        }
+        // Используем языковой сервис для перевода
+        $translated_race = $this->language_service->translateRace($race_key_lower);
         
-        // Если нет перевода, используем данные из API
-        if (isset($race_data['name'])) {
+        // Если перевод не найден, используем данные из API
+        if ($translated_race === $race_key_lower && isset($race_data['name'])) {
             return $race_data['name'];
         }
         
-        // Fallback на оригинальное название
-        return ucfirst($race_key);
+        return $translated_race;
     }
     
     /**
@@ -669,18 +628,15 @@ class CharacterGeneratorV4 {
     private function getClassDisplayName($class_key, $class_data) {
         $class_key_lower = strtolower($class_key);
         
-        // Сначала проверяем переводы
-        if (isset($this->class_translations[$class_key_lower])) {
-            return $this->class_translations[$class_key_lower];
-        }
+        // Используем языковой сервис для перевода
+        $translated_class = $this->language_service->translateClass($class_key_lower);
         
-        // Если нет перевода, используем данные из API
-        if (isset($class_data['name'])) {
+        // Если перевод не найден, используем данные из API
+        if ($translated_class === $class_key_lower && isset($class_data['name'])) {
             return $class_data['name'];
         }
         
-        // Fallback на оригинальное название
-        return ucfirst($class_key);
+        return $translated_class;
     }
     
     /**

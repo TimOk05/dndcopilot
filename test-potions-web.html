@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест API зелий</title>
+    <title>Potion API Test</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -47,34 +47,143 @@
             border-radius: 5px;
             overflow-x: auto;
         }
+        
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .language-switcher select {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
     </style>
 </head>
 
 <body>
-    <h1>🧪 Тест API зелий через браузер</h1>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <label for="language-select">Language:</label>
+        <select id="language-select" onchange="switchLanguage()">
+            <option value="en">English</option>
+            <option value="ru">Русский</option>
+        </select>
+    </div>
+
+    <h1 id="page-title">🧪 Potion API Test</h1>
 
     <div class="test-section">
-        <h2>Тест 1: Простая генерация зелий</h2>
-        <button onclick="testSimpleGeneration()">Сгенерировать 1 зелье</button>
+        <h2 id="test1-title">Test 1: Simple Potion Generation</h2>
+        <button id="test1-button" onclick="testSimpleGeneration()">Generate 1 Potion</button>
         <div id="result1"></div>
     </div>
 
     <div class="test-section">
-        <h2>Тест 2: Генерация с параметрами</h2>
-        <button onclick="testGenerationWithParams()">Сгенерировать 2 зелья</button>
+        <h2 id="test2-title">Test 2: Generation with Parameters</h2>
+        <button id="test2-button" onclick="testGenerationWithParams()">Generate 2 Potions</button>
         <div id="result2"></div>
     </div>
 
     <div class="test-section">
-        <h2>Тест 3: Проверка ошибок</h2>
-        <button onclick="testErrorHandling()">Тест обработки ошибок</button>
+        <h2 id="test3-title">Test 3: Error Handling</h2>
+        <button id="test3-button" onclick="testErrorHandling()">Test Error Handling</button>
         <div id="result3"></div>
     </div>
 
     <script>
+        // Language translations
+        const translations = {
+            en: {
+                'page-title': '🧪 Potion API Test',
+                'test1-title': 'Test 1: Simple Potion Generation',
+                'test1-button': 'Generate 1 Potion',
+                'test2-title': 'Test 2: Generation with Parameters',
+                'test2-button': 'Generate 2 Potions',
+                'test3-title': 'Test 3: Error Handling',
+                'test3-button': 'Test Error Handling',
+                'testing': 'Testing...',
+                'success': 'Success! Generated potions:',
+                'error': 'Error:',
+                'network-error': 'Network error:'
+            },
+            ru: {
+                'page-title': '🧪 Тест API зелий',
+                'test1-title': 'Тест 1: Простая генерация зелий',
+                'test1-button': 'Сгенерировать 1 зелье',
+                'test2-title': 'Тест 2: Генерация с параметрами',
+                'test2-button': 'Сгенерировать 2 зелья',
+                'test3-title': 'Тест 3: Проверка ошибок',
+                'test3-button': 'Тест обработки ошибок',
+                'testing': 'Тестируем...',
+                'success': 'Успешно! Сгенерировано зелий:',
+                'error': 'Ошибка:',
+                'network-error': 'Ошибка сети:'
+            }
+        };
+
+        let currentLanguage = 'en';
+
+        // Initialize language
+        async function initLanguage() {
+            try {
+                const response = await fetch('api/language-switch.php');
+                const data = await response.json();
+                if (data.success) {
+                    currentLanguage = data.current_language;
+                    document.getElementById('language-select').value = currentLanguage;
+                    updateUI();
+                }
+            } catch (error) {
+                console.error('Failed to get current language:', error);
+            }
+        }
+
+        // Switch language
+        async function switchLanguage() {
+            const newLanguage = document.getElementById('language-select').value;
+            try {
+                const response = await fetch('api/language-switch.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        language: newLanguage
+                    })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    currentLanguage = newLanguage;
+                    updateUI();
+                }
+            } catch (error) {
+                console.error('Failed to switch language:', error);
+            }
+        }
+
+        // Update UI with current language
+        function updateUI() {
+            const t = translations[currentLanguage];
+            document.getElementById('page-title').textContent = t['page-title'];
+            document.getElementById('test1-title').textContent = t['test1-title'];
+            document.getElementById('test1-button').textContent = t['test1-button'];
+            document.getElementById('test2-title').textContent = t['test2-title'];
+            document.getElementById('test2-button').textContent = t['test2-button'];
+            document.getElementById('test3-title').textContent = t['test3-title'];
+            document.getElementById('test3-button').textContent = t['test3-button'];
+        }
+
         async function testSimpleGeneration() {
             const resultDiv = document.getElementById('result1');
-            resultDiv.innerHTML = '<div class="result">Тестируем...</div>';
+            const t = translations[currentLanguage];
+            resultDiv.innerHTML = `<div class="result">${t['testing']}</div>`;
 
             try {
                 const response = await fetch('api/generate-potions.php?action=random&count=1');
@@ -83,14 +192,14 @@
                 if (data.success) {
                     resultDiv.innerHTML = `
                         <div class="result success">
-                            ✅ Успешно! Сгенерировано зелий: ${data.count}
+                            ✅ ${t['success']} ${data.count}
                             <pre>${JSON.stringify(data, null, 2)}</pre>
                         </div>
                     `;
                 } else {
                     resultDiv.innerHTML = `
                         <div class="result error">
-                            ❌ Ошибка: ${data.error}
+                            ❌ ${t['error']} ${data.error}
                             <pre>${JSON.stringify(data, null, 2)}</pre>
                         </div>
                     `;
@@ -98,7 +207,7 @@
             } catch (error) {
                 resultDiv.innerHTML = `
                     <div class="result error">
-                        ❌ Ошибка сети: ${error.message}
+                        ❌ ${t['network-error']} ${error.message}
                     </div>
                 `;
             }
@@ -106,7 +215,8 @@
 
         async function testGenerationWithParams() {
             const resultDiv = document.getElementById('result2');
-            resultDiv.innerHTML = '<div class="result">Тестируем...</div>';
+            const t = translations[currentLanguage];
+            resultDiv.innerHTML = `<div class="result">${t['testing']}</div>`;
 
             try {
                 const response = await fetch('api/generate-potions.php?action=random&count=2&rarity=Uncommon');
@@ -115,14 +225,14 @@
                 if (data.success) {
                     resultDiv.innerHTML = `
                         <div class="result success">
-                            ✅ Успешно! Сгенерировано зелий: ${data.count}
+                            ✅ ${t['success']} ${data.count}
                             <pre>${JSON.stringify(data, null, 2)}</pre>
                         </div>
                     `;
                 } else {
                     resultDiv.innerHTML = `
                         <div class="result error">
-                            ❌ Ошибка: ${data.error}
+                            ❌ ${t['error']} ${data.error}
                             <pre>${JSON.stringify(data, null, 2)}</pre>
                         </div>
                     `;
@@ -130,7 +240,7 @@
             } catch (error) {
                 resultDiv.innerHTML = `
                     <div class="result error">
-                        ❌ Ошибка сети: ${error.message}
+                        ❌ ${t['network-error']} ${error.message}
                     </div>
                 `;
             }
@@ -138,7 +248,8 @@
 
         async function testErrorHandling() {
             const resultDiv = document.getElementById('result3');
-            resultDiv.innerHTML = '<div class="result">Тестируем...</div>';
+            const t = translations[currentLanguage];
+            resultDiv.innerHTML = `<div class="result">${t['testing']}</div>`;
 
             try {
                 // Тестируем неверный параметр
@@ -148,14 +259,14 @@
                 if (data.success) {
                     resultDiv.innerHTML = `
                         <div class="result success">
-                            ✅ Успешно (неожиданно для count=999)
+                            ✅ ${t['success']} (unexpected for count=999)
                             <pre>${JSON.stringify(data, null, 2)}</pre>
                         </div>
                     `;
                 } else {
                     resultDiv.innerHTML = `
                         <div class="result success">
-                            ✅ Ошибка корректно обработана: ${data.error}
+                            ✅ Error handled correctly: ${data.error}
                             <pre>${JSON.stringify(data, null, 2)}</pre>
                         </div>
                     `;
@@ -163,11 +274,16 @@
             } catch (error) {
                 resultDiv.innerHTML = `
                     <div class="result error">
-                        ❌ Ошибка сети: ${error.message}
+                        ❌ ${t['network-error']} ${error.message}
                     </div>
                 `;
             }
         }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initLanguage();
+        });
     </script>
 </body>
 

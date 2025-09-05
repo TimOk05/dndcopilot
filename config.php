@@ -23,6 +23,10 @@ define('APP_NAME', 'DnD AI Assistant');
 define('APP_VERSION', '2.0');
 define('DEBUG_MODE', true);
 
+// Настройки языков
+define('DEFAULT_LANGUAGE', 'en'); // Английский по умолчанию
+define('SUPPORTED_LANGUAGES', ['en', 'ru']);
+
 // Настройки безопасности
 define('SESSION_TIMEOUT', 3600); // 1 час
 define('MAX_LOGIN_ATTEMPTS', 5);
