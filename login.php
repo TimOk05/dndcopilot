@@ -12,7 +12,8 @@ if (isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DnD Copilot - Вход</title>
+    <title id="page-title">DnD Copilot - Вход</title>
+    <script src="js/language-switcher.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -109,11 +110,11 @@ if (isLoggedIn()) {
 </head>
 <body>
     <div class="container">
-        <h1 style="text-align: center; margin-bottom: 30px;">DnD Copilot</h1>
+        <h1 style="text-align: center; margin-bottom: 30px;" data-translate="app_name">DnD Copilot</h1>
         
         <div class="tabs">
-            <button class="tab active" onclick="switchTab('login')">Вход</button>
-            <button class="tab" onclick="switchTab('register')">Регистрация</button>
+            <button class="tab active" onclick="switchTab('login')" data-translate="login">Вход</button>
+            <button class="tab" onclick="switchTab('register')" data-translate="register">Регистрация</button>
         </div>
         
         <div id="message"></div>
@@ -121,31 +122,31 @@ if (isLoggedIn()) {
         <!-- Форма входа -->
         <form id="loginForm" class="form active">
                 <div class="form-group">
-                <label>Имя пользователя или Email:</label>
+                <label data-translate="username_or_email">Имя пользователя или Email:</label>
                 <input type="text" name="username" required>
                 </div>
                 <div class="form-group">
-                <label>Пароль:</label>
+                <label data-translate="password">Пароль:</label>
                 <input type="password" name="password" required>
                     </div>
-            <button type="submit">Войти</button>
+            <button type="submit" data-translate="login_button">Войти</button>
             </form>
         
         <!-- Форма регистрации -->
         <form id="registerForm" class="form">
                 <div class="form-group">
-                <label>Имя пользователя:</label>
+                <label data-translate="username">Имя пользователя:</label>
                 <input type="text" name="username" required>
                 </div>
                 <div class="form-group">
-                <label>Email:</label>
+                <label data-translate="email">Email:</label>
                 <input type="email" name="email" required>
                 </div>
                 <div class="form-group">
-                <label>Пароль:</label>
+                <label data-translate="password">Пароль:</label>
                 <input type="password" name="password" required>
                     </div>
-            <button type="submit">Зарегистрироваться</button>
+            <button type="submit" data-translate="register_button">Зарегистрироваться</button>
             </form>
     </div>
 

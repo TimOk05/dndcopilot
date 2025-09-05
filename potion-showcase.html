@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧪 Генератор зелий D&D - Поиск по характеристикам</title>
+    <title id="page-title">🧪 Генератор зелий D&D - Поиск по характеристикам</title>
+    <script src="js/language-switcher.js"></script>
     <style>
         * {
             margin: 0;
@@ -349,54 +351,52 @@
             .header h1 {
                 font-size: 2rem;
             }
-            
             .control-group {
                 grid-template-columns: 1fr;
             }
-            
             .results {
                 grid-template-columns: 1fr;
             }
-            
             .button-group {
                 flex-direction: column;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
-            <h1>🧪 Генератор зелий D&D</h1>
-            <p>Поиск и создание магических зелий по характеристикам</p>
+            <h1 data-translate="potion_generator_title">🧪 Генератор зелий D&D</h1>
+            <p data-translate="potion_generator_subtitle">Поиск и создание магических зелий по характеристикам</p>
         </div>
-        
+
         <div class="stats-section">
-            <h2 style="text-align: center; margin-bottom: 20px; color: #4ecdc4;">📊 Статистика зелий</h2>
+            <h2 style="text-align: center; margin-bottom: 20px; color: #4ecdc4;" data-translate="potion_stats">📊 Статистика зелий</h2>
             <div id="statsContent" class="stats-grid">
                 <div class="loading">Загрузка статистики...</div>
             </div>
         </div>
-        
+
         <div class="controls">
             <div class="search-section">
-                <input type="text" id="searchQuery" class="search-input" placeholder="🔍 Поиск зелий по названию или описанию...">
+                <input type="text" id="searchQuery" class="search-input" placeholder="🔍 Поиск зелий по названию или описанию..." data-translate-placeholder="search_potions_placeholder">
                 <div class="button-group">
-                    <button class="search-btn" onclick="searchPotions()">
+                    <button class="search-btn" onclick="searchPotions()" data-translate="find_potions">
                         🔍 Найти зелья
                     </button>
-                    <button class="generate-btn" onclick="generatePotions()">
+                    <button class="generate-btn" onclick="generatePotions()" data-translate="create_potions">
                         🧪 Создать зелья
                     </button>
                 </div>
             </div>
-            
+
             <div class="control-group">
                 <div class="control-item">
                     <label for="count">Количество зелий</label>
                     <input type="number" id="count" value="3" min="1" max="10">
                 </div>
-                
+
                 <div class="control-item">
                     <label for="rarity">Редкость</label>
                     <select id="rarity">
@@ -408,7 +408,7 @@
                         <option value="legendary">Легендарное</option>
                     </select>
                 </div>
-                
+
                 <div class="control-item">
                     <label for="type">Тип зелья</label>
                     <select id="type">
@@ -423,7 +423,7 @@
                         <option value="Эвокация">⚡ Эвокация</option>
                     </select>
                 </div>
-                
+
                 <div class="control-item">
                     <label for="effect">Эффект</label>
                     <select id="effect">
@@ -443,11 +443,11 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="searchResultsInfo" class="search-results-info" style="display: none;">
             <!-- Информация о результатах поиска -->
         </div>
-        
+
         <div id="results" class="results">
             <!-- Результаты будут здесь -->
         </div>
@@ -458,34 +458,34 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadStats();
         });
-        
+
         async function loadStats() {
             try {
                 const response = await fetch('api/generate-potions.php?action=stats');
                 const data = await response.json();
-                
+
                 if (data.success) {
                     displayStats(data.data);
                 } else {
-                    document.getElementById('statsContent').innerHTML = 
+                    document.getElementById('statsContent').innerHTML =
                         `<div class="error">Ошибка загрузки статистики: ${data.error}</div>`;
                 }
             } catch (error) {
-                document.getElementById('statsContent').innerHTML = 
+                document.getElementById('statsContent').innerHTML =
                     `<div class="error">Ошибка сети: ${error.message}</div>`;
             }
         }
-        
+
         function displayStats(stats) {
             const statsContent = document.getElementById('statsContent');
-            
+
             let html = `
                 <div class="stat-card">
                     <div class="stat-number">${stats.total_potions}</div>
                     <div class="stat-label">Всего зелий</div>
                 </div>
             `;
-            
+
             // Добавляем статистику по редкости
             Object.entries(stats.rarity_distribution).forEach(([rarity, count]) => {
                 html += `
@@ -495,22 +495,22 @@
                     </div>
                 `;
             });
-            
+
             statsContent.innerHTML = html;
         }
-        
+
         async function generatePotions() {
             const count = document.getElementById('count').value;
             const rarity = document.getElementById('rarity').value;
             const type = document.getElementById('type').value;
             const effect = document.getElementById('effect').value;
-            
+
             const resultsDiv = document.getElementById('results');
             const searchInfo = document.getElementById('searchResultsInfo');
-            
+
             searchInfo.style.display = 'none';
             resultsDiv.innerHTML = '<div class="loading">Создание зелий...</div>';
-            
+
             try {
                 const params = new URLSearchParams();
                 params.append('action', 'random');
@@ -518,10 +518,10 @@
                 if (rarity) params.append('rarity', rarity);
                 if (type) params.append('type', type);
                 if (effect) params.append('effect', effect);
-                
+
                 const response = await fetch(`api/generate-potions.php?${params.toString()}`);
                 const data = await response.json();
-                
+
                 if (data.success) {
                     displayPotions(data.data);
                 } else {
@@ -531,23 +531,23 @@
                 resultsDiv.innerHTML = `<div class="error">Ошибка сети: ${error.message}</div>`;
             }
         }
-        
+
         async function searchPotions() {
             const query = document.getElementById('searchQuery').value.trim();
             const rarity = document.getElementById('rarity').value;
             const type = document.getElementById('type').value;
             const effect = document.getElementById('effect').value;
-            
+
             if (!query && !rarity && !type && !effect) {
                 alert('Введите поисковый запрос или выберите фильтры');
                 return;
             }
-            
+
             const resultsDiv = document.getElementById('results');
             const searchInfo = document.getElementById('searchResultsInfo');
-            
+
             resultsDiv.innerHTML = '<div class="loading">Поиск зелий...</div>';
-            
+
             try {
                 const params = new URLSearchParams();
                 params.append('action', 'search');
@@ -555,10 +555,10 @@
                 if (rarity) params.append('rarity', rarity);
                 if (type) params.append('type', type);
                 if (effect) params.append('effect', effect);
-                
+
                 const response = await fetch(`api/generate-potions.php?${params.toString()}`);
                 const data = await response.json();
-                
+
                 if (data.success) {
                     if (data.total_found > 0) {
                         searchInfo.innerHTML = `Найдено ${data.total_found} зелий, показано ${data.count}`;
@@ -576,21 +576,21 @@
                 resultsDiv.innerHTML = `<div class="error">Ошибка сети: ${error.message}</div>`;
             }
         }
-        
+
         function displayPotions(potions) {
             const resultsDiv = document.getElementById('results');
-            
+
             if (potions.length === 0) {
                 resultsDiv.innerHTML = '<div class="error">Зелья не найдены</div>';
                 return;
             }
-            
+
             let html = '';
-            
+
             potions.forEach(potion => {
-                const rarityColor = potion.color;
-                
-                html += `
+                        const rarityColor = potion.color;
+
+                        html += `
                     <div class="potion-card" style="--rarity-color: ${rarityColor}">
                         <div class="potion-header">
                             <div class="potion-icon">${potion.icon}</div>
@@ -642,4 +642,5 @@
         });
     </script>
 </body>
+
 </html>

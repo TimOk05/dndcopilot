@@ -34,7 +34,7 @@ if (isMobileDevice()) {
 }
 
 // Получаем имя текущего пользователя
-$currentUser = $_SESSION['username'] ?? 'Пользователь';
+$currentUser = $_SESSION['username'] ?? t('user_default');
 
 
 
@@ -68,15 +68,15 @@ if (isset($_POST['fast_action'])) {
             $sum = array_sum($results);
             // Формируем результат в зависимости от количества костей
             if ($count == 1) {
-                $out = "🎲 Бросок: $dice\n📊 Результат: " . $results[0];
+                $out = "🎲 " . t('dice_roll', ['dice' => $dice]) . "\n📊 " . t('dice_result', ['result' => $results[0]]);
             } else {
-                $out = "🎲 Бросок: $dice\n📊 Результаты: " . implode(', ', $results) . "\n💎 Сумма: $sum";
+                $out = "🎲 " . t('dice_roll', ['dice' => $dice]) . "\n📊 " . t('dice_results', ['results' => implode(', ', $results)]) . "\n💎 " . t('dice_sum', ['sum' => $sum]);
             }
-            if ($label) $out .= "\n💬 Комментарий: $label";
+            if ($label) $out .= "\n💬 " . t('dice_comment', ['comment' => $label]);
             echo nl2br(htmlspecialchars($out));
             exit;
         } else {
-            echo 'Неверный формат кубов!';
+            echo t('invalid_dice_format');
             exit;
         }
     }
@@ -85,9 +85,9 @@ if (isset($_POST['fast_action'])) {
         $content = $_POST['content'] ?? '';
         if ($content) {
             $_SESSION['notes'][] = $content;
-            echo 'Заметка сохранена';
+            echo t('note_saved');
         } else {
-            echo 'Ошибка: пустое содержимое';
+            echo t('error_empty_content');
         }
         exit;
     }
@@ -261,11 +261,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message']) && !isset(
 
 // --- Генерация быстрых кнопок ---
 $fastBtns = '<div class="button-grid">';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей">🎲 Бросок костей</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей">⚔️ Персонаж</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников">👹 Противники</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий">🧪 Зелья</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="Управление инициативой" aria-label="Открыть управление инициативой">⚡ Инициатива</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="' . t('roll_dice') . '" aria-label="' . t('open_dice_generator') . '">🎲 ' . t('dice_roller') . '</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="' . t('create_character') . '" aria-label="' . t('open_character_generator') . '">⚔️ ' . t('characters') . '</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="' . t('create_enemy') . '" aria-label="' . t('open_enemy_generator') . '">👹 ' . t('enemies') . '</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="' . t('create_potion') . '" aria-label="' . t('open_potion_generator') . '">🧪 ' . t('potions') . '</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="' . t('manage_initiative') . '" aria-label="' . t('open_initiative_manager') . '">⚡ ' . t('initiative_tracker') . '</button>';
 $fastBtns .= '<a href="combat.html" class="fast-btn btn btn-primary interactive" style="text-decoration: none; display: inline-block;" data-tooltip="Система боя" aria-label="Перейти к системе боя">⚔️ Система боя</a>';
 $fastBtns .= '</div>';
 
@@ -420,8 +420,8 @@ function openCharacterModal() {
     showModal(`
         <div class="character-generator">
             <div class="generator-header">
-                <h2>&#9876;&#65039; Генератор персонажей</h2>
-                <p class="generator-subtitle">Создайте полноценного персонажа с использованием D&D API и AI</p>
+                <h2>&#9876;&#65039; <?= t('character_generator') ?></h2>
+                <p class="generator-subtitle"><?= t('character_generator_subtitle') ?></p>
             </div>
             
             <form id="characterForm" class="character-form">

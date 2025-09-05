@@ -8,7 +8,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="DnD Copilot">
-    <title>DnD Copilot - Мобильная версия</title>
+    <title id="page-title">DnD Copilot - Мобильная версия</title>
+    <script src="js/language-switcher.js"></script>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
 
@@ -558,7 +559,7 @@
 <body>
     <!-- Заголовок -->
     <header class="header">
-        <div class="logo">DnD Copilot</div>
+        <div class="logo" data-translate="app_name">DnD Copilot</div>
         <div class="header-controls">
             <button class="theme-toggle" onclick="cycleTheme()">🎨</button>
 
@@ -570,26 +571,26 @@
         <!-- Главная страница -->
         <section id="home" class="content-section active">
             <div class="card">
-                <h2 class="card-title">🎲 Добро пожаловать в DnD Copilot</h2>
-                <p class="text-center mb-md">Ваш мобильный помощник для игр D&D</p>
+                <h2 class="card-title" data-translate="mobile_welcome">🎲 Добро пожаловать в DnD Copilot</h2>
+                <p class="text-center mb-md" data-translate="mobile_subtitle">Ваш мобильный помощник для игр D&D</p>
 
                 <div class="btn-group">
-                    <button class="btn" onclick="showSection('characters')">
+                    <button class="btn" onclick="showSection('characters')" data-translate="create_character">
                         👤 Создать персонажа
                     </button>
-                    <button class="btn" onclick="showSection('enemies')">
+                    <button class="btn" onclick="showSection('enemies')" data-translate="enemy_generator">
                         ⚔️ Генератор противников
                     </button>
-                    <button class="btn" onclick="showSection('potions')">
+                    <button class="btn" onclick="showSection('potions')" data-translate="potion_generator">
                         🧪 Генератор зелий
                     </button>
-                    <button class="btn" onclick="showSection('combat')">
+                    <button class="btn" onclick="showSection('combat')" data-translate="combat_system">
                         🗡️ Система боя
                     </button>
-                    <button class="btn" onclick="showSection('ai-chat')">
+                    <button class="btn" onclick="showSection('ai-chat')" data-translate="ai_assistant">
                         🤖 AI Помощник
                     </button>
-                    <button class="btn" onclick="showSection('notes')">
+                    <button class="btn" onclick="showSection('notes')" data-translate="notes">
                         📝 Заметки
                     </button>
                 </div>

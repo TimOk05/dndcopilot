@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Система боя - D&D Copilot</title>
+    <title id="page-title">Система боя - D&D Copilot</title>
+    <script src="js/language-switcher.js"></script>
     <style>
          :root {
             --bg-primary: #1a1a1a;
@@ -373,29 +374,29 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>⚔️ Система боя</h1>
-            <p>Управление инициативой и ходами в бою</p>
+            <h1 data-translate="combat_system">⚔️ Система боя</h1>
+            <p data-translate="combat_description">Управление инициативой и ходами в бою</p>
             <div class="header-controls">
-                <button class="header-btn end-combat-btn" onclick="endCombat()">🏁 Закончить бой</button>
-                <button class="header-btn save-result-btn" onclick="saveCombatResult()">💾 Сохранить результат</button>
-                <button class="header-btn" onclick="window.location.href='index.php'" style="background: var(--accent-primary); color: white;">🏠 Вернуться</button>
+                <button class="header-btn end-combat-btn" onclick="endCombat()" data-translate="end_combat">🏁 Закончить бой</button>
+                <button class="header-btn save-result-btn" onclick="saveCombatResult()" data-translate="save_result">💾 Сохранить результат</button>
+                <button class="header-btn" onclick="window.location.href='index.php'" style="background: var(--accent-primary); color: white;" data-translate="go_back">🏠 Вернуться</button>
             </div>
         </div>
 
         <div class="combat-grid">
             <div class="participants-list">
-                <h2>Участники боя</h2>
+                <h2 data-translate="combat_participants">Участники боя</h2>
                 <div id="participants-container">
                     <div class="empty-state">
-                        <h3>Нет участников</h3>
-                        <p>Добавьте участников в панели справа</p>
+                        <h3 data-translate="no_participants">Нет участников</h3>
+                        <p data-translate="add_participants_hint">Добавьте участников в панели справа</p>
                     </div>
                 </div>
             </div>
 
             <div class="controls-panel">
                 <div class="round-info">
-                    <div class="stat-label">Раунд</div>
+                    <div class="stat-label" data-translate="round">Раунд</div>
                     <div class="round-number" id="round-number">1</div>
                 </div>
 
@@ -411,14 +412,14 @@
                         <input type="number" id="initiative-bonus" value="0" min="-5" max="10">
                     </div>
                     <div class="roll-result" id="roll-result" style="display: none;"></div>
-                    <button class="roll-btn" onclick="rollInitiative()">Бросить кости</button>
+                    <button class="roll-btn" onclick="rollInitiative()" data-translate="roll_dice">Бросить кости</button>
                 </div>
 
                 <div class="add-participant">
-                    <h3>➕ Добавить участника</h3>
+                    <h3 data-translate="add_participant">➕ Добавить участника</h3>
                     <div class="form-group">
                         <label>Имя:</label>
-                        <input type="text" id="participant-name" placeholder="Имя персонажа">
+                        <input type="text" id="participant-name" placeholder="Имя персонажа" data-translate-placeholder="character_name">
                     </div>
                     <div class="form-group">
                         <label>Тип:</label>
@@ -439,10 +440,10 @@
                         <label>Текущие хиты:</label>
                         <input type="number" id="participant-current-hp" placeholder="10" min="0" max="500">
                     </div>
-                    <button class="add-btn" onclick="addParticipant()">Добавить</button>
+                    <button class="add-btn" onclick="addParticipant()" data-translate="add">Добавить</button>
                 </div>
 
-                <button class="clear-btn" onclick="clearCombat()">🗑️ Очистить бой</button>
+                <button class="clear-btn" onclick="clearCombat()" data-translate="clear_combat">🗑️ Очистить бой</button>
             </div>
         </div>
     </div>

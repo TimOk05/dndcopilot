@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест API зелий</title>
+    <title id="page-title">Тест API зелий</title>
+    <script src="js/language-switcher.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -51,46 +52,47 @@
 </head>
 
 <body>
-    <h1>🧪 Тест API зелий через браузер</h1>
+    <h1 id="main-title" data-translate="potion_test_title">🧪 Тест API зелий через браузер</h1>
 
     <div class="test-section">
-        <h2>Тест 1: Простая генерация зелий</h2>
-        <button onclick="testSimpleGeneration()">Сгенерировать 1 зелье</button>
+        <h2 data-translate="test_simple_generation">Тест 1: Простая генерация зелий</h2>
+        <button onclick="testSimpleGeneration()" data-translate="generate_1_potion">Сгенерировать 1 зелье</button>
         <div id="result1"></div>
     </div>
 
     <div class="test-section">
-        <h2>Тест 2: Генерация с параметрами</h2>
-        <button onclick="testGenerationWithParams()">Сгенерировать 2 зелья</button>
+        <h2 data-translate="test_with_params">Тест 2: Генерация с параметрами</h2>
+        <button onclick="testGenerationWithParams()" data-translate="generate_2_potions">Сгенерировать 2 зелья</button>
         <div id="result2"></div>
     </div>
 
     <div class="test-section">
-        <h2>Тест 3: Проверка ошибок</h2>
-        <button onclick="testErrorHandling()">Тест обработки ошибок</button>
+        <h2 data-translate="test_error_handling">Тест 3: Проверка ошибок</h2>
+        <button onclick="testErrorHandling()" data-translate="test_error_handling_btn">Тест обработки ошибок</button>
         <div id="result3"></div>
     </div>
 
     <script>
         async function testSimpleGeneration() {
             const resultDiv = document.getElementById('result1');
-            resultDiv.innerHTML = '<div class="result">Тестируем...</div>';
+            const currentLang = LanguageSwitcher.getCurrentLanguage();
+            resultDiv.innerHTML = `<div class="result">${LanguageSwitcher.t('testing')}</div>`;
 
             try {
-                const response = await fetch('api/generate-potions.php?action=random&count=1');
+                const response = await fetch(`api/generate-potions.php?action=random&count=1&lang=${currentLang}`);
                 const data = await response.json();
 
                 if (data.success) {
                     resultDiv.innerHTML = `
                         <div class="result success">
-                            ✅ Успешно! Сгенерировано зелий: ${data.count}
+                            ${LanguageSwitcher.t('success_generated_count').replace('{count}', data.count)}
                             <pre>${JSON.stringify(data, null, 2)}</pre>
                         </div>
                     `;
                 } else {
                     resultDiv.innerHTML = `
                         <div class="result error">
-                            ❌ Ошибка: ${data.error}
+                            ${LanguageSwitcher.t('error_occurred').replace('{error}', data.error)}
                             <pre>${JSON.stringify(data, null, 2)}</pre>
                         </div>
                     `;
@@ -98,7 +100,7 @@
             } catch (error) {
                 resultDiv.innerHTML = `
                     <div class="result error">
-                        ❌ Ошибка сети: ${error.message}
+                        ${LanguageSwitcher.t('network_error').replace('{error}', error.message)}
                     </div>
                 `;
             }

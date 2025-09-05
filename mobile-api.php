@@ -207,7 +207,7 @@ function askMobileAI($question) {
         // Используем AI напрямую через API
         require_once 'config.php';
         
-        $api_key = defined('DEEPSEEK_API_KEY') ? DEEPSEEK_API_KEY : '';
+        $api_key = getApiKey('deepseek');
         if (empty($api_key)) {
             throw new Exception('API ключ не настроен');
         }
