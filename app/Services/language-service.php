@@ -24,7 +24,6 @@ class LanguageService {
      */
     public function getRarityName($rarity, $language = 'ru') {
         $rarities = [
-            'common' => 'Обычная',
             'uncommon' => 'Необычная',
             'rare' => 'Редкая',
             'very rare' => 'Очень редкая',

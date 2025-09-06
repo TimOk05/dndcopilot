@@ -112,8 +112,23 @@ class PotionGenerator {
             $log_message = "[" . date('Y-m-d H:i:s') . "] Получено зелий из getAllPotions: " . count($all_potions) . "\n";
             file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
             
-            // Фильтруем зелья по параметрам
-            $filtered_potions = $this->filterPotionsByCriteria($all_potions, $rarity, $type, $effect);
+            // Получаем детальную информацию для всех зелий (выборочно для производительности)
+            $detailed_potions = [];
+            $sample_size = min(50, count($all_potions)); // Ограничиваем выборку для производительности
+            $sample_potions = array_slice($all_potions, 0, $sample_size);
+            
+            foreach ($sample_potions as $potion) {
+                $detailed_potion = $this->getPotionDetails($potion);
+                if ($detailed_potion) {
+                    $detailed_potions[] = $detailed_potion;
+                }
+            }
+            
+            $log_message = "[" . date('Y-m-d H:i:s') . "] Получено детальных зелий: " . count($detailed_potions) . "\n";
+            file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+            
+            // Теперь фильтруем детальные зелья по параметрам
+            $filtered_potions = $this->filterPotionsByCriteria($detailed_potions, $rarity, $type, $effect);
             $log_message = "[" . date('Y-m-d H:i:s') . "] После фильтрации осталось зелий: " . count($filtered_potions) . "\n";
             file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
             
@@ -121,27 +136,13 @@ class PotionGenerator {
                 throw new Exception('Не найдены зелья с указанными характеристиками');
             }
             
-            // Выбираем случайные зелья
+            // Выбираем случайные зелья из отфильтрованного списка
             $selected_potions = $this->selectRandomPotions($filtered_potions, $count);
             $log_message = "[" . date('Y-m-d H:i:s') . "] Выбрано случайных зелий: " . count($selected_potions) . "\n";
             file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
             
-            // Получаем детальную информацию о каждом зелье
-            $detailed_potions = [];
-            foreach ($selected_potions as $potion) {
-                $log_message = "[" . date('Y-m-d H:i:s') . "] Получаем детали для зелья: " . $potion['name'] . "\n";
-                file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
-                
-                $detailed_potion = $this->getPotionDetails($potion);
-                if ($detailed_potion) {
-                    $detailed_potions[] = $detailed_potion;
-                    $log_message = "[" . date('Y-m-d H:i:s') . "] Детали получены успешно для: " . $potion['name'] . "\n";
-                    file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
-                } else {
-                    $log_message = "[" . date('Y-m-d H:i:s') . "] Не удалось получить детали для: " . $potion['name'] . "\n";
-                    file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
-                }
-            }
+            // У нас уже есть детальная информация, поэтому используем выбранные зелья как есть
+            $detailed_potions = $selected_potions;
             
             $log_message = "[" . date('Y-m-d H:i:s') . "] Итого получено детальных зелий: " . count($detailed_potions) . "\n";
             file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
@@ -272,6 +273,30 @@ class PotionGenerator {
     }
     
     /**
+     * Безопасное приведение к нижнему регистру для русского текста
+     */
+    private function safeLower($text) {
+        // Сначала обрабатываем русские буквы
+        $russianMap = [
+            'А' => 'а', 'Б' => 'б', 'В' => 'в', 'Г' => 'г', 'Д' => 'д', 'Е' => 'е', 'Ё' => 'ё',
+            'Ж' => 'ж', 'З' => 'з', 'И' => 'и', 'Й' => 'й', 'К' => 'к', 'Л' => 'л', 'М' => 'м',
+            'Н' => 'н', 'О' => 'о', 'П' => 'п', 'Р' => 'р', 'С' => 'с', 'Т' => 'т', 'У' => 'у',
+            'Ф' => 'ф', 'Х' => 'х', 'Ц' => 'ц', 'Ч' => 'ч', 'Ш' => 'ш', 'Щ' => 'щ', 'Ъ' => 'ъ',
+            'Ы' => 'ы', 'Ь' => 'ь', 'Э' => 'э', 'Ю' => 'ю', 'Я' => 'я'
+        ];
+        $text = strtr($text, $russianMap);
+        
+        // Затем обрабатываем английские буквы
+        $englishMap = [
+            'A' => 'a', 'B' => 'b', 'C' => 'c', 'D' => 'd', 'E' => 'e', 'F' => 'f', 'G' => 'g',
+            'H' => 'h', 'I' => 'i', 'J' => 'j', 'K' => 'k', 'L' => 'l', 'M' => 'm', 'N' => 'n',
+            'O' => 'o', 'P' => 'p', 'Q' => 'q', 'R' => 'r', 'S' => 's', 'T' => 't', 'U' => 'u',
+            'V' => 'v', 'W' => 'w', 'X' => 'x', 'Y' => 'y', 'Z' => 'z'
+        ];
+        return strtr($text, $englishMap);
+    }
+    
+    /**
      * Преобразование русских названий в английские для фильтрации
      */
     private function translateFilterToEnglish($value, $type) {
@@ -279,16 +304,14 @@ class PotionGenerator {
         
         if ($type === 'rarity') {
             $rarity_map = [
-                'обычная' => 'common',
                 'необычная' => 'uncommon', 
                 'редкая' => 'rare',
                 'очень редкая' => 'very rare',
                 'легендарная' => 'legendary',
                 'артефакт' => 'artifact'
             ];
-            $result = $rarity_map[strtolower($value)] ?? $value;
-            $log_message = "[" . date('Y-m-d H:i:s') . "] translateFilterToEnglish(rarity): '$value' -> '$result'\n";
-            file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+            $lower_value = $this->safeLower($value);
+            $result = $rarity_map[$lower_value] ?? $value;
             return $result;
         }
         
@@ -301,9 +324,7 @@ class PotionGenerator {
                 'настойка' => 'tincture',
                 'эссенция' => 'essence'
             ];
-            $result = $type_map[strtolower($value)] ?? $value;
-            $log_message = "[" . date('Y-m-d H:i:s') . "] translateFilterToEnglish(type): '$value' -> '$result'\n";
-            file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+            $result = $type_map[$this->safeLower($value)] ?? $value;
             return $result;
         }
         
@@ -320,13 +341,17 @@ class PotionGenerator {
         $english_rarity = $this->translateFilterToEnglish($rarity, 'rarity');
         $english_type = $this->translateFilterToEnglish($type, 'type');
         
+        
         foreach ($potions as $potion) {
             $matches = true;
             
             // Фильтр по редкости
             if ($english_rarity && !empty($potion['rarity'])) {
-                $potion_rarity = strtolower($potion['rarity']['name'] ?? '');
-                if ($potion_rarity !== strtolower($english_rarity)) {
+                $potion_rarity = $this->safeLower($potion['rarity']['name'] ?? '');
+                $target_rarity = $this->safeLower($english_rarity);
+                
+                
+                if ($potion_rarity !== $target_rarity) {
                     $matches = false;
                 }
             }
@@ -334,7 +359,7 @@ class PotionGenerator {
             // Фильтр по типу предмета (potion, elixir, oil и т.д.)
             if ($english_type && $matches) {
                 // Используем оригинальное английское название для фильтрации
-                $original_name = strtolower($potion['original_name'] ?? $potion['name']);
+                $original_name = $this->safeLower($potion['original_name'] ?? $potion['name']);
                 $type_found = false;
                 
                 // Проверяем, содержит ли оригинальное название зелья указанный тип
@@ -489,7 +514,7 @@ class PotionGenerator {
         
         return [
             'name' => $potion_data['name'],
-            'rarity' => $potion_data['rarity']['name'] ?? 'Unknown',
+            'rarity' => $potion_data['rarity'] ?? ['name' => 'Unknown'],
             'type' => $type,
             'description' => $this->formatDescription($potion_data['desc'] ?? []),
             'effects' => $effects,
@@ -966,7 +991,7 @@ class PotionGenerator {
                     $translated_potion['original_name'] = $potion['name'];
                     
                     // Добавляем локализованные названия редкости и типа
-                    $translated_potion['rarity_localized'] = $this->language_service->getRarityName($translated_potion['rarity'], $target_language);
+                    $translated_potion['rarity_localized'] = $this->language_service->getRarityName($translated_potion['rarity']['name'] ?? 'common', $target_language);
                     $translated_potion['type_localized'] = $this->language_service->getPotionTypeName($translated_potion['type'], $target_language);
                     
                     $translated_potions[] = $translated_potion;
@@ -1005,7 +1030,7 @@ class PotionGenerator {
      * Получение локализованных редкостей
      */
     public function getLocalizedRarities($language = 'ru') {
-        $rarities = ['Common', 'Uncommon', 'Rare', 'Very Rare', 'Legendary'];
+        $rarities = ['Uncommon', 'Rare', 'Very Rare', 'Legendary'];
         $localized = [];
         
         foreach ($rarities as $rarity) {
