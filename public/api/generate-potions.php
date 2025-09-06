@@ -272,26 +272,77 @@ class PotionGenerator {
     }
     
     /**
+     * Преобразование русских названий в английские для фильтрации
+     */
+    private function translateFilterToEnglish($value, $type) {
+        if (empty($value)) return $value;
+        
+        if ($type === 'rarity') {
+            $rarity_map = [
+                'обычная' => 'common',
+                'необычная' => 'uncommon', 
+                'редкая' => 'rare',
+                'очень редкая' => 'very rare',
+                'легендарная' => 'legendary',
+                'артефакт' => 'artifact'
+            ];
+            $result = $rarity_map[strtolower($value)] ?? $value;
+            $log_message = "[" . date('Y-m-d H:i:s') . "] translateFilterToEnglish(rarity): '$value' -> '$result'\n";
+            file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+            return $result;
+        }
+        
+        if ($type === 'type') {
+            $type_map = [
+                'любой тип' => '',
+                'зелье' => 'potion',
+                'эликсир' => 'elixir',
+                'масло' => 'oil',
+                'настойка' => 'tincture',
+                'эссенция' => 'essence'
+            ];
+            $result = $type_map[strtolower($value)] ?? $value;
+            $log_message = "[" . date('Y-m-d H:i:s') . "] translateFilterToEnglish(type): '$value' -> '$result'\n";
+            file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+            return $result;
+        }
+        
+        return $value;
+    }
+    
+    /**
      * Фильтрация зелий по критериям
      */
     private function filterPotionsByCriteria($potions, $rarity, $type, $effect) {
         $filtered = [];
         
+        // Преобразуем русские фильтры в английские
+        $english_rarity = $this->translateFilterToEnglish($rarity, 'rarity');
+        $english_type = $this->translateFilterToEnglish($type, 'type');
+        
         foreach ($potions as $potion) {
             $matches = true;
             
             // Фильтр по редкости
-            if ($rarity && !empty($potion['rarity'])) {
+            if ($english_rarity && !empty($potion['rarity'])) {
                 $potion_rarity = strtolower($potion['rarity']['name'] ?? '');
-                if ($potion_rarity !== strtolower($rarity)) {
+                if ($potion_rarity !== strtolower($english_rarity)) {
                     $matches = false;
                 }
             }
             
-            // Фильтр по типу (определяется по названию и описанию)
-            if ($type && $matches) {
-                $potion_type = $this->determinePotionType($potion);
-                if ($potion_type !== $type) {
+            // Фильтр по типу предмета (potion, elixir, oil и т.д.)
+            if ($english_type && $matches) {
+                // Используем оригинальное английское название для фильтрации
+                $original_name = strtolower($potion['original_name'] ?? $potion['name']);
+                $type_found = false;
+                
+                // Проверяем, содержит ли оригинальное название зелья указанный тип
+                if (strpos($original_name, $english_type) !== false) {
+                    $type_found = true;
+                }
+                
+                if (!$type_found) {
                     $matches = false;
                 }
             }
@@ -911,6 +962,9 @@ class PotionGenerator {
                 
                 // Проверяем, что перевод прошел успешно
                 if (is_array($translated_potion) && !isset($translated_potion['error'])) {
+                    // Сохраняем оригинальное название для фильтрации
+                    $translated_potion['original_name'] = $potion['name'];
+                    
                     // Добавляем локализованные названия редкости и типа
                     $translated_potion['rarity_localized'] = $this->language_service->getRarityName($translated_potion['rarity'], $target_language);
                     $translated_potion['type_localized'] = $this->language_service->getPotionTypeName($translated_potion['type'], $target_language);
@@ -923,11 +977,13 @@ class PotionGenerator {
                     // Если перевод не удался, используем оригинальное зелье с предупреждением
                     logMessage('WARNING', 'Не удалось перевести зелье: ' . $potion['name']);
                     $potion['translation_error'] = 'Перевод недоступен';
+                    $potion['original_name'] = $potion['name']; // Сохраняем оригинальное название
                     $translated_potions[] = $potion;
                 }
             } catch (Exception $e) {
                 logMessage('ERROR', 'Ошибка перевода зелья ' . $potion['name'] . ': ' . $e->getMessage());
                 $potion['translation_error'] = 'Ошибка перевода: ' . $e->getMessage();
+                $potion['original_name'] = $potion['name']; // Сохраняем оригинальное название
                 $translated_potions[] = $potion;
             }
         }
