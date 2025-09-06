@@ -316,16 +316,8 @@ class PotionGenerator {
         }
         
         if ($type === 'type') {
-            $type_map = [
-                'любой тип' => '',
-                'зелье' => 'potion',
-                'эликсир' => 'elixir',
-                'масло' => 'oil',
-                'настойка' => 'tincture',
-                'эссенция' => 'essence'
-            ];
-            $result = $type_map[$this->safeLower($value)] ?? $value;
-            return $result;
+            // Типы эффектов уже на русском языке, не переводим
+            return $value;
         }
         
         return $value;
@@ -356,18 +348,10 @@ class PotionGenerator {
                 }
             }
             
-            // Фильтр по типу предмета (potion, elixir, oil и т.д.)
-            if ($english_type && $matches) {
-                // Используем оригинальное английское название для фильтрации
-                $original_name = $this->safeLower($potion['original_name'] ?? $potion['name']);
-                $type_found = false;
-                
-                // Проверяем, содержит ли оригинальное название зелья указанный тип
-                if (strpos($original_name, $english_type) !== false) {
-                    $type_found = true;
-                }
-                
-                if (!$type_found) {
+            // Фильтр по типу эффекта (Восстановление, Усиление, Защита и т.д.)
+            if ($type && $matches) {
+                $potion_effect_type = $this->determinePotionType($potion);
+                if ($potion_effect_type !== $type) {
                     $matches = false;
                 }
             }
@@ -1044,9 +1028,26 @@ class PotionGenerator {
     }
     
     /**
-     * Получение локализованных типов зелий
+     * Получение локализованных типов эффектов зелий
      */
     public function getLocalizedTypes($language = 'ru') {
+        $types = ['Восстановление', 'Усиление', 'Защита', 'Иллюзия', 'Трансмутация', 'Некромантия', 'Прорицание', 'Эвокация', 'Универсальное'];
+        $localized = [];
+        
+        foreach ($types as $type) {
+            $localized[] = [
+                'value' => $type,
+                'name' => $type // Названия уже на русском
+            ];
+        }
+        
+        return $localized;
+    }
+    
+    /**
+     * Получение локализованных типов эффектов зелий
+     */
+    public function getLocalizedEffectTypes($language = 'ru') {
         $types = ['Восстановление', 'Усиление', 'Защита', 'Иллюзия', 'Трансмутация', 'Некромантия', 'Прорицание', 'Эвокация', 'Универсальное'];
         $localized = [];
         
