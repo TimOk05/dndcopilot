@@ -4,9 +4,9 @@
  * Использует D&D 5e API для получения реальных данных
  */
 
-// Включаем отображение ошибок для отладки
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+// Отключаем прямое отображение ошибок для API (логируем в файл)
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
 // Устанавливаем обработчик ошибок
@@ -40,7 +40,7 @@ register_shutdown_function(function() {
 
 // Логируем начало выполнения
 $log_message = "[" . date('Y-m-d H:i:s') . "] generate-potions.php начал выполнение\n";
-file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
 
 /**
  * API для генерации зелий D&D через официальную D&D 5e API

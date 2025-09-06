@@ -4,7 +4,7 @@
  */
 
 class ErrorHandler {
-    private static $logFile = __DIR__ . '/../logs/api_errors.log';
+    private static $logFile = __DIR__ . '/../../data/logs/api_errors.log';
     
     /**
      * Инициализация обработчика ошибок
