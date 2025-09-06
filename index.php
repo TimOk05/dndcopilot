@@ -3168,49 +3168,26 @@ if (window.allNotes) {
     });
 }
 // --- Чат: отправка сообщения ---
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    if (!form) {
-        console.error('Форма чата не найдена');
-        return;
-    }
-    
-    form.onsubmit = function(e) {
-        e.preventDefault();
-        var msg = this.message.value.trim();
-        if (!msg) return false;
-        
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-        console.log('Отправка сообщения:', { msg, csrfToken });
-        
-        fetch('public/api/ai-chat.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'action=send_message&message=' + encodeURIComponent(msg) + '&csrf_token=' + encodeURIComponent(csrfToken)
-        })
-        .then(r => {
-            console.log('Ответ сервера:', r.status, r.statusText);
-            return r.json();
-        })
-        .then(data => {
-            console.log('Данные ответа:', data);
-            if (data && data.success) {
-                // Добавить сообщение в чат (можно обновить страницу или динамически)
-                location.reload();
-            } else {
-                alert(data.error || 'Ошибка AI');
-                if (data.debug) {
-                    console.log('Отладочная информация:', data.debug);
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка запроса:', error);
-            alert('Ошибка сети: ' + error.message);
-        });
-        return false;
-    };
-});
+document.querySelector('form').onsubmit = function(e) {
+    e.preventDefault();
+    var msg = this.message.value.trim();
+    if (!msg) return false;
+    fetch('public/api/ai-chat.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'action=send_message&message=' + encodeURIComponent(msg) + '&csrf_token=' + encodeURIComponent(document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '')
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data && data.success) {
+            // Добавить сообщение в чат (можно обновить страницу или динамически)
+            location.reload();
+        } else {
+            alert(data.error || 'Ошибка AI');
+        }
+    });
+    return false;
+};
 
         // Показываем приветственное сообщение для новых пользователей
         const urlParams = new URLSearchParams(window.location.search);

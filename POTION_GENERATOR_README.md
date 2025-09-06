@@ -78,10 +78,10 @@ const response = await fetch('/api/generate-potions.php', {
 {
     "success": true,
     "data": [
-        {
-            "name": "Potion of Healing",
-            "rarity": "Common",
-            "type": "Восстановление",
+{
+  "name": "Potion of Healing",
+  "rarity": "Common",
+  "type": "Восстановление",
             "description": "A character who drinks this magical red liquid regains 2d4 + 2 hit points.",
             "effects": ["Heal", "Restore"],
             "cost": "50 золотых",

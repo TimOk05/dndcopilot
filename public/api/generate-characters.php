@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json');
+    header('Content-Type: application/json');
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../app/Services/dnd-api-service.php';
 require_once __DIR__ . '/../../app/Services/ai-service.php';
@@ -80,10 +80,10 @@ class CharacterGeneratorV4 {
     private function loadOccupations() {
         try {
             $jsonFile = __DIR__ . '/../../data/pdf/d100_unique_traders.json';
-            if (file_exists($jsonFile)) {
-                $jsonData = json_decode(file_get_contents($jsonFile), true);
-                if (isset($jsonData['data']['occupations'])) {
-                    $this->occupations = $jsonData['data']['occupations'];
+        if (file_exists($jsonFile)) {
+            $jsonData = json_decode(file_get_contents($jsonFile), true);
+            if (isset($jsonData['data']['occupations'])) {
+                $this->occupations = $jsonData['data']['occupations'];
                 }
             }
         } catch (Exception $e) {
@@ -121,12 +121,12 @@ class CharacterGeneratorV4 {
             // Валидация параметров
             $this->validateParams($params);
             
-            $race = $params['race'] ?? 'human';
-            $class = $params['class'] ?? 'fighter';
-            $level = (int)($params['level'] ?? 1);
-            $alignment = $params['alignment'] ?? 'neutral';
-            $gender = $params['gender'] ?? 'random';
-            $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
+        $race = $params['race'] ?? 'human';
+        $class = $params['class'] ?? 'fighter';
+        $level = (int)($params['level'] ?? 1);
+        $alignment = $params['alignment'] ?? 'neutral';
+        $gender = $params['gender'] ?? 'random';
+        $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
             $language = $params['language'] ?? $this->language_service->getCurrentLanguage();
             
             // Получаем данные расы из D&D API
@@ -429,14 +429,14 @@ class CharacterGeneratorV4 {
         
         return $base_ac + $dex_bonus;
     }
-    
+
     /**
      * Расчет инициативы
      */
     private function calculateInitiative($dex_modifier) {
         return floor(($dex_modifier - 10) / 2);
     }
-    
+
     /**
      * Расчет бонуса владения
      */
@@ -513,7 +513,7 @@ class CharacterGeneratorV4 {
         
         // Увеличиваем урон с уровнем для воинских классов
         if (in_array($class_name, ['Варвар', 'Воин', 'Паладин', 'Следопыт'])) {
-            if ($level >= 5) {
+        if ($level >= 5) {
                 // Дополнительная атака на 5 уровне
                 $damage = '2' . substr($damage, 1);
             }
@@ -1030,11 +1030,11 @@ class CharacterGeneratorV4 {
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $generator = new CharacterGeneratorV4();
-        $result = $generator->generateCharacter($_POST);
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    $result = $generator->generateCharacter($_POST);
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
     } catch (Exception $e) {
-        echo json_encode([
-            'success' => false,
+    echo json_encode([
+        'success' => false,
             'error' => $e->getMessage()
         ], JSON_UNESCAPED_UNICODE);
     }

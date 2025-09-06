@@ -164,12 +164,16 @@ class AIChat {
     }
     
     /**
-     * Вызов DeepSeek API (используем тот же подход, что и в AI сервисе)
+     * Вызов DeepSeek API
      */
     private function callDeepSeek($prompt) {
         $api_key = getApiKey('deepseek');
         if (!$api_key) {
             return "Извините, AI временно недоступен. Проверьте настройки API.";
+        }
+        
+        if (!function_exists('curl_init')) {
+            return "Извините, AI временно недоступен. Отсутствует поддержка cURL.";
         }
         
         $data = [
@@ -184,92 +188,26 @@ class AIChat {
             'temperature' => 0.7
         ];
         
-        // Используем тот же подход, что и в AI сервисе
-        if (function_exists('curl_init')) {
-            return $this->callWithCurl('https://api.deepseek.com/v1/chat/completions', $data, $api_key);
-        } else {
-            return $this->callWithFileGetContents('https://api.deepseek.com/v1/chat/completions', $data, $api_key);
-        }
-    }
-    
-    /**
-     * Вызов API через cURL (как в AI сервисе)
-     */
-    private function callWithCurl($url, $data, $api_key) {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://api.deepseek.com/v1/chat/completions');
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/2.0');
-        
-        // Настройки SSL как в AI сервисе
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
-        curl_setopt($ch, CURLOPT_USE_SSL, CURLUSESSL_ALL);
-        curl_setopt($ch, CURLOPT_CAINFO, null);
-        curl_setopt($ch, CURLOPT_CAPATH, null);
-        
-        $headers = [
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Authorization: Bearer ' . $api_key
-        ];
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         
         $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         
-        if ($response === false) {
-            return "Извините, произошла ошибка при обращении к AI: $error";
-        }
-        
-        if ($httpCode !== 200) {
-            return "Извините, произошла ошибка при обращении к AI (HTTP $httpCode)";
-        }
-        
-        $result = json_decode($response, true);
-        if (isset($result['choices'][0]['message']['content'])) {
-            return trim($result['choices'][0]['message']['content']);
-        }
-        
-        return "Извините, произошла ошибка при обращении к AI. Попробуйте позже.";
-    }
-    
-    /**
-     * Вызов API через file_get_contents (fallback)
-     */
-    private function callWithFileGetContents($url, $data, $api_key) {
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'header' => [
-                    'Content-Type: application/json',
-                    'Authorization: Bearer ' . $api_key,
-                    'User-Agent: DnD-Copilot/2.0'
-                ],
-                'content' => json_encode($data),
-                'timeout' => 30
-            ],
-            'ssl' => [
-                'verify_peer' => false,
-                'verify_peer_name' => false
-            ]
-        ]);
-        
-        $response = @file_get_contents($url, false, $context);
-        
-        if ($response === false) {
-            $error = error_get_last();
-            $error_msg = $error ? $error['message'] : 'Неизвестная ошибка';
-            return "Извините, произошла ошибка при обращении к AI: $error_msg";
-        }
-        
-        $result = json_decode($response, true);
-        if (isset($result['choices'][0]['message']['content'])) {
-            return trim($result['choices'][0]['message']['content']);
+        if ($http_code === 200 && $response) {
+            $result = json_decode($response, true);
+            if (isset($result['choices'][0]['message']['content'])) {
+                return trim($result['choices'][0]['message']['content']);
+            }
         }
         
         return "Извините, произошла ошибка при обращении к AI. Попробуйте позже.";
@@ -315,29 +253,11 @@ class AIChat {
 }
 
 // Обработка запросов
-$request_method = $_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN';
-$request_uri = $_SERVER['REQUEST_URI'] ?? 'UNKNOWN';
-
-// Логируем информацию о запросе
-error_log("AI Chat Request: Method=$request_method, URI=$request_uri, POST=" . json_encode($_POST));
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Проверяем CSRF токен
-    $csrf_token = $_POST['csrf_token'] ?? '';
-    $session_token = $_SESSION['csrf_token'] ?? '';
-    
-    if (empty($csrf_token) || !verifyCSRFToken($csrf_token)) {
+    // Проверяем CSRF токен (если функция существует)
+    if (function_exists('verifyCSRFToken') && (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token']))) {
         http_response_code(403);
-        echo json_encode([
-            'success' => false, 
-            'error' => 'Неверный CSRF токен',
-            'debug' => [
-                'csrf_token_received' => $csrf_token,
-                'session_token' => $session_token,
-                'session_id' => session_id(),
-                'tokens_match' => $csrf_token === $session_token
-            ]
-        ]);
+        echo json_encode(['success' => false, 'error' => 'Неверный CSRF токен']);
         exit;
     }
     
@@ -381,29 +301,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
 } else {
-    // Для GET запросов возвращаем информацию о статусе
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        echo json_encode([
-            'success' => false, 
-            'error' => 'GET метод не поддерживается',
-            'info' => 'Используйте POST для отправки сообщений',
-            'debug' => [
-                'method' => $request_method,
-                'uri' => $request_uri,
-                'session_id' => session_id(),
-                'csrf_token_exists' => isset($_SESSION['csrf_token'])
-            ]
-        ]);
-    } else {
-        echo json_encode([
-            'success' => false, 
-            'error' => 'Метод не поддерживается',
-            'debug' => [
-                'method' => $request_method,
-                'uri' => $request_uri,
-                'supported_methods' => ['POST']
-            ]
-        ]);
-    }
+    echo json_encode(['success' => false, 'error' => 'Метод не поддерживается']);
 }
 ?>

@@ -11,8 +11,7 @@
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        require_once __DIR__ . '/../../config/config.php';
-        echo generateCSRFToken();
+        echo function_exists('generateCSRFToken') ? generateCSRFToken() : '';
     ?>">
     <meta name="apple-mobile-web-app-title" content="DnD Chat">
     <title>DnD AI</title>

@@ -426,55 +426,52 @@ class AiService {
      * Выполнение API запроса
      */
     private function makeApiRequest($url, $data, $api_key = null) {
-        // Проверяем поддержку OpenSSL для HTTPS запросов
-        if (!extension_loaded('openssl')) {
-            logMessage('WARNING', 'OpenSSL не доступен, AI API не может работать с HTTPS');
+        if (!function_exists('curl_init')) {
+            logMessage('WARNING', 'cURL не доступен, AI API не может работать');
             return null;
         }
         
-        // Используем file_get_contents вместо cURL
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'header' => [
-                    'Content-Type: application/json',
-                    'User-Agent: DnD-Copilot/2.0' . ($api_key ? "\r\nAuthorization: Bearer " . $api_key : '')
-                ],
-                'content' => json_encode($data),
-                'timeout' => 30
-            ],
-            'ssl' => [
-                'verify_peer' => false,
-                'verify_peer_name' => false
-            ]
-        ]);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Увеличиваем таймаут
+        curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/2.0');
         
-        logMessage('INFO', "AI API запрос к: {$url}");
+        // Критически важные настройки SSL для обхода проблем
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
+        curl_setopt($ch, CURLOPT_USE_SSL, CURLUSESSL_ALL);
         
-        $response = @file_get_contents($url, false, $context);
+        // Дополнительные настройки для Windows
+        curl_setopt($ch, CURLOPT_CAINFO, null);
+        curl_setopt($ch, CURLOPT_CAPATH, null);
+        
+        // Добавляем заголовки
+        $headers = ['Content-Type: application/json'];
+        if ($api_key) {
+            $headers[] = 'Authorization: Bearer ' . $api_key;
+        }
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        
+        // Выполняем запрос
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        $info = curl_getinfo($ch);
+        curl_close($ch);
+        
+        // Логируем детальную информацию
+        logMessage('INFO', "AI API запрос к: {$url}, HTTP код: {$httpCode}");
         
         if ($response === false) {
-            $error = error_get_last();
-            $error_msg = $error ? $error['message'] : 'Неизвестная ошибка';
-            logMessage('ERROR', "AI API file_get_contents ошибка: {$error_msg} для URL: {$url}");
+            logMessage('ERROR', "AI API cURL ошибка: {$error} для URL: {$url}");
             return null;
         }
         
-        // Получаем HTTP код из заголовков
-        $http_code = 200; // По умолчанию считаем успешным
-        if (isset($http_response_header)) {
-            foreach ($http_response_header as $header) {
-                if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $header, $matches)) {
-                    $http_code = (int)$matches[1];
-                    break;
-                }
-            }
-        }
-        
-        logMessage('INFO', "AI API запрос завершен, HTTP код: {$http_code}");
-        
-        if ($http_code !== 200) {
-            logMessage('ERROR', "AI API HTTP ошибка: {$http_code} для URL: {$url}");
+        if ($httpCode !== 200) {
+            logMessage('ERROR', "AI API HTTP ошибка: {$httpCode} для URL: {$url}");
             logMessage('ERROR', "AI API ответ: {$response}");
             return null;
         }
