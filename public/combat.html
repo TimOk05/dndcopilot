@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система боя - D&D Copilot</title>
+    <style>
+         :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2a2a2a;
+            --bg-tertiary: #3a3a3a;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --accent-primary: #4a90e2;
+            --accent-secondary: #f39c12;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+        }
+        
+        .header h1 {
+            color: var(--accent-primary);
+            margin-bottom: 10px;
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .header-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .end-combat-btn {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .end-combat-btn:hover {
+            background: #c0392b;
+        }
+        
+        .save-result-btn {
+            background: var(--success);
+            color: white;
+        }
+        
+        .save-result-btn:hover {
+            background: #229954;
+        }
+        
+        .combat-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .participants-list {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .participant-item {
+            background: var(--bg-tertiary);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .participant-item.current-turn {
+            border-left-color: var(--accent-secondary);
+            background: var(--accent-secondary);
+            color: var(--bg-primary);
+        }
+        
+        .participant-item.unconscious {
+            border-left-color: var(--warning);
+            opacity: 0.7;
+        }
+        
+        .participant-item.dead {
+            border-left-color: var(--danger);
+            opacity: 0.5;
+        }
+        
+        .participant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .participant-name {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .participant-type {
+            background: var(--accent-primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .participant-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            font-size: 0.9em;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.8em;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+        }
+        
+        .hp-controls {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .hp-input {
+            width: 60px;
+            padding: 5px;
+            border: none;
+            border-radius: 4px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            text-align: center;
+        }
+        
+        .hp-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        
+        .hp-btn.damage {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .hp-btn.heal {
+            background: var(--success);
+            color: white;
+        }
+        
+        .remove-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        
+        .controls-panel {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .round-info {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+        
+        .round-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--accent-secondary);
+        }
+        
+        .turn-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .turn-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .turn-btn.next {
+            background: var(--accent-primary);
+            color: white;
+        }
+        
+        .turn-btn.prev {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        .turn-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .add-participant {
+            margin-bottom: 20px;
+        }
+        
+        .add-participant h3 {
+            margin-bottom: 15px;
+            color: var(--accent-primary);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        .add-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+        }
+        
+        .add-btn:hover {
+            background: #229954;
+        }
+        
+        .initiative-roll {
+            background: var(--bg-tertiary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .roll-result {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--accent-secondary);
+            margin: 10px 0;
+        }
+        
+        .roll-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--accent-secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .clear-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: var(--accent-primary);
+        }
+        
+        @media (max-width: 768px) {
+            .combat-grid {
+                grid-template-columns: 1fr;
+            }
+            .participant-stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .turn-controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚔️ Система боя</h1>
+            <p>Управление инициативой и ходами в бою</p>
+            <div class="header-controls">
+                <button class="header-btn end-combat-btn" onclick="endCombat()">🏁 Закончить бой</button>
+                <button class="header-btn save-result-btn" onclick="saveCombatResult()">💾 Сохранить результат</button>
+                <button class="header-btn" onclick="window.location.href='index.php'" style="background: var(--accent-primary); color: white;">🏠 Вернуться</button>
+            </div>
+        </div>
+
+        <div class="combat-grid">
+            <div class="participants-list">
+                <h2>Участники боя</h2>
+                <div id="participants-container">
+                    <div class="empty-state">
+                        <h3>Нет участников</h3>
+                        <p>Добавьте участников в панели справа</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-panel">
+                <div class="round-info">
+                    <div class="stat-label">Раунд</div>
+                    <div class="round-number" id="round-number">1</div>
+                </div>
+
+                <div class="turn-controls">
+                    <button class="turn-btn prev" onclick="previousTurn()">◀</button>
+                    <button class="turn-btn next" onclick="nextTurn()">▶</button>
+                </div>
+
+                <div class="initiative-roll">
+                    <h3>🎲 Бросок инициативы</h3>
+                    <div class="form-group">
+                        <label>Бонус инициативы:</label>
+                        <input type="number" id="initiative-bonus" value="0" min="-5" max="10">
+                    </div>
+                    <div class="roll-result" id="roll-result" style="display: none;"></div>
+                    <button class="roll-btn" onclick="rollInitiative()">Бросить кости</button>
+                </div>
+
+                <div class="add-participant">
+                    <h3>➕ Добавить участника</h3>
+                    <div class="form-group">
+                        <label>Имя:</label>
+                        <input type="text" id="participant-name" placeholder="Имя персонажа">
+                    </div>
+                    <div class="form-group">
+                        <label>Тип:</label>
+                        <select id="participant-type">
+                            <option value="character">Персонаж</option>
+                            <option value="enemy">Противник</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Инициатива:</label>
+                        <input type="number" id="participant-initiative" placeholder="0" min="-10" max="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Максимальные хиты:</label>
+                        <input type="number" id="participant-max-hp" placeholder="10" min="1" max="500">
+                    </div>
+                    <div class="form-group">
+                        <label>Текущие хиты:</label>
+                        <input type="number" id="participant-current-hp" placeholder="10" min="0" max="500">
+                    </div>
+                    <button class="add-btn" onclick="addParticipant()">Добавить</button>
+                </div>
+
+                <button class="clear-btn" onclick="clearCombat()">🗑️ Очистить бой</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let participants = [];
+        let currentTurn = 0;
+        let round = 1;
+
+        // Загрузка данных при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCombatData();
+        });
+
+        // Загрузка данных боя
+        function loadCombatData() {
+            fetch('api/combat-system.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=get_participants'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        participants = data.participants;
+                        currentTurn = data.current_turn;
+                        round = data.round;
+                        updateDisplay();
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки данных:', error);
+                });
+        }
+
+        // Обновление отображения
+        function updateDisplay() {
+            updateParticipantsList();
+            updateRoundInfo();
+        }
+
+        // Обновление списка участников
+        function updateParticipantsList() {
+            const container = document.getElementById('participants-container');
+
+            if (participants.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Нет участников</h3>
+                        <p>Добавьте участников в панели справа</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = participants.map((participant, index) => {
+                const isCurrentTurn = index === currentTurn;
+                const statusClass = participant.status === 'unconscious' ? 'unconscious' :
+                    participant.status === 'dead' ? 'dead' : '';
+                const currentTurnClass = isCurrentTurn ? 'current-turn' : '';
+
+                return `
+                    <div class="participant-item ${statusClass} ${currentTurnClass}">
+                        <div class="participant-header">
+                            <div class="participant-name">${participant.name}</div>
+                            <div class="participant-type">${participant.type === 'character' ? '👤' : '👹'}</div>
+                        </div>
+                        <div class="participant-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Инициатива</div>
+                                <div class="stat-value">${participant.initiative}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Хиты</div>
+                                <div class="stat-value">${participant.current_hp}/${participant.max_hp}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Статус</div>
+                                <div class="stat-value">${getStatusText(participant.status)}</div>
+                            </div>
+                        </div>
+                        <div class="hp-controls">
+                            <input type="number" class="hp-input" id="hp-change-${participant.id}" placeholder="0" min="0" max="100">
+                            <button class="hp-btn damage" onclick="modifyHP('${participant.id}', 'damage')">Урон</button>
+                            <button class="hp-btn heal" onclick="modifyHP('${participant.id}', 'heal')">Лечение</button>
+                            <button class="remove-btn" onclick="removeParticipant('${participant.id}')">Удалить</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Получение текста статуса
+        function getStatusText(status) {
+            switch (status) {
+                case 'active':
+                    return 'Активен';
+                case 'unconscious':
+                    return 'Без сознания';
+                case 'dead':
+                    return 'Мертв';
+                default:
+                    return 'Неизвестно';
+            }
+        }
+
+        // Обновление информации о раунде
+        function updateRoundInfo() {
+            document.getElementById('round-number').textContent = round;
+        }
+
+        // Добавление участника
+        function addParticipant() {
+            const name = document.getElementById('participant-name').value.trim();
+            const type = document.getElementById('participant-type').value;
+            const initiative = parseInt(document.getElementById('participant-initiative').value) || 0;
+            const maxHp = parseInt(document.getElementById('participant-max-hp').value) || 10;
+            const currentHp = parseInt(document.getElementById('participant-current-hp').value) || maxHp;
+
+            if (!name) {
+                alert('Введите имя участника');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('action', 'add_participant');
+            formData.append('name', name);
+            formData.append('type', type);
+            formData.append('initiative', initiative);
+            formData.append('max_hp', maxHp);
+            formData.append('current_hp', currentHp);
+
+            fetch('api/combat-system.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        loadCombatData();
+                        // Очищаем форму
+                        document.getElementById('participant-name').value = '';
+                        document.getElementById('participant-initiative').value = '';
+                        document.getElementById('participant-max-hp').value = '';
+                        document.getElementById('participant-current-hp').value = '';
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка добавления участника:', error);
+                    alert('Ошибка при добавлении участника');
+                });
+        }
+
+        // Следующий ход
+        function nextTurn() {
+            fetch('api/combat-system.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=next_turn'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        loadCombatData();
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка перехода хода:', error);
+                });
+        }
+
+        // Предыдущий ход
+        function previousTurn() {
+            fetch('api/combat-system.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=previous_turn'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        loadCombatData();
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка перехода хода:', error);
+                });
+        }
+
+        // Изменение хитов
+        function modifyHP(id, type) {
+            const input = document.getElementById(`hp-change-${id}`);
+            const change = parseInt(input.value) || 0;
+
+            if (change <= 0) {
+                alert('Введите положительное число');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('action', 'modify_hp');
+            formData.append('id', id);
+            formData.append('change', change);
+            formData.append('type', type);
+
+            fetch('api/combat-system.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        loadCombatData();
+                        input.value = '';
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка изменения хитов:', error);
+                });
+        }
+
+        // Удаление участника
+        function removeParticipant(id) {
+            if (!confirm('Удалить участника из боя?')) {
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('action', 'remove_participant');
+            formData.append('id', id);
+
+            fetch('api/combat-system.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        loadCombatData();
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка удаления участника:', error);
+                });
+        }
+
+        // Бросок инициативы
+        function rollInitiative() {
+            const bonus = parseInt(document.getElementById('initiative-bonus').value) || 0;
+
+            const formData = new FormData();
+            formData.append('action', 'roll_initiative');
+            formData.append('bonus', bonus);
+
+            fetch('api/combat-system.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const resultDiv = document.getElementById('roll-result');
+                        resultDiv.textContent = `${data.roll} (${data.dice} + ${data.bonus})`;
+                        resultDiv.style.display = 'block';
+
+                        // Автоматически заполняем поле инициативы
+                        document.getElementById('participant-initiative').value = data.roll;
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка броска инициативы:', error);
+                });
+        }
+
+        // Очистка боя
+        function clearCombat() {
+            if (!confirm('Очистить весь бой? Это действие нельзя отменить.')) {
+                return;
+            }
+
+            fetch('api/combat-system.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=clear_combat'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        loadCombatData();
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка очистки боя:', error);
+                });
+        }
+
+        // Завершение боя
+        function endCombat() {
+            if (!confirm('Вы уверены, что хотите завершить бой?')) {
+                return;
+            }
+
+            fetch('api/combat-system.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=end_combat'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Бой завершен!');
+                        loadCombatData(); // Обновляем данные после завершения боя
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка завершения боя:', error);
+                });
+        }
+
+        // Сохранение результатов боя
+        function saveCombatResult() {
+            const combatData = {
+                participants: participants,
+                current_turn: currentTurn,
+                round: round,
+                initiative_roll: document.getElementById('initiative-bonus').value,
+                roll_result: document.getElementById('roll-result').textContent,
+                combat_end_reason: 'combat_ended' // Пример причины завершения
+            };
+
+            fetch('api/combat-system.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=save_result&data=' + encodeURIComponent(JSON.stringify(combatData))
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Результаты боя сохранены!');
+                        // Здесь можно добавить логику для перехода на страницу с результатами
+                    } else {
+                        alert('Ошибка сохранения результатов: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка сохранения результатов:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,7 +1,14 @@
-<<<<<<< HEAD
 <?php
 session_start();
-require_once 'auth.php';
+require_once '../app/Middleware/auth.php';
+
+// Безопасная загрузка Language Service
+try {
+    require_once '../app/Services/language-service.php';
+} catch (Exception $e) {
+    // Если Language Service недоступен, продолжаем без него
+    error_log("Language Service error: " . $e->getMessage());
+}
 
 // Автоматическое определение мобильного устройства и переадресация
 function isMobileDevice() {
@@ -36,6 +43,19 @@ if (isMobileDevice()) {
 
 // Получаем имя текущего пользователя
 $currentUser = $_SESSION['username'] ?? 'Пользователь';
+
+// Инициализируем Language Service безопасно
+$languageService = null;
+$currentLanguage = 'ru'; // По умолчанию русский
+try {
+    if (class_exists('LanguageService')) {
+        $languageService = new LanguageService();
+        $currentLanguage = $languageService->getCurrentLanguage();
+    }
+} catch (Exception $e) {
+    error_log("Language Service initialization error: " . $e->getMessage());
+    $currentLanguage = 'ru'; // Fallback на русский
+}
 
 
 
@@ -548,7 +568,7 @@ function openCharacterModal() {
             progressFill.style.width = progress + '%';
         }, 200);
         
-        fetch('api/generate-characters-v4.php', {
+        fetch('api/generate-characters.php', {
             method: 'POST',
             body: formData
         })
@@ -1271,7 +1291,7 @@ function fetchNpcFromAI(race, npcClass, background, level, advancedSettings = {}
             backgroundParam: background
         });
         
-        fetch('api/generate-npc.php', {
+        fetch('api/generate-characters.php', {
             method: 'POST',
             body: formData
         })
@@ -1428,27 +1448,26 @@ function openPotionModalSimple() {
     showModal(`
         <div class="potion-generator">
             <div class="generator-header">
-                <h2>🧪 Генератор зелий D&D</h2>
-                <p class="generator-subtitle">Создавайте магические зелья используя официальную D&D 5e API</p>
+                <h2>🧪 Генератор зелий</h2>
+                <p class="generator-subtitle">Создайте магические зелья различных типов и редкости</p>
             </div>
             
             <form id="potionForm" class="potion-form">
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="potion-count">Количество зелий</label>
-                        <input type="number" id="potion-count" name="count" min="1" max="20" value="3" required>
-                        <small>От 1 до 20 зелий</small>
+                        <input type="number" id="potion-count" name="count" min="1" max="10" value="1" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="potion-rarity">Редкость</label>
                         <select id="potion-rarity" name="rarity">
                             <option value="">Любая редкость</option>
-                            <option value="common">⚪ Обычное (Common)</option>
-                            <option value="uncommon">🟢 Необычное (Uncommon)</option>
-                            <option value="rare">🔵 Редкое (Rare)</option>
-                            <option value="very rare">🟣 Очень редкое (Very Rare)</option>
-                            <option value="legendary">🟠 Легендарное (Legendary)</option>
+                            <option value="common">Обычное</option>
+                            <option value="uncommon">Необычное</option>
+                            <option value="rare">Редкое</option>
+                            <option value="very rare">Очень редкое</option>
+                            <option value="legendary">Легендарное</option>
                         </select>
                     </div>
                     
@@ -1463,36 +1482,17 @@ function openPotionModalSimple() {
                             <option value="Трансмутация">🔄 Трансмутация</option>
                             <option value="Некромантия">💀 Некромантия</option>
                             <option value="Прорицание">🔮 Прорицание</option>
-                            <option value="Эвокация">⚡ Эвокация</option>
                         </select>
                     </div>
                 </div>
                 
-                <div class="form-actions">
-                    <button type="submit" class="generate-btn">
-                        <span class="btn-icon">🧪</span>
-                        <span class="btn-text">Создать зелья</span>
-                    </button>
-                    
-                    <button type="button" class="info-btn" onclick="showPotionInfo()">
-                        <span class="btn-icon">ℹ️</span>
-                        <span class="btn-text">Информация</span>
-                    </button>
-                </div>
+                <button type="submit" class="generate-btn">
+                    <span class="btn-icon">🧪</span>
+                    <span class="btn-text">Создать зелья</span>
+                </button>
             </form>
             
             <div id="potionResult" class="result-container"></div>
-            
-            <div id="potionInfo" class="info-container" style="display: none;">
-                <h3>ℹ️ О генераторе зелий</h3>
-                <p>Этот генератор использует официальную D&D 5e API для создания реальных зелий из игры.</p>
-                <ul>
-                    <li>🎯 <strong>Точность:</strong> Все зелья соответствуют официальным правилам D&D</li>
-                    <li>🔍 <strong>Фильтрация:</strong> Выбирайте по редкости и типу</li>
-                    <li>💾 <strong>Сохранение:</strong> Сохраняйте понравившиеся зелья в заметки</li>
-                    <li>📱 <strong>Адаптивность:</strong> Работает на всех устройствах</li>
-                </ul>
-            </div>
         </div>
     `);
     
@@ -1510,10 +1510,11 @@ function openPotionModalSimple() {
         submitBtn.disabled = true;
         resultDiv.innerHTML = '<div class="loading">Создание зелий...</div>';
         
-        // Используем улучшенный API
+        // Используем упрощенный API с поддержкой языков
         const params = new URLSearchParams();
         params.append('action', 'random');
         params.append('count', formData.get('count'));
+        params.append('language', currentLanguage); // Добавляем текущий язык
         if (formData.get('rarity')) {
             params.append('rarity', formData.get('rarity'));
         }
@@ -1533,19 +1534,6 @@ function openPotionModalSimple() {
             if (data.success && data.data) {
                 let resultHtml = formatPotionsFromApi(data.data);
                 resultDiv.innerHTML = resultHtml;
-                
-                // Показываем статистику
-                if (data.filters) {
-                    const statsHtml = `
-                        <div class="potion-stats">
-                            <h4>📊 Результаты поиска</h4>
-                            <p>Найдено: <strong>${data.count}</strong> зелий</p>
-                            ${data.filters.rarity ? `<p>Редкость: <strong>${data.filters.rarity}</strong></p>` : ''}
-                            ${data.filters.type ? `<p>Тип: <strong>${data.filters.type}</strong></p>` : ''}
-                        </div>
-                    `;
-                    resultDiv.insertAdjacentHTML('afterbegin', statsHtml);
-                }
                 
                 // Автоматическая прокрутка к результату
                 setTimeout(() => {
@@ -1577,20 +1565,6 @@ function openPotionModalSimple() {
     });
 }
 
-// Функция показа информации о генераторе зелий
-function showPotionInfo() {
-    const infoDiv = document.getElementById('potionInfo');
-    const resultDiv = document.getElementById('potionResult');
-    
-    if (infoDiv.style.display === 'none') {
-        infoDiv.style.display = 'block';
-        resultDiv.style.display = 'none';
-    } else {
-        infoDiv.style.display = 'none';
-        resultDiv.style.display = 'block';
-    }
-}
-
 
 
 // Функция форматирования зелий из API
@@ -1610,30 +1584,37 @@ function formatPotionsFromApi(potions) {
             ).join('');
         }
         
-        let descriptionHtml = `<p class="potion-description">${potion.description}</p>`;
+        // Используем переведенные данные если доступны
+        const displayName = potion.name || 'Неизвестное зелье';
+        const displayRarity = potion.rarity_localized || potion.rarity || 'Неизвестная редкость';
+        const displayType = potion.type_localized || potion.type || 'Неизвестный тип';
+        const displayDescription = potion.description || 'Описание недоступно';
+        
+        let descriptionHtml = `<p class="potion-description">${displayDescription}</p>`;
         
         html += `
             <div class="potion-card" style="border-left: 4px solid ${potion.color}">
                 <div class="potion-header">
                     <span class="potion-icon">${potion.icon}</span>
-                    <h3 class="potion-name">${potion.name}</h3>
-                    <span class="potion-rarity" style="color: ${potion.color}">${potion.rarity}</span>
+                    <h3 class="potion-name">${displayName}</h3>
+                    <span class="potion-rarity" style="color: ${potion.color}">${displayRarity}</span>
                 </div>
                 <div class="potion-body">
                     ${descriptionHtml}
                     <div class="potion-details">
-                        <span class="potion-type">${potion.icon} ${potion.type}</span>
-                        <span class="potion-value">💰 ${potion.cost || potion.value}</span>
+                        <span class="potion-type">${potion.icon} ${displayType}</span>
+                        <span class="potion-value">💰 ${potion.value}</span>
                         <span class="potion-weight">⚖️ ${potion.weight}</span>
                     </div>
                     <div class="potion-properties">
                         ${effectsHtml}
                     </div>
                     <div class="potion-actions" style="margin-top: var(--space-4); text-align: center;">
-                        <button class="fast-btn" onclick="savePotionAsNote('${potion.name}', \`${potion.description}\`, '${potion.rarity}', '${potion.type}', '${potion.cost || potion.value}', '${potion.weight}', '${effectsHtml ? effectsHtml.replace(/<[^>]*>/g, '') : ''}')" style="background: var(--accent-success);">
+                        <button class="fast-btn" onclick="savePotionAsNote('${displayName}', \`${displayDescription}\`, '${displayRarity}', '${displayType}', '${potion.value}', '${potion.weight}', '${effectsHtml ? effectsHtml.replace(/<[^>]*>/g, '') : ''}')" style="background: var(--accent-success);">
                             💾 Сохранить в заметки
                         </button>
                     </div>
+                    ${potion.translation_error ? `<div class="translation-warning" style="color: orange; font-size: 0.8em; margin-top: 5px; text-align: center;">⚠️ ${potion.translation_error}</div>` : ''}
                 </div>
             </div>
         `;
@@ -2317,53 +2298,27 @@ function formatNpcBlocks(txt, forcedName = '') {
         </div>`;
     }
     
-    // Генерируем случайные fallback значения
-    const fallbackDescriptions = [
-        'Бывалый авантюрист с богатым опытом путешествий и приключений.',
-        'Местный житель, знающий все тайны и слухи этого региона.',
-        'Загадочный незнакомец, чье прошлое окутано тайной.',
-        'Опытный мастер своего дела, пользующийся уважением среди местных.',
-        'Молодой искатель приключений, жаждущий славы и богатства.'
-    ];
-    
-    const fallbackTraits = [
-        'Любознательный и наблюдательный, всегда интересуется новостями.',
-        'Осторожный и расчетливый, не доверяет незнакомцам.',
-        'Дружелюбный и общительный, легко находит общий язык с людьми.',
-        'Гордый и независимый, ценит свою свободу превыше всего.',
-        'Мудрый и терпеливый, предпочитает действовать обдуманно.'
-    ];
-    
-    const fallbackAppearances = [
-        'Среднего роста с крепким телосложением и уверенной походкой.',
-        'Высокий и стройный, с острыми чертами лица и внимательным взглядом.',
-        'Коренастый и сильный, с широкими плечами и грубыми руками.',
-        'Элегантный и ухоженный, с аккуратной одеждой и хорошими манерами.',
-        'Простой и неприметный, легко растворяется в толпе.'
-    ];
+
     
     // Описание
     if (desc && desc.length > 10) {
         out += `<div class='npc-col-block'><span style='font-size:1.2em;'>📜</span> <b>Описание</b><div class='npc-content'>${firstSentence(desc)}</div></div>`;
     } else if (!desc || desc.length <= 10) {
-        let randomDesc = fallbackDescriptions[Math.floor(Math.random() * fallbackDescriptions.length)];
-        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>📜</span> <b>Описание</b><div class='npc-content'>${randomDesc}</div></div>`;
+        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>📜</span> <b>Описание</b><div class='npc-content'>Описание недоступно</div></div>`;
     }
     
     // Черты характера
     if (trait && trait.length > 5) {
         out += `<div class='npc-col-block'><span style='font-size:1.2em;'>🧠</span> <b>Черты характера</b><div class='npc-content'>${firstSentence(trait)}</div></div>`;
     } else if (!trait || trait.length <= 5) {
-        let randomTrait = fallbackTraits[Math.floor(Math.random() * fallbackTraits.length)];
-        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>🧠</span> <b>Черты характера</b><div class='npc-content'>${randomTrait}</div></div>`;
+        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>🧠</span> <b>Черты характера</b><div class='npc-content'>Черты характера недоступны</div></div>`;
     }
     
     // Внешность
     if (appear && appear.length > 10) {
         out += `<div class='npc-col-block'><span style='font-size:1.2em;'>&#128100;</span> <b>Внешность</b><div class='npc-content'>${firstSentence(appear)}</div></div>`;
     } else if (!appear || appear.length <= 10) {
-        let randomAppear = fallbackAppearances[Math.floor(Math.random() * fallbackAppearances.length)];
-        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>&#128100;</span> <b>Внешность</b><div class='npc-content'>${randomAppear}</div></div>`;
+        out += `<div class='npc-col-block'><span style='font-size:1.2em;'>&#128100;</span> <b>Внешность</b><div class='npc-content'>Внешность недоступна</div></div>`;
     }
     out += `</div>`;
     setTimeout(() => {
@@ -3704,15 +3659,3 @@ function saveAllEnemiesToNotes(enemies) {
     });
 }
 </script>
-=======
-<?php
-/**
- * D&D Copilot - Главная точка входа
- * Редирект на public/index.php для соблюдения архитектуры
- */
-
-// Редирект на публичную папку
-header('Location: public/index.php');
-exit;
-?>
->>>>>>> 766e930d3413ce7b803a786361d01b52d395138e

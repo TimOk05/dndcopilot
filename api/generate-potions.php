@@ -290,14 +290,17 @@ class PotionGenerator {
         }
         
         // Получаем детальную информацию из API
-        $url = $this->dnd5e_api_url . $potion['url'];
-        $response = $this->makeRequest($url);
-        
-        if (!$response) {
-            return null;
+        if (isset($potion['url'])) {
+            $url = $this->dnd5e_api_url . $potion['url'];
+            $response = $this->makeRequest($url);
+            
+            if ($response) {
+                return $this->formatPotionData($response);
+            }
         }
         
-        return $this->formatPotionData($response);
+        // Если не удалось получить детали, возвращаем базовую информацию
+        return $this->formatBasicPotionData($potion);
     }
     
     /**
@@ -322,6 +325,28 @@ class PotionGenerator {
             'cost' => $this->getPotionCost($potion_data)
         ];
     }
+
+    /**
+     * Форматирование базовых данных зелья (когда детали недоступны)
+     */
+    private function formatBasicPotionData($potion_data) {
+        $type = $this->determinePotionType($potion_data);
+        
+        return [
+            'name' => $potion_data['name'],
+            'rarity' => $potion_data['rarity']['name'] ?? 'Common',
+            'type' => $type,
+            'description' => 'Описание зелья недоступно. Это магическое зелье, которое можно найти в мире D&D.',
+            'effects' => ['Магический эффект'],
+            'value' => $this->getPotionValue($potion_data),
+            'weight' => '0.5 фунта',
+            'icon' => $this->getPotionIcon($type),
+            'color' => $this->getPotionColor($potion_data['rarity']['name'] ?? 'Common'),
+            'properties' => ['Питье', 'Магическое'],
+            'equipment_category' => 'Adventuring Gear',
+            'cost' => $this->getPotionValue($potion_data)
+        ];
+    }
     
     /**
      * Определение типа зелья
@@ -343,9 +368,9 @@ class PotionGenerator {
             return 'Трансмутация';
         } elseif (strpos($name, 'poison') !== false || strpos($desc, 'poison') !== false || strpos($desc, 'damage') !== false || strpos($desc, 'harm') !== false) {
             return 'Некромантия';
-        } elseif (strpos($name, 'clairvoyance') !== false || strpos($name, 'mind reading') !== false || strpos($desc, 'see') !== false || strpos($desc, 'vision') !== false || strpos($desc, 'divination') !== false) {
+        } elseif (strpos($name, 'clairvoyance') !== false || strpos($name, 'vision') !== false || strpos($name, 'foresight') !== false || strpos($desc, 'see') !== false || strpos($desc, 'vision') !== false || strpos($desc, 'divination') !== false) {
             return 'Прорицание';
-        } elseif (strpos($name, 'fire') !== false || strpos($name, 'frost') !== false || strpos($name, 'lightning') !== false || strpos($desc, 'fire') !== false || strpos($desc, 'cold') !== false || strpos($desc, 'lightning') !== false || strpos($desc, 'energy') !== false) {
+        } elseif (strpos($name, 'fire') !== false || strpos($name, 'frost') !== false || strpos($name, 'lightning') !== false || strpos($name, 'thunder') !== false || strpos($desc, 'fire') !== false || strpos($desc, 'cold') !== false || strpos($desc, 'lightning') !== false || strpos($desc, 'energy') !== false) {
             return 'Эвокация';
         } else {
             return 'Универсальное';
@@ -400,6 +425,7 @@ class PotionGenerator {
             'uncommon' => '150 золотых',
             'rare' => '500 золотых',
             'very rare' => '1000 золотых',
+            'very_rare' => '1000 золотых',
             'legendary' => '5000 золотых'
         ];
         
@@ -457,6 +483,7 @@ class PotionGenerator {
             'Uncommon' => '#4caf50',
             'Rare' => '#2196f3',
             'Very Rare' => '#9c27b0',
+            'Very_Rare' => '#9c27b0',
             'Legendary' => '#ff9800'
         ];
         

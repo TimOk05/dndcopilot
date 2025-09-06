@@ -1,6 +1,7 @@
 class PotionGenerator {
     constructor() {
         this.baseUrl = 'https://www.dnd5eapi.co/api';
+        this.apiUrl = '/api/generate-potions.php';
         this.initializeEventListeners();
     }
 
@@ -27,7 +28,8 @@ class PotionGenerator {
         this.showLoading(true);
         
         try {
-            const potions = await this.fetchPotions(options);
+            // Используем наш PHP API вместо прямого обращения к D&D API
+            const potions = await this.fetchPotionsFromAPI(options);
             this.displayResults(potions);
         } catch (error) {
             this.handleError(error);
@@ -54,137 +56,47 @@ class PotionGenerator {
 
         return {
             count,
-            type: typeSelect.value,
-            rarity: raritySelect.value
+            type: typeSelect.value === 'all' ? '' : typeSelect.value,
+            rarity: raritySelect.value === 'all' ? '' : raritySelect.value
         };
     }
 
-    async fetchPotions(options) {
+    async fetchPotionsFromAPI(options) {
         try {
             console.log('Запрос зелий с параметрами:', options);
             
-            // Получаем все магические предметы
-            const response = await fetch(`${this.baseUrl}/magic-items`);
+            // Создаем FormData для POST запроса
+            const formData = new FormData();
+            formData.append('count', options.count);
+            if (options.type) formData.append('type', options.type);
+            if (options.rarity) formData.append('rarity', options.rarity);
+
+            const response = await fetch(this.apiUrl, {
+                method: 'POST',
+                body: formData
+            });
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const data = await response.json();
-            const magicItems = data.results || [];
-            console.log(`Получено ${magicItems.length} магических предметов`);
+            const result = await response.json();
+            console.log('Ответ от API:', result);
 
-            // Фильтруем зелья по типу и редкости
-            let filteredPotions = await this.filterPotions(magicItems, options);
-            console.log(`Отфильтровано ${filteredPotions.length} зелий`);
-            
-            // Если не хватает зелий, добавляем случайные
-            if (filteredPotions.length < options.count) {
-                const additionalPotions = await this.getRandomPotions(magicItems, options.count - filteredPotions.length);
-                filteredPotions = [...filteredPotions, ...additionalPotions];
-                console.log(`Добавлено ${additionalPotions.length} случайных зелий`);
+            if (!result.success) {
+                throw new Error(result.error || 'Неизвестная ошибка API');
             }
 
-            // Ограничиваем количество
-            return filteredPotions.slice(0, options.count);
+            if (!result.data || result.data.length === 0) {
+                throw new Error('Не найдено зелий по указанным критериям');
+            }
+
+            return result.data;
 
         } catch (error) {
             console.error('Error fetching potions:', error);
-            throw new Error('Не удалось получить данные о зельях');
+            throw new Error(`Не удалось получить данные о зельях: ${error.message}`);
         }
-    }
-
-    async filterPotions(magicItems, options) {
-        const potions = [];
-        
-        for (const item of magicItems) {
-            if (potions.length >= options.count) break;
-            
-            try {
-                const itemDetails = await this.fetchItemDetails(item.index);
-                
-                if (this.matchesFilters(itemDetails, options)) {
-                    potions.push(itemDetails);
-                }
-            } catch (error) {
-                console.warn(`Failed to fetch details for ${item.index}:`, error);
-                continue;
-            }
-        }
-
-        return potions;
-    }
-
-    async fetchItemDetails(index) {
-        const response = await fetch(`${this.baseUrl}/magic-items/${index}`);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch item details for ${index}`);
-        }
-        return await response.json();
-    }
-
-    matchesFilters(potion, options) {
-        // Проверяем редкость
-        if (options.rarity !== 'all' && potion.rarity?.name !== options.rarity) {
-            return false;
-        }
-
-        // Проверяем тип (по названию и описанию)
-        if (options.type !== 'all') {
-            const name = potion.name.toLowerCase();
-            const description = potion.desc?.join(' ').toLowerCase() || '';
-            
-            switch (options.type) {
-                case 'healing':
-                    return name.includes('healing') || name.includes('cure') || 
-                           description.includes('heal') || description.includes('cure') ||
-                           name.includes('health') || description.includes('health');
-                case 'poison':
-                    return name.includes('poison') || description.includes('poison') ||
-                           description.includes('damage') || description.includes('harm') ||
-                           name.includes('toxin') || description.includes('toxin');
-                case 'buff':
-                    return name.includes('strength') || name.includes('power') ||
-                           description.includes('enhance') || description.includes('boost') ||
-                           description.includes('advantage') || name.includes('giant') ||
-                           description.includes('giant') || name.includes('heroism') ||
-                           description.includes('heroism');
-                case 'utility':
-                    return name.includes('utility') || name.includes('tool') ||
-                           description.includes('use') || description.includes('tool') ||
-                           name.includes('invisibility') || description.includes('invisibility') ||
-                           name.includes('flying') || description.includes('flying');
-                default:
-                    return true;
-            }
-        }
-
-        return true;
-    }
-
-    async getRandomPotions(magicItems, count) {
-        const randomItems = this.shuffleArray([...magicItems]).slice(0, count);
-        const potions = [];
-
-        for (const item of randomItems) {
-            try {
-                const itemDetails = await this.fetchItemDetails(item.index);
-                potions.push(itemDetails);
-            } catch (error) {
-                console.warn(`Failed to fetch random item ${item.index}:`, error);
-                continue;
-            }
-        }
-
-        return potions;
-    }
-
-    shuffleArray(array) {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
     }
 
     displayResults(potions) {
@@ -201,23 +113,34 @@ class PotionGenerator {
     }
 
     createPotionCard(potion) {
-        const rarity = potion.rarity?.name || 'Неизвестно';
-        const cost = potion.cost ? `${potion.cost.quantity} ${potion.cost.unit}` : 'Не указана';
-        const description = potion.desc?.join(' ') || 'Описание отсутствует';
+        const rarity = potion.rarity || 'Неизвестно';
+        const cost = potion.cost || 'Не указана';
+        const description = potion.description || 'Описание отсутствует';
+        const type = potion.type || 'Неизвестный тип';
+        const icon = potion.icon || '🧪';
 
         // Очищаем название редкости для CSS класса
         const rarityClass = rarity.toLowerCase().replace(/\s+/g, '-');
 
         return `
             <div class="potion-card">
-                <h3 class="potion-name">${potion.name}</h3>
+                <div class="potion-header">
+                    <span class="potion-icon">${icon}</span>
+                    <h3 class="potion-name">${potion.name}</h3>
+                </div>
                 <div class="potion-details">
+                    <p><strong>Тип:</strong> ${type}</p>
                     <p><strong>Редкость:</strong> <span class="rarity-${rarityClass}">${rarity}</span></p>
                     <p><strong>Стоимость:</strong> ${cost}</p>
                 </div>
                 <div class="potion-description">
                     <p>${description}</p>
                 </div>
+                ${potion.effects && potion.effects.length > 0 ? `
+                <div class="potion-effects">
+                    <strong>Эффекты:</strong> ${potion.effects.join(', ')}
+                </div>
+                ` : ''}
             </div>
         `;
     }

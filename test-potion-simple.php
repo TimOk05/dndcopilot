@@ -1,109 +1,156 @@
 <?php
 /**
- * Простой тест API генератора зелий
+ * Простой тест API генерации зелий
+ * Используйте для проверки работоспособности
  */
 
-echo "<h1>🧪 Тест API генератора зелий</h1>\n";
+echo "<h1>🧪 Тест API генерации зелий</h1>";
 
-// Тест 1: Базовая генерация
-echo "<h2>Тест 1: Базовая генерация</h2>\n";
+// Проверяем доступность D&D API
+echo "<h2>1. Проверка D&D API</h2>";
+$dnd_api_url = 'https://www.dnd5eapi.co/api';
+
 try {
-    $url = 'http://localhost/api/generate-potions.php?action=random&count=2';
-    $response = file_get_contents($url);
+    $ch = curl_init($dnd_api_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     
-    if ($response === false) {
-        echo "<p style='color: red;'>❌ Ошибка: не удалось получить ответ от API</p>\n";
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_error($ch);
+    curl_close($ch);
+    
+    if ($error) {
+        echo "<p style='color: red;'>❌ Ошибка CURL: $error</p>";
+    } elseif ($http_code === 200) {
+        echo "<p style='color: green;'>✅ D&D API доступен (HTTP $http_code)</p>";
     } else {
-        $data = json_decode($response, true);
-        if ($data && isset($data['success'])) {
-            if ($data['success']) {
-                echo "<p style='color: green;'>✅ API работает! Сгенерировано зелий: " . count($data['data']) . "</p>\n";
-                echo "<pre>" . print_r($data, true) . "</pre>\n";
-            } else {
-                echo "<p style='color: orange;'>⚠️ API вернул ошибку: " . ($data['error'] ?? 'неизвестная ошибка') . "</p>\n";
-            }
-        } else {
-            echo "<p style='color: red;'>❌ Ошибка: неверный формат ответа</p>\n";
-        }
+        echo "<p style='color: orange;'>⚠️ D&D API вернул код $http_code</p>";
     }
 } catch (Exception $e) {
-    echo "<p style='color: red;'>❌ Исключение: " . $e->getMessage() . "</p>\n";
+    echo "<p style='color: red;'>❌ Исключение: " . $e->getMessage() . "</p>";
 }
 
-// Тест 2: Проверка D&D API
-echo "<h2>Тест 2: Проверка D&D API</h2>\n";
-try {
-    $dnd_url = 'https://www.dnd5eapi.co/api/magic-items';
-    $dnd_response = file_get_contents($dnd_url);
+// Проверяем наш API
+echo "<h2>2. Проверка нашего API</h2>";
+
+if (file_exists('api/generate-potions.php')) {
+    echo "<p style='color: green;'>✅ Файл API найден</p>";
     
-    if ($dnd_response === false) {
-        echo "<p style='color: red;'>❌ Ошибка: D&D API недоступен</p>\n";
+    // Проверяем синтаксис PHP
+    $syntax_check = shell_exec('php -l api/generate-potions.php 2>&1');
+    if (strpos($syntax_check, 'No syntax errors') !== false) {
+        echo "<p style='color: green;'>✅ Синтаксис PHP корректен</p>";
     } else {
-        $dnd_data = json_decode($dnd_response, true);
-        if ($dnd_data && isset($dnd_data['results'])) {
-            echo "<p style='color: green;'>✅ D&D API доступен! Найдено предметов: " . count($dnd_data['results']) . "</p>\n";
-            
-            // Ищем зелья
-            $potions = 0;
-            foreach ($dnd_data['results'] as $item) {
-                $name = strtolower($item['name']);
-                if (strpos($name, 'potion') !== false || 
-                    strpos($name, 'elixir') !== false || 
-                    strpos($name, 'philter') !== false) {
-                    $potions++;
-                }
-            }
-            echo "<p>Найдено потенциальных зелий: $potions</p>\n";
-        } else {
-            echo "<p style='color: red;'>❌ Ошибка: неверный формат ответа D&D API</p>\n";
-        }
+        echo "<p style='color: red;'>❌ Ошибки синтаксиса PHP:</p>";
+        echo "<pre>$syntax_check</pre>";
     }
-} catch (Exception $e) {
-    echo "<p style='color: red;'>❌ Исключение при обращении к D&D API: " . $e->getMessage() . "</p>\n";
+} else {
+    echo "<p style='color: red;'>❌ Файл API не найден</p>";
 }
 
-// Тест 3: Проверка файлов
-echo "<h2>Тест 3: Проверка файлов</h2>\n";
+// Проверяем директорию кеша
+echo "<h2>3. Проверка директорий</h2>";
 
-$files_to_check = [
-    'api/generate-potions.php' => 'API генератора зелий',
-    'index.php' => 'Основной файл сайта',
-    'utilities.css' => 'Стили',
-    'test-potion-integration.html' => 'Тестовый файл'
-];
-
-foreach ($files_to_check as $file => $description) {
-    if (file_exists($file)) {
-        echo "<p style='color: green;'>✅ $description: $file</p>\n";
+$cache_dir = 'logs/cache';
+if (is_dir($cache_dir)) {
+    echo "<p style='color: green;'>✅ Директория кеша существует</p>";
+    
+    if (is_writable($cache_dir)) {
+        echo "<p style='color: green;'>✅ Директория кеша доступна для записи</p>";
     } else {
-        echo "<p style='color: red;'>❌ $description: $file - не найден</p>\n";
+        echo "<p style='color: red;'>❌ Директория кеша недоступна для записи</p>";
+    }
+} else {
+    echo "<p style='color: orange;'>⚠️ Директория кеша не существует</p>";
+    
+    // Пытаемся создать
+    if (mkdir($cache_dir, 0755, true)) {
+        echo "<p style='color: green;'>✅ Директория кеша создана</p>";
+    } else {
+        echo "<p style='color: red;'>❌ Не удалось создать директорию кеша</p>";
     }
 }
 
-// Тест 4: Проверка директорий
-echo "<h2>Тест 4: Проверка директорий</h2>\n";
+// Тестируем API
+echo "<h2>4. Тест API</h2>";
 
-$dirs_to_check = [
-    'logs/cache' => 'Директория кеша',
-    'api' => 'Директория API'
-];
-
-foreach ($dirs_to_check as $dir => $description) {
-    if (is_dir($dir)) {
-        echo "<p style='color: green;'>✅ $description: $dir</p>\n";
+if (function_exists('curl_init')) {
+    echo "<p style='color: green;'>✅ CURL доступен</p>";
+    
+    // Тестируем простой запрос
+    try {
+        $ch = curl_init('http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']) . '/api/generate-potions.php');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, 'count=1');
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         
-        // Проверяем права на запись
-        if (is_writable($dir)) {
-            echo "<p style='color: green;'>  ✅ Права на запись есть</p>\n";
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+        
+        if ($error) {
+            echo "<p style='color: red;'>❌ Ошибка CURL при тестировании API: $error</p>";
+        } elseif ($http_code === 200) {
+            echo "<p style='color: green;'>✅ API отвечает (HTTP $http_code)</p>";
+            
+            $data = json_decode($response, true);
+            if ($data && isset($data['success'])) {
+                if ($data['success']) {
+                    echo "<p style='color: green;'>✅ API вернул успешный ответ</p>";
+                    echo "<p>Найдено зелий: " . count($data['data']) . "</p>";
+                } else {
+                    echo "<p style='color: orange;'>⚠️ API вернул ошибку: " . ($data['error'] ?? 'Неизвестная ошибка') . "</p>";
+                }
+            } else {
+                echo "<p style='color: orange;'>⚠️ API вернул неожиданный формат данных</p>";
+                echo "<pre>" . htmlspecialchars(substr($response, 0, 500)) . "</pre>";
+            }
         } else {
-            echo "<p style='color: orange;'>  ⚠️ Нет прав на запись</p>\n";
+            echo "<p style='color: red;'>❌ API вернул код $http_code</p>";
         }
+    } catch (Exception $e) {
+        echo "<p style='color: red;'>❌ Исключение при тестировании API: " . $e->getMessage() . "</p>";
+    }
+} else {
+    echo "<p style='color: red;'>❌ CURL недоступен</p>";
+}
+
+// Проверяем конфигурацию PHP
+echo "<h2>5. Конфигурация PHP</h2>";
+
+$required_extensions = ['curl', 'json', 'fileinfo'];
+foreach ($required_extensions as $ext) {
+    if (extension_loaded($ext)) {
+        echo "<p style='color: green;'>✅ Расширение $ext загружено</p>";
     } else {
-        echo "<p style='color: red;'>❌ $description: $dir - не найдена</p>\n";
+        echo "<p style='color: red;'>❌ Расширение $ext не загружено</p>";
     }
 }
 
-echo "<hr>\n";
-echo "<p><strong>Тест завершен.</strong></p>\n";
-echo "<p>Для полного тестирования откройте <a href='test-potion-integration.html'>test-potion-integration.html</a></p>\n";
+echo "<p><strong>Версия PHP:</strong> " . PHP_VERSION . "</p>";
+echo "<p><strong>Максимальное время выполнения:</strong> " . ini_get('max_execution_time') . " сек</p>";
+echo "<p><strong>Лимит памяти:</strong> " . ini_get('memory_limit') . "</p>";
+
+// Рекомендации
+echo "<h2>6. Рекомендации</h2>";
+
+if (!extension_loaded('curl')) {
+    echo "<p style='color: red;'>❌ Установите расширение CURL для PHP</p>";
+}
+
+if (ini_get('max_execution_time') < 30) {
+    echo "<p style='color: orange;'>⚠️ Увеличьте max_execution_time до 30+ секунд</p>";
+}
+
+if (ini_get('memory_limit') < '128M') {
+    echo "<p style='color: orange;'>⚠️ Увеличьте memory_limit до 128M+</p>";
+}
+
+echo "<hr>";
+echo "<p><a href='potion-generator.html'>Открыть генератор зелий</a> | ";
+echo "<a href='test-potion-api.html'>Открыть тестовый интерфейс</a></p>";
 ?>
