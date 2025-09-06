@@ -125,7 +125,7 @@
             --accent-warning: #ffd700;
             --accent-danger: #b71c1c;
             --accent-info: #4a90e2;
-            --bg-image: url('backgrounds/light-theme.png');
+            --bg-image: url('assets/backgrounds/light-theme.png');
         }
         /* Средняя тема (коричневая) */
         
@@ -145,7 +145,7 @@
             --accent-warning: #fbbf24;
             --accent-danger: #f87171;
             --accent-info: #60a5fa;
-            --bg-image: url('backgrounds/orange-theme.png');
+            --bg-image: url('assets/backgrounds/orange-theme.png');
         }
         /* Тёмная тема */
         
@@ -165,7 +165,7 @@
             --accent-warning: #fbbf24;
             --accent-danger: #f87171;
             --accent-info: #60a5fa;
-            --bg-image: url('backgrounds/dark-theme.png');
+            --bg-image: url('assets/backgrounds/dark-theme.png');
         }
         /* Мистическая тема */
         
@@ -185,7 +185,7 @@
             --accent-warning: #fbbf24;
             --accent-danger: #f87171;
             --accent-info: #60a5fa;
-            --bg-image: url('backgrounds/mystic-theme.png');
+            --bg-image: url('assets/backgrounds/mystic-theme.png');
         }
         
         body {
@@ -1114,7 +1114,7 @@
             formData.append('class', characterClass);
             formData.append('level', level);
 
-            fetch('mobile-api.php', {
+            fetch('api/mobile-api.php', {
                     method: 'POST',
                     body: formData
                 })
@@ -1200,7 +1200,7 @@
             
             showModal(message);
 
-            fetch('mobile-api.php', {
+            fetch('api/mobile-api.php', {
                 method: 'POST',
                 body: formData
             })
@@ -1428,7 +1428,7 @@
             formData.append('action', 'ai_chat');
             formData.append('question', question);
             
-            fetch('mobile-api.php', {
+            fetch('api/mobile-api.php', {
                 method: 'POST',
                 body: formData
             })

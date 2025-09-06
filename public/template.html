@@ -5324,10 +5324,10 @@
                     </select>
 
                     <!-- Иконка статистики - всегда видна -->
-                    <a href="stats.php" class="stats-link" style="display: block !important; visibility: visible !important; opacity: 1 !important;">📊</a>
+                    <a href="../app/Controllers/stats.php" class="stats-link" style="display: block !important; visibility: visible !important; opacity: 1 !important;">📊</a>
 
                     <?php if (isAdmin()): ?>
-                    <a href="admin.php" class="admin-link" style="display: block !important; visibility: visible !important; opacity: 1 !important;">🔧</a>
+                    <a href="../app/Controllers/admin.php" class="admin-link" style="display: block !important; visibility: visible !important; opacity: 1 !important;">🔧</a>
                     <?php endif; ?>
 
                     <button class="logout-btn btn btn-secondary" onclick="logout()">🚪 Выйти</button>
@@ -5471,7 +5471,7 @@
         </div>
     </div>
 
-    <script src="mobile.js"></script>
+    <script src="assets/js/mobile.js"></script>
     <script>
         // JS для модального окна и заметок будет добавлен через PHP
 

@@ -111,7 +111,7 @@ function getCurrentUser() {
         return null;
     }
     
-    $usersFile = __DIR__ . '/users.json';
+    $usersFile = __DIR__ . '/../data/users.json';
     if (file_exists($usersFile)) {
         $users = json_decode(file_get_contents($usersFile), true);
         $userId = $_SESSION['user_id'];

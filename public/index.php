@@ -568,7 +568,7 @@ function openCharacterModal() {
             progressFill.style.width = progress + '%';
         }, 200);
         
-        fetch('api/generate-characters-v4.php', {
+        fetch('api/generate-characters.php', {
             method: 'POST',
             body: formData
         })
@@ -1291,7 +1291,7 @@ function fetchNpcFromAI(race, npcClass, background, level, advancedSettings = {}
             backgroundParam: background
         });
         
-        fetch('api/generate-npc.php', {
+        fetch('api/generate-characters.php', {
             method: 'POST',
             body: formData
         })

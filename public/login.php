@@ -1,5 +1,5 @@
 <?php
-require_once 'auth.php';
+require_once '../app/Middleware/auth.php';
 
 // Если пользователь уже авторизован, перенаправляем
 if (isLoggedIn()) {
@@ -184,7 +184,7 @@ if (isLoggedIn()) {
             const formData = new FormData(this);
             formData.append('action', 'login');
             
-            fetch('auth.php', {
+            fetch('api/users.php', {
                 method: 'POST',
                 body: formData
             })
@@ -211,7 +211,7 @@ if (isLoggedIn()) {
             const formData = new FormData(this);
             formData.append('action', 'register');
             
-            fetch('auth.php', {
+            fetch('api/users.php', {
                 method: 'POST',
                 body: formData
             })
