@@ -315,6 +315,12 @@ class AIChat {
 }
 
 // Обработка запросов
+$request_method = $_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN';
+$request_uri = $_SERVER['REQUEST_URI'] ?? 'UNKNOWN';
+
+// Логируем информацию о запросе
+error_log("AI Chat Request: Method=$request_method, URI=$request_uri, POST=" . json_encode($_POST));
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Проверяем CSRF токен
     $csrf_token = $_POST['csrf_token'] ?? '';
@@ -375,6 +381,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
 } else {
-    echo json_encode(['success' => false, 'error' => 'Метод не поддерживается']);
+    // Для GET запросов возвращаем информацию о статусе
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        echo json_encode([
+            'success' => false, 
+            'error' => 'GET метод не поддерживается',
+            'info' => 'Используйте POST для отправки сообщений',
+            'debug' => [
+                'method' => $request_method,
+                'uri' => $request_uri,
+                'session_id' => session_id(),
+                'csrf_token_exists' => isset($_SESSION['csrf_token'])
+            ]
+        ]);
+    } else {
+        echo json_encode([
+            'success' => false, 
+            'error' => 'Метод не поддерживается',
+            'debug' => [
+                'method' => $request_method,
+                'uri' => $request_uri,
+                'supported_methods' => ['POST']
+            ]
+        ]);
+    }
 }
 ?>
