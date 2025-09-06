@@ -89,17 +89,28 @@
 
         // Функция обновления интерфейса
         function updateInterfaceLanguage() {
+            console.log('Обновление интерфейса для языка:', currentLanguage);
+
             // Обновляем приветствие
             const welcomeElement = document.querySelector('.welcome-text');
             if (welcomeElement) {
-                const username = welcomeElement.textContent.replace('Добро пожаловать ', '').replace('Welcome ', '');
+                console.log('Найден элемент приветствия:', welcomeElement);
+                const currentText = welcomeElement.textContent;
+                const username = currentText.replace(/^(Добро пожаловать|Welcome)\s+/, '');
                 welcomeElement.textContent = t('welcome') + ' ' + username;
+                console.log('Обновлено приветствие:', welcomeElement.textContent);
+            } else {
+                console.log('Элемент приветствия не найден');
             }
 
             // Обновляем кнопку выхода
             const logoutBtn = document.querySelector('.logout-btn');
             if (logoutBtn) {
+                console.log('Найдена кнопка выхода:', logoutBtn);
                 logoutBtn.textContent = t('logout');
+                console.log('Обновлена кнопка выхода:', logoutBtn.textContent);
+            } else {
+                console.log('Кнопка выхода не найдена');
             }
         }
 

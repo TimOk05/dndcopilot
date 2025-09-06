@@ -60,7 +60,7 @@
             'ru': {
                 'welcome': 'Добро пожаловать',
                 'logout': '🚪 Выйти',
-                'character_generator': '⚔️ Генератор персонажей',
+                'character_generator': '🎭 Генератор персонажей',
                 'character_subtitle': 'Создайте полноценного персонажа с использованием D&D API и AI',
                 'enemy_generator': '👹 Генератор противников',
                 'enemy_subtitle': 'Создайте подходящих противников для вашей группы',
@@ -71,15 +71,19 @@
                 'round': 'Раунд',
                 'notes': '📝 Заметки',
                 'dice': '🎲 Кости',
-                'generate': 'Создать',
+                'generate': '🎲 Сгенерировать',
                 'loading': 'Загрузка...',
                 'error': 'Ошибка',
-                'success': 'Успешно'
+                'success': 'Успешно',
+                'race': 'Раса',
+                'class': 'Класс',
+                'level': 'Уровень',
+                'gender': 'Пол'
             },
             'en': {
                 'welcome': 'Welcome',
                 'logout': '🚪 Logout',
-                'character_generator': '⚔️ Character Generator',
+                'character_generator': '🎭 Character Generator',
                 'character_subtitle': 'Create a full character using D&D API and AI',
                 'enemy_generator': '👹 Enemy Generator',
                 'enemy_subtitle': 'Create suitable enemies for your group',
@@ -90,10 +94,14 @@
                 'round': 'Round',
                 'notes': '📝 Notes',
                 'dice': '🎲 Dice',
-                'generate': 'Generate',
+                'generate': '🎲 Generate',
                 'loading': 'Loading...',
                 'error': 'Error',
-                'success': 'Success'
+                'success': 'Success',
+                'race': 'Race',
+                'class': 'Class',
+                'level': 'Level',
+                'gender': 'Gender'
             }
         };
 
@@ -104,41 +112,63 @@
 
         // Функция обновления интерфейса
         function updateInterfaceLanguage() {
+            console.log('Обновление интерфейса для языка:', currentLanguage);
+
             // Обновляем приветствие
             const welcomeElement = document.querySelector('.welcome-text');
             if (welcomeElement) {
-                const username = welcomeElement.textContent.replace('Добро пожаловать ', '').replace('Welcome ', '');
+                console.log('Найден элемент приветствия:', welcomeElement);
+                const currentText = welcomeElement.textContent;
+                const username = currentText.replace(/^(Добро пожаловать|Welcome)\s+/, '');
                 welcomeElement.textContent = t('welcome') + ' ' + username;
+                console.log('Обновлено приветствие:', welcomeElement.textContent);
+            } else {
+                console.log('Элемент приветствия не найден');
             }
 
             // Обновляем кнопку выхода
             const logoutBtn = document.querySelector('.logout-btn');
             if (logoutBtn) {
+                console.log('Найдена кнопка выхода:', logoutBtn);
                 logoutBtn.textContent = t('logout');
+                console.log('Обновлена кнопка выхода:', logoutBtn.textContent);
+            } else {
+                console.log('Кнопка выхода не найдена');
             }
 
-            // Обновляем заголовки генераторов
-            const characterHeader = document.querySelector('.generator-header h2');
-            if (characterHeader && characterHeader.textContent.includes('Генератор персонажей')) {
+            // Обновляем заголовок генератора персонажей в модальном окне
+            const characterHeader = document.querySelector('#character-modal .modal-header h2');
+            if (characterHeader) {
+                console.log('Найден заголовок генератора персонажей:', characterHeader);
                 characterHeader.innerHTML = t('character_generator');
+                console.log('Обновлен заголовок генератора:', characterHeader.innerHTML);
+            } else {
+                console.log('Заголовок генератора персонажей не найден');
             }
 
-            const enemyHeader = document.querySelectorAll('.generator-header h2')[1];
-            if (enemyHeader && enemyHeader.textContent.includes('Генератор противников')) {
-                enemyHeader.innerHTML = t('enemy_generator');
+            // Обновляем кнопку генерации персонажа
+            const generateBtn = document.querySelector('.generate-btn');
+            if (generateBtn) {
+                console.log('Найдена кнопка генерации:', generateBtn);
+                generateBtn.textContent = t('generate') + ' ' + (currentLanguage === 'en' ? 'Character' : 'персонажа');
+                console.log('Обновлена кнопка генерации:', generateBtn.textContent);
+            } else {
+                console.log('Кнопка генерации не найдена');
             }
 
-            const potionHeader = document.querySelectorAll('.generator-header h2')[2];
-            if (potionHeader && potionHeader.textContent.includes('Генератор зелий')) {
-                potionHeader.innerHTML = t('potion_generator');
-            }
-
-            // Обновляем подзаголовки
-            const subtitles = document.querySelectorAll('.generator-subtitle');
-            subtitles.forEach((subtitle, index) => {
-                if (index === 0) subtitle.textContent = t('character_subtitle');
-                else if (index === 1) subtitle.textContent = t('enemy_subtitle');
-                else if (index === 2) subtitle.textContent = t('potion_subtitle');
+            // Обновляем лейблы форм
+            const labels = document.querySelectorAll('label');
+            labels.forEach(label => {
+                const forAttr = label.getAttribute('for');
+                if (forAttr === 'race') {
+                    label.textContent = t('race') + ':';
+                } else if (forAttr === 'class') {
+                    label.textContent = t('class') + ':';
+                } else if (forAttr === 'level') {
+                    label.textContent = t('level') + ':';
+                } else if (forAttr === 'gender') {
+                    label.textContent = t('gender') + ':';
+                }
             });
         }
 

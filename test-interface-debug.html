@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест интерфейса</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+        }
+        
+        .success {
+            color: green;
+        }
+        
+        .error {
+            color: red;
+        }
+        
+        .info {
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔍 Тест интерфейса</h1>
+
+    <div class="test-section">
+        <h2>Тест 1: Проверка элементов</h2>
+        <div id="element-test"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Тест 2: Проверка переводов</h2>
+        <div id="translation-test"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Тест 3: Проверка кнопок</h2>
+        <div id="button-test"></div>
+    </div>
+
+    <script>
+        // Словарь переводов
+        const interfaceTranslations = {
+            'ru': {
+                'welcome': 'Добро пожаловать',
+                'logout': '🚪 Выйти',
+                'character_generator': '🎭 Генератор персонажей',
+                'generate': '🎲 Сгенерировать',
+                'race': 'Раса',
+                'class': 'Класс',
+                'level': 'Уровень',
+                'gender': 'Пол'
+            },
+            'en': {
+                'welcome': 'Welcome',
+                'logout': '🚪 Logout',
+                'character_generator': '🎭 Character Generator',
+                'generate': '🎲 Generate',
+                'race': 'Race',
+                'class': 'Class',
+                'level': 'Level',
+                'gender': 'Gender'
+            }
+        };
+
+        let currentLanguage = 'ru';
+
+        function t(key) {
+            return interfaceTranslations[currentLanguage] ? .[key] || interfaceTranslations['ru'][key] || key;
+        }
+
+        // Тест 1: Проверка элементов
+        function testElements() {
+            const testDiv = document.getElementById('element-test');
+            const elements = [
+                '.welcome-text',
+                '.logout-btn',
+                '.stats-link',
+                '.admin-link',
+                '#character-modal .modal-header h2',
+                '.generate-btn'
+            ];
+
+            elements.forEach(selector => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    testDiv.innerHTML += `<div class="success">✅ Найден: ${selector}</div>`;
+                } else {
+                    testDiv.innerHTML += `<div class="error">❌ Не найден: ${selector}</div>`;
+                }
+            });
+        }
+
+        // Тест 2: Проверка переводов
+        function testTranslations() {
+            const testDiv = document.getElementById('translation-test');
+
+            // Тест русского языка
+            currentLanguage = 'ru';
+            testDiv.innerHTML += '<h3>Русский язык:</h3>';
+            testDiv.innerHTML += `<div class="info">Приветствие: ${t('welcome')}</div>`;
+            testDiv.innerHTML += `<div class="info">Выход: ${t('logout')}</div>`;
+            testDiv.innerHTML += `<div class="info">Генератор: ${t('character_generator')}</div>`;
+
+            // Тест английского языка
+            currentLanguage = 'en';
+            testDiv.innerHTML += '<h3>Английский язык:</h3>';
+            testDiv.innerHTML += `<div class="info">Welcome: ${t('welcome')}</div>`;
+            testDiv.innerHTML += `<div class="info">Logout: ${t('logout')}</div>`;
+            testDiv.innerHTML += `<div class="info">Generator: ${t('character_generator')}</div>`;
+        }
+
+        // Тест 3: Проверка кнопок
+        function testButtons() {
+            const testDiv = document.getElementById('button-test');
+
+            const buttons = [{
+                selector: '.logout-btn',
+                name: 'Кнопка выхода'
+            }, {
+                selector: '.stats-link',
+                name: 'Кнопка статистики'
+            }, {
+                selector: '.admin-link',
+                name: 'Кнопка админ панели'
+            }, {
+                selector: '.generate-btn',
+                name: 'Кнопка генерации'
+            }];
+
+            buttons.forEach(button => {
+                const element = document.querySelector(button.selector);
+                if (element) {
+                    testDiv.innerHTML += `<div class="success">✅ ${button.name}: ${element.textContent}</div>`;
+                    testDiv.innerHTML += `<div class="info">Стили: ${window.getComputedStyle(element).display}</div>`;
+                } else {
+                    testDiv.innerHTML += `<div class="error">❌ ${button.name}: не найдена</div>`;
+                }
+            });
+        }
+
+        // Запуск тестов
+        document.addEventListener('DOMContentLoaded', function() {
+            testElements();
+            testTranslations();
+            testButtons();
+        });
+    </script>
+</body>
+
+</html>
