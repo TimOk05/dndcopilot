@@ -48,9 +48,98 @@
                 } catch (e) {
                     console.log('localStorage недоступен');
                 }
+                // Обновляем интерфейс сразу
+                updateInterfaceLanguage();
                 // Перезагружаем страницу с новым языком
                 window.location.href = `index.php?lang=${currentLanguage}`;
             }
+        }
+
+        // Словарь переводов интерфейса
+        const interfaceTranslations = {
+            'ru': {
+                'welcome': 'Добро пожаловать',
+                'logout': '🚪 Выйти',
+                'character_generator': '⚔️ Генератор персонажей',
+                'character_subtitle': 'Создайте полноценного персонажа с использованием D&D API и AI',
+                'enemy_generator': '👹 Генератор противников',
+                'enemy_subtitle': 'Создайте подходящих противников для вашей группы',
+                'potion_generator': '🧪 Генератор зелий',
+                'potion_subtitle': 'Создайте магические зелья различных типов и редкости',
+                'initiative': '⚡ Инициатива',
+                'participants': 'Участников',
+                'round': 'Раунд',
+                'notes': '📝 Заметки',
+                'dice': '🎲 Кости',
+                'generate': 'Создать',
+                'loading': 'Загрузка...',
+                'error': 'Ошибка',
+                'success': 'Успешно'
+            },
+            'en': {
+                'welcome': 'Welcome',
+                'logout': '🚪 Logout',
+                'character_generator': '⚔️ Character Generator',
+                'character_subtitle': 'Create a full character using D&D API and AI',
+                'enemy_generator': '👹 Enemy Generator',
+                'enemy_subtitle': 'Create suitable enemies for your group',
+                'potion_generator': '🧪 Potion Generator',
+                'potion_subtitle': 'Create magical potions of various types and rarity',
+                'initiative': '⚡ Initiative',
+                'participants': 'Participants',
+                'round': 'Round',
+                'notes': '📝 Notes',
+                'dice': '🎲 Dice',
+                'generate': 'Generate',
+                'loading': 'Loading...',
+                'error': 'Error',
+                'success': 'Success'
+            }
+        };
+
+        // Функция получения переведенного текста
+        function t(key) {
+            return interfaceTranslations[currentLanguage] ? .[key] || interfaceTranslations['ru'][key] || key;
+        }
+
+        // Функция обновления интерфейса
+        function updateInterfaceLanguage() {
+            // Обновляем приветствие
+            const welcomeElement = document.querySelector('.welcome-text');
+            if (welcomeElement) {
+                const username = welcomeElement.textContent.replace('Добро пожаловать ', '').replace('Welcome ', '');
+                welcomeElement.textContent = t('welcome') + ' ' + username;
+            }
+
+            // Обновляем кнопку выхода
+            const logoutBtn = document.querySelector('.logout-btn');
+            if (logoutBtn) {
+                logoutBtn.textContent = t('logout');
+            }
+
+            // Обновляем заголовки генераторов
+            const characterHeader = document.querySelector('.generator-header h2');
+            if (characterHeader && characterHeader.textContent.includes('Генератор персонажей')) {
+                characterHeader.innerHTML = t('character_generator');
+            }
+
+            const enemyHeader = document.querySelectorAll('.generator-header h2')[1];
+            if (enemyHeader && enemyHeader.textContent.includes('Генератор противников')) {
+                enemyHeader.innerHTML = t('enemy_generator');
+            }
+
+            const potionHeader = document.querySelectorAll('.generator-header h2')[2];
+            if (potionHeader && potionHeader.textContent.includes('Генератор зелий')) {
+                potionHeader.innerHTML = t('potion_generator');
+            }
+
+            // Обновляем подзаголовки
+            const subtitles = document.querySelectorAll('.generator-subtitle');
+            subtitles.forEach((subtitle, index) => {
+                if (index === 0) subtitle.textContent = t('character_subtitle');
+                else if (index === 1) subtitle.textContent = t('enemy_subtitle');
+                else if (index === 2) subtitle.textContent = t('potion_subtitle');
+            });
         }
 
         // Инициализация при загрузке
@@ -64,7 +153,11 @@
             } catch (e) {
                 console.log('localStorage недоступен');
             }
+
             loadLanguageInfo();
+
+            // Обновляем интерфейс после загрузки
+            setTimeout(updateInterfaceLanguage, 100);
         });
     </script>
     <!-- Временно убираем manifest.json из-за проблем с синхронизацией -->
@@ -5313,7 +5406,7 @@
         <div class="top-elements-container">
             <div class="user-info flex items-center justify-between">
                 <div class="user-welcome-section">
-                    <span class="welcome-text">Добро пожаловать <?php echo htmlspecialchars($currentUser); ?>!</span>
+                    <span class="welcome-text" data-welcome-ru="Добро пожаловать" data-welcome-en="Welcome"><?php echo ($currentLanguage === 'en' ? 'Welcome' : 'Добро пожаловать'); ?> <?php echo htmlspecialchars($currentUser); ?>!</span>
 
                 </div>
                 <div class="user-controls flex gap-2 items-center">
@@ -5330,7 +5423,7 @@
                     <a href="admin.php" class="admin-link" style="display: block !important; visibility: visible !important; opacity: 1 !important;">🔧</a>
                     <?php endif; ?>
 
-                    <button class="logout-btn btn btn-secondary" onclick="logout()">🚪 Выйти</button>
+                    <button class="logout-btn btn btn-secondary" onclick="logout()" data-logout-ru="🚪 Выйти" data-logout-en="🚪 Logout"><?php echo ($currentLanguage === 'en' ? '🚪 Logout' : '🚪 Выйти'); ?></button>
                 </div>
             </div>
 
@@ -5409,13 +5502,15 @@
         <div class="modal character-modal" id="character-modal">
             <button class="modal-close" id="character-modal-close">×</button>
             <div class="modal-header">
-                <h2>🎭 Генератор персонажей</h2>
+                <h2>
+                    <?php echo ($currentLanguage === 'en' ? '🎭 Character Generator' : '🎭 Генератор персонажей'); ?>
+                </h2>
             </div>
             <div class="modal-body">
                 <form class="character-form" id="characterForm">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="race">Раса:</label>
+                            <label for="race"><?php echo ($currentLanguage === 'en' ? 'Race:' : 'Раса:'); ?></label>
                             <select name="race" id="race" required>
                                 <option value="human">Человек</option>
                                 <option value="elf">Эльф</option>
@@ -5430,7 +5525,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="class">Класс:</label>
+                            <label for="class"><?php echo ($currentLanguage === 'en' ? 'Class:' : 'Класс:'); ?></label>
                             <select name="class" id="class" required>
                                 <option value="fighter">Воин</option>
                                 <option value="wizard">Волшебник</option>
@@ -5447,11 +5542,11 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="level">Уровень:</label>
+                            <label for="level"><?php echo ($currentLanguage === 'en' ? 'Level:' : 'Уровень:'); ?></label>
                             <input type="number" name="level" id="level" min="1" max="20" value="1" required>
                         </div>
                         <div class="form-group">
-                            <label for="gender">Пол:</label>
+                            <label for="gender"><?php echo ($currentLanguage === 'en' ? 'Gender:' : 'Пол:'); ?></label>
                             <select name="gender" id="gender">
                                 <option value="male">Мужской</option>
                                 <option value="female">Женский</option>
@@ -5459,7 +5554,7 @@
                             </select>
                         </div>
                     </div>
-                    <button type="submit" class="generate-btn">🎲 Сгенерировать персонажа</button>
+                    <button type="submit" class="generate-btn"><?php echo ($currentLanguage === 'en' ? '🎲 Generate Character' : '🎲 Сгенерировать персонажа'); ?></button>
                 </form>
 
                 <!-- Результат генерации персонажа -->
