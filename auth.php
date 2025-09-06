@@ -80,6 +80,20 @@ function isLoggedIn() {
     return isset($_SESSION['user_id']) && isset($_SESSION['username']);
 }
 
+// Функция проверки админских прав
+function isAdmin() {
+    if (!isLoggedIn()) {
+        return false;
+    }
+    
+    $username = $_SESSION['username'] ?? '';
+    
+    // Список админов (можно вынести в конфиг)
+    $admins = ['TimOk', 'admin', 'root'];
+    
+    return in_array($username, $admins);
+}
+
 // Обработка POST запросов
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');

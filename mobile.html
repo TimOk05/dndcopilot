@@ -134,20 +134,35 @@
 
         // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM загружен, начинаем инициализацию');
+
             // Проверяем сохраненный язык
             try {
                 const savedLanguage = localStorage.getItem('dnd_language');
                 if (savedLanguage) {
                     currentLanguage = savedLanguage;
+                    console.log('Язык из localStorage:', currentLanguage);
                 }
             } catch (e) {
                 console.log('localStorage недоступен');
             }
 
-            loadLanguageInfo();
+            // Проверяем язык из URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLang = urlParams.get('lang');
+            if (urlLang) {
+                currentLanguage = urlLang;
+                console.log('Язык из URL:', currentLanguage);
+            }
 
-            // Обновляем интерфейс после загрузки
-            setTimeout(updateInterfaceLanguage, 100);
+            // Обновляем селектор языка
+            updateLanguageSelector();
+
+            // Обновляем интерфейс
+            updateInterfaceLanguage();
+
+            // Загружаем информацию о языках
+            loadLanguageInfo();
         });
     </script>
 
