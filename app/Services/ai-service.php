@@ -426,52 +426,55 @@ class AiService {
      * Выполнение API запроса
      */
     private function makeApiRequest($url, $data, $api_key = null) {
-        if (!function_exists('curl_init')) {
-            logMessage('WARNING', 'cURL не доступен, AI API не может работать');
+        // Проверяем поддержку OpenSSL для HTTPS запросов
+        if (!extension_loaded('openssl')) {
+            logMessage('WARNING', 'OpenSSL не доступен, AI API не может работать с HTTPS');
             return null;
         }
         
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Увеличиваем таймаут
-        curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/2.0');
+        // Используем file_get_contents вместо cURL
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'POST',
+                'header' => [
+                    'Content-Type: application/json',
+                    'User-Agent: DnD-Copilot/2.0' . ($api_key ? "\r\nAuthorization: Bearer " . $api_key : '')
+                ],
+                'content' => json_encode($data),
+                'timeout' => 30
+            ],
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false
+            ]
+        ]);
         
-        // Критически важные настройки SSL для обхода проблем
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
-        curl_setopt($ch, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+        logMessage('INFO', "AI API запрос к: {$url}");
         
-        // Дополнительные настройки для Windows
-        curl_setopt($ch, CURLOPT_CAINFO, null);
-        curl_setopt($ch, CURLOPT_CAPATH, null);
-        
-        // Добавляем заголовки
-        $headers = ['Content-Type: application/json'];
-        if ($api_key) {
-            $headers[] = 'Authorization: Bearer ' . $api_key;
-        }
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        
-        // Выполняем запрос
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        $info = curl_getinfo($ch);
-        curl_close($ch);
-        
-        // Логируем детальную информацию
-        logMessage('INFO', "AI API запрос к: {$url}, HTTP код: {$httpCode}");
+        $response = @file_get_contents($url, false, $context);
         
         if ($response === false) {
-            logMessage('ERROR', "AI API cURL ошибка: {$error} для URL: {$url}");
+            $error = error_get_last();
+            $error_msg = $error ? $error['message'] : 'Неизвестная ошибка';
+            logMessage('ERROR', "AI API file_get_contents ошибка: {$error_msg} для URL: {$url}");
             return null;
         }
         
-        if ($httpCode !== 200) {
-            logMessage('ERROR', "AI API HTTP ошибка: {$httpCode} для URL: {$url}");
+        // Получаем HTTP код из заголовков
+        $http_code = 200; // По умолчанию считаем успешным
+        if (isset($http_response_header)) {
+            foreach ($http_response_header as $header) {
+                if (preg_match('/HTTP\/\d\.\d\s+(\d+)/', $header, $matches)) {
+                    $http_code = (int)$matches[1];
+                    break;
+                }
+            }
+        }
+        
+        logMessage('INFO', "AI API запрос завершен, HTTP код: {$http_code}");
+        
+        if ($http_code !== 200) {
+            logMessage('ERROR', "AI API HTTP ошибка: {$http_code} для URL: {$url}");
             logMessage('ERROR', "AI API ответ: {$response}");
             return null;
         }
@@ -844,6 +847,160 @@ class AiService {
     }
     
     /**
+     * Перевод действий противника
+     */
+    public function translateEnemyActions($actions, $target_language = 'ru') {
+        if ($target_language === 'en' || empty($actions)) {
+            return $actions;
+        }
+        
+        $translated_actions = [];
+        
+        foreach ($actions as $action) {
+            $translated_action = $action;
+            
+            // Переводим название действия
+            if (isset($action['name'])) {
+                $translated_name = $this->translateActionName($action['name'], $target_language);
+                if (is_string($translated_name)) {
+                    $translated_action['name'] = $translated_name;
+                }
+            }
+            
+            // Переводим описание действия
+            if (isset($action['description'])) {
+                $translated_desc = $this->translateActionDescription($action['description'], $target_language);
+                if (is_string($translated_desc)) {
+                    $translated_action['description'] = $translated_desc;
+                }
+            }
+            
+            $translated_actions[] = $translated_action;
+        }
+        
+        return $translated_actions;
+    }
+    
+    /**
+     * Перевод особых способностей противника
+     */
+    public function translateEnemySpecialAbilities($abilities, $target_language = 'ru') {
+        if ($target_language === 'en' || empty($abilities)) {
+            return $abilities;
+        }
+        
+        $translated_abilities = [];
+        
+        foreach ($abilities as $ability) {
+            $translated_ability = $ability;
+            
+            // Переводим название способности
+            if (isset($ability['name'])) {
+                $translated_name = $this->translateAbilityName($ability['name'], $target_language);
+                if (is_string($translated_name)) {
+                    $translated_ability['name'] = $translated_name;
+                }
+            }
+            
+            // Переводим описание способности
+            if (isset($ability['description'])) {
+                $translated_desc = $this->translateAbilityDescription($ability['description'], $target_language);
+                if (is_string($translated_desc)) {
+                    $translated_ability['description'] = $translated_desc;
+                }
+            }
+            
+            $translated_abilities[] = $translated_ability;
+        }
+        
+        return $translated_abilities;
+    }
+    
+    /**
+     * Перевод названия действия
+     */
+    private function translateActionName($name, $target_language) {
+        $cache_key = 'action_name_' . md5($name . '_' . $target_language);
+        $cached = $this->getCachedData($cache_key);
+        if ($cached !== null) {
+            return $cached;
+        }
+        
+        $prompt = $this->buildActionNameTranslationPrompt($name, $target_language);
+        $result = $this->callAiApi($prompt);
+        
+        if ($result && is_string($result)) {
+            $this->cacheData($cache_key, $result);
+            return $result;
+        }
+        
+        return $name; // Возвращаем оригинал при ошибке
+    }
+    
+    /**
+     * Перевод описания действия
+     */
+    private function translateActionDescription($description, $target_language) {
+        $cache_key = 'action_desc_' . md5($description . '_' . $target_language);
+        $cached = $this->getCachedData($cache_key);
+        if ($cached !== null) {
+            return $cached;
+        }
+        
+        $prompt = $this->buildActionDescriptionTranslationPrompt($description, $target_language);
+        $result = $this->callAiApi($prompt);
+        
+        if ($result && is_string($result)) {
+            $this->cacheData($cache_key, $result);
+            return $result;
+        }
+        
+        return $description; // Возвращаем оригинал при ошибке
+    }
+    
+    /**
+     * Перевод названия способности
+     */
+    private function translateAbilityName($name, $target_language) {
+        $cache_key = 'ability_name_' . md5($name . '_' . $target_language);
+        $cached = $this->getCachedData($cache_key);
+        if ($cached !== null) {
+            return $cached;
+        }
+        
+        $prompt = $this->buildAbilityNameTranslationPrompt($name, $target_language);
+        $result = $this->callAiApi($prompt);
+        
+        if ($result && is_string($result)) {
+            $this->cacheData($cache_key, $result);
+            return $result;
+        }
+        
+        return $name; // Возвращаем оригинал при ошибке
+    }
+    
+    /**
+     * Перевод описания способности
+     */
+    private function translateAbilityDescription($description, $target_language) {
+        $cache_key = 'ability_desc_' . md5($description . '_' . $target_language);
+        $cached = $this->getCachedData($cache_key);
+        if ($cached !== null) {
+            return $cached;
+        }
+        
+        $prompt = $this->buildAbilityDescriptionTranslationPrompt($description, $target_language);
+        $result = $this->callAiApi($prompt);
+        
+        if ($result && is_string($result)) {
+            $this->cacheData($cache_key, $result);
+            return $result;
+        }
+        
+        return $description; // Возвращаем оригинал при ошибке
+    }
+    
+    /**
      * Построение промпта для перевода названия зелья
      */
     private function buildPotionNameTranslationPrompt($name, $target_language) {
@@ -902,6 +1059,86 @@ class AiService {
 - Без дополнительных объяснений
 
 Переведенные эффекты:";
+    }
+    
+    /**
+     * Построение промпта для перевода названия действия
+     */
+    private function buildActionNameTranslationPrompt($name, $target_language) {
+        $language_name = $target_language === 'ru' ? 'русский' : 'английский';
+        
+        return "Переведи название действия/атаки D&D с английского на {$language_name} язык:
+
+Название: {$name}
+
+Требования к переводу:
+- Сохрани игровую терминологию D&D
+- Используй подходящие термины для боевых действий
+- Название должно звучать естественно на {$language_name} языке
+- Если это стандартная атака (например, Claw, Bite), используй стандартный перевод
+- Верни только переведенное название, без дополнительных объяснений
+
+Переведенное название:";
+    }
+    
+    /**
+     * Построение промпта для перевода описания действия
+     */
+    private function buildActionDescriptionTranslationPrompt($description, $target_language) {
+        $language_name = $target_language === 'ru' ? 'русский' : 'английский';
+        
+        return "Переведи описание действия/атаки D&D с английского на {$language_name} язык:
+
+Описание: {$description}
+
+Требования к переводу:
+- Сохрани все игровые механики и числа (урон, бонусы, спасброски)
+- Используй терминологию D&D на {$language_name} языке
+- Сохрани форматирование и структуру
+- Переведи все игровые термины (hit points, damage, advantage, saving throw, etc.)
+- Верни только переведенное описание, без дополнительных объяснений
+
+Переведенное описание:";
+    }
+    
+    /**
+     * Построение промпта для перевода названия способности
+     */
+    private function buildAbilityNameTranslationPrompt($name, $target_language) {
+        $language_name = $target_language === 'ru' ? 'русский' : 'английский';
+        
+        return "Переведи название особой способности D&D с английского на {$language_name} язык:
+
+Название: {$name}
+
+Требования к переводу:
+- Сохрани магическую/фантастическую атмосферу D&D
+- Используй подходящие термины для способностей
+- Название должно звучать естественно на {$language_name} языке
+- Если это стандартная способность (например, Magic Resistance), используй стандартный перевод
+- Верни только переведенное название, без дополнительных объяснений
+
+Переведенное название:";
+    }
+    
+    /**
+     * Построение промпта для перевода описания способности
+     */
+    private function buildAbilityDescriptionTranslationPrompt($description, $target_language) {
+        $language_name = $target_language === 'ru' ? 'русский' : 'английский';
+        
+        return "Переведи описание особой способности D&D с английского на {$language_name} язык:
+
+Описание: {$description}
+
+Требования к переводу:
+- Сохрани все игровые механики и числа
+- Используй терминологию D&D на {$language_name} языке
+- Сохрани форматирование и структуру
+- Переведи все игровые термины (advantage, disadvantage, resistance, immunity, etc.)
+- Верни только переведенное описание, без дополнительных объяснений
+
+Переведенное описание:";
     }
 
 }

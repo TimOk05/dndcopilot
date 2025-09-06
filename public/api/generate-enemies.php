@@ -375,7 +375,7 @@ class EnemyGenerator {
                 'hit_points' => $this->formatHitPoints($monster['hit_points'] ?? 'Не определено'),
                 'armor_class' => $this->formatArmorClass($monster['armor_class'] ?? 'Не определено'),
                 'speed' => $this->formatSpeed($monster['speed'] ?? 'Не определено'),
-                'abilities' => $this->formatAbilities($monster['abilities'] ?? []),
+                'abilities' => $this->formatAbilities($monster),
                 'actions' => $this->formatActions($monster['actions'] ?? []),
                 'special_abilities' => $this->formatSpecialAbilities($monster['special_abilities'] ?? []),
                 'legendary_actions' => $this->formatLegendaryActions($monster['legendary_actions'] ?? []),
@@ -391,16 +391,12 @@ class EnemyGenerator {
                 'xp' => $monster['xp'] ?? 0
             ];
             
-            // Генерируем описание и тактику с AI (опционально)
+            // Переводим действия и особые способности
+            $enemy['actions'] = $this->translateActions($enemy['actions']);
+            $enemy['special_abilities'] = $this->translateSpecialAbilities($enemy['special_abilities']);
+            
+            // Генерируем только тактику с AI (опционально)
             if ($use_ai && $this->deepseek_api_key) {
-                $description_result = $this->generateDescription($monster);
-                if (!isset($description_result['error'])) {
-                    $enemy['description'] = $description_result;
-                } else {
-                    logMessage('WARNING', "AI генерация описания не удалась: " . $description_result['message']);
-                    $enemy['description'] = 'Описание недоступно (AI API недоступен)';
-                }
-                
                 $tactics_result = $this->generateTactics($monster);
                 if (!isset($tactics_result['error'])) {
                     $enemy['tactics'] = $tactics_result;
@@ -409,9 +405,8 @@ class EnemyGenerator {
                     $enemy['tactics'] = 'Тактика недоступна (AI API недоступен)';
                 }
             } else {
-                // AI отключен - создаем противника без описаний
-                logMessage('INFO', 'AI генерация отключена, создаем противника без описаний');
-                $enemy['description'] = 'Описание недоступно (AI отключен)';
+                // AI отключен - создаем противника без тактики
+                logMessage('INFO', 'AI генерация отключена, создаем противника без тактики');
                 $enemy['tactics'] = 'Тактика недоступна (AI отключен)';
             }
             
@@ -543,26 +538,18 @@ class EnemyGenerator {
     /**
      * Форматирование характеристик
      */
-    private function formatAbilities($abilities) {
-        if (empty($abilities)) {
-            return [
-                'str' => 10, 'dex' => 10, 'con' => 10,
-                'int' => 10, 'wis' => 10, 'cha' => 10
-            ];
-        }
+    private function formatAbilities($monster) {
+        // В D&D 5e API характеристики хранятся как отдельные поля
+        $abilities = [
+            'str' => $monster['strength'] ?? 10,
+            'dex' => $monster['dexterity'] ?? 10,
+            'con' => $monster['constitution'] ?? 10,
+            'int' => $monster['intelligence'] ?? 10,
+            'wis' => $monster['wisdom'] ?? 10,
+            'cha' => $monster['charisma'] ?? 10
+        ];
         
-        $formatted = [];
-        $ability_names = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
-        
-        foreach ($ability_names as $ability) {
-            if (isset($abilities[$ability])) {
-                $formatted[$ability] = $abilities[$ability];
-            } else {
-                $formatted[$ability] = 10;
-            }
-        }
-        
-        return $formatted;
+        return $abilities;
     }
     
     /**
@@ -866,6 +853,48 @@ class EnemyGenerator {
         ];
         
         return $cr_map[$cr] ?? 0;
+    }
+    
+    /**
+     * Перевод действий противника
+     */
+    private function translateActions($actions) {
+        if (empty($actions)) {
+            return [];
+        }
+        
+        try {
+            require_once __DIR__ . '/../../app/Services/ai-service.php';
+            $ai_service = new AiService();
+            
+            $translated_actions = $ai_service->translateEnemyActions($actions, 'ru');
+            return $translated_actions;
+            
+        } catch (Exception $e) {
+            logMessage('WARNING', "Не удалось перевести действия: " . $e->getMessage());
+            return $actions; // Возвращаем оригинальные действия при ошибке
+        }
+    }
+    
+    /**
+     * Перевод особых способностей противника
+     */
+    private function translateSpecialAbilities($abilities) {
+        if (empty($abilities)) {
+            return [];
+        }
+        
+        try {
+            require_once __DIR__ . '/../../app/Services/ai-service.php';
+            $ai_service = new AiService();
+            
+            $translated_abilities = $ai_service->translateEnemySpecialAbilities($abilities, 'ru');
+            return $translated_abilities;
+            
+        } catch (Exception $e) {
+            logMessage('WARNING', "Не удалось перевести особые способности: " . $e->getMessage());
+            return $abilities; // Возвращаем оригинальные способности при ошибке
+        }
     }
     
     /**
