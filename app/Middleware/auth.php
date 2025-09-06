@@ -2,7 +2,7 @@
 session_start();
 
 // Простая система пользователей в JSON файле
-$users_file = 'users.json';
+$users_file = __DIR__ . '/../../data/users.json';
 
 // Функция загрузки пользователей
 function loadUsers() {

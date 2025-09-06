@@ -6,7 +6,7 @@ class CacheService {
     private $defaultTtl;
     
     public function __construct($cacheDir = null, $defaultTtl = 3600) {
-        $this->cacheDir = $cacheDir ?: __DIR__ . '/../cache';
+        $this->cacheDir = $cacheDir ?: __DIR__ . '/../../data/cache';
         $this->defaultTtl = $defaultTtl;
         
         if (!is_dir($this->cacheDir)) {
