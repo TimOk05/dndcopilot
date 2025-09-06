@@ -316,8 +316,8 @@ class AIChat {
 
 // Обработка запросов
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Проверяем CSRF токен (если функция существует)
-    if (function_exists('verifyCSRFToken') && (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token']))) {
+    // Проверяем CSRF токен
+    if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
         http_response_code(403);
         echo json_encode(['success' => false, 'error' => 'Неверный CSRF токен']);
         exit;
