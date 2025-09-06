@@ -40,133 +40,29 @@
             }
         }
 
-        // Словарь переводов интерфейса
-        const interfaceTranslations = {
-            'ru': {
-                'welcome': 'Добро пожаловать',
-                'logout': '🚪 Выйти',
-                'character_generator': '⚔️ Генератор персонажей',
-                'character_subtitle': 'Создайте полноценного персонажа с использованием D&D API и AI',
-                'enemy_generator': '👹 Генератор противников',
-                'enemy_subtitle': 'Создайте подходящих противников для вашей группы',
-                'potion_generator': '🧪 Генератор зелий',
-                'potion_subtitle': 'Создайте магические зелья различных типов и редкости',
-                'initiative': '⚡ Инициатива',
-                'participants': 'Участников',
-                'round': 'Раунд',
-                'notes': '📝 Заметки',
-                'dice': '🎲 Кости',
-                'generate': 'Создать',
-                'loading': 'Загрузка...',
-                'error': 'Ошибка',
-                'success': 'Успешно'
-            },
-            'en': {
-                'welcome': 'Welcome',
-                'logout': '🚪 Logout',
-                'character_generator': '⚔️ Character Generator',
-                'character_subtitle': 'Create a full character using D&D API and AI',
-                'enemy_generator': '👹 Enemy Generator',
-                'enemy_subtitle': 'Create suitable enemies for your group',
-                'potion_generator': '🧪 Potion Generator',
-                'potion_subtitle': 'Create magical potions of various types and rarity',
-                'initiative': '⚡ Initiative',
-                'participants': 'Participants',
-                'round': 'Round',
-                'notes': '📝 Notes',
-                'dice': '🎲 Dice',
-                'generate': 'Generate',
-                'loading': 'Loading...',
-                'error': 'Error',
-                'success': 'Success'
-            }
-        };
-
-        // Функция получения переведенного текста
-        function t(key) {
-            return interfaceTranslations[currentLanguage] ? .[key] || interfaceTranslations['ru'][key] || key;
-        }
-
-        // Функция обновления интерфейса
-        function updateInterfaceLanguage() {
-            console.log('Обновление интерфейса для языка:', currentLanguage);
-
-            // Обновляем приветствие
-            const welcomeElement = document.querySelector('.welcome-text');
-            if (welcomeElement) {
-                console.log('Найден элемент приветствия:', welcomeElement);
-                const currentText = welcomeElement.textContent;
-                const username = currentText.replace(/^(Добро пожаловать|Welcome)\s+/, '');
-                welcomeElement.textContent = t('welcome') + ' ' + username;
-                console.log('Обновлено приветствие:', welcomeElement.textContent);
-            } else {
-                console.log('Элемент приветствия не найден');
-            }
-
-            // Обновляем кнопку выхода
-            const logoutBtn = document.querySelector('.logout-btn');
-            if (logoutBtn) {
-                console.log('Найдена кнопка выхода:', logoutBtn);
-                logoutBtn.textContent = t('logout');
-                console.log('Обновлена кнопка выхода:', logoutBtn.textContent);
-            } else {
-                console.log('Кнопка выхода не найдена');
-            }
-        }
-
         // Смена языка
         function changeLanguage() {
             const selector = document.getElementById('languageSelector');
             if (selector) {
                 currentLanguage = selector.value;
                 // Сохраняем выбор в localStorage
-                try {
-                    localStorage.setItem('dnd_language', currentLanguage);
-                } catch (e) {
-                    console.log('localStorage недоступен');
-                }
-                // Обновляем интерфейс сразу
-                updateInterfaceLanguage();
+                localStorage.setItem('dnd_language', currentLanguage);
                 // Перезагружаем страницу с новым языком
                 window.location.href = `mobile.html?lang=${currentLanguage}`;
             }
         }
 
-        // Делаем функции глобальными для доступа из HTML
-        window.changeLanguage = changeLanguage;
-        window.updateInterfaceLanguage = updateInterfaceLanguage;
-        window.updateLanguageSelector = updateLanguageSelector;
-
         // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM загружен, начинаем инициализацию');
-
             // Проверяем сохраненный язык
             try {
                 const savedLanguage = localStorage.getItem('dnd_language');
                 if (savedLanguage) {
                     currentLanguage = savedLanguage;
-                    console.log('Язык из localStorage:', currentLanguage);
                 }
             } catch (e) {
                 console.log('localStorage недоступен');
             }
-
-            // Проверяем язык из URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const urlLang = urlParams.get('lang');
-            if (urlLang) {
-                currentLanguage = urlLang;
-                console.log('Язык из URL:', currentLanguage);
-            }
-
-            // Обновляем селектор языка
-            updateLanguageSelector();
-
-            // Обновляем интерфейс
-            updateInterfaceLanguage();
-
-            // Загружаем информацию о языках
             loadLanguageInfo();
         });
     </script>
