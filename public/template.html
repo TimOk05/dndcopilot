@@ -857,11 +857,11 @@
                 flex-direction: column;
                 gap: 16px;
                 padding: 12px 16px;
-                padding-right: 80px; /* Сохраняем отступ для кнопки темы */
             }
             
             .user-info {
-                justify-content: space-between;
+                flex-direction: column;
+                gap: 12px;
                 width: 100%;
             }
             
@@ -901,7 +901,6 @@
             
             .top-elements-container {
                 padding: 10px 12px;
-                padding-right: 70px; /* Уменьшаем отступ для маленьких экранов */
                 gap: 12px;
             }
             
@@ -2416,9 +2415,7 @@
         /* Переключатель темы */
         
         .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+            position: relative;
             z-index: 10;
         }
         
@@ -4484,9 +4481,8 @@
             box-shadow: 0 2px 8px var(--shadow-tertiary);
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             z-index: 10;
-            padding-right: 80px; /* Добавляем отступ справа для кнопки темы */
         }
         /* Базовые стили для всех элементов верхней части */
         
@@ -4501,7 +4497,6 @@
             align-items: center;
             gap: 16px;
             flex: 1;
-            max-width: calc(100% - 100px); /* Ограничиваем ширину чтобы оставить место для кнопки темы */
         }
         
         .user-welcome-section {
@@ -4513,7 +4508,6 @@
             display: flex;
             align-items: center;
             gap: 8px; /* Уменьшаем расстояние между кнопками */
-            margin-left: auto; /* Сдвигаем кнопки вправо внутри контейнера */
         }
         
         .welcome-text {
@@ -4801,11 +4795,11 @@
                 flex-direction: column;
                 gap: 16px;
                 padding: 12px 16px;
-                padding-right: 80px; /* Сохраняем отступ для кнопки темы */
             }
 
             .user-info {
-                justify-content: space-between;
+                flex-direction: column;
+                gap: 12px;
                 width: 100%;
             }
 
@@ -4844,7 +4838,6 @@
         @media (max-width: 480px) {
             .top-elements-container {
                 padding: 10px 12px;
-                padding-right: 70px; /* Уменьшаем отступ для маленьких экранов */
                 gap: 12px;
             }
 
@@ -5466,13 +5459,8 @@
 <body>
     <div class="parchment">
         <div class="top-elements-container">
-            <div class="user-info flex items-center justify-between">
-                <div class="user-welcome-section">
-                    <span class="welcome-text">Добро пожаловать <?php echo htmlspecialchars($currentUser); ?>!</span>
-
-                </div>
+            <div class="user-info flex items-center">
                 <div class="user-controls flex gap-2 items-center">
-
                     <!-- Иконка статистики - всегда видна -->
                     <a href="../app/Controllers/stats.php" class="stats-link" style="display: block !important; visibility: visible !important; opacity: 1 !important;">📊</a>
 
@@ -5481,6 +5469,10 @@
                     <?php endif; ?>
 
                     <button class="logout-btn btn btn-secondary" onclick="logout()">🚪 Выйти</button>
+                </div>
+                
+                <div class="user-welcome-section">
+                    <span class="welcome-text">Добро пожаловать <?php echo htmlspecialchars($currentUser); ?>!</span>
                 </div>
             </div>
 
