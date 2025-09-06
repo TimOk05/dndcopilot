@@ -6,7 +6,7 @@ if (php_sapi_name() !== 'cli') {
 require_once __DIR__ . '/../../config/config.php';
 
 class EnemyGenerator {
-    private $dnd5e_api_url = 'https://www.dnd5eapi.co/api';
+    private $dnd5e_api_url = 'http://www.dnd5eapi.co/api';
     private $deepseek_api_key;
     private $cache_dir;
     private $max_retries = 3;
@@ -391,50 +391,29 @@ class EnemyGenerator {
                 'xp' => $monster['xp'] ?? 0
             ];
             
-            // Генерируем описание и тактику с AI (всегда включено)
-            // if ($use_ai && $this->deepseek_api_key) {
+            // Генерируем описание и тактику с AI (опционально)
+            if ($use_ai && $this->deepseek_api_key) {
                 $description_result = $this->generateDescription($monster);
-                if (isset($description_result['error'])) {
-                    // НЕ используем fallback - возвращаем ошибку
-                    logMessage('ERROR', "AI генерация описания не удалась: " . $description_result['message']);
-                    return [
-                        'success' => false,
-                        'error' => 'AI API недоступен',
-                        'message' => $description_result['message'],
-                        'details' => $description_result['details'] ?? 'Не удалось сгенерировать описание противника',
-                        'ai_error' => true
-                    ];
-                } else {
+                if (!isset($description_result['error'])) {
                     $enemy['description'] = $description_result;
+                } else {
+                    logMessage('WARNING', "AI генерация описания не удалась: " . $description_result['message']);
+                    $enemy['description'] = 'Описание недоступно (AI API недоступен)';
                 }
                 
                 $tactics_result = $this->generateTactics($monster);
-                if (isset($tactics_result['error'])) {
-                    // НЕ используем fallback - возвращаем ошибку
-                    logMessage('ERROR', "AI генерация тактики не удалась: " . $tactics_result['message']);
-                    return [
-                        'success' => false,
-                        'error' => 'AI API недоступен',
-                        'message' => $tactics_result['message'],
-                        'details' => $tactics_result['details'] ?? 'Не удалось сгенерировать тактику противника',
-                        'ai_error' => true
-                    ];
-                } else {
+                if (!isset($tactics_result['error'])) {
                     $enemy['tactics'] = $tactics_result;
+                } else {
+                    logMessage('WARNING', "AI генерация тактики не удалась: " . $tactics_result['message']);
+                    $enemy['tactics'] = 'Тактика недоступна (AI API недоступен)';
                 }
-            // } else {
-            //     // AI всегда включен - это основной функционал
-            //     // Если AI отключен, возвращаем ошибку
-            //     // return [
-            //     //     'success' => false,
-            //     //     'error' => 'AI отключен',
-            //     //     'message' => 'Генерация противника невозможна без AI API',
-            //     //     'details' => 'Включите AI генерацию для создания противников с описаниями и тактикой'
-            //     // ];
-            //     
-            //     // Продолжаем генерацию без AI описаний
-            //     logMessage('INFO', 'AI генерация отключена, создаем противника без описаний');
-            // }
+            } else {
+                // AI отключен - создаем противника без описаний
+                logMessage('INFO', 'AI генерация отключена, создаем противника без описаний');
+                $enemy['description'] = 'Описание недоступно (AI отключен)';
+                $enemy['tactics'] = 'Тактика недоступна (AI отключен)';
+            }
             
             return $enemy;
             
