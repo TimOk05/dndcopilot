@@ -1,6 +1,6 @@
 <?php
-require_once 'config.php';
-require_once 'users.php';
+require_once '../config/config.php';
+require_once '../public/api/users.php';
 
 // Запускаем сессию
 configureSession();
@@ -163,7 +163,7 @@ if (!isAdmin()) {
                     formData.append('password', password);
                     formData.append('csrf_token', csrfToken);
                     
-                    fetch('users.php', {
+                    fetch('api/users.php', {
                         method: 'POST',
                         body: formData
                     })

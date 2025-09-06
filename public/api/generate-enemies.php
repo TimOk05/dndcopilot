@@ -3,7 +3,7 @@
 if (php_sapi_name() !== 'cli') {
     header('Content-Type: application/json');
 }
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../../config/config.php';
 
 class EnemyGenerator {
     private $dnd5e_api_url = 'https://www.dnd5eapi.co/api';
@@ -902,7 +902,7 @@ class EnemyGenerator {
             ];
             
             // Используем основной AI сервис для генерации описания
-            require_once __DIR__ . '/ai-service.php';
+            require_once __DIR__ . '/../../app/Services/ai-service.php';
             $ai_service = new AiService();
             
             // Используем метод генерации описания персонажа, но передаем данные монстра
@@ -939,7 +939,7 @@ class EnemyGenerator {
             ];
             
             // Используем основной AI сервис для генерации тактики
-            require_once __DIR__ . '/ai-service.php';
+            require_once __DIR__ . '/../../app/Services/ai-service.php';
             $ai_service = new AiService();
             
             // Используем метод генерации тактики противника

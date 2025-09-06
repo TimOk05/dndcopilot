@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../users.php';
-require_once __DIR__ . '/CharacterService.php';
-require_once __DIR__ . '/CacheService.php';
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/users.php';
+require_once __DIR__ . '/../../app/Services/CharacterService.php';
+require_once __DIR__ . '/../../app/Services/CacheService.php';
 
 // Проверяем авторизацию
 if (!isLoggedIn()) {

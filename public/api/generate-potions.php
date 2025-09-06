@@ -60,13 +60,13 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS
     exit(0);
 }
 
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/language-service.php';
-require_once __DIR__ . '/ai-service.php';
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../app/Services/language-service.php';
+require_once __DIR__ . '/../../app/Services/ai-service.php';
 
 class PotionGenerator {
     private $dnd5e_api_url = 'http://www.dnd5eapi.co';
-    private $cache_file = __DIR__ . '/../logs/cache/potions_cache.json';
+    private $cache_file = __DIR__ . '/../../data/logs/cache/potions_cache.json';
     private $cache_duration = 3600; // 1 час
     private $language_service;
     private $ai_service;

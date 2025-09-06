@@ -7,7 +7,7 @@ header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 }
 
-require_once 'config.php';
+require_once '../../config/config.php';
 
 // Обработка preflight запросов (только для HTTP запросов)
 if (php_sapi_name() !== 'cli' && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -205,7 +205,7 @@ if (!function_exists('askMobileAI')) {
 function askMobileAI($question) {
     try {
         // Используем AI напрямую через API
-        require_once 'config.php';
+        require_once '../../config/config.php';
         
         $api_key = getApiKey('deepseek');
         if (empty($api_key)) {
@@ -417,7 +417,7 @@ if (!function_exists('generateCharacterDescriptionWithAI')) {
 function generateCharacterDescriptionWithAI($race, $characterClass, $level) {
     try {
         // Используем основной AI сервис
-        require_once 'api/ai-service.php';
+        require_once '../../app/Services/ai-service.php';
         
         $aiService = new AiService();
         $character = ['race' => $race, 'class' => $characterClass, 'level' => $level];

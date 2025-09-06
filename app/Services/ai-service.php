@@ -20,7 +20,7 @@ class AiService {
         // Устанавливаем DeepSeek как единственный рабочий API
         $this->preferred_api = 'deepseek';
         
-        $this->cache_dir = __DIR__ . '/../cache/ai/';
+        $this->cache_dir = __DIR__ . '/../../data/cache/ai/';
         if (!is_dir($this->cache_dir)) {
             mkdir($this->cache_dir, 0755, true);
         }

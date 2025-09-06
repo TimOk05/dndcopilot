@@ -75,7 +75,7 @@
     <meta name="apple-mobile-web-app-title" content="DnD Copilot">
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM3MjA5YjciLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyeiIvPgo8cGF0aCBkPSJNMTIgNkM4LjY5IDYgNiA4LjY5IDYgMTJzMi42OSA2IDYgNiA2LTIuNjkgNi02LTIuNjktNi02LTZ6Ii8+CjxwYXRoIGQ9Ik0xMiAxMEMxMC4zNCAxMCA5IDExLjM0IDkgMTNzMS4zNCAzIDMgMyAzLTEuMzQgMy0zLTEuMzQtMy0zLTN6Ii8+Cjwvc3ZnPgo8L3N2Zz4K">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=UnifrakturCook:wght@700&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="utilities.css?v=2.0">
+    <link rel="stylesheet" href="assets/css/utilities.css?v=2.0">
     <style>
         /* CSS v2.0 - Исправления иконок */
         
@@ -147,7 +147,7 @@
             --shadow-primary: #0002;
             --shadow-secondary: #0006;
             --shadow-tertiary: #0001;
-            --bg-image: url('backgrounds/light-theme.png');
+            --bg-image: url('assets/backgrounds/light-theme.png');
         }
         /* Средняя тема (коричневая) */
         
@@ -176,7 +176,7 @@
             --shadow-primary: rgba(210, 105, 30, 0.2);
             --shadow-secondary: rgba(210, 105, 30, 0.3);
             --shadow-tertiary: rgba(210, 105, 30, 0.1);
-            --bg-image: url('backgrounds/orange-theme.png');
+            --bg-image: url('assets/backgrounds/orange-theme.png');
         }
         /* Стили кнопок для средней темы */
         
@@ -256,7 +256,7 @@
             --shadow-primary: rgba(102, 0, 0, 0.2);
             --shadow-secondary: rgba(102, 0, 0, 0.3);
             --shadow-tertiary: rgba(102, 0, 0, 0.1);
-            --bg-image: url('backgrounds/dark-theme.png');
+            --bg-image: url('assets/backgrounds/dark-theme.png');
         }
         
         [data-theme="mystic"] {
@@ -284,7 +284,7 @@
             --shadow-primary: rgba(107, 70, 193, 0.2);
             --shadow-secondary: rgba(107, 70, 193, 0.3);
             --shadow-tertiary: rgba(107, 70, 193, 0.1);
-            --bg-image: url('backgrounds/mystic-theme.png');
+            --bg-image: url('assets/backgrounds/mystic-theme.png');
         }
         /* Лавовые подтеки для темной темы */
         
@@ -5585,7 +5585,7 @@
         // Функция выхода
         function logout() {
             if (confirm('Вы уверены, что хотите выйти?')) {
-                fetch('users.php', {
+                fetch('api/users.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
@@ -5745,7 +5745,7 @@
             generateBtn.disabled = true;
 
             // Отправляем запрос на генерацию персонажа
-            fetch('api/generate-characters-v4.php', {
+            fetch('api/generate-characters.php', {
                     method: 'POST',
                     body: formData
                 })
@@ -5970,7 +5970,7 @@
             generateBtn.disabled = true;
             
             // Отправляем запрос на генерацию персонажа
-            fetch('api/generate-characters-v4.php', {
+            fetch('api/generate-characters.php', {
                 method: 'POST',
                 body: formData
             })

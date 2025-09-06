@@ -1,6 +1,6 @@
 <?php
-require_once 'config.php';
-require_once 'users.php';
+require_once '../config/config.php';
+require_once '../public/api/users.php';
 
 // Запускаем сессию
 configureSession();

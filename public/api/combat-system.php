@@ -1,8 +1,8 @@
 <?php
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../users.php';
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/users.php';
 
 // Проверяем авторизацию
 if (!isLoggedIn()) {

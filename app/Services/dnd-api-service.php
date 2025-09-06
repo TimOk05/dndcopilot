@@ -14,7 +14,7 @@ class DndApiService {
     private $cache_dir;
     
     public function __construct() {
-        $this->cache_dir = __DIR__ . '/../cache/dnd_api/';
+        $this->cache_dir = __DIR__ . '/../../data/cache/dnd_api/';
         if (!is_dir($this->cache_dir)) {
             mkdir($this->cache_dir, 0755, true);
         }
