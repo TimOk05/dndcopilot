@@ -287,7 +287,6 @@ $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="open
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников">👹 Противники</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий">🧪 Зелья</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="Управление инициативой" aria-label="Открыть управление инициативой">⚡ Инициатива</button>';
-$fastBtns .= '<a href="combat.html" class="fast-btn btn btn-primary interactive" style="text-decoration: none; display: inline-block;" data-tooltip="Система боя" aria-label="Перейти к системе боя">⚔️ Система боя</a>';
 $fastBtns .= '</div>';
 
 // --- Генерация сообщений чата (пропускаем system) ---
