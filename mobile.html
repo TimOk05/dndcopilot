@@ -16,18 +16,19 @@
         // Инициализация языка при загрузке страницы
         let currentLanguage = 'ru';
 
-        // Загрузка информации о языках
+        // Загрузка информации о языках (безопасно)
         async function loadLanguageInfo() {
             try {
                 const response = await fetch('api/generate-potions.php?action=languages');
-                const data = await response.json();
-
-                if (data.success) {
-                    currentLanguage = data.data.current;
-                    updateLanguageSelector();
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.success) {
+                        currentLanguage = data.data.current;
+                        updateLanguageSelector();
+                    }
                 }
             } catch (error) {
-                console.error('Ошибка загрузки информации о языках:', error);
+                console.log('Информация о языках недоступна, используем русский по умолчанию');
             }
         }
 
@@ -54,9 +55,13 @@
         // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', function() {
             // Проверяем сохраненный язык
-            const savedLanguage = localStorage.getItem('dnd_language');
-            if (savedLanguage) {
-                currentLanguage = savedLanguage;
+            try {
+                const savedLanguage = localStorage.getItem('dnd_language');
+                if (savedLanguage) {
+                    currentLanguage = savedLanguage;
+                }
+            } catch (e) {
+                console.log('localStorage недоступен');
             }
             loadLanguageInfo();
         });

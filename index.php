@@ -1,7 +1,14 @@
 <?php
 session_start();
 require_once 'auth.php';
-require_once 'api/language-service.php';
+
+// Безопасная загрузка Language Service
+try {
+    require_once 'api/language-service.php';
+} catch (Exception $e) {
+    // Если Language Service недоступен, продолжаем без него
+    error_log("Language Service error: " . $e->getMessage());
+}
 
 // Автоматическое определение мобильного устройства и переадресация
 function isMobileDevice() {
@@ -37,9 +44,18 @@ if (isMobileDevice()) {
 // Получаем имя текущего пользователя
 $currentUser = $_SESSION['username'] ?? 'Пользователь';
 
-// Инициализируем Language Service
-$languageService = new LanguageService();
-$currentLanguage = $languageService->getCurrentLanguage();
+// Инициализируем Language Service безопасно
+$languageService = null;
+$currentLanguage = 'ru'; // По умолчанию русский
+try {
+    if (class_exists('LanguageService')) {
+        $languageService = new LanguageService();
+        $currentLanguage = $languageService->getCurrentLanguage();
+    }
+} catch (Exception $e) {
+    error_log("Language Service initialization error: " . $e->getMessage());
+    $currentLanguage = 'ru'; // Fallback на русский
+}
 
 
 

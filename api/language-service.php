@@ -12,7 +12,9 @@ class LanguageService {
     
     public function __construct() {
         $this->initializeLanguage();
-        logMessage('INFO', "Language Service инициализирован. Текущий язык: {$this->current_language}");
+        if (function_exists('logMessage')) {
+            logMessage('INFO', "Language Service инициализирован. Текущий язык: {$this->current_language}");
+        }
     }
     
     /**
@@ -98,13 +100,17 @@ class LanguageService {
      */
     public function setLanguage($language) {
         if (!$this->isLanguageSupported($language)) {
-            logMessage('WARNING', "Попытка установить неподдерживаемый язык: {$language}");
+            if (function_exists('logMessage')) {
+                logMessage('WARNING', "Попытка установить неподдерживаемый язык: {$language}");
+            }
             return false;
         }
         
         $this->current_language = $language;
         $this->saveLanguageToSession($language);
-        logMessage('INFO', "Язык изменен на: {$language}");
+        if (function_exists('logMessage')) {
+            logMessage('INFO', "Язык изменен на: {$language}");
+        }
         return true;
     }
     
@@ -428,7 +434,9 @@ class LanguageService {
      * Логирование действий
      */
     private function logLanguageAction($action, $details = '') {
-        logMessage('INFO', "Language Service: {$action}" . ($details ? " - {$details}" : ''));
+        if (function_exists('logMessage')) {
+            logMessage('INFO', "Language Service: {$action}" . ($details ? " - {$details}" : ''));
+        }
     }
 }
 
