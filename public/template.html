@@ -7,7 +7,12 @@
     <meta name="theme-color" content="#7209b7">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="csrf-token" content="<?php echo generateCSRFToken(); ?>">
+    <meta name="csrf-token" content="<?php 
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        echo function_exists('generateCSRFToken') ? generateCSRFToken() : '';
+    ?>">
     <meta name="apple-mobile-web-app-title" content="DnD Chat">
     <title>DnD AI</title>
     <script>

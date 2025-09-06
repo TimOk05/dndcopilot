@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 session_start();
 require_once 'auth.php';
@@ -209,55 +208,9 @@ if (isset($_GET['reset'])) {
     exit;
 }
 
-// --- Новый systemInstruction с усиленными требованиями ---
-$systemInstruction = "Ты — помощник мастера DnD. Твоя задача — сгенерировать NPC для быстрого и удобного вывода в игровом приложении. Каждый блок будет отображаться отдельно, поэтому не добавляй пояснений, не используй лишние слова, не пиши ничего кроме блоков.\nСтрого по шаблону, каждый блок с новой строки:\nИмя: ...\nКраткое описание: ...\nЧерта характера: ...\nСлабость: ...\nКороткая характеристика: Оружие: ... Урон: ... Хиты: ... Способность: ...\n\nВАЖНО: НЕ используй слово 'Описание' в начале блоков. Начинай блоки сразу с содержимого. НЕ дублируй информацию между блоками. Каждый блок должен содержать только релевантную информацию.
-
-ВАЖНО: Способность — это конкретный навык персонажа в D&D, например: 'Двойная атака', 'Исцеление ран', 'Скрытность', 'Божественная кара', 'Ярость', 'Вдохновение', 'Магическая защита', 'Элементальная магия', 'Боевой стиль', 'Связь с природой', 'Боевые искусства', 'Скрытные способности', 'Магическое исследование', 'Общение с животными', 'Магическая обработка', 'Магическое красноречие'. НЕ пиши описания, только название способности. ОБЯЗАТЕЛЬНО указывай способность для каждого класса кроме 'Без класса'.\nТехнические параметры (Оружие, Урон, Хиты, Способность) обязательны и всегда идут первым блоком. Если не можешь заполнить какой-то параметр — напиши '-'. Не добавляй ничего лишнего.";
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message']) && !isset($_POST['add_note']) && !isset($_POST['remove_note'])) {
-    $userMessage = trim($_POST['message']);
-    if ($userMessage !== '') {
-        if (empty($_SESSION['chat']) || $_SESSION['chat'][0]['role'] !== 'system') {
-            array_unshift($_SESSION['chat'], ['role' => 'system', 'content' => $systemInstruction]);
-        }
-        $_SESSION['chat'][] = ['role' => 'user', 'content' => $userMessage];
-        $apiKey = 'sk-1e898ddba737411e948af435d767e893';
-        $apiUrl = 'https://api.deepseek.com/v1/chat/completions';
-        $messages = array_map(function($msg) {
-            return ['role' => $msg['role'], 'content' => $msg['content']];
-        }, $_SESSION['chat']);
-        $data = [
-            'model' => 'deepseek-chat',
-            'messages' => $messages
-        ];
-        $ch = curl_init($apiUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $apiKey
-        ]);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        $response = curl_exec($ch);
-        curl_close($ch);
-        $result = json_decode($response, true);
-        $aiMessage = $result['choices'][0]['message']['content'] ?? '[Ошибка AI]';
-        $aiMessage = preg_replace('/[*_`>#\-]+/', '', $aiMessage);
-        $aiMessage = str_replace(['"', "'", '“', '”', '«', '»'], '', $aiMessage);
-        $aiMessage = preg_replace('/\n{2,}/', "\n", $aiMessage);
-        $aiMessage = preg_replace('/\s{3,}/', "\n", $aiMessage);
-        $lines = explode("\n", $aiMessage);
-        $formatted = [];
-        foreach ($lines as $line) {
-            $line = trim($line);
-            if (mb_strlen($line) > 90) {
-                $formatted = array_merge($formatted, str_split($line, 80));
-            } else {
-                $formatted[] = $line;
-            }
-        }
-        $aiMessage = implode("\n", $formatted);
-        $_SESSION['chat'][] = ['role' => 'assistant', 'content' => $aiMessage];
-    }
+// Инициализация чата (теперь используется API)
+if (!isset($_SESSION['chat'])) {
+    $_SESSION['chat'] = [];
 }
 
 // --- Генерация быстрых кнопок ---
@@ -3219,14 +3172,14 @@ document.querySelector('form').onsubmit = function(e) {
     e.preventDefault();
     var msg = this.message.value.trim();
     if (!msg) return false;
-    fetch('ai.php', {
+    fetch('public/api/ai-chat.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'prompt=' + encodeURIComponent(msg) + '&type=chat'
+        body: 'action=send_message&message=' + encodeURIComponent(msg) + '&csrf_token=' + encodeURIComponent(document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '')
     })
     .then(r => r.json())
     .then(data => {
-        if (data && data.result) {
+        if (data && data.success) {
             // Добавить сообщение в чат (можно обновить страницу или динамически)
             location.reload();
         } else {
@@ -3715,4 +3668,3 @@ function saveAllEnemiesToNotes(enemies) {
 header('Location: public/index.php');
 exit;
 ?>
->>>>>>> 766e930d3413ce7b803a786361d01b52d395138e

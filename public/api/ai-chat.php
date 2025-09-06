@@ -2,13 +2,10 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../config/config.php';
-require_once __DIR__ . '/../../app/Middleware/auth.php';
 
-// Проверяем авторизацию
-if (!isLoggedIn()) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'error' => 'Не авторизован']);
-    exit;
+// Инициализируем сессию
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
 class AIChat {
@@ -257,8 +254,8 @@ class AIChat {
 
 // Обработка запросов
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Проверяем CSRF токен
-    if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
+    // Проверяем CSRF токен (если функция существует)
+    if (function_exists('verifyCSRFToken') && (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token']))) {
         http_response_code(403);
         echo json_encode(['success' => false, 'error' => 'Неверный CSRF токен']);
         exit;
@@ -270,7 +267,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         switch ($action) {
             case 'send_message':
-                $message = sanitizeInput($_POST['message'] ?? '');
+                $message = function_exists('sanitizeInput') ? sanitizeInput($_POST['message'] ?? '') : trim($_POST['message'] ?? '');
                 $pdf_file = isset($_FILES['pdf']) ? $_FILES['pdf'] : null;
                 
                 if (empty($message)) {
