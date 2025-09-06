@@ -184,7 +184,7 @@ class App {
             languageManager: !!this.languageManager,
             apiManager: !!this.apiManager,
             uiManager: !!this.uiManager,
-            currentLanguage: this.languageManager ? .currentLanguage
+            currentLanguage: this.languageManager && this.languageManager.currentLanguage
         };
     }
 

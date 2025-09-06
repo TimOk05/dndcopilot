@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Простой тест исправления</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        
+        .test {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+        }
+        
+        .success {
+            color: green;
+        }
+        
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔧 Простой тест исправления</h1>
+
+    <div class="test">
+        <h2>Тест переключателя языка</h2>
+        <select id="languageSelector" onchange="changeLanguage()">
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="en">🇺🇸 English</option>
+        </select>
+        <button onclick="testFunction()">Тест функции</button>
+        <div id="result"></div>
+    </div>
+
+    <div class="test">
+        <h2>Тест интерфейса</h2>
+        <span class="welcome-text">Добро пожаловать Пользователь!</span>
+        <button class="logout-btn">🚪 Выйти</button>
+        <button onclick="updateInterfaceLanguage()">Обновить интерфейс</button>
+    </div>
+
+    <!-- Простой JavaScript модуль -->
+    <script src="js/simple-language.js"></script>
+
+    <script>
+        function testFunction() {
+            var resultDiv = document.getElementById('result');
+            if (typeof changeLanguage === 'function') {
+                resultDiv.innerHTML = '<div class="success">✅ Функция changeLanguage работает!</div>';
+                console.log('✅ changeLanguage доступна');
+            } else {
+                resultDiv.innerHTML = '<div class="error">❌ Функция changeLanguage недоступна!</div>';
+                console.error('❌ changeLanguage не работает');
+            }
+        }
+
+        // Автоматический тест при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM загружен, начинаем тесты...');
+            setTimeout(function() {
+                testFunction();
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

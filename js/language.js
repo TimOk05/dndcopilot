@@ -69,7 +69,7 @@ class LanguageManager {
      * Получить перевод по ключу
      */
     t(key) {
-        return this.translations[this.currentLanguage] ? .[key] ||
+        return this.translations[this.currentLanguage] && this.translations[this.currentLanguage][key] ||
             this.translations['ru'][key] ||
             key;
     }

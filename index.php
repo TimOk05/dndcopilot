@@ -272,10 +272,7 @@ if (!isLoggedIn()) {
     </div>
 
     <!-- JavaScript модули -->
-    <script src="js/language.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/simple-language.js"></script>
 
     <!-- Дополнительные функции -->
     <script>
