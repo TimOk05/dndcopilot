@@ -7,6 +7,7 @@
     <meta name="theme-color" content="#7209b7">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="csrf-token" content="<?php echo generateCSRFToken(); ?>">
     <meta name="apple-mobile-web-app-title" content="DnD Chat">
     <title>DnD AI</title>
     <script>
@@ -5528,6 +5529,7 @@
             </div>
             <div class="chat-actions">
                 <a class="reset-link" href="#" onclick="clearAIChat()">Очистить чат</a>
+                <a class="reset-link" href="#" onclick="removePDF()" id="remove-pdf-link" style="display: none;">Удалить PDF</a>
                 <span id="pdf-status" style="display: none;">📄 PDF загружен</span>
             </div>
         </form>
@@ -5619,6 +5621,9 @@
 
         // Переключатель темы
         document.addEventListener('DOMContentLoaded', function() {
+            // Загружаем историю чата
+            loadChatHistory();
+            
             const themeToggle = document.getElementById('theme-toggle');
             const themeIcon = themeToggle.querySelector('.theme-icon');
             const body = document.body;
@@ -5645,6 +5650,7 @@
                     if (file) {
                         document.getElementById('pdf-status').style.display = 'inline';
                         document.getElementById('pdf-status').textContent = `📄 ${file.name}`;
+                        document.getElementById('remove-pdf-link').style.display = 'inline';
                     }
                 });
             }
@@ -5760,6 +5766,39 @@
             });
         }
 
+        // Функция загрузки истории чата
+        function loadChatHistory() {
+            const formData = new FormData();
+            formData.append('action', 'get_history');
+            formData.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+            fetch('api/ai-chat.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.messages) {
+                        const chatBox = document.querySelector('.chat-box');
+                        chatBox.innerHTML = '';
+                        
+                        data.messages.forEach(msg => {
+                            addMessageToChat(msg.role, msg.content);
+                        });
+                        
+                        // Показываем статус PDF если есть
+                        if (data.has_pdf) {
+                            document.getElementById('pdf-status').style.display = 'inline';
+                            document.getElementById('pdf-status').textContent = '📄 PDF загружен';
+                            document.getElementById('remove-pdf-link').style.display = 'inline';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки истории чата:', error);
+                });
+        }
+
         // Функция отправки сообщения в AI чат
         function sendAIMessage() {
             const messageInput = document.getElementById('messageInput');
@@ -5780,6 +5819,7 @@
             const formData = new FormData();
             formData.append('action', 'send_message');
             formData.append('message', message);
+            formData.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
             if (pdfUpload.files[0]) {
                 formData.append('pdf', pdfUpload.files[0]);
@@ -5804,6 +5844,7 @@
                         if (data.pdf_processed) {
                             pdfUpload.value = '';
                             document.getElementById('pdf-status').style.display = 'none';
+                            document.getElementById('remove-pdf-link').style.display = 'none';
                         }
                     } else {
                         addMessageToChat('assistant', '❌ Ошибка: ' + (data.error || 'Неизвестная ошибка'));
@@ -5840,12 +5881,13 @@
         function clearAIChat() {
             if (!confirm('Очистить историю чата?')) return;
 
+            const formData = new FormData();
+            formData.append('action', 'clear_chat');
+            formData.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
             fetch('api/ai-chat.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'action=clear_chat'
+                    body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -5854,12 +5896,39 @@
                         chatBox.innerHTML = '';
                         document.getElementById('pdf-status').style.display = 'none';
                         document.getElementById('pdf-upload').value = '';
+                        document.getElementById('remove-pdf-link').style.display = 'none';
                     } else {
                         alert('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
                     }
                 })
                 .catch(error => {
                     console.error('Ошибка очистки чата:', error);
+                    alert('Ошибка соединения с сервером');
+                });
+        }
+
+        // Функция удаления PDF
+        function removePDF() {
+            const formData = new FormData();
+            formData.append('action', 'remove_pdf');
+            formData.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+            fetch('api/ai-chat.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('pdf-status').style.display = 'none';
+                        document.getElementById('pdf-upload').value = '';
+                        document.getElementById('remove-pdf-link').style.display = 'none';
+                    } else {
+                        alert('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка удаления PDF:', error);
                     alert('Ошибка соединения с сервером');
                 });
         }

@@ -270,7 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         switch ($action) {
             case 'send_message':
-                $message = sanitizeInput($_POST['message'] ?? '', 'string');
+                $message = sanitizeInput($_POST['message'] ?? '');
                 $pdf_file = isset($_FILES['pdf']) ? $_FILES['pdf'] : null;
                 
                 if (empty($message)) {
