@@ -317,9 +317,21 @@ class AIChat {
 // Обработка запросов
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Проверяем CSRF токен
-    if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
+    $csrf_token = $_POST['csrf_token'] ?? '';
+    $session_token = $_SESSION['csrf_token'] ?? '';
+    
+    if (empty($csrf_token) || !verifyCSRFToken($csrf_token)) {
         http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'Неверный CSRF токен']);
+        echo json_encode([
+            'success' => false, 
+            'error' => 'Неверный CSRF токен',
+            'debug' => [
+                'csrf_token_received' => $csrf_token,
+                'session_token' => $session_token,
+                'session_id' => session_id(),
+                'tokens_match' => $csrf_token === $session_token
+            ]
+        ]);
         exit;
     }
     
