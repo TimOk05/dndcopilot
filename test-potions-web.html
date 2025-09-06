@@ -54,6 +54,15 @@
     <h1>🧪 Тест API зелий через браузер</h1>
 
     <div class="test-section">
+        <h2>🌐 Выбор языка</h2>
+        <select id="languageSelector" onchange="changeLanguage()">
+            <option value="ru">Русский</option>
+            <option value="en">English</option>
+        </select>
+        <div id="languageInfo"></div>
+    </div>
+
+    <div class="test-section">
         <h2>Тест 1: Простая генерация зелий</h2>
         <button onclick="testSimpleGeneration()">Сгенерировать 1 зелье</button>
         <div id="result1"></div>
@@ -72,18 +81,54 @@
     </div>
 
     <script>
+        let currentLanguage = 'ru';
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLanguageInfo();
+        });
+
+        // Загрузка информации о языках
+        async function loadLanguageInfo() {
+            try {
+                const response = await fetch('api/generate-potions.php?action=languages');
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('languageInfo').innerHTML = `
+                        <div class="result success">
+                            ✅ Текущий язык: ${data.data.names[data.data.current]} (${data.data.current})
+                            <br>Поддерживаемые языки: ${data.data.supported.join(', ')}
+                        </div>
+                    `;
+                    currentLanguage = data.data.current;
+                    document.getElementById('languageSelector').value = currentLanguage;
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки информации о языках:', error);
+            }
+        }
+
+        // Смена языка
+        function changeLanguage() {
+            currentLanguage = document.getElementById('languageSelector').value;
+            loadLanguageInfo();
+        }
+
         async function testSimpleGeneration() {
             const resultDiv = document.getElementById('result1');
             resultDiv.innerHTML = '<div class="result">Тестируем...</div>';
 
             try {
-                const response = await fetch('api/generate-potions.php?action=random&count=1');
+                const response = await fetch(`api/generate-potions.php?action=random&count=1&language=${currentLanguage}`);
                 const data = await response.json();
 
                 if (data.success) {
                     resultDiv.innerHTML = `
                         <div class="result success">
                             ✅ Успешно! Сгенерировано зелий: ${data.count}
+                            <br>Язык: ${data.language}
+                            <br>Переведено: ${data.translation_info.translated ? 'Да' : 'Нет'}
                             <pre>${JSON.stringify(data, null, 2)}</pre>
                         </div>
                     `;
@@ -109,13 +154,15 @@
             resultDiv.innerHTML = '<div class="result">Тестируем...</div>';
 
             try {
-                const response = await fetch('api/generate-potions.php?action=random&count=2&rarity=Uncommon');
+                const response = await fetch(`api/generate-potions.php?action=random&count=2&rarity=Uncommon&language=${currentLanguage}`);
                 const data = await response.json();
 
                 if (data.success) {
                     resultDiv.innerHTML = `
                         <div class="result success">
                             ✅ Успешно! Сгенерировано зелий: ${data.count}
+                            <br>Язык: ${data.language}
+                            <br>Переведено: ${data.translation_info.translated ? 'Да' : 'Нет'}
                             <pre>${JSON.stringify(data, null, 2)}</pre>
                         </div>
                     `;
@@ -142,7 +189,7 @@
 
             try {
                 // Тестируем неверный параметр
-                const response = await fetch('api/generate-potions.php?action=random&count=999');
+                const response = await fetch(`api/generate-potions.php?action=random&count=999&language=${currentLanguage}`);
                 const data = await response.json();
 
                 if (data.success) {
@@ -166,6 +213,23 @@
                         ❌ Ошибка сети: ${error.message}
                     </div>
                 `;
+            }
+        }
+
+        // Дополнительная функция для тестирования локализованных данных
+        async function testLocalizedData() {
+            try {
+                const response = await fetch(`api/generate-potions.php?action=rarities&language=${currentLanguage}`);
+                const data = await response.json();
+
+                console.log('Локализованные редкости:', data);
+
+                const response2 = await fetch(`api/generate-potions.php?action=types&language=${currentLanguage}`);
+                const data2 = await response2.json();
+
+                console.log('Локализованные типы:', data2);
+            } catch (error) {
+                console.error('Ошибка тестирования локализованных данных:', error);
             }
         }
     </script>

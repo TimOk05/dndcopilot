@@ -655,6 +655,202 @@ class AiService {
         }
     }
     
+    /**
+     * Перевод названия зелья
+     */
+    public function translatePotionName($name, $target_language = 'ru') {
+        if ($target_language === 'en') {
+            return $name; // Уже на английском
+        }
+        
+        $cache_key = "potion_name_" . md5($name . '_' . $target_language);
+        $cached = $this->getCachedData($cache_key);
+        if ($cached) {
+            return $cached;
+        }
+        
+        $prompt = $this->buildPotionNameTranslationPrompt($name, $target_language);
+        $response = $this->callAiApi($prompt);
+        
+        if ($response) {
+            $this->cacheData($cache_key, $response);
+            return $response;
+        }
+        
+        // Возвращаем детальную ошибку для диагностики
+        return [
+            'error' => 'AI API недоступен',
+            'message' => 'Не удалось перевести название зелья',
+            'details' => 'Проверьте: 1) Подключение к интернету, 2) API ключи, 3) SSL настройки',
+            'original_name' => $name
+        ];
+    }
+    
+    /**
+     * Перевод описания зелья
+     */
+    public function translatePotionDescription($description, $target_language = 'ru') {
+        if ($target_language === 'en') {
+            return $description; // Уже на английском
+        }
+        
+        $cache_key = "potion_desc_" . md5($description . '_' . $target_language);
+        $cached = $this->getCachedData($cache_key);
+        if ($cached) {
+            return $cached;
+        }
+        
+        $prompt = $this->buildPotionDescriptionTranslationPrompt($description, $target_language);
+        $response = $this->callAiApi($prompt);
+        
+        if ($response) {
+            $this->cacheData($cache_key, $response);
+            return $response;
+        }
+        
+        // Возвращаем детальную ошибку для диагностики
+        return [
+            'error' => 'AI API недоступен',
+            'message' => 'Не удалось перевести описание зелья',
+            'details' => 'Проверьте: 1) Подключение к интернету, 2) API ключи, 3) SSL настройки',
+            'original_description' => $description
+        ];
+    }
+    
+    /**
+     * Перевод эффектов зелья
+     */
+    public function translatePotionEffects($effects, $target_language = 'ru') {
+        if ($target_language === 'en' || empty($effects)) {
+            return $effects; // Уже на английском или пустой
+        }
+        
+        $cache_key = "potion_effects_" . md5(json_encode($effects) . '_' . $target_language);
+        $cached = $this->getCachedData($cache_key);
+        if ($cached) {
+            return $cached;
+        }
+        
+        $prompt = $this->buildPotionEffectsTranslationPrompt($effects, $target_language);
+        $response = $this->callAiApi($prompt);
+        
+        if ($response) {
+            $this->cacheData($cache_key, $response);
+            return $response;
+        }
+        
+        // Возвращаем детальную ошибку для диагностики
+        return [
+            'error' => 'AI API недоступен',
+            'message' => 'Не удалось перевести эффекты зелья',
+            'details' => 'Проверьте: 1) Подключение к интернету, 2) API ключи, 3) SSL настройки',
+            'original_effects' => $effects
+        ];
+    }
+    
+    /**
+     * Полный перевод зелья
+     */
+    public function translatePotion($potion_data, $target_language = 'ru') {
+        if ($target_language === 'en') {
+            return $potion_data; // Уже на английском
+        }
+        
+        $translated_potion = $potion_data;
+        
+        // Переводим название
+        if (isset($potion_data['name'])) {
+            $translated_name = $this->translatePotionName($potion_data['name'], $target_language);
+            if (is_string($translated_name)) {
+                $translated_potion['name'] = $translated_name;
+            } else {
+                logMessage('WARNING', 'Не удалось перевести название зелья: ' . $potion_data['name']);
+            }
+        }
+        
+        // Переводим описание
+        if (isset($potion_data['description'])) {
+            $translated_desc = $this->translatePotionDescription($potion_data['description'], $target_language);
+            if (is_string($translated_desc)) {
+                $translated_potion['description'] = $translated_desc;
+            } else {
+                logMessage('WARNING', 'Не удалось перевести описание зелья: ' . $potion_data['name']);
+            }
+        }
+        
+        // Переводим эффекты
+        if (isset($potion_data['effects']) && is_array($potion_data['effects'])) {
+            $translated_effects = $this->translatePotionEffects($potion_data['effects'], $target_language);
+            if (is_array($translated_effects)) {
+                $translated_potion['effects'] = $translated_effects;
+            } else {
+                logMessage('WARNING', 'Не удалось перевести эффекты зелья: ' . $potion_data['name']);
+            }
+        }
+        
+        return $translated_potion;
+    }
+    
+    /**
+     * Построение промпта для перевода названия зелья
+     */
+    private function buildPotionNameTranslationPrompt($name, $target_language) {
+        $language_name = $target_language === 'ru' ? 'русский' : 'английский';
+        
+        return "Переведи название зелья D&D с английского на {$language_name} язык:
+
+Название: {$name}
+
+Требования к переводу:
+- Сохрани магическую атмосферу D&D
+- Используй подходящие термины для фэнтези
+- Название должно звучать естественно на {$language_name} языке
+- Если это известное зелье (например, Potion of Healing), используй стандартный перевод
+- Верни только переведенное название, без дополнительных объяснений
+
+Переведенное название:";
+    }
+    
+    /**
+     * Построение промпта для перевода описания зелья
+     */
+    private function buildPotionDescriptionTranslationPrompt($description, $target_language) {
+        $language_name = $target_language === 'ru' ? 'русский' : 'английский';
+        
+        return "Переведи описание зелья D&D с английского на {$language_name} язык:
+
+Описание: {$description}
+
+Требования к переводу:
+- Сохрани все игровые механики и числа
+- Используй терминологию D&D на {$language_name} языке
+- Сохрани форматирование и структуру
+- Переведи все игровые термины (hit points, damage, advantage, etc.)
+- Верни только переведенное описание, без дополнительных объяснений
+
+Переведенное описание:";
+    }
+    
+    /**
+     * Построение промпта для перевода эффектов зелья
+     */
+    private function buildPotionEffectsTranslationPrompt($effects, $target_language) {
+        $language_name = $target_language === 'ru' ? 'русский' : 'английский';
+        $effects_text = is_array($effects) ? implode(', ', $effects) : $effects;
+        
+        return "Переведи эффекты зелья D&D с английского на {$language_name} язык:
+
+Эффекты: {$effects_text}
+
+Требования к переводу:
+- Переведи каждый эффект отдельно
+- Используй игровую терминологию D&D на {$language_name} языке
+- Сохрани названия типов урона (fire, cold, lightning, etc.)
+- Верни список переведенных эффектов через запятую
+- Без дополнительных объяснений
+
+Переведенные эффекты:";
+    }
 
 }
 ?>

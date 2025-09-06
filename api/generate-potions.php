@@ -61,11 +61,15 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS
 }
 
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/language-service.php';
+require_once __DIR__ . '/ai-service.php';
 
 class PotionGenerator {
     private $dnd5e_api_url = 'http://www.dnd5eapi.co';
     private $cache_file = __DIR__ . '/../logs/cache/potions_cache.json';
     private $cache_duration = 3600; // 1 час
+    private $language_service;
+    private $ai_service;
     
     public function __construct() {
         // Создаем директорию для кеша если не существует
@@ -73,6 +77,12 @@ class PotionGenerator {
         if (!is_dir($cache_dir)) {
             mkdir($cache_dir, 0755, true);
         }
+        
+        // Инициализируем сервисы
+        $this->language_service = new LanguageService();
+        $this->ai_service = new AiService();
+        
+        logMessage('INFO', 'PotionGenerator инициализирован с поддержкой языков');
     }
     
     /**
@@ -86,8 +96,9 @@ class PotionGenerator {
         $rarity = $params['rarity'] ?? '';
         $type = $params['type'] ?? '';
         $effect = $params['effect'] ?? '';
+        $language = $params['language'] ?? $this->language_service->getCurrentLanguage();
         
-        $log_message = "[" . date('Y-m-d H:i:s') . "] Параметры после обработки: count=$count, rarity=$rarity, type=$type, effect=$effect\n";
+        $log_message = "[" . date('Y-m-d H:i:s') . "] Параметры после обработки: count=$count, rarity=$rarity, type=$type, effect=$effect, language=$language\n";
         file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
         
         // Валидация параметров
@@ -139,14 +150,22 @@ class PotionGenerator {
                 throw new Exception('Не удалось получить детальную информацию о зельях');
             }
             
+            // Переводим зелья если нужно
+            $translated_potions = $this->translatePotions($detailed_potions, $language);
+            
             return [
                 'success' => true,
-                'data' => $detailed_potions,
-                'count' => count($detailed_potions),
+                'data' => $translated_potions,
+                'count' => count($translated_potions),
+                'language' => $language,
                 'filters' => [
                     'rarity' => $rarity,
                     'type' => $type,
                     'effect' => $effect
+                ],
+                'translation_info' => [
+                    'translated' => $language !== 'en',
+                    'ai_used' => $language !== 'en'
                 ]
             ];
             
@@ -873,6 +892,93 @@ class PotionGenerator {
     }
     
     /**
+     * Перевод зелий на указанный язык
+     */
+    private function translatePotions($potions, $target_language) {
+        if ($target_language === 'en') {
+            return $potions; // Уже на английском
+        }
+        
+        $log_message = "[" . date('Y-m-d H:i:s') . "] Начинаем перевод " . count($potions) . " зелий на язык: $target_language\n";
+        file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+        
+        $translated_potions = [];
+        
+        foreach ($potions as $potion) {
+            try {
+                $translated_potion = $this->ai_service->translatePotion($potion, $target_language);
+                
+                // Проверяем, что перевод прошел успешно
+                if (is_array($translated_potion) && !isset($translated_potion['error'])) {
+                    // Добавляем локализованные названия редкости и типа
+                    $translated_potion['rarity_localized'] = $this->language_service->getRarityName($translated_potion['rarity'], $target_language);
+                    $translated_potion['type_localized'] = $this->language_service->getPotionTypeName($translated_potion['type'], $target_language);
+                    
+                    $translated_potions[] = $translated_potion;
+                    
+                    $log_message = "[" . date('Y-m-d H:i:s') . "] Успешно переведено зелье: " . $potion['name'] . "\n";
+                    file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+                } else {
+                    // Если перевод не удался, используем оригинальное зелье с предупреждением
+                    logMessage('WARNING', 'Не удалось перевести зелье: ' . $potion['name']);
+                    $potion['translation_error'] = 'Перевод недоступен';
+                    $translated_potions[] = $potion;
+                }
+            } catch (Exception $e) {
+                logMessage('ERROR', 'Ошибка перевода зелья ' . $potion['name'] . ': ' . $e->getMessage());
+                $potion['translation_error'] = 'Ошибка перевода: ' . $e->getMessage();
+                $translated_potions[] = $potion;
+            }
+        }
+        
+        $log_message = "[" . date('Y-m-d H:i:s') . "] Перевод завершен. Переведено зелий: " . count($translated_potions) . "\n";
+        file_put_contents(__DIR__ . '/../logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
+        
+        return $translated_potions;
+    }
+    
+    /**
+     * Получение информации о языках
+     */
+    public function getLanguageInfo() {
+        return $this->language_service->getLanguageInfo();
+    }
+    
+    /**
+     * Получение локализованных редкостей
+     */
+    public function getLocalizedRarities($language = 'ru') {
+        $rarities = ['Common', 'Uncommon', 'Rare', 'Very Rare', 'Legendary'];
+        $localized = [];
+        
+        foreach ($rarities as $rarity) {
+            $localized[] = [
+                'value' => $rarity,
+                'name' => $this->language_service->getRarityName($rarity, $language)
+            ];
+        }
+        
+        return $localized;
+    }
+    
+    /**
+     * Получение локализованных типов зелий
+     */
+    public function getLocalizedTypes($language = 'ru') {
+        $types = ['Восстановление', 'Усиление', 'Защита', 'Иллюзия', 'Трансмутация', 'Некромантия', 'Прорицание', 'Эвокация', 'Универсальное'];
+        $localized = [];
+        
+        foreach ($types as $type) {
+            $localized[] = [
+                'value' => $type,
+                'name' => $this->language_service->getPotionTypeName($type, $language)
+            ];
+        }
+        
+        return $localized;
+    }
+    
+    /**
      * Поиск зелий по характеристикам
      */
     public function searchPotions($params) {
@@ -947,11 +1053,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         switch ($action) {
             case 'rarities':
-                $result = ['Common', 'Uncommon', 'Rare', 'Very Rare', 'Legendary'];
+                $language = $_GET['language'] ?? 'ru';
+                $result = $generator->getLocalizedRarities($language);
                 break;
                 
             case 'types':
-                $result = ['Восстановление', 'Усиление', 'Защита', 'Иллюзия', 'Трансмутация', 'Некромантия', 'Прорицание', 'Эвокация', 'Универсальное'];
+                $language = $_GET['language'] ?? 'ru';
+                $result = $generator->getLocalizedTypes($language);
                 break;
                 
             case 'effects':
@@ -964,6 +1072,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
             case 'search':
                 $result = $generator->searchPotions($_GET);
+                break;
+                
+            case 'languages':
+                $result = $generator->getLanguageInfo();
                 break;
                 
             case 'random':
