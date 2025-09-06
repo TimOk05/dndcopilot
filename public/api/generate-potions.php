@@ -150,8 +150,8 @@ class PotionGenerator {
                 throw new Exception('Не удалось получить детальную информацию о зельях');
             }
             
-            // Переводим зелья если нужно
-            $translated_potions = $this->translatePotions($detailed_potions, $language);
+            // Зелья уже на русском языке
+            $translated_potions = $detailed_potions;
             
             return [
                 'success' => true,
@@ -164,8 +164,8 @@ class PotionGenerator {
                     'effect' => $effect
                 ],
                 'translation_info' => [
-                    'translated' => $language !== 'en',
-                    'ai_used' => $language !== 'en'
+                    'translated' => false,
+                    'ai_used' => false
                 ]
             ];
             
@@ -891,51 +891,6 @@ class PotionGenerator {
         }
     }
     
-    /**
-     * Перевод зелий на указанный язык
-     */
-    private function translatePotions($potions, $target_language) {
-        if ($target_language === 'en') {
-            return $potions; // Уже на английском
-        }
-        
-        $log_message = "[" . date('Y-m-d H:i:s') . "] Начинаем перевод " . count($potions) . " зелий на язык: $target_language\n";
-        file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
-        
-        $translated_potions = [];
-        
-        foreach ($potions as $potion) {
-            try {
-                $translated_potion = $this->ai_service->translatePotion($potion, $target_language);
-                
-                // Проверяем, что перевод прошел успешно
-                if (is_array($translated_potion) && !isset($translated_potion['error'])) {
-                    // Добавляем локализованные названия редкости и типа
-                    $translated_potion['rarity_localized'] = $this->language_service->getRarityName($translated_potion['rarity'], $target_language);
-                    $translated_potion['type_localized'] = $this->language_service->getPotionTypeName($translated_potion['type'], $target_language);
-                    
-                    $translated_potions[] = $translated_potion;
-                    
-                    $log_message = "[" . date('Y-m-d H:i:s') . "] Успешно переведено зелье: " . $potion['name'] . "\n";
-                    file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
-                } else {
-                    // Если перевод не удался, используем оригинальное зелье с предупреждением
-                    logMessage('WARNING', 'Не удалось перевести зелье: ' . $potion['name']);
-                    $potion['translation_error'] = 'Перевод недоступен';
-                    $translated_potions[] = $potion;
-                }
-            } catch (Exception $e) {
-                logMessage('ERROR', 'Ошибка перевода зелья ' . $potion['name'] . ': ' . $e->getMessage());
-                $potion['translation_error'] = 'Ошибка перевода: ' . $e->getMessage();
-                $translated_potions[] = $potion;
-            }
-        }
-        
-        $log_message = "[" . date('Y-m-d H:i:s') . "] Перевод завершен. Переведено зелий: " . count($translated_potions) . "\n";
-        file_put_contents(__DIR__ . '/../../data/logs/app.log', $log_message, FILE_APPEND | LOCK_EX);
-        
-        return $translated_potions;
-    }
     
     /**
      * Получение информации о языках
@@ -1075,7 +1030,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 break;
                 
             case 'languages':
-                $result = $generator->getLanguageInfo();
+                $result = ['current' => 'ru', 'supported' => ['ru'], 'default' => 'ru'];
                 break;
                 
             case 'random':

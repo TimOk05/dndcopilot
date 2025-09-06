@@ -14,57 +14,8 @@
 
     <script>
         // Инициализация языка при загрузке страницы
+        // Язык зафиксирован на русском
         let currentLanguage = 'ru';
-
-        // Загрузка информации о языках (безопасно)
-        async function loadLanguageInfo() {
-            try {
-                const response = await fetch('api/generate-potions.php?action=languages');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && data.success) {
-                        currentLanguage = data.data.current;
-                        updateLanguageSelector();
-                    }
-                }
-            } catch (error) {
-                console.log('Информация о языках недоступна, используем русский по умолчанию');
-            }
-        }
-
-        // Обновление переключателя языка
-        function updateLanguageSelector() {
-            const selector = document.getElementById('languageSelector');
-            if (selector) {
-                selector.value = currentLanguage;
-            }
-        }
-
-        // Смена языка
-        function changeLanguage() {
-            const selector = document.getElementById('languageSelector');
-            if (selector) {
-                currentLanguage = selector.value;
-                // Сохраняем выбор в localStorage
-                localStorage.setItem('dnd_language', currentLanguage);
-                // Перезагружаем страницу с новым языком
-                window.location.href = `mobile.html?lang=${currentLanguage}`;
-            }
-        }
-
-        // Инициализация при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
-            // Проверяем сохраненный язык
-            try {
-                const savedLanguage = localStorage.getItem('dnd_language');
-                if (savedLanguage) {
-                    currentLanguage = savedLanguage;
-                }
-            } catch (e) {
-                console.log('localStorage недоступен');
-            }
-            loadLanguageInfo();
-        });
     </script>
 
     <style>
@@ -615,11 +566,6 @@
     <header class="header">
         <div class="logo">DnD Copilot</div>
         <div class="header-controls">
-            <!-- Переключатель языка -->
-            <select id="languageSelector" onchange="changeLanguage()" style="background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-primary); border-radius: 6px; padding: 4px 6px; font-size: 0.8em; margin-right: 8px;">
-                <option value="ru">🇷🇺</option>
-                <option value="en">🇺🇸</option>
-            </select>
 
             <button class="theme-toggle" onclick="cycleTheme()">🎨</button>
         </div>

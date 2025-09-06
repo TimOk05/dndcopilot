@@ -10,62 +10,8 @@
     <meta name="apple-mobile-web-app-title" content="DnD Chat">
     <title>DnD AI</title>
     <script>
-        // Инициализация языка при загрузке страницы
+        // Язык зафиксирован на русском
         let currentLanguage = 'ru';
-
-        // Загрузка информации о языках (безопасно)
-        async function loadLanguageInfo() {
-            try {
-                const response = await fetch('api/generate-potions.php?action=languages');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && data.success) {
-                        currentLanguage = data.data.current;
-                        updateLanguageSelector();
-                    }
-                }
-            } catch (error) {
-                console.log('Информация о языках недоступна, используем русский по умолчанию');
-            }
-        }
-
-        // Обновление переключателя языка
-        function updateLanguageSelector() {
-            const selector = document.getElementById('languageSelector');
-            if (selector) {
-                selector.value = currentLanguage;
-            }
-        }
-
-        // Смена языка
-        function changeLanguage() {
-            const selector = document.getElementById('languageSelector');
-            if (selector) {
-                currentLanguage = selector.value;
-                // Сохраняем выбор в localStorage
-                try {
-                    localStorage.setItem('dnd_language', currentLanguage);
-                } catch (e) {
-                    console.log('localStorage недоступен');
-                }
-                // Перезагружаем страницу с новым языком
-                window.location.href = `index.php?lang=${currentLanguage}`;
-            }
-        }
-
-        // Инициализация при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
-            // Проверяем сохраненный язык
-            try {
-                const savedLanguage = localStorage.getItem('dnd_language');
-                if (savedLanguage) {
-                    currentLanguage = savedLanguage;
-                }
-            } catch (e) {
-                console.log('localStorage недоступен');
-            }
-            loadLanguageInfo();
-        });
     </script>
     <!-- Временно убираем manifest.json из-за проблем с синхронизацией -->
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
@@ -5317,11 +5263,6 @@
 
                 </div>
                 <div class="user-controls flex gap-2 items-center">
-                    <!-- Переключатель языка -->
-                    <select id="languageSelector" onchange="changeLanguage()" style="background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-sm); padding: 4px 8px; font-size: 0.9em;">
-                        <option value="ru">🇷🇺 Русский</option>
-                        <option value="en">🇺🇸 English</option>
-                    </select>
 
                     <!-- Иконка статистики - всегда видна -->
                     <a href="../app/Controllers/stats.php" class="stats-link" style="display: block !important; visibility: visible !important; opacity: 1 !important;">📊</a>
