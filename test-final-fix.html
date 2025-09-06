@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест исправления changeLanguage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        
+        .test {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+        }
+        
+        .success {
+            color: green;
+        }
+        
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔧 Тест исправления changeLanguage</h1>
+
+    <div class="test">
+        <h2>Тест 1: Проверка загрузки модулей</h2>
+        <div id="module-test"></div>
+    </div>
+
+    <div class="test">
+        <h2>Тест 2: Переключатель языка</h2>
+        <select id="languageSelector" onchange="changeLanguage()">
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="en">🇺🇸 English</option>
+        </select>
+        <button onclick="testChangeLanguage()">Тест смены языка</button>
+    </div>
+
+    <div class="test">
+        <h2>Тест 3: Статус приложения</h2>
+        <div id="app-status"></div>
+        <button onclick="checkAppStatus()">Проверить статус</button>
+    </div>
+
+    <!-- JavaScript модули -->
+    <script src="js/language.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        function testChangeLanguage() {
+            console.log('Тестируем смену языка...');
+            if (typeof changeLanguage === 'function') {
+                document.getElementById('module-test').innerHTML = '<div class="success">✅ Функция changeLanguage доступна!</div>';
+                console.log('✅ changeLanguage работает');
+            } else {
+                document.getElementById('module-test').innerHTML = '<div class="error">❌ Функция changeLanguage недоступна!</div>';
+                console.error('❌ changeLanguage не работает');
+            }
+        }
+
+        function checkAppStatus() {
+            if (typeof window.app !== 'undefined') {
+                const status = window.app.getStatus();
+                document.getElementById('app-status').innerHTML = `
+                    <div class="success">
+                        <h3>✅ Приложение инициализировано</h3>
+                        <p>Язык: ${status.currentLanguage}</p>
+                        <p>LanguageManager: ${status.languageManager ? '✅' : '❌'}</p>
+                        <p>ApiManager: ${status.apiManager ? '✅' : '❌'}</p>
+                        <p>UIManager: ${status.uiManager ? '✅' : '❌'}</p>
+                    </div>
+                `;
+            } else {
+                document.getElementById('app-status').innerHTML = '<div class="error">❌ Приложение не инициализировано</div>';
+            }
+        }
+
+        // Автоматический тест при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM загружен, начинаем тесты...');
+            setTimeout(() => {
+                testChangeLanguage();
+                checkAppStatus();
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
