@@ -221,6 +221,11 @@
             updateInterfaceLanguage();
         };
 
+        // Делаем функции глобальными для доступа из HTML
+        window.changeLanguage = changeLanguage;
+        window.updateInterfaceLanguage = updateInterfaceLanguage;
+        window.updateLanguageSelector = updateLanguageSelector;
+
         // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM загружен, начинаем инициализацию');
