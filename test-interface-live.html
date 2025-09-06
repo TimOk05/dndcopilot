@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест интерфейса в реальном времени</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+        }
+        
+        .success {
+            color: green;
+        }
+        
+        .error {
+            color: red;
+        }
+        
+        .info {
+            color: blue;
+        }
+        
+        .debug {
+            background: #f0f0f0;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        
+        .welcome-text {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .stats-link {
+            background: #007bff;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .admin-link {
+            background: #ffc107;
+            color: black;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .generate-btn {
+            background: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        select {
+            padding: 5px;
+            margin: 5px;
+        }
+        
+        label {
+            display: block;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔍 Тест интерфейса в реальном времени</h1>
+
+    <div class="test-section">
+        <h2>Элементы интерфейса</h2>
+        <div class="welcome-text">Добро пожаловать TimOk!</div>
+        <a href="#" class="stats-link">📊 Статистика</a>
+        <a href="#" class="admin-link">🔧 Админ</a>
+        <button class="logout-btn">🚪 Выйти</button>
+        <button class="generate-btn">🎲 Сгенерировать персонажа</button>
+
+        <h3>Форма генератора:</h3>
+        <form>
+            <label for="race">Раса:</label>
+            <select id="race" name="race">
+                <option value="human">Человек</option>
+                <option value="elf">Эльф</option>
+            </select>
+
+            <label for="class">Класс:</label>
+            <select id="class" name="class">
+                <option value="fighter">Воин</option>
+                <option value="wizard">Волшебник</option>
+            </select>
+
+            <label for="level">Уровень:</label>
+            <input type="number" id="level" name="level" value="1" min="1" max="20">
+
+            <label for="gender">Пол:</label>
+            <select id="gender" name="gender">
+                <option value="male">Мужской</option>
+                <option value="female">Женский</option>
+            </select>
+        </form>
+    </div>
+
+    <div class="test-section">
+        <h2>Переключатель языка</h2>
+        <select id="languageSelector" onchange="changeLanguage()">
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="en">🇺🇸 English</option>
+        </select>
+        <button onclick="testUpdate()">Тест обновления</button>
+        <button onclick="clearDebug()">Очистить отладку</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Отладочная информация</h2>
+        <div id="debug-info" class="debug"></div>
+    </div>
+
+    <script>
+        // Словарь переводов
+        const interfaceTranslations = {
+            'ru': {
+                'welcome': 'Добро пожаловать',
+                'logout': '🚪 Выйти',
+                'character_generator': '🎭 Генератор персонажей',
+                'generate': '🎲 Сгенерировать',
+                'race': 'Раса',
+                'class': 'Класс',
+                'level': 'Уровень',
+                'gender': 'Пол'
+            },
+            'en': {
+                'welcome': 'Welcome',
+                'logout': '🚪 Logout',
+                'character_generator': '🎭 Character Generator',
+                'generate': '🎲 Generate',
+                'race': 'Race',
+                'class': 'Class',
+                'level': 'Level',
+                'gender': 'Gender'
+            }
+        };
+
+        let currentLanguage = 'ru';
+
+        function t(key) {
+            return interfaceTranslations[currentLanguage] ? .[key] || interfaceTranslations['ru'][key] || key;
+        }
+
+        function log(message) {
+            const debugDiv = document.getElementById('debug-info');
+            const timestamp = new Date().toLocaleTimeString();
+            debugDiv.innerHTML += `[${timestamp}] ${message}<br>`;
+            console.log(message);
+        }
+
+        function clearDebug() {
+            document.getElementById('debug-info').innerHTML = '';
+        }
+
+        function updateLanguageSelector() {
+            const selector = document.getElementById('languageSelector');
+            if (selector) {
+                selector.value = currentLanguage;
+                log(`Селектор языка обновлен на: ${currentLanguage}`);
+            } else {
+                log('ОШИБКА: Селектор языка не найден');
+            }
+        }
+
+        function updateInterfaceLanguage() {
+            log(`Начинаем обновление интерфейса для языка: ${currentLanguage}`);
+
+            // Обновляем приветствие
+            const welcomeElement = document.querySelector('.welcome-text');
+            if (welcomeElement) {
+                log(`Найден элемент приветствия: ${welcomeElement.textContent}`);
+                const currentText = welcomeElement.textContent;
+                const username = currentText.replace(/^(Добро пожаловать|Welcome)\s+/, '');
+                welcomeElement.textContent = t('welcome') + ' ' + username;
+                log(`Обновлено приветствие: ${welcomeElement.textContent}`);
+            } else {
+                log('ОШИБКА: Элемент приветствия не найден');
+            }
+
+            // Обновляем кнопку выхода
+            const logoutBtn = document.querySelector('.logout-btn');
+            if (logoutBtn) {
+                log(`Найдена кнопка выхода: ${logoutBtn.textContent}`);
+                logoutBtn.textContent = t('logout');
+                log(`Обновлена кнопка выхода: ${logoutBtn.textContent}`);
+            } else {
+                log('ОШИБКА: Кнопка выхода не найдена');
+            }
+
+            // Обновляем кнопку генерации
+            const generateBtn = document.querySelector('.generate-btn');
+            if (generateBtn) {
+                log(`Найдена кнопка генерации: ${generateBtn.textContent}`);
+                generateBtn.textContent = t('generate') + ' ' + (currentLanguage === 'en' ? 'Character' : 'персонажа');
+                log(`Обновлена кнопка генерации: ${generateBtn.textContent}`);
+            } else {
+                log('ОШИБКА: Кнопка генерации не найдена');
+            }
+
+            // Обновляем лейблы форм
+            const labels = document.querySelectorAll('label');
+            labels.forEach(label => {
+                const forAttr = label.getAttribute('for');
+                if (forAttr === 'race') {
+                    label.textContent = t('race') + ':';
+                    log(`Обновлен лейбл расы: ${label.textContent}`);
+                } else if (forAttr === 'class') {
+                    label.textContent = t('class') + ':';
+                    log(`Обновлен лейбл класса: ${label.textContent}`);
+                } else if (forAttr === 'level') {
+                    label.textContent = t('level') + ':';
+                    log(`Обновлен лейбл уровня: ${label.textContent}`);
+                } else if (forAttr === 'gender') {
+                    label.textContent = t('gender') + ':';
+                    log(`Обновлен лейбл пола: ${label.textContent}`);
+                }
+            });
+
+            log('Обновление интерфейса завершено');
+        }
+
+        function changeLanguage() {
+            const selector = document.getElementById('languageSelector');
+            if (selector) {
+                currentLanguage = selector.value;
+                log(`Язык изменен на: ${currentLanguage}`);
+                updateInterfaceLanguage();
+            }
+        }
+
+        function testUpdate() {
+            log('=== ТЕСТ ОБНОВЛЕНИЯ ===');
+            updateInterfaceLanguage();
+        }
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            log('DOM загружен, начинаем инициализацию');
+
+            // Проверяем язык из URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLang = urlParams.get('lang');
+            if (urlLang) {
+                currentLanguage = urlLang;
+                log(`Язык из URL: ${currentLanguage}`);
+            }
+
+            // Обновляем селектор языка
+            updateLanguageSelector();
+
+            // Обновляем интерфейс
+            updateInterfaceLanguage();
+
+            log('Инициализация завершена');
+        });
+    </script>
+</body>
+
+</html>

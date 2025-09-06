@@ -42,16 +42,25 @@
             const selector = document.getElementById('languageSelector');
             if (selector) {
                 currentLanguage = selector.value;
+                console.log('Язык изменен на:', currentLanguage);
+
                 // Сохраняем выбор в localStorage
                 try {
                     localStorage.setItem('dnd_language', currentLanguage);
+                    console.log('Язык сохранен в localStorage');
                 } catch (e) {
                     console.log('localStorage недоступен');
                 }
+
                 // Обновляем интерфейс сразу
+                console.log('Обновляем интерфейс...');
                 updateInterfaceLanguage();
-                // Перезагружаем страницу с новым языком
-                window.location.href = `index.php?lang=${currentLanguage}`;
+
+                // Небольшая задержка перед перезагрузкой
+                setTimeout(() => {
+                    console.log('Перезагружаем страницу...');
+                    window.location.href = `index.php?lang=${currentLanguage}`;
+                }, 100);
             }
         }
 
@@ -112,65 +121,105 @@
 
         // Функция обновления интерфейса
         function updateInterfaceLanguage() {
-            console.log('Обновление интерфейса для языка:', currentLanguage);
+            console.log('=== НАЧИНАЕМ ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ===');
+            console.log('Текущий язык:', currentLanguage);
+
+            let updatedCount = 0;
 
             // Обновляем приветствие
             const welcomeElement = document.querySelector('.welcome-text');
             if (welcomeElement) {
-                console.log('Найден элемент приветствия:', welcomeElement);
+                console.log('✅ Найден элемент приветствия:', welcomeElement.textContent);
                 const currentText = welcomeElement.textContent;
                 const username = currentText.replace(/^(Добро пожаловать|Welcome)\s+/, '');
-                welcomeElement.textContent = t('welcome') + ' ' + username;
-                console.log('Обновлено приветствие:', welcomeElement.textContent);
+                const newText = t('welcome') + ' ' + username;
+                welcomeElement.textContent = newText;
+                console.log('✅ Обновлено приветствие:', newText);
+                updatedCount++;
             } else {
-                console.log('Элемент приветствия не найден');
+                console.log('❌ Элемент приветствия не найден');
             }
 
             // Обновляем кнопку выхода
             const logoutBtn = document.querySelector('.logout-btn');
             if (logoutBtn) {
-                console.log('Найдена кнопка выхода:', logoutBtn);
-                logoutBtn.textContent = t('logout');
-                console.log('Обновлена кнопка выхода:', logoutBtn.textContent);
+                console.log('✅ Найдена кнопка выхода:', logoutBtn.textContent);
+                const newText = t('logout');
+                logoutBtn.textContent = newText;
+                console.log('✅ Обновлена кнопка выхода:', newText);
+                updatedCount++;
             } else {
-                console.log('Кнопка выхода не найдена');
+                console.log('❌ Кнопка выхода не найдена');
             }
 
             // Обновляем заголовок генератора персонажей в модальном окне
             const characterHeader = document.querySelector('#character-modal .modal-header h2');
             if (characterHeader) {
-                console.log('Найден заголовок генератора персонажей:', characterHeader);
-                characterHeader.innerHTML = t('character_generator');
-                console.log('Обновлен заголовок генератора:', characterHeader.innerHTML);
+                console.log('✅ Найден заголовок генератора персонажей:', characterHeader.textContent);
+                const newText = t('character_generator');
+                characterHeader.innerHTML = newText;
+                console.log('✅ Обновлен заголовок генератора:', newText);
+                updatedCount++;
             } else {
-                console.log('Заголовок генератора персонажей не найден');
+                console.log('❌ Заголовок генератора персонажей не найден');
             }
 
             // Обновляем кнопку генерации персонажа
             const generateBtn = document.querySelector('.generate-btn');
             if (generateBtn) {
-                console.log('Найдена кнопка генерации:', generateBtn);
-                generateBtn.textContent = t('generate') + ' ' + (currentLanguage === 'en' ? 'Character' : 'персонажа');
-                console.log('Обновлена кнопка генерации:', generateBtn.textContent);
+                console.log('✅ Найдена кнопка генерации:', generateBtn.textContent);
+                const newText = t('generate') + ' ' + (currentLanguage === 'en' ? 'Character' : 'персонажа');
+                generateBtn.textContent = newText;
+                console.log('✅ Обновлена кнопка генерации:', newText);
+                updatedCount++;
             } else {
-                console.log('Кнопка генерации не найдена');
+                console.log('❌ Кнопка генерации не найдена');
             }
 
             // Обновляем лейблы форм
             const labels = document.querySelectorAll('label');
-            labels.forEach(label => {
+            console.log('Найдено лейблов:', labels.length);
+            labels.forEach((label, index) => {
                 const forAttr = label.getAttribute('for');
                 if (forAttr === 'race') {
-                    label.textContent = t('race') + ':';
+                    const newText = t('race') + ':';
+                    label.textContent = newText;
+                    console.log(`✅ Обновлен лейбл расы (${index}):`, newText);
+                    updatedCount++;
                 } else if (forAttr === 'class') {
-                    label.textContent = t('class') + ':';
+                    const newText = t('class') + ':';
+                    label.textContent = newText;
+                    console.log(`✅ Обновлен лейбл класса (${index}):`, newText);
+                    updatedCount++;
                 } else if (forAttr === 'level') {
-                    label.textContent = t('level') + ':';
+                    const newText = t('level') + ':';
+                    label.textContent = newText;
+                    console.log(`✅ Обновлен лейбл уровня (${index}):`, newText);
+                    updatedCount++;
                 } else if (forAttr === 'gender') {
-                    label.textContent = t('gender') + ':';
+                    const newText = t('gender') + ':';
+                    label.textContent = newText;
+                    console.log(`✅ Обновлен лейбл пола (${index}):`, newText);
+                    updatedCount++;
                 }
             });
+
+            console.log(`=== ОБНОВЛЕНИЕ ЗАВЕРШЕНО. Обновлено элементов: ${updatedCount} ===`);
         }
+
+        // Глобальная функция для отладки
+        window.debugLanguage = function() {
+            console.log('=== ОТЛАДКА ЯЗЫКА ===');
+            console.log('Текущий язык:', currentLanguage);
+            console.log('Переводы доступны:', Object.keys(interfaceTranslations[currentLanguage] || {}));
+            updateInterfaceLanguage();
+        };
+
+        // Глобальная функция для принудительного обновления
+        window.forceUpdateInterface = function() {
+            console.log('=== ПРИНУДИТЕЛЬНОЕ ОБНОВЛЕНИЕ ===');
+            updateInterfaceLanguage();
+        };
 
         // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', function() {
