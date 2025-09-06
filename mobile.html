@@ -12,6 +12,56 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
 
+    <script>
+        // Инициализация языка при загрузке страницы
+        let currentLanguage = 'ru';
+
+        // Загрузка информации о языках
+        async function loadLanguageInfo() {
+            try {
+                const response = await fetch('api/generate-potions.php?action=languages');
+                const data = await response.json();
+
+                if (data.success) {
+                    currentLanguage = data.data.current;
+                    updateLanguageSelector();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки информации о языках:', error);
+            }
+        }
+
+        // Обновление переключателя языка
+        function updateLanguageSelector() {
+            const selector = document.getElementById('languageSelector');
+            if (selector) {
+                selector.value = currentLanguage;
+            }
+        }
+
+        // Смена языка
+        function changeLanguage() {
+            const selector = document.getElementById('languageSelector');
+            if (selector) {
+                currentLanguage = selector.value;
+                // Сохраняем выбор в localStorage
+                localStorage.setItem('dnd_language', currentLanguage);
+                // Перезагружаем страницу с новым языком
+                window.location.href = `mobile.html?lang=${currentLanguage}`;
+            }
+        }
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверяем сохраненный язык
+            const savedLanguage = localStorage.getItem('dnd_language');
+            if (savedLanguage) {
+                currentLanguage = savedLanguage;
+            }
+            loadLanguageInfo();
+        });
+    </script>
+
     <style>
         /* Базовые стили и сброс */
         
@@ -560,8 +610,13 @@
     <header class="header">
         <div class="logo">DnD Copilot</div>
         <div class="header-controls">
-            <button class="theme-toggle" onclick="cycleTheme()">🎨</button>
+            <!-- Переключатель языка -->
+            <select id="languageSelector" onchange="changeLanguage()" style="background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-primary); border-radius: 6px; padding: 4px 6px; font-size: 0.8em; margin-right: 8px;">
+                <option value="ru">🇷🇺</option>
+                <option value="en">🇺🇸</option>
+            </select>
 
+            <button class="theme-toggle" onclick="cycleTheme()">🎨</button>
         </div>
     </header>
 
@@ -1174,10 +1229,11 @@
 
             showModal('Создание зелий...');
 
-            // Формируем параметры для API
+            // Формируем параметры для API с поддержкой языков
             const params = new URLSearchParams();
             params.append('action', 'random');
             params.append('count', count);
+            params.append('language', currentLanguage); // Добавляем текущий язык
             if (rarity) params.append('rarity', rarity);
             if (type) params.append('type', type);
 
@@ -1203,6 +1259,12 @@
             let content = '<div class="potions-list">';
             
             potions.forEach((potion, index) => {
+                // Используем переведенные данные если доступны
+                const displayName = potion.name || 'Неизвестное зелье';
+                const displayRarity = potion.rarity_localized || potion.rarity || 'Неизвестная редкость';
+                const displayType = potion.type_localized || potion.type || 'Неизвестный тип';
+                const displayDescription = potion.description || 'Описание недоступно';
+                
                 const propertiesHtml = potion.properties.map(prop => 
                     `<span class="potion-property">${prop}</span>`
                 ).join('');
@@ -1211,13 +1273,13 @@
                     <div class="potion-item" style="border-left: 4px solid ${potion.color}; margin-bottom: 20px; padding: 15px; background: var(--bg-secondary); border-radius: 8px;">
                         <div class="potion-header" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
                             <span class="potion-icon" style="font-size: 24px;">${potion.icon}</span>
-                            <h4 style="margin: 0; flex: 1;">${potion.name}</h4>
-                            <span class="potion-rarity" style="color: ${potion.color}; font-size: 12px; font-weight: bold; padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; border: 1px solid currentColor;">${potion.rarity}</span>
+                            <h4 style="margin: 0; flex: 1;">${displayName}</h4>
+                            <span class="potion-rarity" style="color: ${potion.color}; font-size: 12px; font-weight: bold; padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; border: 1px solid currentColor;">${displayRarity}</span>
                         </div>
                         <div class="potion-body">
-                            <p style="margin: 0 0 15px 0; line-height: 1.5;">${potion.description}</p>
+                            <p style="margin: 0 0 15px 0; line-height: 1.5;">${displayDescription}</p>
                             <div class="potion-details" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px;">
-                                <span class="potion-type" style="padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 12px;">${potion.icon} ${potion.type}</span>
+                                <span class="potion-type" style="padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 12px;">${potion.icon} ${displayType}</span>
                                 <span class="potion-value" style="padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 12px;">💰 ${potion.value}</span>
                                 <span class="potion-weight" style="padding: 4px 8px; background: var(--bg-tertiary); border-radius: 4px; font-size: 12px;">⚖️ ${potion.weight}</span>
                             </div>
@@ -1226,6 +1288,7 @@
                                     `<span class="potion-property" style="font-size: 10px; padding: 2px 6px; background: var(--accent-primary); color: white; border-radius: 3px; font-weight: 500;">${prop.trim()}</span>`
                                 ).join('')}
                             </div>
+                            ${potion.translation_error ? `<div class="translation-warning" style="color: orange; font-size: 0.8em; margin-top: 8px; text-align: center;">⚠️ ${potion.translation_error}</div>` : ''}
                         </div>
                     </div>
                 `;

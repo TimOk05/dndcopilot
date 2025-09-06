@@ -287,6 +287,144 @@ class LanguageService {
     }
     
     /**
+     * Получение локализованного названия расы
+     */
+    public function getRaceName($race, $language = null) {
+        $lang = $language ?? $this->current_language;
+        
+        $race_translations = [
+            'ru' => [
+                'aarakocra' => 'Ааракокра',
+                'aasimar' => 'Аасимар',
+                'bugbear' => 'Багбир',
+                'dragonborn' => 'Драконорожденный',
+                'dwarf' => 'Дварф',
+                'elf' => 'Эльф',
+                'firbolg' => 'Фирболг',
+                'genasi' => 'Генаси',
+                'gnome' => 'Гном',
+                'goblin' => 'Гоблин',
+                'goliath' => 'Голиаф',
+                'half-elf' => 'Полуэльф',
+                'half-orc' => 'Полуорк',
+                'halfling' => 'Полурослик',
+                'human' => 'Человек',
+                'kenku' => 'Кенку',
+                'kobold' => 'Кобольд',
+                'lizardfolk' => 'Людоящер',
+                'orc' => 'Орк',
+                'tabaxi' => 'Табакси',
+                'tiefling' => 'Тифлинг',
+                'triton' => 'Тритон',
+                'yuan-ti' => 'Юань-ти'
+            ],
+            'en' => [
+                'aarakocra' => 'Aarakocra',
+                'aasimar' => 'Aasimar',
+                'bugbear' => 'Bugbear',
+                'dragonborn' => 'Dragonborn',
+                'dwarf' => 'Dwarf',
+                'elf' => 'Elf',
+                'firbolg' => 'Firbolg',
+                'genasi' => 'Genasi',
+                'gnome' => 'Gnome',
+                'goblin' => 'Goblin',
+                'goliath' => 'Goliath',
+                'half-elf' => 'Half-Elf',
+                'half-orc' => 'Half-Orc',
+                'halfling' => 'Halfling',
+                'human' => 'Human',
+                'kenku' => 'Kenku',
+                'kobold' => 'Kobold',
+                'lizardfolk' => 'Lizardfolk',
+                'orc' => 'Orc',
+                'tabaxi' => 'Tabaxi',
+                'tiefling' => 'Tiefling',
+                'triton' => 'Triton',
+                'yuan-ti' => 'Yuan-ti'
+            ]
+        ];
+        
+        return $race_translations[$lang][$race] ?? $race;
+    }
+    
+    /**
+     * Получение локализованного названия класса
+     */
+    public function getClassName($class, $language = null) {
+        $lang = $language ?? $this->current_language;
+        
+        $class_translations = [
+            'ru' => [
+                'barbarian' => 'Варвар',
+                'bard' => 'Бард',
+                'cleric' => 'Жрец',
+                'druid' => 'Друид',
+                'fighter' => 'Воин',
+                'monk' => 'Монах',
+                'paladin' => 'Паладин',
+                'ranger' => 'Следопыт',
+                'rogue' => 'Плут',
+                'sorcerer' => 'Чародей',
+                'warlock' => 'Колдун',
+                'wizard' => 'Волшебник',
+                'artificer' => 'Артифисер'
+            ],
+            'en' => [
+                'barbarian' => 'Barbarian',
+                'bard' => 'Bard',
+                'cleric' => 'Cleric',
+                'druid' => 'Druid',
+                'fighter' => 'Fighter',
+                'monk' => 'Monk',
+                'paladin' => 'Paladin',
+                'ranger' => 'Ranger',
+                'rogue' => 'Rogue',
+                'sorcerer' => 'Sorcerer',
+                'warlock' => 'Warlock',
+                'wizard' => 'Wizard',
+                'artificer' => 'Artificer'
+            ]
+        ];
+        
+        return $class_translations[$lang][$class] ?? $class;
+    }
+    
+    /**
+     * Получение локализованного названия мировоззрения
+     */
+    public function getAlignmentName($alignment, $language = null) {
+        $lang = $language ?? $this->current_language;
+        
+        $alignment_translations = [
+            'ru' => [
+                'lawful-good' => 'Законопослушный добрый',
+                'neutral-good' => 'Нейтральный добрый',
+                'chaotic-good' => 'Хаотичный добрый',
+                'lawful-neutral' => 'Законопослушный нейтральный',
+                'neutral' => 'Нейтральный',
+                'chaotic-neutral' => 'Хаотичный нейтральный',
+                'lawful-evil' => 'Законопослушный злой',
+                'neutral-evil' => 'Нейтральный злой',
+                'chaotic-evil' => 'Хаотичный злой'
+            ],
+            'en' => [
+                'lawful-good' => 'Lawful Good',
+                'neutral-good' => 'Neutral Good',
+                'chaotic-good' => 'Chaotic Good',
+                'lawful-neutral' => 'Lawful Neutral',
+                'neutral' => 'Neutral',
+                'chaotic-neutral' => 'Chaotic Neutral',
+                'lawful-evil' => 'Lawful Evil',
+                'neutral-evil' => 'Neutral Evil',
+                'chaotic-evil' => 'Chaotic Evil'
+            ]
+        ];
+        
+        return $alignment_translations[$lang][$alignment] ?? $alignment;
+    }
+    
+    /**
      * Логирование действий
      */
     private function logLanguageAction($action, $details = '') {

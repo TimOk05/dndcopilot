@@ -4,10 +4,12 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/dnd-api-service.php';
 require_once __DIR__ . '/ai-service.php';
 require_once __DIR__ . '/ai-service-alternative.php';
+require_once __DIR__ . '/language-service.php';
 
 class CharacterGeneratorV4 {
     private $dnd_api_service;
     private $ai_service;
+    private $language_service;
     private $occupations = [];
     private $race_names = [];
     
@@ -58,6 +60,7 @@ class CharacterGeneratorV4 {
     public function __construct() {
         $this->dnd_api_service = new DndApiService();
         $this->ai_service = new AiService(); // Используем основной AI сервис
+        $this->language_service = new LanguageService(); // Добавляем Language Service
         $this->loadData();
     }
     
@@ -125,6 +128,7 @@ class CharacterGeneratorV4 {
             $alignment = $params['alignment'] ?? 'neutral';
             $gender = $params['gender'] ?? 'random';
             $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
+            $language = $params['language'] ?? $this->language_service->getCurrentLanguage();
             
             // Получаем данные расы из D&D API
             logMessage('INFO', "Начинаем получение данных расы: {$race}");
@@ -233,9 +237,13 @@ class CharacterGeneratorV4 {
                 'ai_used' => true // AI всегда включен
             ]);
             
+            // Переводим персонажа если нужно
+            $translated_character = $this->translateCharacter($character, $language);
+            
             return [
                 'success' => true,
-                'character' => $character,
+                'character' => $translated_character,
+                'language' => $language,
                 'api_info' => [
                     'dnd_api_used' => true,
                     'ai_api_used' => true, // AI всегда включен
@@ -968,6 +976,56 @@ class CharacterGeneratorV4 {
         ];
         
         return $basic_classes[$class_key] ?? $basic_classes['fighter'];
+    }
+    
+    /**
+     * Перевод персонажа на указанный язык
+     */
+    private function translateCharacter($character, $target_language) {
+        if ($target_language === 'en') {
+            return $character; // Уже на английском
+        }
+        
+        logMessage('INFO', "Начинаем перевод персонажа на язык: $target_language");
+        
+        try {
+            // Переводим основные поля
+            $translated_character = $character;
+            
+            // Переводим расу и класс
+            $translated_character['race'] = $this->language_service->getRaceName($character['race'], $target_language);
+            $translated_character['class'] = $this->language_service->getClassName($character['class'], $target_language);
+            
+            // Переводим мировоззрение
+            $translated_character['alignment'] = $this->language_service->getAlignmentName($character['alignment'], $target_language);
+            
+            // Переводим описание и предысторию через AI
+            if (isset($character['description'])) {
+                $translated_description = $this->ai_service->translateCharacterDescription($character['description'], $target_language);
+                if ($translated_description && !isset($translated_description['error'])) {
+                    $translated_character['description'] = $translated_description;
+                } else {
+                    $translated_character['translation_error'] = 'Ошибка перевода описания';
+                }
+            }
+            
+            if (isset($character['background'])) {
+                $translated_background = $this->ai_service->translateCharacterBackground($character['background'], $target_language);
+                if ($translated_background && !isset($translated_background['error'])) {
+                    $translated_character['background'] = $translated_background;
+                } else {
+                    $translated_character['translation_error'] = 'Ошибка перевода предыстории';
+                }
+            }
+            
+            logMessage('INFO', "Перевод персонажа завершен успешно");
+            return $translated_character;
+            
+        } catch (Exception $e) {
+            logMessage('ERROR', "Ошибка перевода персонажа: " . $e->getMessage());
+            $character['translation_error'] = 'Ошибка перевода: ' . $e->getMessage();
+            return $character;
+        }
     }
 }
 

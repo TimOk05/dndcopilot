@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'auth.php';
+require_once 'api/language-service.php';
 
 // Автоматическое определение мобильного устройства и переадресация
 function isMobileDevice() {
@@ -35,6 +36,10 @@ if (isMobileDevice()) {
 
 // Получаем имя текущего пользователя
 $currentUser = $_SESSION['username'] ?? 'Пользователь';
+
+// Инициализируем Language Service
+$languageService = new LanguageService();
+$currentLanguage = $languageService->getCurrentLanguage();
 
 
 
@@ -1489,10 +1494,11 @@ function openPotionModalSimple() {
         submitBtn.disabled = true;
         resultDiv.innerHTML = '<div class="loading">Создание зелий...</div>';
         
-        // Используем упрощенный API
+        // Используем упрощенный API с поддержкой языков
         const params = new URLSearchParams();
         params.append('action', 'random');
         params.append('count', formData.get('count'));
+        params.append('language', currentLanguage); // Добавляем текущий язык
         if (formData.get('rarity')) {
             params.append('rarity', formData.get('rarity'));
         }
@@ -1562,19 +1568,25 @@ function formatPotionsFromApi(potions) {
             ).join('');
         }
         
-        let descriptionHtml = `<p class="potion-description">${potion.description}</p>`;
+        // Используем переведенные данные если доступны
+        const displayName = potion.name || 'Неизвестное зелье';
+        const displayRarity = potion.rarity_localized || potion.rarity || 'Неизвестная редкость';
+        const displayType = potion.type_localized || potion.type || 'Неизвестный тип';
+        const displayDescription = potion.description || 'Описание недоступно';
+        
+        let descriptionHtml = `<p class="potion-description">${displayDescription}</p>`;
         
         html += `
             <div class="potion-card" style="border-left: 4px solid ${potion.color}">
                 <div class="potion-header">
                     <span class="potion-icon">${potion.icon}</span>
-                    <h3 class="potion-name">${potion.name}</h3>
-                    <span class="potion-rarity" style="color: ${potion.color}">${potion.rarity}</span>
+                    <h3 class="potion-name">${displayName}</h3>
+                    <span class="potion-rarity" style="color: ${potion.color}">${displayRarity}</span>
                 </div>
                 <div class="potion-body">
                     ${descriptionHtml}
                     <div class="potion-details">
-                        <span class="potion-type">${potion.icon} ${potion.type}</span>
+                        <span class="potion-type">${potion.icon} ${displayType}</span>
                         <span class="potion-value">💰 ${potion.value}</span>
                         <span class="potion-weight">⚖️ ${potion.weight}</span>
                     </div>
@@ -1582,10 +1594,11 @@ function formatPotionsFromApi(potions) {
                         ${effectsHtml}
                     </div>
                     <div class="potion-actions" style="margin-top: var(--space-4); text-align: center;">
-                        <button class="fast-btn" onclick="savePotionAsNote('${potion.name}', \`${potion.description}\`, '${potion.rarity}', '${potion.type}', '${potion.value}', '${potion.weight}', '${effectsHtml ? effectsHtml.replace(/<[^>]*>/g, '') : ''}')" style="background: var(--accent-success);">
+                        <button class="fast-btn" onclick="savePotionAsNote('${displayName}', \`${displayDescription}\`, '${displayRarity}', '${displayType}', '${potion.value}', '${potion.weight}', '${effectsHtml ? effectsHtml.replace(/<[^>]*>/g, '') : ''}')" style="background: var(--accent-success);">
                             💾 Сохранить в заметки
                         </button>
                     </div>
+                    ${potion.translation_error ? `<div class="translation-warning" style="color: orange; font-size: 0.8em; margin-top: 5px; text-align: center;">⚠️ ${potion.translation_error}</div>` : ''}
                 </div>
             </div>
         `;

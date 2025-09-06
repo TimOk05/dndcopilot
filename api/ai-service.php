@@ -749,6 +749,58 @@ class AiService {
     }
     
     /**
+     * Перевод описания персонажа на указанный язык
+     */
+    public function translateCharacterDescription($description, $target_language = 'ru') {
+        if ($target_language === 'en') {
+            return $description; // Уже на английском
+        }
+        
+        $cache_key = 'char_desc_' . md5($description . '_' . $target_language);
+        $cached = $this->getCachedData($cache_key);
+        if ($cached !== null) {
+            return $cached;
+        }
+        
+        $prompt = "Переведи на русский язык описание персонажа D&D, сохранив стиль и атмосферу:\n\n" . $description;
+        
+        $result = $this->callAiApi($prompt);
+        
+        if ($result && !isset($result['error'])) {
+            $this->cacheData($cache_key, $result);
+            return $result;
+        }
+        
+        return $description; // Возвращаем оригинал при ошибке
+    }
+    
+    /**
+     * Перевод предыстории персонажа на указанный язык
+     */
+    public function translateCharacterBackground($background, $target_language = 'ru') {
+        if ($target_language === 'en') {
+            return $background; // Уже на английском
+        }
+        
+        $cache_key = 'char_bg_' . md5($background . '_' . $target_language);
+        $cached = $this->getCachedData($cache_key);
+        if ($cached !== null) {
+            return $cached;
+        }
+        
+        $prompt = "Переведи на русский язык предысторию персонажа D&D, сохранив стиль и атмосферу:\n\n" . $background;
+        
+        $result = $this->callAiApi($prompt);
+        
+        if ($result && !isset($result['error'])) {
+            $this->cacheData($cache_key, $result);
+            return $result;
+        }
+        
+        return $background; // Возвращаем оригинал при ошибке
+    }
+    
+    /**
      * Полный перевод зелья
      */
     public function translatePotion($potion_data, $target_language = 'ru') {
