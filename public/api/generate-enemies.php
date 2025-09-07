@@ -22,6 +22,9 @@ class EnemyGenerator {
         
         // Загружаем данные о средах обитания
         $this->loadEnvironmentData();
+        
+        // Тестируем логирование
+        logMessage('DEBUG', 'EnemyGenerator: Конструктор вызван');
     }
     
     /**
@@ -258,8 +261,9 @@ class EnemyGenerator {
                 }
                 
                 if ($enemy_type && !$this->checkType($monster_details['type'], $enemy_type)) {
-                continue;
-            }
+                    logMessage('DEBUG', "EnemyGenerator: Монстр '$monster_name' пропущен - тип '{$monster_details['type']}' не подходит для '$enemy_type'");
+                    continue;
+                }
             
                 // Проверяем среду - при выборе конкретной среды показываем только подходящих существ
                 if ($environment) {
@@ -272,8 +276,9 @@ class EnemyGenerator {
                 
                 // Проверяем совместимость
                 if (!$this->checkCompatibility($monster_details, $cr_range)) {
-                continue;
-            }
+                    logMessage('DEBUG', "EnemyGenerator: Монстр '$monster_name' пропущен - не совместим с CR диапазоном");
+                    continue;
+                }
                 
                 $filtered[] = $monster_details;
                 logMessage('DEBUG', "EnemyGenerator: Монстр '$monster_name' добавлен в результат");
