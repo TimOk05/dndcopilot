@@ -712,17 +712,32 @@
                 return `${ability.toUpperCase()}: ${abilities[ability]} (${mod >= 0 ? '+' : ''}${mod})`;
             }).join(', ');
 
+            // Правильная обработка features
+            let featuresText = '';
+            if (character.features && Array.isArray(character.features)) {
+                featuresText = character.features.map(feature => {
+                    if (typeof feature === 'string') {
+                        return feature;
+                    } else if (feature && feature.name) {
+                        return feature.name;
+                    } else if (feature && feature.title) {
+                        return feature.title;
+                    }
+                    return 'Неизвестная особенность';
+                }).join(', ');
+            }
+
             const content = `
                 <div class="character-info">
                     <h3>${character.name}</h3>
                     <p><strong>Раса:</strong> ${character.race}</p>
                     <p><strong>Класс:</strong> ${character.class}</p>
                     <p><strong>Уровень:</strong> ${character.level}</p>
-                    <p><strong>HP:</strong> ${character.hp}</p>
-                    <p><strong>AC:</strong> ${character.ac}</p>
+                    <p><strong>HP:</strong> ${character.hit_points || character.hp || 'Не указано'}</p>
+                    <p><strong>AC:</strong> ${character.armor_class || character.ac || 'Не указано'}</p>
                     <p><strong>Характеристики:</strong> ${abilityMods}</p>
                     ${character.description ? `<p><strong>Описание:</strong> ${character.description}</p>` : ''}
-                    ${character.features && character.features.length > 0 ? `<p><strong>Особенности:</strong> ${character.features.join(', ')}</p>` : ''}
+                    ${featuresText ? `<p><strong>Особенности:</strong> ${featuresText}</p>` : ''}
                     ${character.equipment && character.equipment.length > 0 ? `<p><strong>Снаряжение:</strong> ${character.equipment.join(', ')}</p>` : ''}
                     ${character.spells && character.spells.length > 0 ? `<p><strong>Заклинания:</strong> ${character.spells.join(', ')}</p>` : ''}
                 </div>
@@ -918,6 +933,7 @@
                     ${abilityMods ? `<p><strong>Характеристики:</strong> ${abilityMods}</p>` : ''}
                     ${enemy.description ? `<p><strong>Описание:</strong> ${enemy.description}</p>` : ''}
                     ${enemy.tactics ? `<p><strong>Тактика:</strong> ${enemy.tactics}</p>` : ''}
+                    ${enemy.actions && enemy.actions.length > 0 ? `<p><strong>Действия:</strong> ${enemy.actions.join(', ')}</p>` : ''}
                 </div>
                 <button class="btn" onclick="addNoteToEnemy('${enemy.name}', '${enemy.type || 'Неизвестно'}', '${enemy.challenge_rating || 'Неизвестно'}')">
                     💾 Сохранить в заметки
