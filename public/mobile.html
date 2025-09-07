@@ -332,14 +332,103 @@
         .hidden {
             display: none !important;
         }
+        /* Кнопка переключения темы */
+        
+        .theme-toggle {
+            background: var(--accent-primary);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+        
+        .theme-toggle:hover {
+            background: var(--accent-secondary);
+            transform: scale(1.1);
+        }
+        /* Темная тема */
+        
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #3a3a3a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-primary: #8b5a3c;
+            --accent-secondary: #6d4429;
+        }
+        
+        [data-theme="dark"] .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+        
+        [data-theme="dark"] .quick-btn {
+            background: var(--bg-secondary);
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .quick-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+        
+        [data-theme="dark"] .modal-content {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .form-group input,
+        [data-theme="dark"] .form-group select,
+        [data-theme="dark"] .form-group textarea {
+            background: var(--bg-primary);
+            border-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .form-group input:focus,
+        [data-theme="dark"] .form-group select:focus,
+        [data-theme="dark"] .form-group textarea:focus {
+            border-color: var(--accent-primary);
+        }
+        
+        [data-theme="dark"] .result-container {
+            background: var(--bg-tertiary);
+            border-left-color: var(--accent-primary);
+        }
+        
+        [data-theme="dark"] .note-item {
+            background: var(--bg-secondary);
+            border-left-color: var(--accent-primary);
+        }
+        
+        [data-theme="dark"] .bottom-nav {
+            background: var(--bg-secondary);
+            border-top-color: var(--bg-tertiary);
+        }
     </style>
 </head>
 
 <body>
     <!-- Заголовок -->
     <header class="header">
-        <h1>D&D Copilot</h1>
-        <p>Мобильная версия</p>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>D&D Copilot</h1>
+                <p>Мобильная версия</p>
+            </div>
+            <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span>
+            </button>
+        </div>
     </header>
 
     <!-- Основной контент -->
@@ -401,7 +490,29 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadNotes();
             updateNotesDisplay();
+            loadTheme();
         });
+
+        // Система тем
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('dnd_theme') || 'light';
+            setTheme(savedTheme);
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const themeIcon = document.getElementById('theme-icon');
+            if (themeIcon) {
+                themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+            }
+            localStorage.setItem('dnd_theme', theme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        }
 
         // Управление секциями
         function showSection(section) {
