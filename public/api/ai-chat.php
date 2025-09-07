@@ -169,11 +169,13 @@ class AIChat {
     private function callDeepSeek($prompt) {
         $api_key = getApiKey('deepseek');
         if (!$api_key) {
-            return "Извините, AI временно недоступен. Проверьте настройки API.";
+            logMessage('ERROR', 'AI API ключ не найден');
+            return null; // НЕ возвращаем fallback сообщение!
         }
         
         if (!function_exists('curl_init')) {
-            return "Извините, AI временно недоступен. Отсутствует поддержка cURL.";
+            logMessage('ERROR', 'cURL недоступен для AI API');
+            return null; // НЕ возвращаем fallback сообщение!
         }
         
         $data = [
@@ -198,19 +200,56 @@ class AIChat {
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/2.0');
+        
+        // Критически важные настройки SSL для обхода проблем
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
+        curl_setopt($ch, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+        
+        // Дополнительные настройки для Windows
+        curl_setopt($ch, CURLOPT_CAINFO, null);
+        curl_setopt($ch, CURLOPT_CAPATH, null);
         
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        $info = curl_getinfo($ch);
         curl_close($ch);
         
-        if ($http_code === 200 && $response) {
-            $result = json_decode($response, true);
-            if (isset($result['choices'][0]['message']['content'])) {
-                return trim($result['choices'][0]['message']['content']);
-            }
+        // Логируем детальную информацию
+        logMessage('INFO', "AI Chat API запрос к: https://api.deepseek.com/v1/chat/completions, HTTP код: {$http_code}");
+        
+        if ($response === false) {
+            logMessage('ERROR', "AI Chat API cURL ошибка: {$error}");
+            return null;
         }
         
-        return "Извините, произошла ошибка при обращении к AI. Попробуйте позже.";
+        if ($http_code !== 200) {
+            logMessage('ERROR', "AI Chat API HTTP ошибка: {$http_code}");
+            logMessage('ERROR', "AI Chat API ответ: " . substr($response, 0, 500));
+            return null;
+        }
+        
+        $result = json_decode($response, true);
+        
+        // Проверяем, что JSON декодировался корректно
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            logMessage('ERROR', 'AI Chat API вернул неверный JSON: ' . json_last_error_msg());
+            logMessage('ERROR', 'AI Chat API сырой ответ: ' . substr($response, 0, 500));
+            return null;
+        }
+        
+        if (isset($result['choices'][0]['message']['content'])) {
+            $ai_text = trim($result['choices'][0]['message']['content']);
+            logMessage('INFO', 'AI Chat API успешно вернул ответ длиной: ' . strlen($ai_text));
+            return $ai_text;
+        }
+        
+        logMessage('WARNING', 'AI Chat API не вернул текстовый ответ');
+        logMessage('DEBUG', 'AI Chat API структура ответа: ' . json_encode($result, JSON_UNESCAPED_UNICODE));
+        return null;
     }
     
     /**
