@@ -768,8 +768,23 @@
                 </div>
 
                 <div class="input-group">
-                    <label class="input-label">Тип противника (опционально)</label>
-                    <input type="text" class="input-field" id="enemy-type" placeholder="например: dragon, undead, beast">
+                    <label class="input-label">Тип противника</label>
+                    <select class="input-field" id="enemy-type">
+                        <option value="">Любой тип</option>
+                        <option value="humanoid">Гуманоиды</option>
+                        <option value="beast">Звери</option>
+                        <option value="undead">Нежить</option>
+                        <option value="fiend">Демоны</option>
+                        <option value="dragon">Драконы</option>
+                        <option value="elemental">Стихийные</option>
+                        <option value="celestial">Небожители</option>
+                        <option value="aberration">Аберрации</option>
+                        <option value="construct">Конструкты</option>
+                        <option value="giant">Великаны</option>
+                        <option value="monstrosity">Монстры</option>
+                        <option value="ooze">Слизи</option>
+                        <option value="plant">Растения</option>
+                    </select>
                 </div>
 
                 <div class="input-group">
@@ -1104,14 +1119,13 @@
                 return;
             }
 
-            // Вызов API для генерации персонажа
+            // Используем тот же API что и ПК версия
             const formData = new FormData();
-            formData.append('action', 'generate_character');
             formData.append('race', race);
             formData.append('class', characterClass);
             formData.append('level', level);
 
-            fetch('api/mobile-api.php', {
+            fetch('api/generate-characters.php', {
                     method: 'POST',
                     body: formData
                 })
@@ -1186,9 +1200,8 @@
                 return;
             }
 
-            // Вызов API для генерации противника
+            // Используем тот же API что и ПК версия
             const formData = new FormData();
-            formData.append('action', 'generate_enemy');
             formData.append('threat_level', threatLevelParam);
             formData.append('count', count);
             formData.append('enemy_type', enemyType);
@@ -1197,7 +1210,7 @@
             
             showModal(message);
 
-            fetch('api/mobile-api.php', {
+            fetch('api/generate-enemies.php', {
                 method: 'POST',
                 body: formData
             })
@@ -1619,19 +1632,19 @@
                 return;
             }
             
-            // Вызов API для AI
+            // Используем тот же API что и ПК версия
             const formData = new FormData();
-            formData.append('action', 'ai_chat');
-            formData.append('question', question);
+            formData.append('action', 'send_message');
+            formData.append('message', question);
             
-            fetch('api/mobile-api.php', {
+            fetch('api/ai-chat.php', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    displayAIResponse(data.data.response);
+                    displayAIResponse(data.response);
                 } else {
                     showModal('Ошибка: ' + data.message);
                 }
