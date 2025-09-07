@@ -283,11 +283,54 @@ class TavernGenerator {
         for ($i = 0; $i < $count; $i++) {
             $item = $this->selectByRarity($items, 'city'); // Используем базовую редкость
             if ($item && !in_array($item, $selected)) {
+                // Добавляем цену к элементу меню
+                $item['price'] = $this->generatePrice($item);
                 $selected[] = $item;
             }
         }
         
         return $selected;
+    }
+    
+    /**
+     * Генерация цены для элемента меню
+     */
+    private function generatePrice($item) {
+        $base_prices = [
+            'drinks' => [
+                'common' => ['min' => 2, 'max' => 5],    // 2-5 медных
+                'uncommon' => ['min' => 5, 'max' => 10], // 5-10 медных
+                'rare' => ['min' => 10, 'max' => 25]     // 10-25 медных
+            ],
+            'meals' => [
+                'common' => ['min' => 5, 'max' => 12],   // 5-12 медных
+                'uncommon' => ['min' => 12, 'max' => 25], // 12-25 медных
+                'rare' => ['min' => 25, 'max' => 50]     // 25-50 медных
+            ],
+            'sides' => [
+                'common' => ['min' => 1, 'max' => 3],    // 1-3 медных
+                'uncommon' => ['min' => 3, 'max' => 8],  // 3-8 медных
+                'rare' => ['min' => 8, 'max' => 15]      // 8-15 медных
+            ]
+        ];
+        
+        $rarity = $item['rarity'] ?? 'common';
+        $category = 'drinks'; // По умолчанию
+        
+        // Определяем категорию по тегам
+        if (isset($item['tags'])) {
+            if (in_array('poultry', $item['tags']) || in_array('meat', $item['tags']) || 
+                in_array('seafood', $item['tags']) || in_array('game', $item['tags'])) {
+                $category = 'meals';
+            } elseif (in_array('bread', $item['tags']) || in_array('salad', $item['tags'])) {
+                $category = 'sides';
+            }
+        }
+        
+        $price_range = $base_prices[$category][$rarity] ?? $base_prices[$category]['common'];
+        $price = rand($price_range['min'], $price_range['max']);
+        
+        return $price . ' медных';
     }
     
     /**

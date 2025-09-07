@@ -1590,6 +1590,90 @@ margin-top: var(--space-2);
     font-size: var(--text-sm);
     color: var(--text-secondary);
 }
+.tavern-icon {
+    font-size: var(--text-2xl);
+    margin-right: var(--space-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+}
+.owner-info {
+    background: var(--bg-primary);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-secondary);
+}
+.owner-info p {
+    margin-bottom: var(--space-2);
+    color: var(--text-secondary);
+}
+.owner-info strong {
+    color: var(--text-primary);
+}
+.menu-category {
+    margin-bottom: var(--space-3);
+}
+.menu-category h5 {
+    color: var(--accent-primary);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-base);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-tertiary);
+    padding-bottom: var(--space-1);
+}
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-1);
+}
+.item-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+}
+.item-price {
+    font-weight: 600;
+    color: var(--accent-primary);
+    background: var(--bg-tertiary);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    border: 1px solid var(--accent-primary);
+}
+.item-tags {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+    background: var(--bg-tertiary);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    display: inline-block;
+}
+.game-item {
+    background: var(--bg-primary);
+    padding: var(--space-3);
+    margin: var(--space-2) 0;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-secondary);
+}
+.game-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-1);
+}
+.game-rules {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    font-style: italic;
+    background: var(--bg-tertiary);
+    padding: var(--space-2);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent-primary);
+}
 
 /* ===== RESPONSIVE TAVERN STYLES ===== */
 @media (max-width: 768px) {

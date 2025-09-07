@@ -1789,12 +1789,66 @@ async function generateTavern() {
             
             let menuHTML = '';
             if (tavern.menu) {
+                let drinksHTML = '';
+                if (tavern.menu.drinks && tavern.menu.drinks.length > 0) {
+                    drinksHTML = `
+                        <div class="menu-category">
+                            <h5>🍺 Напитки</h5>
+                            ${tavern.menu.drinks.map(drink => `
+                                <div class="menu-item">
+                                    <div class="item-header">
+                                        <span class="item-name">${drink.name_ru}</span>
+                                        <span class="item-price">${drink.price || 'Цена не указана'}</span>
+                                    </div>
+                                    ${drink.tags ? `<span class="item-tags">${drink.tags.join(', ')}</span>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                
+                let mealsHTML = '';
+                if (tavern.menu.meals && tavern.menu.meals.length > 0) {
+                    mealsHTML = `
+                        <div class="menu-category">
+                            <h5>🍖 Блюда</h5>
+                            ${tavern.menu.meals.map(meal => `
+                                <div class="menu-item">
+                                    <div class="item-header">
+                                        <span class="item-name">${meal.name_ru}</span>
+                                        <span class="item-price">${meal.price || 'Цена не указана'}</span>
+                                    </div>
+                                    ${meal.tags ? `<span class="item-tags">${meal.tags.join(', ')}</span>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                
+                let sidesHTML = '';
+                if (tavern.menu.sides && tavern.menu.sides.length > 0) {
+                    sidesHTML = `
+                        <div class="menu-category">
+                            <h5>🥗 Закуски</h5>
+                            ${tavern.menu.sides.map(side => `
+                                <div class="menu-item">
+                                    <div class="item-header">
+                                        <span class="item-name">${side.name_ru}</span>
+                                        <span class="item-price">${side.price || 'Цена не указана'}</span>
+                                    </div>
+                                    ${side.tags ? `<span class="item-tags">${side.tags.join(', ')}</span>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                
                 menuHTML = `
                     <div class="tavern-section">
                         <h4>🍽️ Меню</h4>
-                        ${tavern.menu.drinks ? `<div><strong>Напитки:</strong> ${tavern.menu.drinks.map(d => d.name_ru).join(', ')}</div>` : ''}
-                        ${tavern.menu.meals ? `<div><strong>Блюда:</strong> ${tavern.menu.meals.map(m => m.name_ru).join(', ')}</div>` : ''}
-                        ${tavern.menu.sides ? `<div><strong>Закуски:</strong> ${tavern.menu.sides.map(s => s.name_ru).join(', ')}</div>` : ''}
+                        ${drinksHTML}
+                        ${mealsHTML}
+                        ${sidesHTML}
                     </div>
                 `;
             }
@@ -1823,13 +1877,19 @@ async function generateTavern() {
             if (tavern.games) {
                 const gamesList = [];
                 Object.values(tavern.games).forEach(game => {
-                    if (game) gamesList.push(`${game.name_ru} (${game.style})`);
+                    if (game) {
+                        let gameInfo = `<div class="game-item">
+                            <div class="game-name">${game.name_ru} (${game.style})</div>
+                            ${game.brief ? `<div class="game-rules">${game.brief}</div>` : ''}
+                        </div>`;
+                        gamesList.push(gameInfo);
+                    }
                 });
                 if (gamesList.length > 0) {
                     gamesHTML = `
                         <div class="tavern-section">
                             <h4>🎲 Игры</h4>
-                            ${gamesList.map(game => `<div class="menu-item">${game}</div>`).join('')}
+                            ${gamesList.join('')}
                         </div>
                     `;
                 }
@@ -1838,12 +1898,21 @@ async function generateTavern() {
             html += `
                 <div class="tavern-card">
                     <div class="tavern-header">
+                        <div class="tavern-icon">🍺</div>
                         <h3>${name}</h3>
                     </div>
                     <div class="tavern-details">
-                        <p><strong>Расположение:</strong> ${location}</p>
-                        <p><strong>Владелец:</strong> ${owner} (${ownerRace})</p>
-                        <p><strong>Биом:</strong> ${biome}</p>
+                        <p><strong>📍 Расположение:</strong> ${location}</p>
+                        <p><strong>🏞️ Биом:</strong> ${biome}</p>
+                    </div>
+                    <div class="tavern-section">
+                        <h4>👑 Владелец</h4>
+                        <div class="owner-info">
+                            <p><strong>Имя:</strong> ${owner}</p>
+                            <p><strong>Раса:</strong> ${ownerRace}</p>
+                            ${tavern.owner?.traits ? `<p><strong>Особенности:</strong> ${tavern.owner.traits.join(', ')}</p>` : ''}
+                            ${tavern.owner?.hooks ? `<p><strong>Интересные факты:</strong> ${tavern.owner.hooks.join(', ')}</p>` : ''}
+                        </div>
                     </div>
                     ${description}
                     ${menuHTML}
