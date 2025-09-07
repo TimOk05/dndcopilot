@@ -48,12 +48,6 @@ class TavernGenerator {
         try {
             $biome = $params['biome'] ?? '';
             $use_ai = isset($params['use_ai']) ? ($params['use_ai'] === 'on') : true;
-            $count = (int)($params['count'] ?? 1);
-            
-            // Валидация параметров
-            if ($count < 1 || $count > 10) {
-                throw new Exception('Количество таверн должно быть от 1 до 10');
-            }
             
             // Если биом не указан, выбираем случайный
             if (empty($biome)) {
@@ -66,25 +60,18 @@ class TavernGenerator {
                 }
             }
             
-            logMessage('INFO', "TavernGenerator: Генерация таверны. Биом: $biome, Количество: $count");
+            logMessage('INFO', "TavernGenerator: Генерация таверны. Биом: $biome");
             
-            $taverns = [];
-            for ($i = 0; $i < $count; $i++) {
-                $tavern = $this->generateSingleTavern($biome, $use_ai);
-                if ($tavern) {
-                    $taverns[] = $tavern;
-                }
-            }
-            
-            if (empty($taverns)) {
-                throw new Exception('Не удалось сгенерировать таверны');
+            // Генерируем одну таверну
+            $tavern = $this->generateSingleTavern($biome, $use_ai);
+            if (!$tavern) {
+                throw new Exception('Не удалось сгенерировать таверну');
             }
             
             return [
                 'success' => true,
-                'taverns' => $taverns,
+                'tavern' => $tavern,
                 'biome' => $biome,
-                'count' => count($taverns),
                 'ai_used' => $use_ai
             ];
             
@@ -152,7 +139,7 @@ class TavernGenerator {
         $ambience = $this->selectByRarity($all_ambience, $biome);
         
         // Создаем меню
-        $menu = $this->createMenu($core['menu'], $special['menu_additions'] ?? []);
+        $menu = $this->createMenu($core['menu'], $special['menu_additions'] ?? [], $biome);
         
         // Выбираем комнаты
         $rooms = $this->selectRooms($core['rooms']);
@@ -192,7 +179,7 @@ class TavernGenerator {
     /**
      * Выбор элемента по редкости с учетом биома
      */
-    private function selectByRarity($items, $biome) {
+    private function selectByRarity($items, $biome, $exclude = []) {
         if (empty($items)) {
             return null;
         }
@@ -200,8 +187,18 @@ class TavernGenerator {
         $weights = $this->taverns_db['weights'];
         $biome_tags = $this->taverns_db['specials'][$biome]['tags'] ?? [];
         
+        // Фильтруем исключенные элементы
+        $available_items = array_filter($items, function($item) use ($exclude) {
+            $item_key = $this->getItemKey($item);
+            return !in_array($item_key, $exclude);
+        });
+        
+        if (empty($available_items)) {
+            return null;
+        }
+        
         $weighted_items = [];
-        foreach ($items as $item) {
+        foreach ($available_items as $item) {
             $weight = $weights['rarity'][$item['rarity']] ?? 1;
             
             // Применяем tag_boost если есть совпадающие теги
@@ -216,6 +213,22 @@ class TavernGenerator {
         }
         
         return $this->weightedRandomSelect($weighted_items);
+    }
+    
+    /**
+     * Получение уникального ключа для элемента
+     */
+    private function getItemKey($item) {
+        if (isset($item['name_ru'])) {
+            return $item['name_ru'];
+        } elseif (isset($item['text_ru'])) {
+            return $item['text_ru'];
+        } elseif (isset($item['type'])) {
+            return $item['type'];
+        } elseif (isset($item['role'])) {
+            return $item['role'];
+        }
+        return md5(serialize($item));
     }
     
     /**
@@ -242,11 +255,13 @@ class TavernGenerator {
     private function selectStaff($staff_archetypes, $biome) {
         $staff_count = rand(2, 4);
         $selected_staff = [];
+        $excluded_staff = [];
         
         for ($i = 0; $i < $staff_count; $i++) {
-            $staff_member = $this->selectByRarity($staff_archetypes, $biome);
+            $staff_member = $this->selectByRarity($staff_archetypes, $biome, $excluded_staff);
             if ($staff_member) {
                 $selected_staff[] = $staff_member;
+                $excluded_staff[] = $this->getItemKey($staff_member);
             }
         }
         
@@ -256,36 +271,56 @@ class TavernGenerator {
     /**
      * Создание меню
      */
-    private function createMenu($core_menu, $special_additions) {
+    private function createMenu($core_menu, $special_additions, $biome) {
+        // Объединяем меню, избегая дубликатов по названию
         $menu = [
-            'drinks' => array_merge($core_menu['drinks'], $special_additions['drinks'] ?? []),
-            'meals' => array_merge($core_menu['meals'], $special_additions['meals'] ?? []),
-            'sides' => array_merge($core_menu['sides'], $special_additions['sides'] ?? [])
+            'drinks' => $this->mergeMenuItems($core_menu['drinks'], $special_additions['drinks'] ?? []),
+            'meals' => $this->mergeMenuItems($core_menu['meals'], $special_additions['meals'] ?? []),
+            'sides' => $this->mergeMenuItems($core_menu['sides'], $special_additions['sides'] ?? [])
         ];
         
         // Выбираем случайные элементы для меню
         $selected_menu = [
-            'drinks' => $this->selectMenuItems($menu['drinks'], 3, 6),
-            'meals' => $this->selectMenuItems($menu['meals'], 2, 4),
-            'sides' => $this->selectMenuItems($menu['sides'], 1, 3)
+            'drinks' => $this->selectMenuItems($menu['drinks'], 3, 6, $biome),
+            'meals' => $this->selectMenuItems($menu['meals'], 2, 4, $biome),
+            'sides' => $this->selectMenuItems($menu['sides'], 1, 3, $biome)
         ];
         
         return $selected_menu;
     }
     
     /**
+     * Объединение элементов меню без дубликатов
+     */
+    private function mergeMenuItems($core_items, $special_items) {
+        $merged = $core_items;
+        $existing_names = array_column($core_items, 'name_ru');
+        
+        foreach ($special_items as $item) {
+            if (!in_array($item['name_ru'], $existing_names)) {
+                $merged[] = $item;
+                $existing_names[] = $item['name_ru'];
+            }
+        }
+        
+        return $merged;
+    }
+    
+    /**
      * Выбор элементов меню
      */
-    private function selectMenuItems($items, $min, $max) {
+    private function selectMenuItems($items, $min, $max, $biome = 'city') {
         $count = rand($min, min($max, count($items)));
         $selected = [];
+        $excluded_items = [];
         
         for ($i = 0; $i < $count; $i++) {
-            $item = $this->selectByRarity($items, 'city'); // Используем базовую редкость
-            if ($item && !in_array($item, $selected)) {
+            $item = $this->selectByRarity($items, $biome, $excluded_items);
+            if ($item) {
                 // Форматируем цену из JSON
                 $item['formatted_price'] = $this->formatPrice($item['price'] ?? null);
                 $selected[] = $item;
+                $excluded_items[] = $this->getItemKey($item);
             }
         }
         
@@ -321,11 +356,13 @@ class TavernGenerator {
     private function selectRooms($rooms) {
         $room_count = rand(1, 2);
         $selected_rooms = [];
+        $excluded_rooms = [];
         
         for ($i = 0; $i < $room_count; $i++) {
-            $room = $this->selectByRarity($rooms, 'city');
+            $room = $this->selectByRarity($rooms, 'city', $excluded_rooms);
             if ($room) {
                 $selected_rooms[] = $room;
+                $excluded_rooms[] = $this->getItemKey($room);
             }
         }
         
@@ -338,11 +375,13 @@ class TavernGenerator {
     private function selectEvents($events, $biome) {
         $event_count = rand(1, 3);
         $selected_events = [];
+        $excluded_events = [];
         
         for ($i = 0; $i < $event_count; $i++) {
-            $event = $this->selectByRarity($events, $biome);
-            if ($event && !in_array($event, $selected_events)) {
+            $event = $this->selectByRarity($events, $biome, $excluded_events);
+            if ($event) {
                 $selected_events[] = $event;
+                $excluded_events[] = $this->getItemKey($event);
             }
         }
         
