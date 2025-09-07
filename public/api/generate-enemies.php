@@ -221,7 +221,7 @@ class EnemyGenerator {
         
         $filtered = [];
         $checked_count = 0;
-        $max_checks = 50; // Ограничиваем количество проверок для производительности
+        $max_checks = 500; // Значительно увеличиваем выборку для лучшего покрытия
         
         foreach ($monsters['results'] as $monster) {
             if ($checked_count >= $max_checks) {
@@ -284,7 +284,7 @@ class EnemyGenerator {
                 logMessage('DEBUG', "EnemyGenerator: Монстр '$monster_name' добавлен в результат");
                 
                 // Ограничиваем количество проверенных монстров
-                if (count($filtered) >= 15) {
+                if (count($filtered) >= 50) {
                     break;
                 }
                 
@@ -389,7 +389,25 @@ class EnemyGenerator {
             $requested_type_lower = $type_translations[$requested_type_lower];
         }
         
-        return strpos($monster_type_lower, $requested_type_lower) !== false;
+        // Логируем для диагностики
+        logMessage('DEBUG', "EnemyGenerator: Проверка типа - монстр: '$monster_type_lower', запрос: '$requested_type_lower'");
+        
+        // Улучшенная проверка типа - ищем точное совпадение или вхождение
+        if ($monster_type_lower === $requested_type_lower) {
+            return true;
+        }
+        
+        // Проверяем вхождение в название типа
+        if (strpos($monster_type_lower, $requested_type_lower) !== false) {
+            return true;
+        }
+        
+        // Проверяем обратное вхождение (например, "dragon" в "blue dragon wyrmling")
+        if (strpos($requested_type_lower, $monster_type_lower) !== false) {
+            return true;
+        }
+        
+        return false;
     }
     
     /**
@@ -440,6 +458,9 @@ class EnemyGenerator {
                 $requested_env = $env_translations[$requested_env];
             }
             
+            // Логируем для диагностики
+            logMessage('DEBUG', "EnemyGenerator: Проверка среды - монстр: '$monster_env', запрос: '$requested_env'");
+            
             // Прямое сравнение
             if ($monster_env === $requested_env) {
                 return true;
@@ -450,6 +471,7 @@ class EnemyGenerator {
         }
         
         // Если нет данных о среде - монстр не подходит для конкретной среды
+        logMessage('DEBUG', "EnemyGenerator: Нет данных о среде для монстра '$monster_index'");
         return false;
     }
     
@@ -492,7 +514,8 @@ class EnemyGenerator {
             return $this->translateEnvironment($env);
         }
         
-        return 'Не определена';
+        // НЕ используем fallback - возвращаем null если нет данных
+        return null;
     }
     
     /**
@@ -520,7 +543,7 @@ class EnemyGenerator {
                 'languages' => $this->formatLanguages($monster['languages'] ?? []),
                 'alignment' => $monster['alignment'] ?? 'Не определено',
                 'size' => $this->translateSize($monster['size'] ?? 'medium'),
-                'environment' => $this->getMonsterEnvironment($monster),
+                'environment' => $this->getMonsterEnvironment($monster) ?? 'Данные недоступны',
                 'xp' => $monster['xp'] ?? 0
             ];
             
@@ -535,12 +558,13 @@ class EnemyGenerator {
                     $enemy['tactics'] = $tactics_result;
                 } else {
                     logMessage('WARNING', "AI генерация тактики не удалась: " . $tactics_result['message']);
-                    $enemy['tactics'] = 'Тактика недоступна (AI API недоступен)';
+                    // НЕ используем fallback - возвращаем ошибку
+                    $enemy['tactics_error'] = $tactics_result;
                 }
             } else {
                 // AI отключен - создаем противника без тактики
                 logMessage('INFO', 'AI генерация отключена, создаем противника без тактики');
-                $enemy['tactics'] = 'Тактика недоступна (AI отключен)';
+                $enemy['tactics'] = null;
             }
             
             return $enemy;
@@ -1233,14 +1257,14 @@ class EnemyGenerator {
         }
         
         logMessage('INFO', "EnemyGenerator: Успешный ответ, размер: " . strlen($response) . " байт");
-            $decoded = json_decode($response, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
+        $decoded = json_decode($response, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
             logMessage('INFO', "EnemyGenerator: JSON успешно декодирован");
-                return $decoded;
-            } else {
+            return $decoded;
+        } else {
             logMessage('ERROR', "EnemyGenerator: JSON decode error for $url: " . json_last_error_msg());
-                throw new Exception("Ошибка разбора ответа API");
-            }
+            throw new Exception("Ошибка разбора ответа API");
+        }
     }
 
     /**
