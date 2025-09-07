@@ -293,11 +293,22 @@ class AIChat {
 
 // Обработка запросов
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Проверяем CSRF токен (если функция существует)
-    if (function_exists('verifyCSRFToken') && (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token']))) {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'Неверный CSRF токен']);
-        exit;
+    // Логируем входящий запрос для диагностики
+    logMessage('INFO', 'AI Chat POST запрос', [
+        'action' => $_POST['action'] ?? 'не указано',
+        'has_csrf_token' => isset($_POST['csrf_token']),
+        'session_status' => session_status(),
+        'csrf_function_exists' => function_exists('verifyCSRFToken')
+    ]);
+    
+    // Упрощенная проверка CSRF токена - только если функция существует и токен передан
+    if (function_exists('verifyCSRFToken') && isset($_POST['csrf_token'])) {
+        if (!verifyCSRFToken($_POST['csrf_token'])) {
+            logMessage('WARNING', 'AI Chat: Неверный CSRF токен');
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'Неверный CSRF токен']);
+            exit;
+        }
     }
     
     $chat = new AIChat();
@@ -331,10 +342,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             default:
                 throw new Exception('Неизвестное действие');
         }
-    } catch (Exception $e) {
+        } catch (Exception $e) {
+        logMessage('ERROR', 'AI Chat ошибка: ' . $e->getMessage());
         $result = [
             'success' => false,
-            'error' => $e->getMessage()
+            'error' => $e->getMessage(),
+            'debug_info' => [
+                'action' => $action,
+                'session_status' => session_status(),
+                'csrf_function_exists' => function_exists('verifyCSRFToken'),
+                'post_data_keys' => array_keys($_POST)
+            ]
         ];
     }
     

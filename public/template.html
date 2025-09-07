@@ -11,6 +11,8 @@
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+        // Подключаем config.php для доступа к функциям CSRF
+        require_once __DIR__ . '/../config/config.php';
         echo function_exists('generateCSRFToken') ? generateCSRFToken() : '';
     ?>">
     <meta name="apple-mobile-web-app-title" content="DnD Chat">
@@ -5686,7 +5688,11 @@
         function loadChatHistory() {
             const formData = new FormData();
             formData.append('action', 'get_history');
-            formData.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            // Безопасное получение CSRF токена
+            const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+            if (csrfTokenElement) {
+                formData.append('csrf_token', csrfTokenElement.getAttribute('content'));
+            }
 
             fetch('api/ai-chat.php', {
                     method: 'POST',
@@ -5735,7 +5741,11 @@
             const formData = new FormData();
             formData.append('action', 'send_message');
             formData.append('message', message);
-            formData.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            // Безопасное получение CSRF токена
+            const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+            if (csrfTokenElement) {
+                formData.append('csrf_token', csrfTokenElement.getAttribute('content'));
+            }
 
             if (pdfUpload.files[0]) {
                 formData.append('pdf', pdfUpload.files[0]);
@@ -5799,7 +5809,11 @@
 
             const formData = new FormData();
             formData.append('action', 'clear_chat');
-            formData.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            // Безопасное получение CSRF токена
+            const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+            if (csrfTokenElement) {
+                formData.append('csrf_token', csrfTokenElement.getAttribute('content'));
+            }
 
             fetch('api/ai-chat.php', {
                     method: 'POST',
@@ -5827,7 +5841,11 @@
         function removePDF() {
             const formData = new FormData();
             formData.append('action', 'remove_pdf');
-            formData.append('csrf_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            // Безопасное получение CSRF токена
+            const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+            if (csrfTokenElement) {
+                formData.append('csrf_token', csrfTokenElement.getAttribute('content'));
+            }
 
             fetch('api/ai-chat.php', {
                     method: 'POST',
