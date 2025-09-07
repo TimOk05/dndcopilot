@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,16 +11,17 @@
     <title>DnD Copilot - Мобильная версия</title>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
-    
+
     <style>
         /* Базовые стили */
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
-        :root {
+         :root {
             --bg-primary: #f8f4e8;
             --bg-secondary: #fff9f0;
             --bg-tertiary: #f0e6d0;
@@ -38,8 +40,8 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
-        
         /* Заголовок */
+        
         .header {
             background: var(--bg-secondary);
             padding: 16px;
@@ -61,14 +63,14 @@
             font-size: 0.9rem;
             color: var(--text-secondary);
         }
-        
         /* Основной контент */
+        
         .main-content {
             padding: 16px;
             max-width: 100%;
         }
-        
         /* Кнопки быстрых действий */
+        
         .quick-actions {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -101,8 +103,8 @@
             display: block;
             margin-bottom: 8px;
         }
-        
         /* Модальные окна */
+        
         .modal {
             display: none;
             position: fixed;
@@ -162,8 +164,8 @@
         .modal-body {
             padding: 20px;
         }
-        
         /* Формы */
+        
         .form-group {
             margin-bottom: 16px;
         }
@@ -193,8 +195,8 @@
             outline: none;
             border-color: var(--accent-primary);
         }
-        
         /* Кнопки */
+        
         .btn {
             background: var(--accent-primary);
             color: white;
@@ -219,8 +221,8 @@
             cursor: not-allowed;
             transform: none;
         }
-        
         /* Результаты */
+        
         .result-container {
             margin-top: 20px;
             padding: 16px;
@@ -242,8 +244,8 @@
             border-radius: 8px;
             border-left: 4px solid #d32f2f;
         }
-        
         /* Заметки */
+        
         .notes-container {
             margin-top: 24px;
         }
@@ -280,8 +282,8 @@
         .btn-danger:hover {
             background: #b71c1c;
         }
-        
         /* Нижняя навигация */
+        
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -314,25 +316,25 @@
             font-size: 1.2rem;
             margin-bottom: 4px;
         }
-        
         /* Адаптивность */
+        
         @media (max-width: 480px) {
             .quick-actions {
                 grid-template-columns: 1fr;
             }
-            
             .modal-content {
                 margin: 10px;
                 max-height: 95vh;
             }
         }
-        
         /* Скрытие контента */
+        
         .hidden {
             display: none !important;
         }
     </style>
 </head>
+
 <body>
     <!-- Заголовок -->
     <header class="header">
@@ -380,12 +382,10 @@
     <!-- Нижняя навигация -->
     <nav class="bottom-nav">
         <a href="#" class="nav-item active" onclick="showSection('main')">
-            <span class="nav-icon">🏠</span>
-            Главная
+            <span class="nav-icon">🏠</span> Главная
         </a>
         <a href="#" class="nav-item" onclick="showSection('notes')">
-            <span class="nav-icon">📝</span>
-            Заметки
+            <span class="nav-icon">📝</span> Заметки
         </a>
     </nav>
 
@@ -406,13 +406,13 @@
         // Управление секциями
         function showSection(section) {
             currentSection = section;
-            
+
             // Обновляем навигацию
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             event.target.closest('.nav-item').classList.add('active');
-            
+
             // Показываем/скрываем контент
             if (section === 'notes') {
                 document.querySelector('.quick-actions').style.display = 'none';
@@ -438,9 +438,9 @@
                     </div>
                 </div>
             `;
-            
+
             document.getElementById('modal-container').appendChild(modal);
-            
+
             // Закрытие по клику вне модального окна
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
@@ -506,7 +506,7 @@
                     <div class="generator-header">
                         <h2>🎲 Броски костей</h2>
                         <p class="generator-subtitle">Бросьте кости для ваших приключений</p>
-                    </div>
+        </div>
                     
                     <form id="diceForm" class="dice-form">
                         <div class="form-group">
@@ -531,23 +531,23 @@
                         <div class="form-group" id="custom-dice-group" style="display: none;">
                             <label for="custom-dice">Пользовательские кости (например: 2d8+3)</label>
                             <input type="text" id="custom-dice" name="custom_dice" placeholder="2d8+3">
-                        </div>
+                </div>
                         
                         <div class="form-group">
                             <label for="dice-label">Комментарий (опционально)</label>
                             <input type="text" id="dice-label" name="label" placeholder="Например: Атака мечом">
-                        </div>
-                        
+            </div>
+
                         <button type="submit" class="btn">
                             <span class="btn-icon">🎲</span>
                             <span class="btn-text">Бросить кости</span>
-                        </button>
+                    </button>
                     </form>
                     
                     <div id="diceResult" class="result-container hidden"></div>
                 </div>
             `);
-            
+
             // Показываем/скрываем поле пользовательских костей
             document.getElementById('dice-type').addEventListener('change', function() {
                 const customGroup = document.getElementById('custom-dice-group');
@@ -571,145 +571,161 @@
                         <div class="form-group">
                             <label for="character-race">Раса персонажа</label>
                             <select id="character-race" name="race" required>
-                                <option value="">Выберите расу</option>
-                                <option value="human">Человек</option>
-                                <option value="elf">Эльф</option>
-                                <option value="dwarf">Дварф</option>
-                                <option value="halfling">Полурослик</option>
-                                <option value="orc">Орк</option>
-                                <option value="tiefling">Тифлинг</option>
-                                <option value="dragonborn">Драконорожденный</option>
-                                <option value="gnome">Гном</option>
-                                <option value="half-elf">Полуэльф</option>
-                                <option value="half-orc">Полуорк</option>
-                                <option value="tabaxi">Табакси</option>
-                                <option value="aarakocra">Ааракокра</option>
-                                <option value="goblin">Гоблин</option>
-                                <option value="kenku">Кенку</option>
-                                <option value="lizardfolk">Ящеролюд</option>
-                                <option value="triton">Тритон</option>
-                                <option value="yuan-ti">Юань-ти</option>
-                                <option value="goliath">Голиаф</option>
-                                <option value="firbolg">Фирболг</option>
-                                <option value="bugbear">Багбир</option>
-                                <option value="hobgoblin">Хобгоблин</option>
-                                <option value="kobold">Кобольд</option>
-                            </select>
-                        </div>
-                        
+                        <option value="">Выберите расу</option>
+                        <option value="human">Человек</option>
+                        <option value="elf">Эльф</option>
+                        <option value="dwarf">Дварф</option>
+                        <option value="halfling">Полурослик</option>
+                        <option value="orc">Орк</option>
+                        <option value="tiefling">Тифлинг</option>
+                        <option value="dragonborn">Драконорожденный</option>
+                        <option value="gnome">Гном</option>
+                        <option value="half-elf">Полуэльф</option>
+                        <option value="half-orc">Полуорк</option>
+                        <option value="tabaxi">Табакси</option>
+                        <option value="aarakocra">Ааракокра</option>
+                        <option value="goblin">Гоблин</option>
+                        <option value="kenku">Кенку</option>
+                        <option value="lizardfolk">Ящеролюд</option>
+                        <option value="triton">Тритон</option>
+                        <option value="yuan-ti">Юань-ти</option>
+                        <option value="goliath">Голиаф</option>
+                        <option value="firbolg">Фирболг</option>
+                        <option value="bugbear">Багбир</option>
+                        <option value="hobgoblin">Хобгоблин</option>
+                        <option value="kobold">Кобольд</option>
+                    </select>
+                </div>
+
                         <div class="form-group">
                             <label for="character-class">Класс персонажа</label>
                             <select id="character-class" name="class" required>
-                                <option value="">Выберите класс</option>
-                                <option value="fighter">Воин</option>
-                                <option value="wizard">Волшебник</option>
-                                <option value="rogue">Плут</option>
-                                <option value="cleric">Жрец</option>
-                                <option value="ranger">Следопыт</option>
-                                <option value="barbarian">Варвар</option>
-                                <option value="bard">Бард</option>
-                                <option value="druid">Друид</option>
-                                <option value="monk">Монах</option>
-                                <option value="paladin">Паладин</option>
-                                <option value="sorcerer">Сорсерер</option>
-                                <option value="warlock">Колдун</option>
-                                <option value="artificer">Изобретатель</option>
-                            </select>
-                        </div>
-                        
+                        <option value="">Выберите класс</option>
+                        <option value="fighter">Воин</option>
+                        <option value="wizard">Волшебник</option>
+                        <option value="rogue">Плут</option>
+                        <option value="cleric">Жрец</option>
+                        <option value="ranger">Следопыт</option>
+                        <option value="barbarian">Варвар</option>
+                        <option value="bard">Бард</option>
+                        <option value="druid">Друид</option>
+                        <option value="monk">Монах</option>
+                        <option value="paladin">Паладин</option>
+                                <option value="sorcerer">Чародей</option>
+                        <option value="warlock">Колдун</option>
+                        <option value="artificer">Изобретатель</option>
+                    </select>
+                </div>
+
                         <div class="form-group">
                             <label for="character-level">Уровень персонажа</label>
                             <select id="character-level" name="level" required>
-                                <option value="1">1 уровень</option>
-                                <option value="2">2 уровень</option>
-                                <option value="3">3 уровень</option>
-                                <option value="4">4 уровень</option>
-                                <option value="5">5 уровень</option>
-                                <option value="6">6 уровень</option>
-                                <option value="7">7 уровень</option>
-                                <option value="8">8 уровень</option>
-                                <option value="9">9 уровень</option>
-                                <option value="10">10 уровень</option>
-                                <option value="11">11 уровень</option>
-                                <option value="12">12 уровень</option>
-                                <option value="13">13 уровень</option>
-                                <option value="14">14 уровень</option>
-                                <option value="15">15 уровень</option>
-                                <option value="16">16 уровень</option>
-                                <option value="17">17 уровень</option>
-                                <option value="18">18 уровень</option>
-                                <option value="19">19 уровень</option>
-                                <option value="20">20 уровень</option>
-                            </select>
-                        </div>
-                        
+                        <option value="1">1 уровень</option>
+                        <option value="2">2 уровень</option>
+                        <option value="3">3 уровень</option>
+                        <option value="4">4 уровень</option>
+                        <option value="5">5 уровень</option>
+                        <option value="6">6 уровень</option>
+                        <option value="7">7 уровень</option>
+                        <option value="8">8 уровень</option>
+                        <option value="9">9 уровень</option>
+                        <option value="10">10 уровень</option>
+                        <option value="11">11 уровень</option>
+                        <option value="12">12 уровень</option>
+                        <option value="13">13 уровень</option>
+                        <option value="14">14 уровень</option>
+                        <option value="15">15 уровень</option>
+                        <option value="16">16 уровень</option>
+                        <option value="17">17 уровень</option>
+                        <option value="18">18 уровень</option>
+                        <option value="19">19 уровень</option>
+                        <option value="20">20 уровень</option>
+                    </select>
+                </div>
+
                         <button type="submit" class="btn">
                             <span class="btn-icon">⚔️</span>
                             <span class="btn-text">Создать персонажа</span>
-                        </button>
+                </button>
                     </form>
                     
                     <div id="characterResult" class="result-container hidden"></div>
-                </div>
+            </div>
             `);
-            
+
             // Обработчик формы
             document.getElementById('characterForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                
+
                 const race = document.getElementById('character-race').value;
                 const characterClass = document.getElementById('character-class').value;
                 const level = document.getElementById('character-level').value;
-                
+
                 if (!race || !characterClass || !level) {
                     alert('Пожалуйста, заполните все поля');
                     return;
                 }
-                
+
                 const submitBtn = this.querySelector('button[type="submit"]');
                 const resultDiv = document.getElementById('characterResult');
-                
+
                 submitBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Создание...</span>';
                 submitBtn.disabled = true;
                 resultDiv.innerHTML = '<div class="loading">Создание персонажа...</div>';
                 resultDiv.classList.remove('hidden');
-                
+
                 // Вызов API
                 const formData = new FormData();
                 formData.append('race', race);
                 formData.append('class', characterClass);
                 formData.append('level', level);
-                
+
                 fetch('api/generate-characters.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        displayCharacter(data.character);
-                    } else {
-                        resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || data.message || 'Неизвестная ошибка') + '</div>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка генерации персонажа:', error);
-                    resultDiv.innerHTML = '<div class="error">Ошибка соединения. Попробуйте позже.</div>';
-                })
-                .finally(() => {
-                    submitBtn.innerHTML = '<span class="btn-icon">⚔️</span><span class="btn-text">Создать персонажа</span>';
-                    submitBtn.disabled = false;
-                });
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            displayCharacter(data.character);
+                        } else {
+                            resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || data.message || 'Неизвестная ошибка') + '</div>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка генерации персонажа:', error);
+                        resultDiv.innerHTML = '<div class="error">Ошибка соединения. Попробуйте позже.</div>';
+                    })
+                    .finally(() => {
+                        submitBtn.innerHTML = '<span class="btn-icon">⚔️</span><span class="btn-text">Создать персонажа</span>';
+                        submitBtn.disabled = false;
+                    });
             });
         }
-        
+
         function displayCharacter(character) {
             const resultDiv = document.getElementById('characterResult');
-            
+
             const abilities = character.abilities || {};
+            const abilityTranslations = {
+                'str': 'СИЛ',
+                'strength': 'СИЛ',
+                'dex': 'ЛОВ',
+                'dexterity': 'ЛОВ',
+                'con': 'ТЕЛ',
+                'constitution': 'ТЕЛ',
+                'int': 'ИНТ',
+                'intelligence': 'ИНТ',
+                'wis': 'МДР',
+                'wisdom': 'МДР',
+                'cha': 'ХАР',
+                'charisma': 'ХАР'
+            };
+
             const abilityMods = Object.keys(abilities).map(ability => {
                 const mod = Math.floor((abilities[ability] - 10) / 2);
-                return `${ability.toUpperCase()}: ${abilities[ability]} (${mod >= 0 ? '+' : ''}${mod})`;
+                const translatedAbility = abilityTranslations[ability.toLowerCase()] || ability.toUpperCase();
+                return `${translatedAbility}: ${abilities[ability]} (${mod >= 0 ? '+' : ''}${mod})`;
             }).join(', ');
 
             // Правильная обработка features
@@ -766,8 +782,8 @@
                     <div class="generator-header">
                         <h2>👹 Генератор противников</h2>
                         <p class="generator-subtitle">Создайте подходящих противников для вашей группы</p>
-                    </div>
-                    
+                </div>
+
                     <form id="enemyForm" class="enemy-form">
                         <div class="form-group">
                             <label for="enemy-threat-level">Уровень угрозы</label>
@@ -779,12 +795,12 @@
                                 <option value="hard">🟠 Сложный (CR 5-12)</option>
                                 <option value="deadly">🔴 Смертельный (CR 10-20)</option>
                             </select>
-                        </div>
-                        
+            </div>
+
                         <div class="form-group">
                             <label for="enemy-count">Количество противников</label>
                             <input type="number" id="enemy-count" name="count" min="1" max="10" value="1" required>
-                        </div>
+            </div>
                         
                         <div class="form-group">
                             <label for="enemy-type">Тип противников</label>
@@ -804,8 +820,8 @@
                                 <option value="ooze">Слизи</option>
                                 <option value="plant">Растения</option>
                             </select>
-                        </div>
-                        
+                </div>
+
                         <div class="form-group">
                             <label for="enemy-environment">Среда обитания</label>
                             <select id="enemy-environment" name="environment">
@@ -822,23 +838,23 @@
                                 <option value="underwater">Под водой</option>
                                 <option value="urban">Город</option>
                             </select>
-                        </div>
-                        
+            </div>
+
                         <div class="form-group">
                             <label>
                                 <input type="checkbox" id="enemy-use-ai" name="use_ai" checked>
                                 Использовать AI для описания и тактики
                             </label>
-                        </div>
+            </div>
                         
                         <button type="submit" class="btn">
                             <span class="btn-icon">👹</span>
                             <span class="btn-text">Создать противников</span>
-                        </button>
+                </button>
                     </form>
-                    
+
                     <div id="enemyResult" class="result-container hidden"></div>
-                </div>
+            </div>
             `);
             
             // Обработчик формы
@@ -870,7 +886,7 @@
                 resultDiv.classList.remove('hidden');
                 
                 // Вызов API
-                const formData = new FormData();
+            const formData = new FormData();
                 formData.append('threat_level', threatLevel);
                 formData.append('count', count);
                 formData.append('enemy_type', enemyType);
@@ -917,9 +933,19 @@
         
         function generateEnemyHTML(enemy, number = '') {
             const abilities = enemy.abilities || {};
+            const abilityTranslations = {
+                'str': 'СИЛ', 'strength': 'СИЛ',
+                'dex': 'ЛОВ', 'dexterity': 'ЛОВ', 
+                'con': 'ТЕЛ', 'constitution': 'ТЕЛ',
+                'int': 'ИНТ', 'intelligence': 'ИНТ',
+                'wis': 'МДР', 'wisdom': 'МДР',
+                'cha': 'ХАР', 'charisma': 'ХАР'
+            };
+            
             const abilityMods = Object.keys(abilities).map(ability => {
                 const mod = Math.floor((abilities[ability] - 10) / 2);
-                return `${ability.toUpperCase()}: ${abilities[ability]} (${mod >= 0 ? '+' : ''}${mod})`;
+                const translatedAbility = abilityTranslations[ability.toLowerCase()] || ability.toUpperCase();
+                return `${translatedAbility}: ${abilities[ability]} (${mod >= 0 ? '+' : ''}${mod})`;
             }).join(', ');
 
             return `
@@ -1005,15 +1031,15 @@
             document.getElementById('potionForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                const count = parseInt(document.getElementById('potion-count').value) || 1;
-                const rarity = document.getElementById('potion-rarity').value;
-                const type = document.getElementById('potion-type').value;
+            const count = parseInt(document.getElementById('potion-count').value) || 1;
+            const rarity = document.getElementById('potion-rarity').value;
+            const type = document.getElementById('potion-type').value;
 
-                if (count < 1 || count > 10) {
+            if (count < 1 || count > 10) {
                     alert('Количество зелий должно быть от 1 до 10.');
-                    return;
-                }
-                
+                return;
+            }
+
                 const submitBtn = this.querySelector('button[type="submit"]');
                 const resultDiv = document.getElementById('potionResult');
                 
@@ -1023,24 +1049,24 @@
                 resultDiv.classList.remove('hidden');
                 
                 // Вызов API
-                const params = new URLSearchParams();
-                params.append('action', 'random');
-                params.append('count', count);
+            const params = new URLSearchParams();
+            params.append('action', 'random');
+            params.append('count', count);
                 params.append('language', 'ru');
-                if (rarity) params.append('rarity', rarity);
-                if (type) params.append('type', type);
+            if (rarity) params.append('rarity', rarity);
+            if (type) params.append('type', type);
 
-                fetch(`api/generate-potions.php?${params.toString()}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        displayPotions(data.data);
-                    } else {
+            fetch(`api/generate-potions.php?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayPotions(data.data);
+                } else {
                         resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || data.message || 'Неизвестная ошибка') + '</div>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка генерации зелий:', error);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка генерации зелий:', error);
                     resultDiv.innerHTML = '<div class="error">Ошибка соединения. Попробуйте позже.</div>';
                 })
                 .finally(() => {
@@ -1138,7 +1164,7 @@
                                 <option value="on">Включено</option>
                                 <option value="off">Отключено</option>
                             </select>
-                        </div>
+                </div>
                         
                         <button type="submit" class="btn">
                             <span class="btn-icon">🍺</span>
@@ -1197,9 +1223,10 @@
                 } else if (e.target.id === 'aiForm') {
                     e.preventDefault();
                     
-                    const question = document.getElementById('ai-question').value;
+                    const questionInput = document.getElementById('ai-question');
+                    const question = questionInput.value.trim();
                     
-                    if (!question.trim()) {
+                    if (!question) {
                         alert('Пожалуйста, введите вопрос.');
                         return;
                     }
@@ -1211,6 +1238,9 @@
                     submitBtn.disabled = true;
                     resultDiv.innerHTML = '<div class="loading">AI думает...</div>';
                     resultDiv.classList.remove('hidden');
+                    
+                    // Очищаем поле ввода
+                    questionInput.value = '';
                     
                     // Вызов API
                     const formData = new FormData();
@@ -1253,9 +1283,9 @@
                         }
                     } else if (!diceType) {
                         alert('Пожалуйста, выберите тип костей.');
-                        return;
-                    }
-                    
+                return;
+            }
+            
                     const submitBtn = e.target.querySelector('button[type="submit"]');
                     const resultDiv = document.getElementById('diceResult');
                     
@@ -1297,7 +1327,7 @@
                 <div class="dice-result" style="background: var(--bg-secondary); border-radius: 8px; padding: 16px; margin: 15px 0;">
                     <h4 style="color: var(--accent-primary); margin-bottom: 10px;">🎲 Результат броска</h4>
                     <div style="white-space: pre-wrap; line-height: 1.6;">${result}</div>
-                </div>
+                        </div>
                 <button class="btn" onclick="addNoteToDice('${result.substring(0, 50)}...')">
                     💾 Сохранить в заметки
                 </button>
@@ -1320,12 +1350,23 @@
         function displayAIResponse(response) {
             const resultDiv = document.getElementById('aiResult');
             
+            // Очищаем ответ от лишних символов
+            let cleanResponse = response;
+            if (typeof cleanResponse === 'string') {
+                // Убираем лишние пробелы и переносы строк
+                cleanResponse = cleanResponse.replace(/\s+/g, ' ').trim();
+                // Убираем возможные HTML теги
+                cleanResponse = cleanResponse.replace(/<[^>]*>/g, '');
+                // Убираем лишние символы в начале и конце
+                cleanResponse = cleanResponse.replace(/^[^\w\u0400-\u04FF]+|[^\w\u0400-\u04FF]+$/g, '');
+            }
+            
             const content = `
                 <div class="ai-response" style="background: var(--bg-secondary); border-radius: 8px; padding: 16px; margin: 15px 0;">
                     <h4 style="color: var(--accent-primary); margin-bottom: 10px;">🤖 Ответ AI</h4>
-                    <div style="white-space: pre-wrap; line-height: 1.6;">${response}</div>
+                    <div style="white-space: pre-wrap; line-height: 1.6;">${cleanResponse}</div>
                 </div>
-                <button class="btn" onclick="addNoteToAI('${response.substring(0, 50)}...')">
+                <button class="btn" onclick="addNoteToAI('${cleanResponse.substring(0, 50)}...')">
                     💾 Сохранить в заметки
                 </button>
             `;
@@ -1426,4 +1467,5 @@
         }
     </script>
 </body>
+
 </html>
