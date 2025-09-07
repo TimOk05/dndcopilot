@@ -362,7 +362,34 @@ class EnemyGenerator {
      * Проверка типа
      */
     private function checkType($monster_type, $requested_type) {
-        return strpos(strtolower($monster_type), strtolower($requested_type)) !== false;
+        // Переводим русские типы в английские для сравнения
+        $type_translations = [
+            'гуманоид' => 'humanoid',
+            'зверь' => 'beast',
+            'дракон' => 'dragon',
+            'великан' => 'giant',
+            'нежить' => 'undead',
+            'исчадие' => 'fiend',
+            'небожитель' => 'celestial',
+            'элементаль' => 'elemental',
+            'фей' => 'fey',
+            'чудовище' => 'monstrosity',
+            'слизь' => 'ooze',
+            'растение' => 'plant',
+            'конструкт' => 'construct',
+            'аберрация' => 'aberration',
+            'рой' => 'swarm'
+        ];
+        
+        $monster_type_lower = strtolower($monster_type);
+        $requested_type_lower = strtolower($requested_type);
+        
+        // Если запрашиваемый тип на русском, переводим его
+        if (isset($type_translations[$requested_type_lower])) {
+            $requested_type_lower = $type_translations[$requested_type_lower];
+        }
+        
+        return strpos($monster_type_lower, $requested_type_lower) !== false;
     }
     
     /**
@@ -375,6 +402,43 @@ class EnemyGenerator {
         if (isset($this->environment_data[$monster_index])) {
             $monster_env = $this->environment_data[$monster_index];
             $requested_env = strtolower($requested_environment);
+            
+            // Переводим русские названия сред в английские
+            $env_translations = [
+                'лес' => 'forest',
+                'горы' => 'mountain',
+                'пустыня' => 'desert',
+                'болото' => 'swamp',
+                'подземелье' => 'underdark',
+                'вода' => 'water',
+                'город' => 'urban',
+                'арктика' => 'arctic',
+                'побережье' => 'coastal',
+                'равнины' => 'grassland',
+                'холмы' => 'hill',
+                'джунгли' => 'jungle',
+                'пещера' => 'cave',
+                'подземелье' => 'underground',
+                'водная' => 'aquatic',
+                'океан' => 'ocean',
+                'море' => 'sea',
+                'пляж' => 'beach',
+                'берег' => 'shore',
+                'тундра' => 'tundra',
+                'холодная' => 'cold',
+                'засушливая' => 'arid',
+                'болото' => 'marsh',
+                'водно-болотные угодья' => 'wetland',
+                'нагорье' => 'highland',
+                'лесная местность' => 'woodland',
+                'небесная' => 'celestial',
+                'стихийная' => 'elemental'
+            ];
+            
+            // Если запрашиваемая среда на русском, переводим её
+            if (isset($env_translations[$requested_env])) {
+                $requested_env = $env_translations[$requested_env];
+            }
             
             // Прямое сравнение
             if ($monster_env === $requested_env) {
