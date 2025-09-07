@@ -34,7 +34,7 @@ define('CACHE_DURATION', 3600); // 1 час
 
 // Настройки логирования
 define('LOG_ENABLED', true);
-define('LOG_LEVEL', 'INFO'); // DEBUG, INFO, WARNING, ERROR
+define('LOG_LEVEL', 'DEBUG'); // DEBUG, INFO, WARNING, ERROR
 
 // Функция для логирования
 function logMessage($level, $message, $context = []) {

@@ -234,12 +234,21 @@ class EnemyGenerator {
                     continue;
                 }
                 
-            // Проверяем CR
+                // Логируем детали монстра для диагностики
+                $monster_name = $monster_details['name'] ?? 'Unknown';
+                $monster_cr = $monster_details['challenge_rating'] ?? 'Unknown';
+                $monster_env = $this->getMonsterEnvironment($monster_details);
+                logMessage('DEBUG', "EnemyGenerator: Проверяем монстра '$monster_name' (CR: $monster_cr, Среда: $monster_env)");
+                
+                // Проверяем CR
                 if (!isset($monster_details['challenge_rating'])) {
+                    logMessage('DEBUG', "EnemyGenerator: Монстр '$monster_name' пропущен - нет CR");
                     continue;
                 }
                 
                 if (!$this->checkCRRange($monster_details['challenge_rating'], $cr_range)) {
+                    $parsed_cr = $this->parseCR($monster_details['challenge_rating']);
+                    logMessage('DEBUG', "EnemyGenerator: Монстр '$monster_name' пропущен - CR $parsed_cr не в диапазоне {$cr_range['min']}-{$cr_range['max']}");
                     continue;
                 }
                 
@@ -255,8 +264,10 @@ class EnemyGenerator {
                 // Проверяем среду - при выборе конкретной среды показываем только подходящих существ
                 if ($environment) {
                     if (!$this->checkEnvironment($monster_details, $environment)) {
+                        logMessage('DEBUG', "EnemyGenerator: Монстр '$monster_name' пропущен - среда '$monster_env' не подходит для '$environment'");
                         continue;
                     }
+                    logMessage('DEBUG', "EnemyGenerator: Монстр '$monster_name' прошёл проверку среды");
                 }
                 
                 // Проверяем совместимость
@@ -265,6 +276,7 @@ class EnemyGenerator {
             }
                 
                 $filtered[] = $monster_details;
+                logMessage('DEBUG', "EnemyGenerator: Монстр '$monster_name' добавлен в результат");
                 
                 // Ограничиваем количество проверенных монстров
                 if (count($filtered) >= 15) {
