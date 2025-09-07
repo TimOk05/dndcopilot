@@ -589,6 +589,9 @@
                     <button class="btn" onclick="showSection('potions')">
                         🧪 Генератор зелий
                     </button>
+                    <button class="btn" onclick="showSection('taverns')">
+                        🍺 Генератор таверн
+                    </button>
                     <button class="btn" onclick="showSection('combat')">
                         🗡️ Система боя
                     </button>
@@ -857,6 +860,49 @@
             </div>
         </section>
 
+        <!-- Генератор таверн -->
+        <section id="taverns" class="content-section">
+            <div class="card">
+                <h2 class="card-title">🍺 Генератор таверн</h2>
+
+                <div class="input-group">
+                    <label class="input-label">Биом/Местность</label>
+                    <select class="input-field" id="tavern-biome">
+                        <option value="">Случайная</option>
+                        <option value="city">Город</option>
+                        <option value="forest">Лес</option>
+                        <option value="coastal">Побережье</option>
+                        <option value="mountain">Горы</option>
+                        <option value="desert">Пустыня</option>
+                        <option value="tundra">Тундра</option>
+                        <option value="underground">Подземелье</option>
+                        <option value="swamp">Болото</option>
+                        <option value="roadside">У дороги</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Использовать AI</label>
+                    <select class="input-field" id="tavern-use-ai">
+                        <option value="on">Включено</option>
+                        <option value="off">Отключено</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="generateTavern()">
+                    🍺 Создать таверну
+                </button>
+            </div>
+
+            <div id="tavern-result" class="card hidden">
+                <h3 class="card-title">Результат генерации</h3>
+                <div id="tavern-content"></div>
+                <button class="btn btn-secondary" onclick="saveToNotes('tavern')">
+                    💾 Сохранить в заметки
+                </button>
+            </div>
+        </section>
+
         <!-- Система боя -->
         <section id="combat" class="content-section">
             <div class="card">
@@ -950,6 +996,10 @@
             <div class="nav-icon">🧪</div>
             <div>Зелья</div>
         </a>
+        <a href="#" class="nav-item" onclick="showSection('taverns')">
+            <div class="nav-icon">🍺</div>
+            <div>Таверны</div>
+        </a>
         <a href="#" class="nav-item" onclick="showSection('combat')">
             <div class="nav-icon">🗡️</div>
             <div>Бой</div>
@@ -1032,9 +1082,10 @@
                 'characters': 1,
                 'enemies': 2,
                 'potions': 3,
-                'combat': 4,
-                'ai-chat': 5,
-                'notes': 6
+                'taverns': 4,
+                'combat': 5,
+                'ai-chat': 6,
+                'notes': 7
             };
 
             if (sectionMap[sectionId] !== undefined) {
@@ -1067,7 +1118,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        displayCharacter(data.data);
+                        displayCharacter(data.character);
                     } else {
                         showModal('Ошибка: ' + data.message);
                     }
@@ -1153,7 +1204,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    displayEnemy(data.data);
+                    displayEnemy(data.enemies);
                     hideModal();
                 } else {
                     hideModal();
@@ -1248,6 +1299,205 @@
             content += '</div>';
             document.getElementById('potion-content').innerHTML = content;
             document.getElementById('potion-result').classList.remove('hidden');
+        }
+        
+        // Генерация таверн
+        function generateTavern() {
+            const biome = document.getElementById('tavern-biome').value;
+            const useAi = document.getElementById('tavern-use-ai').value;
+
+            showModal('Создание таверны...');
+
+            // Формируем параметры для API
+            const formData = new FormData();
+            if (biome) formData.append('biome', biome);
+            formData.append('use_ai', useAi);
+
+            fetch('api/generate-taverns.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayTavern(data.tavern);
+                    hideModal();
+                } else {
+                    hideModal();
+                    showModal('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+                }
+            })
+            .catch(error => {
+                hideModal();
+                console.error('Ошибка генерации таверны:', error);
+                showModal('Ошибка соединения. Попробуйте позже.');
+            });
+        }
+        
+        function displayTavern(tavern) {
+            const name = tavern.name || 'Неизвестная таверна';
+            const location = tavern.location?.text_ru || 'Неизвестное место';
+            const owner = tavern.owner?.name_ru || 'Неизвестный владелец';
+            const ownerRace = tavern.owner?.race || 'человек';
+            const biome = tavern.biome || 'неизвестно';
+            
+            let description = '';
+            if (tavern.description) {
+                description = `<div class="tavern-description" style="margin: 15px 0; padding: 15px; background: var(--bg-tertiary); border-radius: 8px;"><p>${tavern.description}</p></div>`;
+            } else if (tavern.description_error) {
+                description = `<div class="tavern-description" style="margin: 15px 0; padding: 15px; background: var(--bg-tertiary); border-radius: 8px;"><p style="color: var(--accent-danger);">Ошибка AI: ${tavern.description_error.message}</p></div>`;
+            }
+            
+            let menuHTML = '';
+            if (tavern.menu) {
+                let drinksHTML = '';
+                if (tavern.menu.drinks && tavern.menu.drinks.length > 0) {
+                    drinksHTML = `
+                        <div class="menu-category" style="margin-bottom: 15px;">
+                            <h5 style="color: var(--accent-primary); margin-bottom: 10px;">🍺 Напитки</h5>
+                            ${tavern.menu.drinks.map(drink => `
+                                <div class="menu-item" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 6px; border-left: 3px solid var(--accent-primary);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                        <span style="font-weight: 600; color: var(--accent-primary);">${drink.name_ru}</span>
+                                        <span style="color: var(--text-tertiary); font-size: 0.9em;">${drink.formatted_price || 'Цена не указана'}</span>
+                                    </div>
+                                    ${drink.tags ? `<span style="font-size: 0.8em; color: var(--text-tertiary);">${drink.tags.join(', ')}</span>` : ''}
+                                    ${drink.effects ? `<div style="font-size: 0.85em; color: var(--text-secondary); margin-top: 4px; font-style: italic;"><strong>Эффект:</strong> ${drink.effects.text_ru}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                
+                let mealsHTML = '';
+                if (tavern.menu.meals && tavern.menu.meals.length > 0) {
+                    mealsHTML = `
+                        <div class="menu-category" style="margin-bottom: 15px;">
+                            <h5 style="color: var(--accent-primary); margin-bottom: 10px;">🍖 Блюда</h5>
+                            ${tavern.menu.meals.map(meal => `
+                                <div class="menu-item" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 6px; border-left: 3px solid var(--accent-primary);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                        <span style="font-weight: 600; color: var(--accent-primary);">${meal.name_ru}</span>
+                                        <span style="color: var(--text-tertiary); font-size: 0.9em;">${meal.formatted_price || 'Цена не указана'}</span>
+                                    </div>
+                                    ${meal.tags ? `<span style="font-size: 0.8em; color: var(--text-tertiary);">${meal.tags.join(', ')}</span>` : ''}
+                                    ${meal.effects ? `<div style="font-size: 0.85em; color: var(--text-secondary); margin-top: 4px; font-style: italic;"><strong>Эффект:</strong> ${meal.effects.text_ru}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                
+                let sidesHTML = '';
+                if (tavern.menu.sides && tavern.menu.sides.length > 0) {
+                    sidesHTML = `
+                        <div class="menu-category" style="margin-bottom: 15px;">
+                            <h5 style="color: var(--accent-primary); margin-bottom: 10px;">🥗 Закуски</h5>
+                            ${tavern.menu.sides.map(side => `
+                                <div class="menu-item" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 6px; border-left: 3px solid var(--accent-primary);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                        <span style="font-weight: 600; color: var(--accent-primary);">${side.name_ru}</span>
+                                        <span style="color: var(--text-tertiary); font-size: 0.9em;">${side.formatted_price || 'Цена не указана'}</span>
+                                    </div>
+                                    ${side.tags ? `<span style="font-size: 0.8em; color: var(--text-tertiary);">${side.tags.join(', ')}</span>` : ''}
+                                    ${side.effects ? `<div style="font-size: 0.85em; color: var(--text-secondary); margin-top: 4px; font-style: italic;"><strong>Эффект:</strong> ${side.effects.text_ru}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                
+                menuHTML = `
+                    <div class="tavern-section" style="margin: 15px 0;">
+                        <h4 style="color: var(--accent-primary); margin-bottom: 15px;">🍽️ Меню</h4>
+                        ${drinksHTML}
+                        ${mealsHTML}
+                        ${sidesHTML}
+                    </div>
+                `;
+            }
+            
+            let staffHTML = '';
+            if (tavern.staff && tavern.staff.length > 0) {
+                staffHTML = `
+                    <div class="tavern-section" style="margin: 15px 0;">
+                        <h4 style="color: var(--accent-primary); margin-bottom: 10px;">👥 Персонал</h4>
+                        ${tavern.staff.map(staff => `
+                            <div style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 6px;">
+                                <strong>${staff.role}</strong> (${staff.race}) - ${staff.traits.join(', ')}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            let eventsHTML = '';
+            if (tavern.events && tavern.events.length > 0) {
+                eventsHTML = `
+                    <div class="tavern-section" style="margin: 15px 0;">
+                        <h4 style="color: var(--accent-primary); margin-bottom: 10px;">🎭 События</h4>
+                        ${tavern.events.map(event => `
+                            <div style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 6px;">
+                                ${event.type}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            let gamesHTML = '';
+            if (tavern.games) {
+                const gamesList = [];
+                Object.values(tavern.games).forEach(game => {
+                    if (game) {
+                        let gameInfo = `
+                            <div style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 6px;">
+                                <div style="font-weight: 600; color: var(--accent-primary);">${game.name_ru} (${game.style})</div>
+                                ${game.brief ? `<div style="font-size: 0.9em; color: var(--text-secondary); margin-top: 5px;">${game.brief}</div>` : ''}
+                            </div>
+                        `;
+                        gamesList.push(gameInfo);
+                    }
+                });
+                if (gamesList.length > 0) {
+                    gamesHTML = `
+                        <div class="tavern-section" style="margin: 15px 0;">
+                            <h4 style="color: var(--accent-primary); margin-bottom: 10px;">🎲 Игры</h4>
+                            ${gamesList.join('')}
+                        </div>
+                    `;
+                }
+            }
+            
+            const content = `
+                <div class="tavern-card" style="background: var(--bg-secondary); border-radius: 12px; padding: 20px; margin: 15px 0;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <div style="font-size: 32px;">🍺</div>
+                        <h3 style="margin: 0; color: var(--accent-primary);">${name}</h3>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <p style="margin: 5px 0;"><strong>📍 Расположение:</strong> ${location}</p>
+                        <p style="margin: 5px 0;"><strong>🏞️ Биом:</strong> ${biome}</p>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: var(--accent-primary); margin-bottom: 10px;">👑 Владелец</h4>
+                        <div style="background: var(--bg-tertiary); padding: 10px; border-radius: 6px;">
+                            <p style="margin: 5px 0;"><strong>Имя:</strong> ${owner}</p>
+                            <p style="margin: 5px 0;"><strong>Раса:</strong> ${ownerRace}</p>
+                            ${tavern.owner?.traits ? `<p style="margin: 5px 0;"><strong>Особенности:</strong> ${tavern.owner.traits.join(', ')}</p>` : ''}
+                            ${tavern.owner?.hooks ? `<p style="margin: 5px 0;"><strong>Интересные факты:</strong> ${tavern.owner.hooks.join(', ')}</p>` : ''}
+                        </div>
+                    </div>
+                    ${description}
+                    ${menuHTML}
+                    ${staffHTML}
+                    ${eventsHTML}
+                    ${gamesHTML}
+                </div>
+            `;
+            
+            document.getElementById('tavern-content').innerHTML = content;
+            document.getElementById('tavern-result').classList.remove('hidden');
         }
         
         function displayEnemy(data) {
@@ -1501,6 +1751,9 @@
                     break;
                 case 'potion':
                     content = document.getElementById('potion-content').innerText;
+                    break;
+                case 'tavern':
+                    content = document.getElementById('tavern-content').innerText;
                     break;
             }
             

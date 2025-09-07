@@ -1682,11 +1682,6 @@ function openTavernModal() {
             <form id="tavernForm" class="tavern-form">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="tavern-count">Количество таверн</label>
-                        <input type="number" id="tavern-count" name="count" min="1" max="10" value="1" placeholder="От 1 до 10">
-                    </div>
-                    
-                    <div class="form-group">
                         <label for="tavern-biome">Биом/Местность</label>
                         <select id="tavern-biome" name="biome">
                             <option value="">Случайная</option>
@@ -1701,18 +1696,26 @@ function openTavernModal() {
                             <option value="roadside">У дороги</option>
                         </select>
                     </div>
+                    
+                    <div class="form-group">
+                        <label for="use-ai">Использовать AI</label>
+                        <select id="use-ai" name="use_ai">
+                            <option value="on">Включено</option>
+                            <option value="off">Отключено</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="form-actions">
                     <button type="button" class="btn btn-primary" onclick="generateTavern()">
-                        <span class="btn-text">Сгенерировать таверны</span>
+                        <span class="btn-text">Сгенерировать таверну</span>
                         <span class="btn-loading" style="display: none;">⏳ Генерация...</span>
                     </button>
                 </div>
             </form>
             
             <div id="tavern-results" class="tavern-results" style="display: none;">
-                <h3>Результаты генерации</h3>
+                <h3>Результат генерации</h3>
                 <div id="tavern-content"></div>
             </div>
         </div>
@@ -1730,9 +1733,6 @@ async function generateTavern() {
         const randomBiome = biomes[Math.floor(Math.random() * biomes.length)];
         formData.set('biome', randomBiome);
     }
-    
-    // AI всегда включен
-    formData.set('use_ai', 'on');
     
     const button = document.querySelector('#tavernForm .btn-primary');
     if (!button) {
@@ -1767,176 +1767,175 @@ async function generateTavern() {
             throw new Error(result.error || 'Неизвестная ошибка API');
         }
         
-        if (!result.taverns || result.taverns.length === 0) {
-            throw new Error('Не найдено таверн по указанным критериям');
+        if (!result.tavern) {
+            throw new Error('Не удалось сгенерировать таверну');
         }
         
-        // Отображаем результаты
+        // Отображаем результат
+        const tavern = result.tavern;
         let html = '';
-        result.taverns.forEach(tavern => {
-            const name = tavern.name || 'Неизвестная таверна';
-            const location = tavern.location?.text_ru || 'Неизвестное место';
-            const owner = tavern.owner?.name_ru || 'Неизвестный владелец';
-            const ownerRace = tavern.owner?.race || 'человек';
-            const biome = tavern.biome || 'неизвестно';
-            
-            let description = '';
-            if (tavern.description) {
-                description = `<div class="tavern-description"><p>${tavern.description}</p></div>`;
-            } else if (tavern.description_error) {
-                description = `<div class="tavern-description"><p style="color: #dc3545;">Ошибка AI: ${tavern.description_error.message}</p></div>`;
-            }
-            
-            let menuHTML = '';
-            if (tavern.menu) {
-                let drinksHTML = '';
-                if (tavern.menu.drinks && tavern.menu.drinks.length > 0) {
-                    drinksHTML = `
-                        <div class="menu-category">
-                            <h5>🍺 Напитки</h5>
-                            ${tavern.menu.drinks.map(drink => `
-                                <div class="menu-item">
-                                    <div class="item-header">
-                                        <span class="item-name">${drink.name_ru}</span>
-                                        <span class="item-price">${drink.formatted_price || 'Цена не указана'}</span>
-                                    </div>
-                                    ${drink.tags ? `<span class="item-tags">${drink.tags.join(', ')}</span>` : ''}
-                                    ${drink.effects ? `<div class="item-effects">
-                                        <strong>Эффект:</strong> ${drink.effects.text_ru}
-                                        ${drink.effects.save ? `<br><strong>Спасбросок:</strong> ${drink.effects.save} Сл ${drink.effects.dc || '—'}` : ''}
-                                        ${drink.effects.duration ? `<br><strong>Длительность:</strong> ${drink.effects.duration}` : ''}
-                                    </div>` : ''}
+        const name = tavern.name || 'Неизвестная таверна';
+        const location = tavern.location?.text_ru || 'Неизвестное место';
+        const owner = tavern.owner?.name_ru || 'Неизвестный владелец';
+        const ownerRace = tavern.owner?.race || 'человек';
+        const biome = tavern.biome || 'неизвестно';
+        
+        let description = '';
+        if (tavern.description) {
+            description = `<div class="tavern-description"><p>${tavern.description}</p></div>`;
+        } else if (tavern.description_error) {
+            description = `<div class="tavern-description"><p style="color: #dc3545;">Ошибка AI: ${tavern.description_error.message}</p></div>`;
+        }
+        
+        let menuHTML = '';
+        if (tavern.menu) {
+            let drinksHTML = '';
+            if (tavern.menu.drinks && tavern.menu.drinks.length > 0) {
+                drinksHTML = `
+                    <div class="menu-category">
+                        <h5>🍺 Напитки</h5>
+                        ${tavern.menu.drinks.map(drink => `
+                            <div class="menu-item">
+                                <div class="item-header">
+                                    <span class="item-name">${drink.name_ru}</span>
+                                    <span class="item-price">${drink.formatted_price || 'Цена не указана'}</span>
                                 </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-                
-                let mealsHTML = '';
-                if (tavern.menu.meals && tavern.menu.meals.length > 0) {
-                    mealsHTML = `
-                        <div class="menu-category">
-                            <h5>🍖 Блюда</h5>
-                            ${tavern.menu.meals.map(meal => `
-                                <div class="menu-item">
-                                    <div class="item-header">
-                                        <span class="item-name">${meal.name_ru}</span>
-                                        <span class="item-price">${meal.formatted_price || 'Цена не указана'}</span>
-                                    </div>
-                                    ${meal.tags ? `<span class="item-tags">${meal.tags.join(', ')}</span>` : ''}
-                                    ${meal.effects ? `<div class="item-effects">
-                                        <strong>Эффект:</strong> ${meal.effects.text_ru}
-                                        ${meal.effects.save ? `<br><strong>Спасбросок:</strong> ${meal.effects.save} Сл ${meal.effects.dc || '—'}` : ''}
-                                        ${meal.effects.duration ? `<br><strong>Длительность:</strong> ${meal.effects.duration}` : ''}
-                                    </div>` : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-                
-                let sidesHTML = '';
-                if (tavern.menu.sides && tavern.menu.sides.length > 0) {
-                    sidesHTML = `
-                        <div class="menu-category">
-                            <h5>🥗 Закуски</h5>
-                            ${tavern.menu.sides.map(side => `
-                                <div class="menu-item">
-                                    <div class="item-header">
-                                        <span class="item-name">${side.name_ru}</span>
-                                        <span class="item-price">${side.formatted_price || 'Цена не указана'}</span>
-                                    </div>
-                                    ${side.tags ? `<span class="item-tags">${side.tags.join(', ')}</span>` : ''}
-                                    ${side.effects ? `<div class="item-effects">
-                                        <strong>Эффект:</strong> ${side.effects.text_ru}
-                                        ${side.effects.save ? `<br><strong>Спасбросок:</strong> ${side.effects.save} Сл ${side.effects.dc || '—'}` : ''}
-                                        ${side.effects.duration ? `<br><strong>Длительность:</strong> ${side.effects.duration}` : ''}
-                                    </div>` : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-                
-                menuHTML = `
-                    <div class="tavern-section">
-                        <h4>🍽️ Меню</h4>
-                        ${drinksHTML}
-                        ${mealsHTML}
-                        ${sidesHTML}
+                                ${drink.tags ? `<span class="item-tags">${drink.tags.join(', ')}</span>` : ''}
+                                ${drink.effects ? `<div class="item-effects">
+                                    <strong>Эффект:</strong> ${drink.effects.text_ru}
+                                    ${drink.effects.save ? `<br><strong>Спасбросок:</strong> ${drink.effects.save} Сл ${drink.effects.dc || '—'}` : ''}
+                                    ${drink.effects.duration ? `<br><strong>Длительность:</strong> ${drink.effects.duration}` : ''}
+                                </div>` : ''}
+                            </div>
+                        `).join('')}
                     </div>
                 `;
             }
             
-            let staffHTML = '';
-            if (tavern.staff && tavern.staff.length > 0) {
-                staffHTML = `
-                    <div class="tavern-section">
-                        <h4>👥 Персонал</h4>
-                        ${tavern.staff.map(staff => `<div class="menu-item">${staff.role} (${staff.race}) - ${staff.traits.join(', ')}</div>`).join('')}
+            let mealsHTML = '';
+            if (tavern.menu.meals && tavern.menu.meals.length > 0) {
+                mealsHTML = `
+                    <div class="menu-category">
+                        <h5>🍖 Блюда</h5>
+                        ${tavern.menu.meals.map(meal => `
+                            <div class="menu-item">
+                                <div class="item-header">
+                                    <span class="item-name">${meal.name_ru}</span>
+                                    <span class="item-price">${meal.formatted_price || 'Цена не указана'}</span>
+                                </div>
+                                ${meal.tags ? `<span class="item-tags">${meal.tags.join(', ')}</span>` : ''}
+                                ${meal.effects ? `<div class="item-effects">
+                                    <strong>Эффект:</strong> ${meal.effects.text_ru}
+                                    ${meal.effects.save ? `<br><strong>Спасбросок:</strong> ${meal.effects.save} Сл ${meal.effects.dc || '—'}` : ''}
+                                    ${meal.effects.duration ? `<br><strong>Длительность:</strong> ${meal.effects.duration}` : ''}
+                                </div>` : ''}
+                            </div>
+                        `).join('')}
                     </div>
                 `;
             }
             
-            let eventsHTML = '';
-            if (tavern.events && tavern.events.length > 0) {
-                eventsHTML = `
-                    <div class="tavern-section">
-                        <h4>🎭 События</h4>
-                        ${tavern.events.map(event => `<div class="menu-item">${event.type}</div>`).join('')}
+            let sidesHTML = '';
+            if (tavern.menu.sides && tavern.menu.sides.length > 0) {
+                sidesHTML = `
+                    <div class="menu-category">
+                        <h5>🥗 Закуски</h5>
+                        ${tavern.menu.sides.map(side => `
+                            <div class="menu-item">
+                                <div class="item-header">
+                                    <span class="item-name">${side.name_ru}</span>
+                                    <span class="item-price">${side.formatted_price || 'Цена не указана'}</span>
+                                </div>
+                                ${side.tags ? `<span class="item-tags">${side.tags.join(', ')}</span>` : ''}
+                                ${side.effects ? `<div class="item-effects">
+                                    <strong>Эффект:</strong> ${side.effects.text_ru}
+                                    ${side.effects.save ? `<br><strong>Спасбросок:</strong> ${side.effects.save} Сл ${side.effects.dc || '—'}` : ''}
+                                    ${side.effects.duration ? `<br><strong>Длительность:</strong> ${side.effects.duration}` : ''}
+                                </div>` : ''}
+                            </div>
+                        `).join('')}
                     </div>
                 `;
             }
             
-            let gamesHTML = '';
-            if (tavern.games) {
-                const gamesList = [];
-                Object.values(tavern.games).forEach(game => {
-                    if (game) {
-                        let gameInfo = `<div class="game-item">
-                            <div class="game-name">${game.name_ru} (${game.style})</div>
-                            ${game.brief ? `<div class="game-rules">${game.brief}</div>` : ''}
-                        </div>`;
-                        gamesList.push(gameInfo);
-                    }
-                });
-                if (gamesList.length > 0) {
-                    gamesHTML = `
-                        <div class="tavern-section">
-                            <h4>🎲 Игры</h4>
-                            ${gamesList.join('')}
-                        </div>
-                    `;
-                }
-            }
-            
-            html += `
-                <div class="tavern-card">
-                    <div class="tavern-header">
-                        <div class="tavern-icon">🍺</div>
-                        <h3>${name}</h3>
-                    </div>
-                    <div class="tavern-details">
-                        <p><strong>📍 Расположение:</strong> ${location}</p>
-                        <p><strong>🏞️ Биом:</strong> ${biome}</p>
-                    </div>
-                    <div class="tavern-section">
-                        <h4>👑 Владелец</h4>
-                        <div class="owner-info">
-                            <p><strong>Имя:</strong> ${owner}</p>
-                            <p><strong>Раса:</strong> ${ownerRace}</p>
-                            ${tavern.owner?.traits ? `<p><strong>Особенности:</strong> ${tavern.owner.traits.join(', ')}</p>` : ''}
-                            ${tavern.owner?.hooks ? `<p><strong>Интересные факты:</strong> ${tavern.owner.hooks.join(', ')}</p>` : ''}
-                        </div>
-                    </div>
-                    ${description}
-                    ${menuHTML}
-                    ${staffHTML}
-                    ${eventsHTML}
-                    ${gamesHTML}
+            menuHTML = `
+                <div class="tavern-section">
+                    <h4>🍽️ Меню</h4>
+                    ${drinksHTML}
+                    ${mealsHTML}
+                    ${sidesHTML}
                 </div>
             `;
-        });
+        }
+        
+        let staffHTML = '';
+        if (tavern.staff && tavern.staff.length > 0) {
+            staffHTML = `
+                <div class="tavern-section">
+                    <h4>👥 Персонал</h4>
+                    ${tavern.staff.map(staff => `<div class="menu-item">${staff.role} (${staff.race}) - ${staff.traits.join(', ')}</div>`).join('')}
+                </div>
+            `;
+        }
+        
+        let eventsHTML = '';
+        if (tavern.events && tavern.events.length > 0) {
+            eventsHTML = `
+                <div class="tavern-section">
+                    <h4>🎭 События</h4>
+                    ${tavern.events.map(event => `<div class="menu-item">${event.type}</div>`).join('')}
+                </div>
+            `;
+        }
+        
+        let gamesHTML = '';
+        if (tavern.games) {
+            const gamesList = [];
+            Object.values(tavern.games).forEach(game => {
+                if (game) {
+                    let gameInfo = `<div class="game-item">
+                        <div class="game-name">${game.name_ru} (${game.style})</div>
+                        ${game.brief ? `<div class="game-rules">${game.brief}</div>` : ''}
+                    </div>`;
+                    gamesList.push(gameInfo);
+                }
+            });
+            if (gamesList.length > 0) {
+                gamesHTML = `
+                    <div class="tavern-section">
+                        <h4>🎲 Игры</h4>
+                        ${gamesList.join('')}
+                    </div>
+                `;
+            }
+        }
+        
+        html += `
+            <div class="tavern-card">
+                <div class="tavern-header">
+                    <div class="tavern-icon">🍺</div>
+                    <h3>${name}</h3>
+                </div>
+                <div class="tavern-details">
+                    <p><strong>📍 Расположение:</strong> ${location}</p>
+                    <p><strong>🏞️ Биом:</strong> ${biome}</p>
+                </div>
+                <div class="tavern-section">
+                    <h4>👑 Владелец</h4>
+                    <div class="owner-info">
+                        <p><strong>Имя:</strong> ${owner}</p>
+                        <p><strong>Раса:</strong> ${ownerRace}</p>
+                        ${tavern.owner?.traits ? `<p><strong>Особенности:</strong> ${tavern.owner.traits.join(', ')}</p>` : ''}
+                        ${tavern.owner?.hooks ? `<p><strong>Интересные факты:</strong> ${tavern.owner.hooks.join(', ')}</p>` : ''}
+                    </div>
+                </div>
+                ${description}
+                ${menuHTML}
+                ${staffHTML}
+                ${eventsHTML}
+                ${gamesHTML}
+            </div>
+        `;
         
         contentDiv.innerHTML = html;
         resultsDiv.style.display = 'block';
