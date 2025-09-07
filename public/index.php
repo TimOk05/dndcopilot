@@ -2780,8 +2780,19 @@ function closeModal() {
         regenerateBtn.remove();
     }
 }
-document.getElementById('modal-close').onclick = closeModal;
-document.getElementById('modal-bg').onclick = function(e) { if (e.target === this) closeModal(); };
+// Безопасная установка обработчиков событий для модального окна
+const modalClose = document.getElementById('modal-close');
+const modalBg = document.getElementById('modal-bg');
+
+if (modalClose) {
+    modalClose.onclick = closeModal;
+}
+
+if (modalBg) {
+    modalBg.onclick = function(e) { 
+        if (e.target === this) closeModal(); 
+    };
+}
 
 // Функция для сохранения результата костей с комментарием
 function saveDiceResultAsNote(content, comment) {
