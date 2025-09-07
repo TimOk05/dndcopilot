@@ -25,7 +25,7 @@ class TavernGenerator {
      * Загрузка базы данных таверн
      */
     private function loadTavernsDatabase() {
-        $db_file = __DIR__ . '/../../data/pdf/taverns_db_v2.json';
+        $db_file = __DIR__ . '/../../data/pdf/taverns_db_v3_1.json';
         
         if (!file_exists($db_file)) {
             throw new Exception('База данных таверн не найдена');
@@ -38,7 +38,7 @@ class TavernGenerator {
             throw new Exception('Ошибка загрузки базы данных таверн');
         }
         
-        logMessage('INFO', 'TavernGenerator: База данных таверн загружена');
+        logMessage('INFO', 'TavernGenerator: База данных таверн v3.1 загружена');
     }
     
     /**
@@ -283,8 +283,8 @@ class TavernGenerator {
         for ($i = 0; $i < $count; $i++) {
             $item = $this->selectByRarity($items, 'city'); // Используем базовую редкость
             if ($item && !in_array($item, $selected)) {
-                // Добавляем цену к элементу меню
-                $item['price'] = $this->generatePrice($item);
+                // Форматируем цену из JSON
+                $item['formatted_price'] = $this->formatPrice($item['price'] ?? null);
                 $selected[] = $item;
             }
         }
@@ -293,44 +293,26 @@ class TavernGenerator {
     }
     
     /**
-     * Генерация цены для элемента меню
+     * Форматирование цены из JSON
      */
-    private function generatePrice($item) {
-        $base_prices = [
-            'drinks' => [
-                'common' => ['min' => 2, 'max' => 5],    // 2-5 медных
-                'uncommon' => ['min' => 5, 'max' => 10], // 5-10 медных
-                'rare' => ['min' => 10, 'max' => 25]     // 10-25 медных
-            ],
-            'meals' => [
-                'common' => ['min' => 5, 'max' => 12],   // 5-12 медных
-                'uncommon' => ['min' => 12, 'max' => 25], // 12-25 медных
-                'rare' => ['min' => 25, 'max' => 50]     // 25-50 медных
-            ],
-            'sides' => [
-                'common' => ['min' => 1, 'max' => 3],    // 1-3 медных
-                'uncommon' => ['min' => 3, 'max' => 8],  // 3-8 медных
-                'rare' => ['min' => 8, 'max' => 15]      // 8-15 медных
-            ]
-        ];
-        
-        $rarity = $item['rarity'] ?? 'common';
-        $category = 'drinks'; // По умолчанию
-        
-        // Определяем категорию по тегам
-        if (isset($item['tags'])) {
-            if (in_array('poultry', $item['tags']) || in_array('meat', $item['tags']) || 
-                in_array('seafood', $item['tags']) || in_array('game', $item['tags'])) {
-                $category = 'meals';
-            } elseif (in_array('bread', $item['tags']) || in_array('salad', $item['tags'])) {
-                $category = 'sides';
-            }
+    private function formatPrice($price_data) {
+        if (!isset($price_data)) {
+            return 'Цена не указана';
         }
         
-        $price_range = $base_prices[$category][$rarity] ?? $base_prices[$category]['common'];
-        $price = rand($price_range['min'], $price_range['max']);
+        $price_parts = [];
         
-        return $price . ' медных';
+        if (isset($price_data['cp']) && $price_data['cp'] > 0) {
+            $price_parts[] = $price_data['cp'] . ' медных';
+        }
+        if (isset($price_data['sp']) && $price_data['sp'] > 0) {
+            $price_parts[] = $price_data['sp'] . ' серебряных';
+        }
+        if (isset($price_data['gp']) && $price_data['gp'] > 0) {
+            $price_parts[] = $price_data['gp'] . ' золотых';
+        }
+        
+        return empty($price_parts) ? 'Цена не указана' : implode(', ', $price_parts);
     }
     
     /**

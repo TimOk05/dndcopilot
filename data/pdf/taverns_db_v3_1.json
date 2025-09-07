@@ -1,0 +1,1488 @@
+{
+  "version": "3.1",
+  "created_at": "2025-09-07T11:31:31.255770Z",
+  "updated_at": "2025-09-07T11:36:06.409396Z",
+  "locale": [
+    "ru"
+  ],
+  "weights": {
+    "rarity": {
+      "common": 6,
+      "uncommon": 3,
+      "rare": 1,
+      "legendary": 0.25
+    },
+    "tag_boost": 0.5
+  },
+  "core": {
+    "name_patterns": {
+      "prefixes": [
+        "Сонный",
+        "Голодный",
+        "Весёлый",
+        "Кровавый",
+        "Пьяный",
+        "Тенистый",
+        "Золотой",
+        "Серебряный",
+        "Зелёный",
+        "Железный",
+        "Бронзовый",
+        "Радостный",
+        "Суровый",
+        "Летучий",
+        "Рокочущий",
+        "Удачливый",
+        "Мрачный",
+        "Тихий",
+        "Хитрый",
+        "Подвыпивший"
+      ],
+      "nouns": [
+        "Огр",
+        "Грифон",
+        "Лебедь",
+        "Кабан",
+        "Котёл",
+        "Крестьянин",
+        "Капитан",
+        "Дракон",
+        "Бард",
+        "Кожевник",
+        "Плут",
+        "Ястреб",
+        "Лжец",
+        "Страж",
+        "Кабачок",
+        "Кузнец",
+        "Плутовка",
+        "Кружка",
+        "Лис"
+      ],
+      "variants": [
+        "Таверна «{prefix} {noun}»",
+        "Постоялый двор «{prefix} {noun}»",
+        "Пивная «{prefix} {noun}»",
+        "{prefix} {noun}",
+        "{prefix} {noun} и Нимфа",
+        "Трактир «{prefix} {noun}»"
+      ]
+    },
+    "locations": [
+      {
+        "text_ru": "центральная площадь",
+        "tags": [
+          "market",
+          "busy"
+        ],
+        "rarity": "common"
+      },
+      {
+        "text_ru": "у городских ворот",
+        "tags": [
+          "travelers",
+          "caravans"
+        ],
+        "rarity": "common"
+      },
+      {
+        "text_ru": "в подвале старой башни",
+        "tags": [
+          "mystic",
+          "underground"
+        ],
+        "rarity": "uncommon"
+      }
+    ],
+    "owners": [
+      {
+        "name_ru": "Дэвис Оуэнсби",
+        "race": "human",
+        "traits": [
+          "бывший фермер",
+          "самоварит эль",
+          "болтлив"
+        ],
+        "hooks": [
+          "пропадают коровы — подозревает огров"
+        ],
+        "rarity": "common"
+      },
+      {
+        "name_ru": "Сель'серен",
+        "race": "elf (призрак)",
+        "traits": [
+          "радушная",
+          "заботливая"
+        ],
+        "hooks": [
+          "одеяла сами укрывают гостей"
+        ],
+        "rarity": "uncommon"
+      },
+      {
+        "name_ru": "Магси",
+        "race": "goblin",
+        "traits": [
+          "бывший преступник",
+          "знает жаргон"
+        ],
+        "hooks": [
+          "паладинам — наценка"
+        ],
+        "rarity": "uncommon"
+      },
+      {
+        "name_ru": "Нимуэ",
+        "race": "tiefling",
+        "traits": [
+          "элегантная",
+          "адский декор"
+        ],
+        "hooks": [
+          "иллюзорная аура зла в фундаменте"
+        ],
+        "rarity": "uncommon"
+      },
+      {
+        "name_ru": "Кра’акс Три Когтя",
+        "race": "half-dragon",
+        "traits": [
+          "вежливый",
+          "ненавидит браконьеров"
+        ],
+        "hooks": [
+          "потерял ногу в капкане на сова‑медведя"
+        ],
+        "rarity": "rare"
+      }
+    ],
+    "staff_archetypes": [
+      {
+        "role": "бармен",
+        "race": "human",
+        "traits": [
+          "быстрый",
+          "внимательный"
+        ],
+        "rarity": "common"
+      },
+      {
+        "role": "официантка",
+        "race": "halfling",
+        "traits": [
+          "шустрость",
+          "улыбчивая"
+        ],
+        "rarity": "common"
+      },
+      {
+        "role": "вышибала",
+        "race": "half-orc",
+        "traits": [
+          "молчаливый",
+          "грозный"
+        ],
+        "rarity": "common"
+      },
+      {
+        "role": "повар",
+        "race": "dwarf",
+        "traits": [
+          "перфекционист",
+          "любит соусы"
+        ],
+        "rarity": "common"
+      },
+      {
+        "role": "певец",
+        "race": "elf",
+        "traits": [
+          "баритон",
+          "лиричный"
+        ],
+        "rarity": "uncommon"
+      }
+    ],
+    "ambience": [
+      {
+        "sound": "лязг кружек и кости",
+        "scent": "дубовые бочки",
+        "lighting": "полумрак",
+        "rarity": "common"
+      },
+      {
+        "sound": "лютня и флейта",
+        "scent": "хмель и корица",
+        "lighting": "тёплые свечи",
+        "rarity": "uncommon"
+      }
+    ],
+    "menu": {
+      "drinks": [
+        {
+          "name_ru": "Коппер-Брю светлое",
+          "tags": [
+            "beer",
+            "light"
+          ],
+          "rarity": "common",
+          "price": {
+            "sp": 4
+          },
+          "effects": {
+            "text_ru": "Лёгкое опьянение: Сл 10 Телосложение; провал — помеха на Ловкость 1 ч.",
+            "save": "CON",
+            "dc": 10,
+            "duration": "1h"
+          }
+        },
+        {
+          "name_ru": "Эль Дьявольской Розы",
+          "tags": [
+            "ale",
+            "spicy"
+          ],
+          "rarity": "uncommon",
+          "price": {
+            "sp": 7
+          },
+          "effects": {
+            "text_ru": "Смелость: +1 к проверкам Харизмы 1 ч; при провале Сл 12 — помеха к Мудрости.",
+            "save": "CON",
+            "dc": 12,
+            "duration": "1h"
+          }
+        },
+        {
+          "name_ru": "Старый Моряк",
+          "tags": [
+            "rum",
+            "strong"
+          ],
+          "rarity": "uncommon",
+          "price": {
+            "sp": 8
+          },
+          "effects": {
+            "text_ru": "Крепкий ром: провал Сл 13 — Отравлен 1 ч.",
+            "save": "CON",
+            "dc": 13,
+            "duration": "1h"
+          }
+        },
+        {
+          "name_ru": "Солнечная вспышка",
+          "tags": [
+            "cocktail",
+            "citrus"
+          ],
+          "rarity": "uncommon",
+          "price": {
+            "sp": 6
+          },
+          "effects": {
+            "text_ru": "Бодрит: 1 раз/час — переброс Инициативы (лучший).",
+            "duration": "1h"
+          }
+        },
+        {
+          "name_ru": "Пьяный угорь",
+          "tags": [
+            "special",
+            "fun"
+          ],
+          "rarity": "uncommon",
+          "price": {
+            "sp": 9
+          },
+          "effects": {
+            "text_ru": "Весёлая искра: к4 — 1=икота (помеха Скрытности), 4=вдохновение.",
+            "duration": "1h"
+          }
+        }
+      ],
+      "meals": [
+        {
+          "name_ru": "Курица в пивном кляре",
+          "tags": [
+            "poultry",
+            "fried"
+          ],
+          "rarity": "common",
+          "price": {
+            "sp": 8
+          },
+          "effects": {
+            "text_ru": "Сытность: временные хиты = мод. Телосложения (мин 1) на 1 ч.",
+            "duration": "1h"
+          }
+        },
+        {
+          "name_ru": "Рыба в пивном кляре",
+          "tags": [
+            "seafood",
+            "fried"
+          ],
+          "rarity": "common",
+          "price": {
+            "sp": 9
+          },
+          "effects": {
+            "text_ru": "Морской настрой: пре-во к одной проверке Выживания у берега (1 раз/24ч).",
+            "duration": "24h"
+          }
+        },
+        {
+          "name_ru": "Яйца с беконом",
+          "tags": [
+            "breakfast"
+          ],
+          "rarity": "common",
+          "price": {
+            "sp": 5
+          },
+          "effects": {
+            "text_ru": "Завтрак чемпиона: снимает 1 уровень истощения при долгом отдыхе, если съедено накануне.",
+            "duration": "—"
+          }
+        },
+        {
+          "name_ru": "Пирог мародёра",
+          "tags": [
+            "meat",
+            "pie"
+          ],
+          "rarity": "uncommon",
+          "price": {
+            "sp": 10
+          },
+          "effects": {
+            "text_ru": "Сомнительная слава: Сл 12 Телосложение или Отравлен на 1 ч.",
+            "save": "CON",
+            "dc": 12,
+            "duration": "1h"
+          }
+        },
+        {
+          "name_ru": "Похлёбка из трески",
+          "tags": [
+            "seafood",
+            "soup"
+          ],
+          "rarity": "common",
+          "price": {
+            "sp": 7
+          },
+          "effects": {
+            "text_ru": "Тепло внутри: сопротивление холоду 1 ч.",
+            "duration": "1h"
+          }
+        },
+        {
+          "name_ru": "Рагу из огненного жука",
+          "tags": [
+            "spicy",
+            "insect"
+          ],
+          "rarity": "rare",
+          "price": {
+            "gp": 2
+          },
+          "effects": {
+            "text_ru": "Огонёк: безоружные +1 огн. урона 10 мин.",
+            "duration": "10m"
+          }
+        },
+        {
+          "name_ru": "Стейк из драконьего сердца",
+          "tags": [
+            "legendary",
+            "meat"
+          ],
+          "rarity": "legendary",
+          "price": {
+            "gp": 25
+          },
+          "effects": {
+            "text_ru": "Дыхание дракона (1/д.): конус 4,5 м, 2к6, спас — половина.",
+            "duration": "24h"
+          }
+        },
+        {
+          "name_ru": "Грибная запеканка",
+          "tags": [
+            "mushroom",
+            "umami"
+          ],
+          "rarity": "uncommon",
+          "price": {
+            "sp": 8
+          },
+          "effects": {
+            "text_ru": "Подземное зрение: +6 м к тёмному зрению 1 ч.",
+            "duration": "1h"
+          }
+        }
+      ],
+      "sides": [
+        {
+          "name_ru": "Свежий хлеб с чесночным маслом",
+          "tags": [
+            "bread"
+          ],
+          "rarity": "common",
+          "price": {
+            "sp": 2
+          },
+          "effects": {
+            "text_ru": "Чесночная защита: пре-во против укусов кровососущих до рассвета.",
+            "duration": "until dawn"
+          }
+        },
+        {
+          "name_ru": "Оливковый хлеб",
+          "tags": [
+            "bread",
+            "olive"
+          ],
+          "rarity": "common",
+          "price": {
+            "sp": 3
+          },
+          "effects": {
+            "text_ru": "Здоровый жир: +1 к первой проверке Концентрации в течение 1 ч.",
+            "duration": "1h"
+          }
+        },
+        {
+          "name_ru": "Ягодный салат",
+          "tags": [
+            "salad",
+            "forest"
+          ],
+          "rarity": "uncommon",
+          "price": {
+            "sp": 4
+          },
+          "effects": {
+            "text_ru": "Лесная свежесть: восстановите 1к4 хитов (однократно).",
+            "duration": "—"
+          }
+        }
+      ]
+    },
+    "rooms": [
+      {
+        "type": "общий зал",
+        "beds": 8,
+        "price": {
+          "sp": 5
+        },
+        "cleanliness": "low",
+        "rarity": "common",
+        "notes_ru": "Матрац у очага, общий шум."
+      },
+      {
+        "type": "частная комната",
+        "beds": 1,
+        "price": {
+          "sp": 12
+        },
+        "cleanliness": "mid",
+        "rarity": "uncommon",
+        "notes_ru": "Простая комнатка с задвижкой."
+      },
+      {
+        "type": "люкс",
+        "beds": 1,
+        "price": {
+          "gp": 3
+        },
+        "cleanliness": "high",
+        "rarity": "rare",
+        "notes_ru": "Камин, умывальник, тёплые перины."
+      }
+    ],
+    "events": [
+      {
+        "type": "выступление барда",
+        "rarity": "common"
+      },
+      {
+        "type": "турнир по кости",
+        "rarity": "common"
+      },
+      {
+        "type": "тайный аукцион",
+        "rarity": "uncommon"
+      }
+    ],
+    "games": {
+      "dice": [
+        {
+          "name_ru": "Тройка на вылет",
+          "style": "кости",
+          "brief": "5к6, тройки=0, меньшая сумма выигрывает",
+          "rarity": "common",
+          "rules_ru": "5к6; тройки=0; минимальная сумма выигрывает. Общий банк с равными ставками."
+        },
+        {
+          "name_ru": "Мёртвый глаз",
+          "style": "кости",
+          "brief": "на единицах теряешь лучшие кости; выживает последний",
+          "rarity": "uncommon",
+          "rules_ru": "Каждый держит к20, к12, к10, к8, к6, к4. На «1» — сбрось лучшую кость. Последний с костями — победитель. Общий банк."
+        }
+      ],
+      "cards": [
+        {
+          "name_ru": "Дурак",
+          "style": "карты",
+          "brief": "классическая отбивная игра, последний с картами проигрывает",
+          "rarity": "common",
+          "rules_ru": "Колода 36/52. В начале по 6 карт; нижняя карта колоды задаёт козырь. Атака 1–4 картами, защита старшей той же масти или козырем. Опции: подкидной/переводной. Последний с картами — «дурак». Возможна ничья."
+        },
+        {
+          "name_ru": "Пьяница",
+          "style": "карты",
+          "brief": "совпадай масти/номиналы; кто первый сбросит — победил",
+          "rarity": "common",
+          "rules_ru": "Цель — избавиться от карт, выкладывая совпадения по масти/достоинству на «бутылку». Если не можешь — тяни карту. Побеждает первый без карт; при стопоре — минимум карт/очков."
+        },
+        {
+          "name_ru": "Червы",
+          "style": "карты",
+          "brief": "добери минимум очков, избегай червей",
+          "rarity": "uncommon",
+          "rules_ru": "4 игрока, 52 карты. Полная раздача по 13. Перед каждым раундом — передача 3 карт (лево/напротив/право/пропуск). Начинает 2♣. Очки за червы и Q♠; цель — минимум очков."
+        }
+      ],
+      "other": [
+        {
+          "name_ru": "Гоблинское яблочко",
+          "style": "дартс",
+          "brief": "к20 + к6 для зоны/кольца; до 301 очка",
+          "rarity": "common",
+          "rules_ru": "Дартс: на ход 3 броска (к20 сектор, к6 зона: 1=×2, 3=×3, 2/4=номинал, 5=25, 6=50). До 301 очка. Общий банк."
+        },
+        {
+          "name_ru": "Фруктовая машина",
+          "style": "автомат",
+          "brief": "три одинаковые кости — джекпот",
+          "rarity": "uncommon",
+          "rules_ru": "Слот: ставка 5з. Три одинаковые кости; все три совпали — джекпот (3к4=64з, 3к6=144з, 3к8=256з, 3к10=400з, 3к12=576з, 3к20=1600з)."
+        },
+        {
+          "name_ru": "Автомат черепов",
+          "style": "автомат",
+          "brief": "лестница к4→к20; чем выше — тем рискованней",
+          "rarity": "uncommon",
+          "rules_ru": "Ставка 2з. Лестница: к4→к6→к8→к10→к12→к20. На ≤3 — забери выигрыш; на ≥4 — проигрыш. Призы: 2з/5з/20з/100з/500з/2000з."
+        }
+      ]
+    },
+    "constraints": {
+      "exclusive_tags": [
+        [
+          "monastic",
+          "rowdy"
+        ]
+      ],
+      "required_together": [
+        {
+          "if_tag": "sea",
+          "then_any_tags": [
+            "dockside",
+            "sailor",
+            "seafood"
+          ]
+        }
+      ]
+    }
+  },
+  "specials": {
+    "city": {
+      "locations": [
+        {
+          "text_ru": "портовый район",
+          "tags": [
+            "sea",
+            "trade",
+            "dockside"
+          ],
+          "rarity": "common"
+        },
+        {
+          "text_ru": "рынок ремесленников",
+          "tags": [
+            "market",
+            "busy"
+          ],
+          "rarity": "common"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "шум улиц и глашатаи",
+          "scent": "уголь и специи",
+          "lighting": "фонари и витражи",
+          "rarity": "common"
+        }
+      ],
+      "menu_additions": {
+        "drinks": [
+          {
+            "name_ru": "Нулевая тяжесть",
+            "tags": [
+              "cocktail",
+              "cool"
+            ],
+            "rarity": "rare",
+            "price": {
+              "gp": 1
+            },
+            "effects": {
+              "text_ru": "Охлаждает: сопротивление огню 10 мин; провал Сл 12 — 1 уровень истощения.",
+              "save": "CON",
+              "dc": 12,
+              "duration": "10m"
+            }
+          },
+          {
+            "name_ru": "Серебряный магистрат",
+            "tags": [
+              "cocktail",
+              "urban",
+              "noble"
+            ],
+            "rarity": "rare",
+            "price": {
+              "gp": 2
+            },
+            "effects": {
+              "text_ru": "Хладнокровие: 1 час получаете пре-во на проверки Переговоров с чиновниками.",
+              "duration": "1h"
+            }
+          }
+        ],
+        "meals": [
+          {
+            "name_ru": "Ветчина в пивном кляре",
+            "tags": [
+              "meat",
+              "fried"
+            ],
+            "rarity": "common",
+            "price": {
+              "sp": 8
+            },
+            "effects": {
+              "text_ru": "Сытная соль: устойчивость к «Испугу» до следующего короткого отдыха.",
+              "duration": "until short rest"
+            }
+          }
+        ],
+        "sides": [
+          {
+            "name_ru": "Паштет из белого голубя",
+            "tags": [
+              "noble",
+              "urban",
+              "poultry"
+            ],
+            "rarity": "rare",
+            "price": {
+              "sp": 12
+            },
+            "effects": {
+              "text_ru": "Придворные манеры: 1 раз получите пре-во на проверку Этикета при приёме.",
+              "duration": "24h"
+            }
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "визит инспектора гильдии",
+          "rarity": "uncommon"
+        }
+      ],
+      "tags": [
+        "urban"
+      ]
+    },
+    "forest": {
+      "locations": [
+        {
+          "text_ru": "на опушке леса",
+          "tags": [
+            "wilds",
+            "fae"
+          ],
+          "rarity": "uncommon"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "стрекот насекомых",
+          "scent": "хвоя и мёд",
+          "lighting": "светлячки",
+          "rarity": "uncommon"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Рагу из огненного жука",
+            "tags": [
+              "spicy",
+              "insect"
+            ],
+            "rarity": "rare",
+            "price": {
+              "gp": 2
+            },
+            "effects": {
+              "text_ru": "Огонёк: безоружные +1 огн. урона 10 мин.",
+              "duration": "10m"
+            }
+          },
+          {
+            "name_ru": "Пирог из корней мандрагоры",
+            "tags": [
+              "fae",
+              "mushroom",
+              "umami"
+            ],
+            "rarity": "rare",
+            "price": {
+              "gp": 1
+            },
+            "effects": {
+              "text_ru": "Эхо леса: 10 мин можете шептаться с растениями (как 'Разговор с растениями', упрощённо).",
+              "duration": "10m"
+            }
+          }
+        ],
+        "sides": [
+          {
+            "name_ru": "Ягодный салат",
+            "tags": [
+              "salad",
+              "forest"
+            ],
+            "rarity": "uncommon",
+            "price": {
+              "sp": 4
+            },
+            "effects": {
+              "text_ru": "Лесная свежесть: восстановите 1к4 хитов (однократно).",
+              "duration": "—"
+            }
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "ночь фейских огней",
+          "rarity": "rare"
+        }
+      ],
+      "tags": [
+        "fae",
+        "wilds"
+      ]
+    },
+    "coastal": {
+      "locations": [
+        {
+          "text_ru": "пещера приливов",
+          "tags": [
+            "sea",
+            "hidden"
+          ],
+          "rarity": "rare"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "морские шанти",
+          "scent": "смола и соль",
+          "lighting": "тускло",
+          "rarity": "common"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Похлёбка из трески",
+            "tags": [
+              "seafood",
+              "soup"
+            ],
+            "rarity": "common",
+            "price": {
+              "sp": 7
+            },
+            "effects": {
+              "text_ru": "Тепло внутри: сопротивление холоду 1 ч.",
+              "duration": "1h"
+            }
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Старый Моряк",
+            "tags": [
+              "rum",
+              "strong"
+            ],
+            "rarity": "uncommon",
+            "price": {
+              "sp": 8
+            },
+            "effects": {
+              "text_ru": "Крепкий ром: провал Сл 13 — Отравлен 1 ч.",
+              "save": "CON",
+              "dc": 13,
+              "duration": "1h"
+            }
+          },
+          {
+            "name_ru": "Ветер прилива",
+            "tags": [
+              "rum",
+              "sea",
+              "breeze"
+            ],
+            "rarity": "uncommon",
+            "price": {
+              "sp": 9
+            },
+            "effects": {
+              "text_ru": "Попутный ветер: следующая Морская навигация — с пре-имуществом.",
+              "duration": "24h"
+            }
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "аукцион трофеев моря",
+          "rarity": "uncommon"
+        }
+      ],
+      "tags": [
+        "sea",
+        "dockside"
+      ]
+    },
+    "mountain": {
+      "locations": [
+        {
+          "text_ru": "в скальном кармане над ущельем",
+          "tags": [
+            "mountain",
+            "peril"
+          ],
+          "rarity": "rare"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "эхо кузниц",
+          "scent": "дым и камень",
+          "lighting": "канделябры",
+          "rarity": "uncommon"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Жаркое из троллей",
+            "tags": [
+              "meat",
+              "hearty"
+            ],
+            "rarity": "rare",
+            "price": {
+              "gp": 5
+            },
+            "effects": {
+              "text_ru": "Живучесть: разово 1к4 хитов бонусным действием в течение 1 ч.",
+              "duration": "1h"
+            }
+          },
+          {
+            "name_ru": "Рёбра каменного барана",
+            "tags": [
+              "meat",
+              "hearty",
+              "mountain"
+            ],
+            "rarity": "rare",
+            "price": {
+              "gp": 2
+            },
+            "effects": {
+              "text_ru": "Крепкие кости: +1 к КБ против падений и обвалов (не маг.), 1 час.",
+              "duration": "1h"
+            }
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Алмазная батарея",
+            "tags": [
+              "cocktail",
+              "steady"
+            ],
+            "rarity": "rare",
+            "price": {
+              "gp": 2
+            },
+            "effects": {
+              "text_ru": "Стабильное опьянение: игнор первой помехи от алкоголя за 2 ч.",
+              "duration": "2h"
+            }
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "праздник пивоваров",
+          "rarity": "uncommon"
+        }
+      ],
+      "tags": [
+        "dwarf",
+        "mountain"
+      ]
+    },
+    "desert": {
+      "locations": [
+        {
+          "text_ru": "оазис караванов",
+          "tags": [
+            "desert",
+            "caravans"
+          ],
+          "rarity": "uncommon"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "шелест парчи",
+          "scent": "кардамон и пыль",
+          "lighting": "масляные лампы",
+          "rarity": "uncommon"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Вяленое «Пустынное солнце»",
+            "tags": [
+              "scorpion",
+              "jerky"
+            ],
+            "rarity": "rare",
+            "price": {
+              "gp": 3
+            },
+            "effects": {
+              "text_ru": "Очищенное мясо: иммунитет к пищевому яду этой таверны на 24ч.",
+              "duration": "24h"
+            }
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Абсолютный ноль",
+            "tags": [
+              "cocktail",
+              "chilled"
+            ],
+            "rarity": "uncommon",
+            "price": {
+              "sp": 9
+            },
+            "effects": {
+              "text_ru": "Сильное охлаждение тела: сопротивление жаре/усталости на 1 ч.",
+              "duration": "1h"
+            }
+          },
+          {
+            "name_ru": "Песчаная роза",
+            "tags": [
+              "cocktail",
+              "desert",
+              "herbal"
+            ],
+            "rarity": "rare",
+            "price": {
+              "sp": 12
+            },
+            "effects": {
+              "text_ru": "Жажду поборет: игнорируете штраф от жары и нехватки воды 8 часов.",
+              "duration": "8h"
+            }
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "ночь рассказчиков",
+          "rarity": "common"
+        }
+      ],
+      "tags": [
+        "desert"
+      ]
+    },
+    "tundra": {
+      "locations": [
+        {
+          "text_ru": "придорожный дом в тундре",
+          "tags": [
+            "tundra",
+            "roadside"
+          ],
+          "rarity": "uncommon"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "воют ветра",
+          "scent": "копчёное мясо",
+          "lighting": "жаркий очаг",
+          "rarity": "common"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Похлёбка охотника",
+            "tags": [
+              "game",
+              "soup"
+            ],
+            "rarity": "common",
+            "price": {
+              "sp": 8
+            },
+            "effects": {
+              "text_ru": "Следопыт: пре-во к одной проверке Выживания в тундре (1 раз/24ч).",
+              "duration": "24h"
+            }
+          },
+          {
+            "name_ru": "Суп белого волка",
+            "tags": [
+              "game",
+              "soup",
+              "cold"
+            ],
+            "rarity": "rare",
+            "price": {
+              "gp": 1
+            },
+            "effects": {
+              "text_ru": "Бдительность охотника: пре-во на Внимание при снегопаде, 1 час.",
+              "duration": "1h"
+            }
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Синее топливо",
+            "tags": [
+              "cocktail",
+              "hot"
+            ],
+            "rarity": "rare",
+            "price": {
+              "sp": 10
+            },
+            "effects": {
+              "text_ru": "Согрев: иммунитет к природному холоду 1 ч; провал Сл 12 — дрожь (помеха Ловкости).",
+              "save": "CON",
+              "dc": 12,
+              "duration": "1h"
+            }
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "соревнование по выпивке",
+          "rarity": "common"
+        }
+      ],
+      "tags": [
+        "cold"
+      ]
+    },
+    "underground": {
+      "locations": [
+        {
+          "text_ru": "в подземной зале грибных садов",
+          "tags": [
+            "underdark",
+            "mushroom"
+          ],
+          "rarity": "rare"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "капли и отдалённые шаги",
+          "scent": "мох и сырость",
+          "lighting": "биолюминесценция",
+          "rarity": "rare"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Грибная запеканка",
+            "tags": [
+              "mushroom",
+              "umami"
+            ],
+            "rarity": "uncommon",
+            "price": {
+              "sp": 8
+            },
+            "effects": {
+              "text_ru": "Подземное зрение: +6 м к тёмному зрению 1 ч.",
+              "duration": "1h"
+            }
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Грибной квас миконида",
+            "tags": [
+              "mushroom",
+              "fermented"
+            ],
+            "rarity": "uncommon",
+            "price": {
+              "sp": 6
+            },
+            "effects": {
+              "text_ru": "Темнозор: ещё +6 м тёмного зрения на 1 час; при провале Сл 12 — краткая тошнота.",
+              "save": "CON",
+              "dc": 12,
+              "duration": "1h"
+            }
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "чёрный рынок снаряжения",
+          "rarity": "rare"
+        }
+      ],
+      "tags": [
+        "underground"
+      ]
+    },
+    "swamp": {
+      "locations": [
+        {
+          "text_ru": "дом на сваях в болоте",
+          "tags": [
+            "swamp",
+            "mosquito"
+          ],
+          "rarity": "uncommon"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "кваканье и плеск",
+          "scent": "травы и ил",
+          "lighting": "болотные огни",
+          "rarity": "uncommon"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Рыба в пивном кляре",
+            "tags": [
+              "seafood",
+              "fried"
+            ],
+            "rarity": "common",
+            "price": {
+              "sp": 9
+            },
+            "effects": {
+              "text_ru": "Морской настрой: пре-во к одной проверке Выживания у берега (1 раз/24ч).",
+              "duration": "24h"
+            }
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Травяной суп (настой)",
+            "tags": [
+              "herbal",
+              "tonic"
+            ],
+            "rarity": "uncommon",
+            "price": {
+              "sp": 5
+            },
+            "effects": {
+              "text_ru": "Тоник: снимает состояние Отравлен, если оно вызвано пищевым ядом.",
+              "duration": "—"
+            }
+          },
+          {
+            "name_ru": "Туман болотника",
+            "tags": [
+              "herbal",
+              "swamp",
+              "tonic"
+            ],
+            "rarity": "rare",
+            "price": {
+              "sp": 10
+            },
+            "effects": {
+              "text_ru": "Отпугиватель насекомых: иммунитет к условиям 'облеплён комарами', 8 часов.",
+              "duration": "8h"
+            }
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "ночь ловцов светляков",
+          "rarity": "uncommon"
+        }
+      ],
+      "tags": [
+        "swamp"
+      ]
+    },
+    "roadside": {
+      "locations": [
+        {
+          "text_ru": "у перепутья",
+          "tags": [
+            "travelers",
+            "roadside"
+          ],
+          "rarity": "common"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "скрип телег",
+          "scent": "пыль и солома",
+          "lighting": "фонари на крюках",
+          "rarity": "common"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Яйца с беконом",
+            "tags": [
+              "breakfast"
+            ],
+            "rarity": "common",
+            "price": {
+              "sp": 5
+            },
+            "effects": {
+              "text_ru": "Завтрак чемпиона: снимает 1 уровень истощения при долгом отдыхе, если съедено накануне.",
+              "duration": "—"
+            }
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Надёжный товарищ",
+            "tags": [
+              "ale",
+              "stout"
+            ],
+            "rarity": "uncommon",
+            "price": {
+              "sp": 7
+            },
+            "effects": {
+              "text_ru": "Стойкость: 1 раз игнорируете помеху от опьянения в течение 1 ч.",
+              "duration": "1h"
+            }
+          }
+        ],
+        "sides": [
+          {
+            "name_ru": "Солёные орешки возчика",
+            "tags": [
+              "road",
+              "snack"
+            ],
+            "rarity": "common",
+            "price": {
+              "sp": 2
+            },
+            "effects": {
+              "text_ru": "Не дремли: один раз игнорируете эффект 'сон в дороге' в течение 8 часов.",
+              "duration": "8h"
+            }
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "борьба/армрестлинг",
+          "rarity": "common"
+        }
+      ],
+      "tags": [
+        "road"
+      ]
+    }
+  },
+  "integration": {
+    "merge_order": [
+      "core",
+      "specials[biome]"
+    ],
+    "merge_rules": {
+      "append_lists": [
+        "locations",
+        "ambience",
+        "events",
+        "staff_archetypes"
+      ],
+      "menu_merge": "core.menu + specials[biome].menu_additions (по категориям)",
+      "owners": "используй core.owners; при желании добавь биом-специфичных владельцев",
+      "constraints": "объединяй, избегая дубликатов пар"
+    },
+    "sampling": {
+      "rarity_weighting": "используй weights.rarity",
+      "tag_boost": "если item.tags ∩ biome_tags != ∅, вес *= (1 + weights.tag_boost * count)"
+    },
+    "pricing_application": {
+      "input_params": [
+        "base_price",
+        "biome",
+        "settlement_size",
+        "season",
+        "tags",
+        "is_happy_hour"
+      ],
+      "pseudo_code": [
+        "mult = economy.settlement_size_multipliers[settlement_size]",
+        "mult *= economy.biome_price_adjustments[biome]",
+        "if season in economy.seasonal_modifiers and biome in economy.seasonal_modifiers[season]:",
+        "    mult *= economy.seasonal_modifiers[season][biome]",
+        "for t in tags: mult *= economy.scarcity_rules.get(t, 1.0)",
+        "if is_happy_hour and economy.happy_hour.enabled: mult *= economy.happy_hour.discount",
+        "final = apply_mult_to_price(base_price, mult)",
+        "return round_to_nearest_coin(final)"
+      ],
+      "notes_ru": "Применяйте множители к базовой цене каждого блюда/напитка, затем округляйте."
+    }
+  },
+  "cursor_instructions": {
+    "what_is_this": "JSON для двухступенчатой генерации таверн: сначала ядро, затем спец‑данные по местности (биому).",
+    "how_to_use": [
+      "1) Загрузите JSON и распарсьте в объект db.",
+      "2) Выберите biome из specials (city, forest, coastal, mountain, desert, tundra, underground, swamp, roadside).",
+      "3) Соберите пул = core + specials[biome]: списки объединяются, меню дополняется через menu_additions.",
+      "4) Взвешивайте выбор с weights.rarity и tag_boost по совпадающим тегам.",
+      "5) Сформируйте DRAFT (имя, локация, владелец, персонал, атмосфера, меню, комнаты, события, игры) и передайте в LLM.",
+      "6) Учитывайте constraints; при конфликте перегенерируйте проблемный блок.",
+      "7) После интеграции удалите cursor_instructions."
+    ],
+    "draft_shape_hint": {
+      "name": "string",
+      "location": "object",
+      "owner": "object",
+      "staff": "array",
+      "ambience": "object|array",
+      "menu": "object",
+      "rooms": "array",
+      "events": "array",
+      "games": "object"
+    },
+    "llm_hint": "Просите 600–900 слов, соблюдение фактов из DRAFT, кинематографичный тон без перегруза."
+  },
+  "economy": {
+    "currency": {
+      "cp_per_sp": 10,
+      "sp_per_gp": 10
+    },
+    "settlement_size_multipliers": {
+      "hamlet": 0.8,
+      "village": 0.9,
+      "town": 1.0,
+      "city": 1.15,
+      "capital": 1.3
+    },
+    "biome_price_adjustments": {
+      "city": 1.05,
+      "forest": 1.0,
+      "coastal": 0.95,
+      "mountain": 1.2,
+      "desert": 1.25,
+      "tundra": 1.15,
+      "underground": 1.2,
+      "swamp": 1.05,
+      "roadside": 1.0
+    },
+    "seasonal_modifiers": {
+      "winter": {
+        "tundra": 1.1,
+        "mountain": 1.05,
+        "city": 1.0,
+        "coastal": 1.0,
+        "desert": 0.95
+      },
+      "summer": {
+        "desert": 1.1,
+        "tundra": 1.0,
+        "coastal": 1.0,
+        "forest": 1.0,
+        "swamp": 1.05
+      },
+      "spring": {
+        "swamp": 1.05,
+        "forest": 1.0,
+        "city": 1.0
+      },
+      "autumn": {
+        "forest": 0.98,
+        "mountain": 1.02
+      }
+    },
+    "scarcity_rules": {
+      "seafood": 1.2,
+      "mushroom": 1.15,
+      "spicy": 1.1,
+      "legendary": 1.5
+    },
+    "happy_hour": {
+      "enabled": true,
+      "hours_local": [
+        16,
+        18
+      ],
+      "discount": 0.85
+    },
+    "rounding": "round_to_nearest_cp",
+    "formula_hint": "final_price = base_price * settlement_size * biome * season(optional) * scarcity(optional) * event(optional)"
+  }
+}

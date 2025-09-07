@@ -1798,9 +1798,14 @@ async function generateTavern() {
                                 <div class="menu-item">
                                     <div class="item-header">
                                         <span class="item-name">${drink.name_ru}</span>
-                                        <span class="item-price">${drink.price || 'Цена не указана'}</span>
+                                        <span class="item-price">${drink.formatted_price || 'Цена не указана'}</span>
                                     </div>
                                     ${drink.tags ? `<span class="item-tags">${drink.tags.join(', ')}</span>` : ''}
+                                    ${drink.effects ? `<div class="item-effects">
+                                        <strong>Эффект:</strong> ${drink.effects.text_ru}
+                                        ${drink.effects.save ? `<br><strong>Спасбросок:</strong> ${drink.effects.save} Сл ${drink.effects.dc || '—'}` : ''}
+                                        ${drink.effects.duration ? `<br><strong>Длительность:</strong> ${drink.effects.duration}` : ''}
+                                    </div>` : ''}
                                 </div>
                             `).join('')}
                         </div>
@@ -1816,9 +1821,14 @@ async function generateTavern() {
                                 <div class="menu-item">
                                     <div class="item-header">
                                         <span class="item-name">${meal.name_ru}</span>
-                                        <span class="item-price">${meal.price || 'Цена не указана'}</span>
+                                        <span class="item-price">${meal.formatted_price || 'Цена не указана'}</span>
                                     </div>
                                     ${meal.tags ? `<span class="item-tags">${meal.tags.join(', ')}</span>` : ''}
+                                    ${meal.effects ? `<div class="item-effects">
+                                        <strong>Эффект:</strong> ${meal.effects.text_ru}
+                                        ${meal.effects.save ? `<br><strong>Спасбросок:</strong> ${meal.effects.save} Сл ${meal.effects.dc || '—'}` : ''}
+                                        ${meal.effects.duration ? `<br><strong>Длительность:</strong> ${meal.effects.duration}` : ''}
+                                    </div>` : ''}
                                 </div>
                             `).join('')}
                         </div>
@@ -1834,9 +1844,14 @@ async function generateTavern() {
                                 <div class="menu-item">
                                     <div class="item-header">
                                         <span class="item-name">${side.name_ru}</span>
-                                        <span class="item-price">${side.price || 'Цена не указана'}</span>
+                                        <span class="item-price">${side.formatted_price || 'Цена не указана'}</span>
                                     </div>
                                     ${side.tags ? `<span class="item-tags">${side.tags.join(', ')}</span>` : ''}
+                                    ${side.effects ? `<div class="item-effects">
+                                        <strong>Эффект:</strong> ${side.effects.text_ru}
+                                        ${side.effects.save ? `<br><strong>Спасбросок:</strong> ${side.effects.save} Сл ${side.effects.dc || '—'}` : ''}
+                                        ${side.effects.duration ? `<br><strong>Длительность:</strong> ${side.effects.duration}` : ''}
+                                    </div>` : ''}
                                 </div>
                             `).join('')}
                         </div>
