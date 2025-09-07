@@ -243,6 +243,10 @@ class AIChat {
         
         if (isset($result['choices'][0]['message']['content'])) {
             $ai_text = trim($result['choices'][0]['message']['content']);
+            
+            // Очищаем и форматируем ответ
+            $ai_text = $this->cleanAndFormatResponse($ai_text);
+            
             logMessage('INFO', 'AI Chat API успешно вернул ответ длиной: ' . strlen($ai_text));
             return $ai_text;
         }
@@ -250,6 +254,43 @@ class AIChat {
         logMessage('WARNING', 'AI Chat API не вернул текстовый ответ');
         logMessage('DEBUG', 'AI Chat API структура ответа: ' . json_encode($result, JSON_UNESCAPED_UNICODE));
         return null;
+    }
+    
+    /**
+     * Очистка и форматирование ответа от AI
+     */
+    private function cleanAndFormatResponse($text) {
+        // Удаляем управляющие символы, кроме переносов строк
+        $text = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $text);
+        
+        // Заменяем проблемные кавычки на обычные
+        $text = str_replace(['"', '"', '"', '"'], '"', $text);
+        $text = str_replace([''', ''', ''', '''], "'", $text);
+        
+        // Заменяем длинные тире на обычные
+        $text = str_replace(['—', '–'], '-', $text);
+        
+        // Убираем множественные пробелы
+        $text = preg_replace('/[ \t]+/', ' ', $text);
+        
+        // Убираем множественные переносы строк
+        $text = preg_replace('/\n{3,}/', "\n\n", $text);
+        
+        // Форматируем списки - заменяем * на •
+        $text = preg_replace('/^\* /m', '• ', $text);
+        
+        // Убираем лишние пробелы в начале и конце строк
+        $text = preg_replace('/^[ \t]+|[ \t]+$/m', '', $text);
+        
+        // Убираем пустые строки в начале и конце
+        $text = trim($text);
+        
+        // Ограничиваем длину ответа
+        if (strlen($text) > 2000) {
+            $text = substr($text, 0, 2000) . '...';
+        }
+        
+        return $text;
     }
     
     /**

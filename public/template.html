@@ -1108,6 +1108,29 @@
         .msg {
             margin-bottom: 10px;
             line-height: 1.5;
+            padding: 8px 12px;
+            border-radius: 8px;
+            word-wrap: break-word;
+        }
+        
+        .msg.user {
+            background: rgba(107, 70, 193, 0.1);
+            border-left: 3px solid var(--accent-primary);
+        }
+        
+        .msg.assistant {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid var(--accent-secondary);
+        }
+        
+        .msg strong {
+            color: var(--accent-primary);
+            font-weight: bold;
+        }
+        
+        .msg em {
+            color: var(--accent-secondary);
+            font-style: italic;
         }
         
         .user {
@@ -5795,7 +5818,14 @@
             messageDiv.className = `msg ${role}`;
 
             const who = role === 'user' ? 'Вы' : 'AI';
-            messageDiv.innerHTML = `<b>${who}:</b> ${content}`;
+            // Форматируем контент для лучшего отображения
+            const formattedContent = content
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Жирный текст
+                .replace(/\*(.*?)\*/g, '<em>$1</em>') // Курсив
+                .replace(/• /g, '• ') // Маркеры списка
+                .replace(/\n/g, '<br>'); // Переносы строк
+
+            messageDiv.innerHTML = `<b>${who}:</b> ${formattedContent}`;
 
             chatBox.appendChild(messageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
