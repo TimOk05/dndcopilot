@@ -11,12 +11,30 @@ class EnemyGenerator {
     private $cache_dir;
     private $max_retries = 3;
     private $retry_delay = 1000; // миллисекунды
+    private $environment_data;
     
     public function __construct() {
         $this->deepseek_api_key = getApiKey('deepseek');
         $this->cache_dir = __DIR__ . '/../../data/cache/dnd_api';
         if (!is_dir($this->cache_dir)) {
             mkdir($this->cache_dir, 0755, true);
+        }
+        
+        // Загружаем данные о средах обитания
+        $this->loadEnvironmentData();
+    }
+    
+    /**
+     * Загрузка данных о средах обитания монстров
+     */
+    private function loadEnvironmentData() {
+        $env_file = __DIR__ . '/../../data/monster_environments.json';
+        if (file_exists($env_file)) {
+            $this->environment_data = json_decode(file_get_contents($env_file), true);
+            logMessage('INFO', 'EnemyGenerator: Загружены данные о средах обитания для ' . count($this->environment_data) . ' монстров');
+        } else {
+            $this->environment_data = [];
+            logMessage('WARNING', 'EnemyGenerator: Файл с данными о средах обитания не найден');
         }
     }
     
@@ -234,15 +252,11 @@ class EnemyGenerator {
                 continue;
             }
             
-                // Проверяем среду - монстры без указанной среды попадают в любую среду
+                // Проверяем среду - при выборе конкретной среды показываем только подходящих существ
                 if ($environment) {
-                    // Если у монстра есть указанная среда, проверяем совместимость
-                    if (isset($monster_details['environment']) && !empty($monster_details['environment'])) {
-                        if (!$this->checkEnvironment($monster_details, $environment)) {
-                            continue;
-                        }
+                    if (!$this->checkEnvironment($monster_details, $environment)) {
+                        continue;
                     }
-                    // Если среда не указана или пустая - монстр подходит для любой среды
                 }
                 
                 // Проверяем совместимость
@@ -338,34 +352,66 @@ class EnemyGenerator {
      * Проверка среды
      */
     private function checkEnvironment($monster, $requested_environment) {
-        if (!isset($monster['environment']) || empty($monster['environment'])) {
-            // Монстры без указанной среды подходят для любой среды
-            return true;
+        $monster_index = $monster['index'] ?? '';
+        
+        // Проверяем нашу базу данных сред обитания
+        if (isset($this->environment_data[$monster_index])) {
+            $monster_env = $this->environment_data[$monster_index];
+            $requested_env = strtolower($requested_environment);
+            
+            // Прямое сравнение
+            if ($monster_env === $requested_env) {
+                return true;
+            }
+            
+            // Проверяем маппинг сред
+            return $this->checkEnvironmentMapping($monster_env, $requested_env);
         }
         
-        $monster_env = strtolower($monster['environment']);
-        $requested_env = strtolower($requested_environment);
-        
+        // Если нет данных о среде - монстр не подходит для конкретной среды
+        return false;
+    }
+    
+    /**
+     * Проверка маппинга сред
+     */
+    private function checkEnvironmentMapping($monster_env, $requested_env) {
         // Маппинг сред
         $environment_mapping = [
-            'forest' => ['forest', 'grassland', 'hill'],
-            'mountain' => ['mountain', 'hill'],
-            'desert' => ['desert'],
-            'swamp' => ['swamp', 'marsh'],
-            'underdark' => ['underdark', 'cave'],
-            'water' => ['aquatic', 'coastal'],
-            'urban' => ['urban', 'city']
+            'forest' => ['forest', 'grassland', 'hill', 'woodland', 'jungle'],
+            'mountain' => ['mountain', 'hill', 'highland'],
+            'desert' => ['desert', 'arid'],
+            'swamp' => ['swamp', 'marsh', 'wetland'],
+            'underdark' => ['underdark', 'cave', 'underground'],
+            'water' => ['aquatic', 'coastal', 'ocean', 'sea'],
+            'urban' => ['urban', 'city', 'town'],
+            'arctic' => ['arctic', 'tundra', 'cold'],
+            'coastal' => ['coastal', 'beach', 'shore']
         ];
         
         if (isset($environment_mapping[$requested_env])) {
             foreach ($environment_mapping[$requested_env] as $env) {
-                if (strpos($monster_env, $env) !== false) {
+                if ($monster_env === $env) {
                     return true;
                 }
             }
         }
         
-        return strpos($monster_env, $requested_env) !== false;
+        return false;
+    }
+    
+    /**
+     * Получение среды обитания монстра
+     */
+    private function getMonsterEnvironment($monster) {
+        $monster_index = $monster['index'] ?? '';
+        
+        if (isset($this->environment_data[$monster_index])) {
+            $env = $this->environment_data[$monster_index];
+            return $this->translateEnvironment($env);
+        }
+        
+        return 'Не определена';
     }
     
     /**
@@ -393,6 +439,7 @@ class EnemyGenerator {
                 'languages' => $this->formatLanguages($monster['languages'] ?? []),
                 'alignment' => $monster['alignment'] ?? 'Не определено',
                 'size' => $this->translateSize($monster['size'] ?? 'medium'),
+                'environment' => $this->getMonsterEnvironment($monster),
                 'xp' => $monster['xp'] ?? 0
             ];
             
@@ -736,6 +783,46 @@ class EnemyGenerator {
         ];
         
         return $translations[strtolower($type)] ?? $type;
+    }
+    
+    /**
+     * Перевод сред обитания на русский
+     */
+    private function translateEnvironment($environment) {
+        $translations = [
+            'forest' => 'Лес',
+            'mountain' => 'Горы',
+            'desert' => 'Пустыня',
+            'swamp' => 'Болото',
+            'underdark' => 'Подземелье',
+            'water' => 'Вода',
+            'urban' => 'Город',
+            'arctic' => 'Арктика',
+            'coastal' => 'Побережье',
+            'grassland' => 'Равнины',
+            'hill' => 'Холмы',
+            'jungle' => 'Джунгли',
+            'cave' => 'Пещера',
+            'underground' => 'Подземелье',
+            'aquatic' => 'Водная',
+            'ocean' => 'Океан',
+            'sea' => 'Море',
+            'city' => 'Город',
+            'town' => 'Город',
+            'beach' => 'Пляж',
+            'shore' => 'Берег',
+            'tundra' => 'Тундра',
+            'cold' => 'Холодная',
+            'arid' => 'Засушливая',
+            'marsh' => 'Болото',
+            'wetland' => 'Водно-болотные угодья',
+            'highland' => 'Нагорье',
+            'woodland' => 'Лесная местность',
+            'celestial' => 'Небесная',
+            'elemental' => 'Стихийная'
+        ];
+        
+        return $translations[$environment] ?? ucfirst($environment);
     }
     
     /**
