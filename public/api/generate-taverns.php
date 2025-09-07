@@ -46,7 +46,7 @@ class TavernGenerator {
      */
     public function generateTavern($params) {
         try {
-            $biome = $params['biome'] ?? 'city';
+            $biome = $params['biome'] ?? '';
             $use_ai = isset($params['use_ai']) ? ($params['use_ai'] === 'on') : true;
             $count = (int)($params['count'] ?? 1);
             
@@ -55,9 +55,15 @@ class TavernGenerator {
                 throw new Exception('Количество таверн должно быть от 1 до 10');
             }
             
-            $valid_biomes = array_keys($this->taverns_db['specials']);
-            if (!in_array($biome, $valid_biomes)) {
-                throw new Exception('Неверный биом. Доступные: ' . implode(', ', $valid_biomes));
+            // Если биом не указан, выбираем случайный
+            if (empty($biome)) {
+                $valid_biomes = array_keys($this->taverns_db['specials']);
+                $biome = $valid_biomes[array_rand($valid_biomes)];
+            } else {
+                $valid_biomes = array_keys($this->taverns_db['specials']);
+                if (!in_array($biome, $valid_biomes)) {
+                    throw new Exception('Неверный биом. Доступные: ' . implode(', ', $valid_biomes));
+                }
             }
             
             logMessage('INFO', "TavernGenerator: Генерация таверны. Биом: $biome, Количество: $count");

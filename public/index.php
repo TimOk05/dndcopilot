@@ -1689,6 +1689,7 @@ function openTavernModal() {
                     <div class="form-group">
                         <label for="tavern-biome">Биом/Местность</label>
                         <select id="tavern-biome" name="biome">
+                            <option value="">Случайная</option>
                             <option value="city">Город</option>
                             <option value="forest">Лес</option>
                             <option value="coastal">Побережье</option>
@@ -1698,14 +1699,6 @@ function openTavernModal() {
                             <option value="underground">Подземелье</option>
                             <option value="swamp">Болото</option>
                             <option value="roadside">У дороги</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="tavern-ai">Использовать AI</label>
-                        <select id="tavern-ai" name="use_ai">
-                            <option value="on">Включено</option>
-                            <option value="off">Отключено</option>
                         </select>
                     </div>
                 </div>
@@ -1729,7 +1722,25 @@ function openTavernModal() {
 async function generateTavern() {
     const form = document.getElementById('tavernForm');
     const formData = new FormData(form);
-    const button = document.querySelector('.btn-primary');
+    
+    // Если биом не выбран, выбираем случайный
+    const biome = formData.get('biome');
+    if (!biome) {
+        const biomes = ['city', 'forest', 'coastal', 'mountain', 'desert', 'tundra', 'underground', 'swamp', 'roadside'];
+        const randomBiome = biomes[Math.floor(Math.random() * biomes.length)];
+        formData.set('biome', randomBiome);
+    }
+    
+    // AI всегда включен
+    formData.set('use_ai', 'on');
+    
+    const button = document.querySelector('#tavernForm .btn-primary');
+    if (!button) {
+        console.error('Кнопка генерации не найдена');
+        addMessage('assistant', '❌ Ошибка: кнопка генерации не найдена');
+        return;
+    }
+    
     const buttonText = button.querySelector('.btn-text');
     const buttonLoading = button.querySelector('.btn-loading');
     const resultsDiv = document.getElementById('tavern-results');
@@ -1737,8 +1748,8 @@ async function generateTavern() {
     
     // Показываем загрузку
     button.disabled = true;
-    buttonText.style.display = 'none';
-    buttonLoading.style.display = 'inline';
+    if (buttonText) buttonText.style.display = 'none';
+    if (buttonLoading) buttonLoading.style.display = 'inline';
     
     try {
         const response = await fetch('/api/generate-taverns.php', {
@@ -1854,9 +1865,11 @@ async function generateTavern() {
         addMessage('assistant', `❌ Ошибка генерации таверн: ${error.message}`);
     } finally {
         // Скрываем загрузку
-        button.disabled = false;
-        buttonText.style.display = 'inline';
-        buttonLoading.style.display = 'none';
+        if (button) {
+            button.disabled = false;
+            if (buttonText) buttonText.style.display = 'inline';
+            if (buttonLoading) buttonLoading.style.display = 'none';
+        }
     }
 }
 
