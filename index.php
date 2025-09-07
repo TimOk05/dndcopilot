@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'auth.php';
+require_once 'app/Middleware/auth.php';
 
 // Автоматическое определение мобильного устройства и переадресация
 function isMobileDevice() {
