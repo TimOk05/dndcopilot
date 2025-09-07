@@ -60,7 +60,7 @@ class EnemyGenerator {
             }
             
             // Фильтруем монстров по CR и типу
-            logMessage('INFO', "EnemyGenerator: Фильтруем монстров. CR range: " . json_encode($cr_range));
+            logMessage('INFO', "EnemyGenerator: Фильтруем монстров. CR range: " . json_encode($cr_range) . ", тип: '$enemy_type', среда: '$environment'");
             $filtered_monsters = $this->filterMonsters($monsters, $cr_range, $enemy_type, $environment);
             logMessage('INFO', "EnemyGenerator: После фильтрации найдено монстров: " . count($filtered_monsters));
             
@@ -234,11 +234,15 @@ class EnemyGenerator {
                 continue;
             }
             
-                // Проверяем среду (необязательно - пропускаем если нет информации)
-                if ($environment && isset($monster_details['environment'])) {
-                    if (!$this->checkEnvironment($monster_details, $environment)) {
-                        continue;
+                // Проверяем среду - монстры без указанной среды попадают в любую среду
+                if ($environment) {
+                    // Если у монстра есть указанная среда, проверяем совместимость
+                    if (isset($monster_details['environment']) && !empty($monster_details['environment'])) {
+                        if (!$this->checkEnvironment($monster_details, $environment)) {
+                            continue;
+                        }
                     }
+                    // Если среда не указана или пустая - монстр подходит для любой среды
                 }
                 
                 // Проверяем совместимость
@@ -334,8 +338,9 @@ class EnemyGenerator {
      * Проверка среды
      */
     private function checkEnvironment($monster, $requested_environment) {
-        if (!isset($monster['environment'])) {
-            return false;
+        if (!isset($monster['environment']) || empty($monster['environment'])) {
+            // Монстры без указанной среды подходят для любой среды
+            return true;
         }
         
         $monster_env = strtolower($monster['environment']);
