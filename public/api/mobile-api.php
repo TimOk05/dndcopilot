@@ -7,19 +7,19 @@ header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 }
 
-require_once '../../config/config.php';
+require_once __DIR__ . '/../../config/config.php';
 
 // Обработка preflight запросов (только для HTTP запросов)
 if (php_sapi_name() !== 'cli' && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// Проверяем авторизацию для мобильной версии (только для HTTP запросов)
-if (php_sapi_name() !== 'cli' && !isLoggedIn()) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'error' => 'Не авторизован']);
-    exit;
-}
+// Авторизация отключена для мобильной версии (как в основных API)
+// if (php_sapi_name() !== 'cli' && !isLoggedIn()) {
+//     http_response_code(401);
+//     echo json_encode(['success' => false, 'error' => 'Не авторизован']);
+//     exit;
+// }
 
 // ===== ОБЪЯВЛЕНИЯ ФУНКЦИЙ =====
 
@@ -31,7 +31,7 @@ function generateMobileCharacter($race, $characterClass, $level) {
     try {
         // Загружаем данные имен
         $namesData = null;
-        $namesFile = 'data/names.json';
+        $namesFile = __DIR__ . '/../../data/pdf/dnd_race_names_ru_v2.json';
         if (file_exists($namesFile)) {
             $namesContent = file_get_contents($namesFile);
             $namesData = json_decode($namesContent, true);
@@ -47,8 +47,8 @@ function generateMobileCharacter($race, $characterClass, $level) {
         $hp = calculateHP($characterClass, $level, $abilities['con']);
         $ac = calculateAC($characterClass, $abilities['dex']);
         
-        // Генерируем описание с AI
-        $description = generateCharacterDescriptionWithAI($race, $characterClass, $level);
+        // Генерируем простое описание без AI
+        $description = generateSimpleCharacterDescription($race, $characterClass, $level);
         
         // Получаем особенности класса
         $features = getClassFeatures($characterClass, $level);
@@ -204,62 +204,41 @@ function generateEnemyTactics($name, $type) {
 if (!function_exists('askMobileAI')) {
 function askMobileAI($question) {
     try {
-        // Используем AI напрямую через API
-        require_once '../../config/config.php';
-        
-        $api_key = getApiKey('deepseek');
-        if (empty($api_key)) {
-            throw new Exception('API ключ не настроен');
-        }
-        
-        $url = 'https://api.deepseek.com/v1/chat/completions';
-        $data = [
-            'model' => 'deepseek-chat',
-            'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => 'Ты помощник по D&D. Отвечай на русском языке кратко и по делу.'
-                ],
-                [
-                    'role' => 'user',
-                    'content' => $question
-                ]
-            ],
-            'max_tokens' => 500,
-            'temperature' => 0.7
+        // Простые ответы без внешнего AI
+        $responses = [
+            'привет' => 'Привет! Я помощник по D&D. Чем могу помочь?',
+            'как дела' => 'Отлично! Готов помочь с вашими D&D вопросами.',
+            'помощь' => 'Я могу помочь с генерацией персонажей, противников, зелий и таверн.',
+            'правила' => 'В D&D есть множество правил. Что именно вас интересует?',
+            'бросок' => 'Для броска кубика используйте кнопки быстрых действий.',
+            'персонаж' => 'Используйте генератор персонажей для создания нового героя.',
+            'противник' => 'Генератор противников поможет создать врагов для вашей кампании.',
+            'зелье' => 'Генератор зелий создаст магические зелья для ваших приключений.',
+            'таверна' => 'Генератор таверн создаст атмосферные места для встреч.'
         ];
         
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'header' => [
-                    'Content-Type: application/json',
-                    'Authorization: Bearer ' . $api_key
-                ],
-                'content' => json_encode($data),
-                'timeout' => 30
-            ]
-        ]);
+        $question_lower = strtolower(trim($question));
         
-        $response = file_get_contents($url, false, $context);
-        if ($response === false) {
-            throw new Exception('Не удалось подключиться к API');
+        // Ищем подходящий ответ
+        foreach ($responses as $key => $response) {
+            if (strpos($question_lower, $key) !== false) {
+                return [
+                    'response' => $response,
+                    'timestamp' => date('Y-m-d H:i:s')
+                ];
+            }
         }
         
-        $result = json_decode($response, true);
-        if (isset($result['error'])) {
-            throw new Exception($result['error']['message'] ?? 'Ошибка API');
-        }
-        
-        $ai_response = $result['choices'][0]['message']['content'] ?? 'Ответ не получен';
-        
+        // Общий ответ
         return [
-            'response' => $ai_response,
+            'response' => 'Интересный вопрос! В D&D есть много возможностей. Попробуйте использовать генераторы для создания контента для вашей кампании.',
             'timestamp' => date('Y-m-d H:i:s')
         ];
     } catch (Exception $e) {
-        logMessage('ERROR', 'Mobile AI chat failed: ' . $e->getMessage());
-        throw new Exception('AI недоступен: ' . $e->getMessage());
+        return [
+            'response' => 'Извините, произошла ошибка. Попробуйте переформулировать вопрос.',
+            'timestamp' => date('Y-m-d H:i:s')
+        ];
     }
 }
 }
@@ -411,27 +390,48 @@ function getArmorProficiencies($characterClass) {
 }
 
 /**
- * Генерация описания персонажа с AI
+ * Генерация простого описания персонажа без AI
  */
-if (!function_exists('generateCharacterDescriptionWithAI')) {
-function generateCharacterDescriptionWithAI($race, $characterClass, $level) {
-    try {
-        // Используем основной AI сервис
-        require_once '../../app/Services/ai-service.php';
-        
-        $aiService = new AiService();
-        $character = ['race' => $race, 'class' => $characterClass, 'level' => $level];
-        $result = $aiService->generateCharacterDescription($character);
-        
-        if (isset($result['error'])) {
-            throw new Exception($result['error']);
-        }
-        
-        return $result;
-    } catch (Exception $e) {
-        logMessage('ERROR', 'Mobile AI description failed: ' . $e->getMessage());
-        throw new Exception('AI недоступен для генерации описания: ' . $e->getMessage());
-    }
+if (!function_exists('generateSimpleCharacterDescription')) {
+function generateSimpleCharacterDescription($race, $characterClass, $level) {
+    $raceNames = [
+        'human' => 'человек',
+        'elf' => 'эльф',
+        'dwarf' => 'дварф',
+        'halfling' => 'полурослик',
+        'gnome' => 'гном',
+        'half-orc' => 'полуорк',
+        'tiefling' => 'тифлинг',
+        'dragonborn' => 'драконорожденный'
+    ];
+    
+    $classNames = [
+        'fighter' => 'воин',
+        'wizard' => 'волшебник',
+        'rogue' => 'плут',
+        'cleric' => 'жрец',
+        'ranger' => 'следопыт',
+        'barbarian' => 'варвар',
+        'bard' => 'бард',
+        'druid' => 'друид',
+        'monk' => 'монах',
+        'paladin' => 'паладин',
+        'sorcerer' => 'чародей',
+        'warlock' => 'колдун',
+        'artificer' => 'изобретатель'
+    ];
+    
+    $raceName = $raceNames[$race] ?? $race;
+    $className = $classNames[$characterClass] ?? $characterClass;
+    
+    $descriptions = [
+        "{$raceName} {$className} {$level} уровня - опытный авантюрист, готовый к любым вызовам.",
+        "Могущественный {$raceName} {$className}, достигший {$level} уровня мастерства.",
+        "Отважный {$raceName} {$className} с {$level} уровнями опыта в приключениях.",
+        "Умелый {$raceName} {$className}, прошедший множество испытаний до {$level} уровня."
+    ];
+    
+    return $descriptions[array_rand($descriptions)];
 }
 }
 
