@@ -997,6 +997,7 @@
     }
 }
 
+
 /* ===== POTION GENERATOR ===== */
 
 .potion-generator {
@@ -1126,11 +1127,12 @@
     color: var(--text-primary);
     font-size: var(--text-sm);
 }
-    font-weight: 500;
-    font-size: var(--text-sm);
-    margin-top: var(--space-2);
-}
 
+font-weight: 500;
+font-size: var(--text-sm);
+margin-top: var(--space-2);
+
+}
 .enemy-threat-level {
     background: var(--accent-tertiary);
     color: var(--text-on-accent);
@@ -1141,11 +1143,9 @@
     margin-bottom: var(--space-3);
     display: inline-block;
 }
-
 .enemy-section {
     margin-bottom: var(--space-3);
 }
-
 .section-title {
     background: var(--bg-tertiary);
     padding: var(--space-2) var(--space-3);
@@ -1159,49 +1159,40 @@
     color: var(--text-primary);
     transition: background-color 0.2s ease;
 }
-
 .section-title:hover {
     background: var(--bg-quaternary);
 }
-
 .section-title.collapsed .toggle-icon::after {
     content: '▶';
 }
-
 .section-title:not(.collapsed) .toggle-icon::after {
     content: '▼';
 }
-
 .section-content {
     padding: var(--space-3);
     background: var(--bg-primary);
     border-radius: var(--radius-md);
     margin-top: var(--space-2);
 }
-
 .section-content.collapsed {
     display: none;
 }
-
 .info-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: var(--space-2);
 }
-
 .info-item {
     padding: var(--space-2);
     background: var(--bg-secondary);
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-secondary);
 }
-
 .abilities-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-2);
 }
-
 .ability-item {
     padding: var(--space-2);
     background: var(--bg-secondary);
@@ -1209,14 +1200,12 @@
     border: 1px solid var(--border-secondary);
     text-align: center;
 }
-
 .actions-list,
 .abilities-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
-
 .actions-list li,
 .abilities-list li {
     padding: var(--space-2);
@@ -1225,12 +1214,10 @@
     margin-bottom: var(--space-2);
     border: 1px solid var(--border-secondary);
 }
-
 .save-enemy-section {
     margin-top: var(--space-3);
     text-align: center;
 }
-
 .save-enemy-btn {
     background: var(--accent-primary);
     color: var(--text-on-accent);
@@ -1241,11 +1228,9 @@
     font-weight: 600;
     transition: background-color 0.2s ease;
 }
-
 .save-enemy-btn:hover {
     background: var(--accent-primary-hover);
 }
-
 .save-enemies-section {
     margin-top: var(--space-4);
     text-align: center;
@@ -1253,7 +1238,6 @@
     background: var(--bg-secondary);
     border-radius: var(--radius-lg);
 }
-
 .save-enemies-btn {
     background: var(--accent-secondary);
     color: var(--text-on-accent);
@@ -1265,18 +1249,15 @@
     font-size: var(--text-lg);
     transition: background-color 0.2s ease;
 }
-
 .save-enemies-btn:hover {
     background: var(--accent-secondary-hover);
 }
-
 .enemy-separator {
     border: none;
     height: 1px;
     background: var(--border-primary);
     margin: var(--space-4) 0;
 }
-
 .generate-btn {
     background: var(--accent-primary);
     color: var(--text-on-accent);
@@ -1289,15 +1270,12 @@
     transition: background-color 0.2s ease;
     width: 100%;
 }
-
 .generate-btn:hover {
     background: var(--accent-primary-hover);
-=======
-    color: var(--text-secondary);
+    =======color: var(--text-secondary);
     margin-bottom: var(--space-2);
     font-size: var(--text-sm);
 }
-
 .form-group input,
 .form-group select {
     padding: var(--space-3);
@@ -1308,14 +1286,12 @@
     font-size: var(--text-base);
     transition: all 0.2s ease;
 }
-
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
     border-color: var(--accent-primary);
     box-shadow: 0 0 0 3px rgba(166, 124, 82, 0.1);
 }
-
 .generate-btn {
     display: flex;
     align-items: center;
@@ -1332,27 +1308,23 @@
     cursor: pointer;
     transition: all 0.2s ease;
 }
-
 .generate-btn:hover {
     background: var(--accent-secondary);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
->>>>>>> b86ba888a4274516acb58e29f394e84525f24695
+    >>>>>>>b86ba888a4274516acb58e29f394e84525f24695
 }
-
 .generate-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-<<<<<<< HEAD
+    <<<<<<< HEAD
 }
-
 .loading {
     text-align: center;
     padding: var(--space-4);
     color: var(--text-secondary);
     font-style: italic;
 }
-
 .fallback-notice {
     background: var(--accent-tertiary);
     color: var(--text-on-accent);
@@ -1361,27 +1333,22 @@
     margin-bottom: var(--space-4);
     text-align: center;
     font-weight: 600;
-=======
-    transform: none;
+    =======transform: none;
 }
-
 .btn-icon {
     font-size: var(--text-xl);
 }
-
 .btn-text {
     font-size: var(--text-lg);
 }
 
 /* ===== POTION CARDS ===== */
-
 .potions-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: var(--space-4);
     margin-top: var(--space-6);
 }
-
 .potion-card {
     background: var(--bg-secondary);
     border: 1px solid var(--border-primary);
@@ -1392,12 +1359,10 @@
     position: relative;
     overflow: hidden;
 }
-
 .potion-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
 }
-
 .potion-card::before {
     content: '';
     position: absolute;
@@ -1407,7 +1372,6 @@
     height: 4px;
     background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
 }
-
 .potion-header {
     display: flex;
     align-items: center;
@@ -1416,7 +1380,6 @@
     padding-bottom: var(--space-3);
     border-bottom: 1px solid var(--border-tertiary);
 }
-
 .potion-icon {
     font-size: var(--text-2xl);
     width: 40px;
@@ -1427,7 +1390,6 @@
     background: var(--bg-tertiary);
     border-radius: var(--radius-md);
 }
-
 .potion-name {
     flex: 1;
     margin: 0;
@@ -1435,7 +1397,6 @@
     font-weight: 600;
     color: var(--text-primary);
 }
-
 .potion-rarity {
     font-size: var(--text-sm);
     font-weight: 600;
@@ -1444,17 +1405,14 @@
     background: var(--bg-tertiary);
     border: 1px solid currentColor;
 }
-
 .potion-body {
     color: var(--text-secondary);
 }
-
 .potion-description {
     margin: 0 0 var(--space-4) 0;
     line-height: var(--line-height-relaxed);
     font-size: var(--text-base);
 }
-
 .potion-details {
     display: flex;
     flex-wrap: wrap;
@@ -1462,7 +1420,6 @@
     margin-bottom: var(--space-4);
     font-size: var(--text-sm);
 }
-
 .potion-type,
 .potion-value,
 .potion-weight {
@@ -1474,13 +1431,11 @@
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-tertiary);
 }
-
 .potion-properties {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
 }
-
 .potion-property,
 .potion-effect {
     font-size: var(--text-xs);
@@ -1492,7 +1447,6 @@
 }
 
 /* ===== LOADING STATES ===== */
-
 .loading {
     text-align: center;
     padding: var(--space-8);
@@ -1500,7 +1454,6 @@
     font-size: var(--text-lg);
     font-style: italic;
 }
-
 .error {
     text-align: center;
     padding: var(--space-6);
@@ -1512,7 +1465,6 @@
 }
 
 /* ===== RESPONSIVE ADJUSTMENTS ===== */
-
 @media (max-width: 768px) {
     .form-grid {
         grid-template-columns: 1fr;
@@ -1543,5 +1495,127 @@
         padding: var(--space-3);
         font-size: var(--text-base);
     }
->>>>>>> b86ba888a4274516acb58e29f394e84525f24695
+    
+    >>>>>>>b86ba888a4274516acb58e29f394e84525f24695
+}
+
+/* ===== TAVERN GENERATOR ===== */
+.tavern-generator {
+    max-width: 800px;
+    margin: 0 auto;
+}
+.tavern-form {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+}
+.tavern-results {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-top: var(--space-6);
+}
+.tavern-results h3 {
+    color: var(--text-primary);
+    margin-bottom: var(--space-4);
+    text-align: center;
+    font-size: var(--text-xl);
+}
+.tavern-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+    border-left: 4px solid var(--accent-primary);
+}
+.tavern-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+.tavern-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--border-tertiary);
+}
+.tavern-header h3 {
+    color: var(--accent-primary);
+    margin: 0;
+    font-size: var(--text-lg);
+    font-weight: 600;
+}
+.tavern-details {
+    margin-bottom: var(--space-3);
+}
+.tavern-details p {
+    margin-bottom: var(--space-1);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+}
+.tavern-details strong {
+    color: var(--text-primary);
+}
+.tavern-description {
+    color: var(--text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--space-3);
+    font-size: var(--text-sm);
+}
+.tavern-section {
+    background: var(--bg-tertiary);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-3);
+    border-left: 3px solid var(--accent-primary);
+}
+.tavern-section h4 {
+    color: var(--accent-primary);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-base);
+    font-weight: 600;
+}
+.menu-item {
+    background: var(--bg-primary);
+    padding: var(--space-2);
+    margin: var(--space-1) 0;
+    border-radius: var(--radius-sm);
+    border-left: 2px solid var(--accent-primary);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+}
+
+/* ===== RESPONSIVE TAVERN STYLES ===== */
+@media (max-width: 768px) {
+    .tavern-generator {
+        padding: var(--space-4);
+    }
+    
+    .tavern-form {
+        padding: var(--space-4);
+    }
+    
+    .tavern-results {
+        padding: var(--space-4);
+    }
+    
+    .tavern-card {
+        padding: var(--space-3);
+    }
+    
+    .tavern-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+    }
+    
+    .tavern-section {
+        padding: var(--space-2);
+    }
 }

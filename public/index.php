@@ -240,6 +240,7 @@ $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="open
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей">⚔️ Персонаж</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников">👹 Противники</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий">🧪 Зелья</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openTavernModal()" data-tooltip="Создать таверну" aria-label="Открыть генератор таверн">🍺 Таверны</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="Управление инициативой" aria-label="Открыть управление инициативой">⚡ Инициатива</button>';
 $fastBtns .= '</div>';
 
@@ -1667,6 +1668,196 @@ function showNotification(message, type = 'info') {
             }
         }, 300);
     }, 3000);
+}
+
+// --- Таверны ---
+function openTavernModal() {
+    showModal(`
+        <div class="tavern-generator">
+            <div class="generator-header">
+                <h2>🍺 Генератор таверн</h2>
+                <p class="generator-subtitle">Создайте атмосферные таверны для ваших приключений</p>
+            </div>
+            
+            <form id="tavernForm" class="tavern-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="tavern-count">Количество таверн</label>
+                        <input type="number" id="tavern-count" name="count" min="1" max="10" value="1" placeholder="От 1 до 10">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tavern-biome">Биом/Местность</label>
+                        <select id="tavern-biome" name="biome">
+                            <option value="city">Город</option>
+                            <option value="forest">Лес</option>
+                            <option value="coastal">Побережье</option>
+                            <option value="mountain">Горы</option>
+                            <option value="desert">Пустыня</option>
+                            <option value="tundra">Тундра</option>
+                            <option value="underground">Подземелье</option>
+                            <option value="swamp">Болото</option>
+                            <option value="roadside">У дороги</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tavern-ai">Использовать AI</label>
+                        <select id="tavern-ai" name="use_ai">
+                            <option value="on">Включено</option>
+                            <option value="off">Отключено</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="generateTavern()">
+                        <span class="btn-text">Сгенерировать таверны</span>
+                        <span class="btn-loading" style="display: none;">⏳ Генерация...</span>
+                    </button>
+                </div>
+            </form>
+            
+            <div id="tavern-results" class="tavern-results" style="display: none;">
+                <h3>Результаты генерации</h3>
+                <div id="tavern-content"></div>
+            </div>
+        </div>
+    `);
+}
+
+async function generateTavern() {
+    const form = document.getElementById('tavernForm');
+    const formData = new FormData(form);
+    const button = document.querySelector('.btn-primary');
+    const buttonText = button.querySelector('.btn-text');
+    const buttonLoading = button.querySelector('.btn-loading');
+    const resultsDiv = document.getElementById('tavern-results');
+    const contentDiv = document.getElementById('tavern-content');
+    
+    // Показываем загрузку
+    button.disabled = true;
+    buttonText.style.display = 'none';
+    buttonLoading.style.display = 'inline';
+    
+    try {
+        const response = await fetch('/api/generate-taverns.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (!result.success) {
+            throw new Error(result.error || 'Неизвестная ошибка API');
+        }
+        
+        if (!result.taverns || result.taverns.length === 0) {
+            throw new Error('Не найдено таверн по указанным критериям');
+        }
+        
+        // Отображаем результаты
+        let html = '';
+        result.taverns.forEach(tavern => {
+            const name = tavern.name || 'Неизвестная таверна';
+            const location = tavern.location?.text_ru || 'Неизвестное место';
+            const owner = tavern.owner?.name_ru || 'Неизвестный владелец';
+            const ownerRace = tavern.owner?.race || 'человек';
+            const biome = tavern.biome || 'неизвестно';
+            
+            let description = '';
+            if (tavern.description) {
+                description = `<div class="tavern-description"><p>${tavern.description}</p></div>`;
+            } else if (tavern.description_error) {
+                description = `<div class="tavern-description"><p style="color: #dc3545;">Ошибка AI: ${tavern.description_error.message}</p></div>`;
+            }
+            
+            let menuHTML = '';
+            if (tavern.menu) {
+                menuHTML = `
+                    <div class="tavern-section">
+                        <h4>🍽️ Меню</h4>
+                        ${tavern.menu.drinks ? `<div><strong>Напитки:</strong> ${tavern.menu.drinks.map(d => d.name_ru).join(', ')}</div>` : ''}
+                        ${tavern.menu.meals ? `<div><strong>Блюда:</strong> ${tavern.menu.meals.map(m => m.name_ru).join(', ')}</div>` : ''}
+                        ${tavern.menu.sides ? `<div><strong>Закуски:</strong> ${tavern.menu.sides.map(s => s.name_ru).join(', ')}</div>` : ''}
+                    </div>
+                `;
+            }
+            
+            let staffHTML = '';
+            if (tavern.staff && tavern.staff.length > 0) {
+                staffHTML = `
+                    <div class="tavern-section">
+                        <h4>👥 Персонал</h4>
+                        ${tavern.staff.map(staff => `<div class="menu-item">${staff.role} (${staff.race}) - ${staff.traits.join(', ')}</div>`).join('')}
+                    </div>
+                `;
+            }
+            
+            let eventsHTML = '';
+            if (tavern.events && tavern.events.length > 0) {
+                eventsHTML = `
+                    <div class="tavern-section">
+                        <h4>🎭 События</h4>
+                        ${tavern.events.map(event => `<div class="menu-item">${event.type}</div>`).join('')}
+                    </div>
+                `;
+            }
+            
+            let gamesHTML = '';
+            if (tavern.games) {
+                const gamesList = [];
+                Object.values(tavern.games).forEach(game => {
+                    if (game) gamesList.push(`${game.name_ru} (${game.style})`);
+                });
+                if (gamesList.length > 0) {
+                    gamesHTML = `
+                        <div class="tavern-section">
+                            <h4>🎲 Игры</h4>
+                            ${gamesList.map(game => `<div class="menu-item">${game}</div>`).join('')}
+                        </div>
+                    `;
+                }
+            }
+            
+            html += `
+                <div class="tavern-card">
+                    <div class="tavern-header">
+                        <h3>${name}</h3>
+                    </div>
+                    <div class="tavern-details">
+                        <p><strong>Расположение:</strong> ${location}</p>
+                        <p><strong>Владелец:</strong> ${owner} (${ownerRace})</p>
+                        <p><strong>Биом:</strong> ${biome}</p>
+                    </div>
+                    ${description}
+                    ${menuHTML}
+                    ${staffHTML}
+                    ${eventsHTML}
+                    ${gamesHTML}
+                </div>
+            `;
+        });
+        
+        contentDiv.innerHTML = html;
+        resultsDiv.style.display = 'block';
+        
+        // Добавляем в чат
+        addMessage('assistant', `🍺 Сгенерированы таверны для биома "${result.biome}":\n\n${html.replace(/<[^>]*>/g, '').substring(0, 500)}...`);
+        
+    } catch (error) {
+        console.error('Tavern generation error:', error);
+        addMessage('assistant', `❌ Ошибка генерации таверн: ${error.message}`);
+    } finally {
+        // Скрываем загрузку
+        button.disabled = false;
+        buttonText.style.display = 'inline';
+        buttonLoading.style.display = 'none';
+    }
 }
 
 // --- Инициатива ---
