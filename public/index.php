@@ -1737,7 +1737,7 @@ async function generateTavern() {
     const button = document.querySelector('#tavernForm .btn-primary');
     if (!button) {
         console.error('Кнопка генерации не найдена');
-        addMessage('assistant', '❌ Ошибка: кнопка генерации не найдена');
+        alert('❌ Ошибка: кнопка генерации не найдена');
         return;
     }
     
@@ -1752,7 +1752,7 @@ async function generateTavern() {
     if (buttonLoading) buttonLoading.style.display = 'inline';
     
     try {
-        const response = await fetch('/api/generate-taverns.php', {
+        const response = await fetch('api/generate-taverns.php', {
             method: 'POST',
             body: formData
         });
@@ -1857,12 +1857,14 @@ async function generateTavern() {
         contentDiv.innerHTML = html;
         resultsDiv.style.display = 'block';
         
-        // Добавляем в чат
-        addMessage('assistant', `🍺 Сгенерированы таверны для биома "${result.biome}":\n\n${html.replace(/<[^>]*>/g, '').substring(0, 500)}...`);
+        // Автоматическая прокрутка к результату
+        setTimeout(() => {
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
         
     } catch (error) {
         console.error('Tavern generation error:', error);
-        addMessage('assistant', `❌ Ошибка генерации таверн: ${error.message}`);
+        alert(`❌ Ошибка генерации таверн: ${error.message}`);
     } finally {
         // Скрываем загрузку
         if (button) {
