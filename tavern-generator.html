@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор таверн DnD</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #8B4513;
+            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.4);
+        }
+
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 69, 19, 0.6);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #8B4513;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #8B4513;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            padding: 40px;
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .tavern-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #8B4513;
+            transition: transform 0.3s ease;
+        }
+
+        .tavern-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .tavern-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e1e5e9;
+            padding-bottom: 10px;
+        }
+
+        .tavern-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .tavern-name {
+            color: #8B4513;
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        .tavern-details {
+            margin-bottom: 15px;
+        }
+
+        .tavern-details p {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .tavern-details strong {
+            color: #333;
+        }
+
+        .tavern-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .tavern-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 3px solid #8B4513;
+        }
+
+        .tavern-section h4 {
+            color: #8B4513;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .menu-item {
+            background: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border-left: 2px solid #8B4513;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #f5c6cb;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .controls {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍺 Генератор таверн DnD</h1>
+            <p>Создавайте атмосферные таверны для ваших приключений</p>
+        </div>
+
+        <div class="controls">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="tavern-count">Количество таверн</label>
+                    <input type="number" id="tavern-count" min="1" max="10" value="1" placeholder="От 1 до 10">
+                </div>
+
+                <div class="form-group">
+                    <label for="tavern-biome">Биом/Местность</label>
+                    <select id="tavern-biome">
+                        <option value="city">Город</option>
+                        <option value="forest">Лес</option>
+                        <option value="coastal">Побережье</option>
+                        <option value="mountain">Горы</option>
+                        <option value="desert">Пустыня</option>
+                        <option value="tundra">Тундра</option>
+                        <option value="underground">Подземелье</option>
+                        <option value="swamp">Болото</option>
+                        <option value="roadside">У дороги</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="use-ai">Использовать AI</label>
+                    <select id="use-ai">
+                        <option value="on">Включено</option>
+                        <option value="off">Отключено</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <button id="generate-taverns" class="generate-btn">Сгенерировать таверны</button>
+            </div>
+
+            <div id="loading" class="loading">Загрузка...</div>
+        </div>
+
+        <div class="results">
+            <h2>Результаты генерации</h2>
+            <div id="tavern-results">
+                <p style="text-align: center; color: #666; font-style: italic;">
+                    Выберите параметры и нажмите "Сгенерировать таверны"
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class TavernGenerator {
+            constructor() {
+                this.apiUrl = '/api/generate-taverns.php';
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                const generateBtn = document.getElementById('generate-taverns');
+                if (generateBtn) {
+                    generateBtn.addEventListener('click', () => this.generateTaverns());
+                }
+
+                const countInput = document.getElementById('tavern-count');
+                if (countInput) {
+                    countInput.addEventListener('input', (e) => {
+                        const value = parseInt(e.target.value);
+                        if (value > 10) e.target.value = '10';
+                        if (value < 1) e.target.value = '1';
+                    });
+                }
+            }
+
+            async generateTaverns() {
+                const options = this.getUserOptions();
+                if (!options) return;
+
+                this.showLoading(true);
+                
+                try {
+                    const taverns = await this.fetchTavernsFromAPI(options);
+                    this.displayResults(taverns);
+                } catch (error) {
+                    this.handleError(error);
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            getUserOptions() {
+                const countInput = document.getElementById('tavern-count');
+                const biomeSelect = document.getElementById('tavern-biome');
+                const aiSelect = document.getElementById('use-ai');
+
+                if (!countInput || !biomeSelect || !aiSelect) {
+                    this.showError('Не удалось найти элементы формы');
+                    return null;
+                }
+
+                const count = parseInt(countInput.value);
+                if (isNaN(count) || count < 1 || count > 10) {
+                    this.showError('Количество таверн должно быть от 1 до 10');
+                    return null;
+                }
+
+                return {
+                    count,
+                    biome: biomeSelect.value,
+                    use_ai: aiSelect.value
+                };
+            }
+
+            async fetchTavernsFromAPI(options) {
+                try {
+                    console.log('Запрос таверн с параметрами:', options);
+                    
+                    const formData = new FormData();
+                    formData.append('count', options.count);
+                    formData.append('biome', options.biome);
+                    formData.append('use_ai', options.use_ai);
+
+                    const response = await fetch(this.apiUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    console.log('Ответ от API:', result);
+
+                    if (!result.success) {
+                        throw new Error(result.error || 'Неизвестная ошибка API');
+                    }
+
+                    if (!result.taverns || result.taverns.length === 0) {
+                        throw new Error('Не найдено таверн по указанным критериям');
+                    }
+
+                    return result.taverns;
+
+                } catch (error) {
+                    console.error('Error fetching taverns:', error);
+                    throw new Error(`Не удалось получить данные о тавернах: ${error.message}`);
+                }
+            }
+
+            displayResults(taverns) {
+                const resultsContainer = document.getElementById('tavern-results');
+                if (!resultsContainer) return;
+
+                if (taverns.length === 0) {
+                    resultsContainer.innerHTML = '<p class="no-results">Не найдено таверн по указанным критериям</p>';
+                    return;
+                }
+
+                const tavernsHTML = taverns.map(tavern => this.createTavernCard(tavern)).join('');
+                resultsContainer.innerHTML = tavernsHTML;
+            }
+
+            createTavernCard(tavern) {
+                const icon = '🍺';
+                const name = tavern.name || 'Неизвестная таверна';
+                const location = tavern.location?.text_ru || 'Неизвестное место';
+                const owner = tavern.owner?.name_ru || 'Неизвестный владелец';
+                const ownerRace = tavern.owner?.race || 'человек';
+                const biome = tavern.biome || 'неизвестно';
+
+                let description = '';
+                if (tavern.description) {
+                    description = `<div class="tavern-description"><p>${tavern.description}</p></div>`;
+                } else if (tavern.description_error) {
+                    description = `<div class="tavern-description"><p style="color: #dc3545;">Ошибка AI: ${tavern.description_error.message}</p></div>`;
+                }
+
+                let menuHTML = '';
+                if (tavern.menu) {
+                    menuHTML = `
+                        <div class="tavern-section">
+                            <h4>🍽️ Меню</h4>
+                            ${tavern.menu.drinks ? `<div><strong>Напитки:</strong> ${tavern.menu.drinks.map(d => d.name_ru).join(', ')}</div>` : ''}
+                            ${tavern.menu.meals ? `<div><strong>Блюда:</strong> ${tavern.menu.meals.map(m => m.name_ru).join(', ')}</div>` : ''}
+                            ${tavern.menu.sides ? `<div><strong>Закуски:</strong> ${tavern.menu.sides.map(s => s.name_ru).join(', ')}</div>` : ''}
+                        </div>
+                    `;
+                }
+
+                let staffHTML = '';
+                if (tavern.staff && tavern.staff.length > 0) {
+                    staffHTML = `
+                        <div class="tavern-section">
+                            <h4>👥 Персонал</h4>
+                            ${tavern.staff.map(staff => `<div class="menu-item">${staff.role} (${staff.race}) - ${staff.traits.join(', ')}</div>`).join('')}
+                        </div>
+                    `;
+                }
+
+                let eventsHTML = '';
+                if (tavern.events && tavern.events.length > 0) {
+                    eventsHTML = `
+                        <div class="tavern-section">
+                            <h4>🎭 События</h4>
+                            ${tavern.events.map(event => `<div class="menu-item">${event.type}</div>`).join('')}
+                        </div>
+                    `;
+                }
+
+                let gamesHTML = '';
+                if (tavern.games) {
+                    const gamesList = [];
+                    Object.values(tavern.games).forEach(game => {
+                        if (game) gamesList.push(`${game.name_ru} (${game.style})`);
+                    });
+                    if (gamesList.length > 0) {
+                        gamesHTML = `
+                            <div class="tavern-section">
+                                <h4>🎲 Игры</h4>
+                                ${gamesList.map(game => `<div class="menu-item">${game}</div>`).join('')}
+                            </div>
+                        `;
+                    }
+                }
+
+                return `
+                    <div class="tavern-card">
+                        <div class="tavern-header">
+                            <span class="tavern-icon">${icon}</span>
+                            <h3 class="tavern-name">${name}</h3>
+                        </div>
+                        <div class="tavern-details">
+                            <p><strong>Расположение:</strong> ${location}</p>
+                            <p><strong>Владелец:</strong> ${owner} (${ownerRace})</p>
+                            <p><strong>Биом:</strong> ${biome}</p>
+                        </div>
+                        ${description}
+                        ${menuHTML}
+                        ${staffHTML}
+                        ${eventsHTML}
+                        ${gamesHTML}
+                    </div>
+                `;
+            }
+
+            showLoading(show) {
+                const loadingElement = document.getElementById('loading');
+                const generateBtn = document.getElementById('generate-taverns');
+                
+                if (loadingElement) {
+                    loadingElement.style.display = show ? 'block' : 'none';
+                }
+                
+                if (generateBtn) {
+                    generateBtn.disabled = show;
+                    generateBtn.textContent = show ? 'Генерация...' : 'Сгенерировать таверны';
+                }
+            }
+
+            handleError(error) {
+                console.error('Tavern generation error:', error);
+                const errorMessage = error instanceof Error ? error.message : 'Произошла неизвестная ошибка';
+                this.showError(errorMessage);
+            }
+
+            showError(message) {
+                const resultsContainer = document.getElementById('tavern-results');
+                if (resultsContainer) {
+                    resultsContainer.innerHTML = `<div class="error-message">${message}</div>`;
+                }
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Инициализация генератора таверн...');
+            new TavernGenerator();
+            console.log('Генератор таверн готов к работе!');
+        });
+    </script>
+</body>
+</html>

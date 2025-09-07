@@ -1,0 +1,923 @@
+{
+  "version": "2.0",
+  "created_at": "2025-09-07T10:40:38.925794Z",
+  "locale": [
+    "ru"
+  ],
+  "weights": {
+    "rarity": {
+      "common": 6,
+      "uncommon": 3,
+      "rare": 1,
+      "legendary": 0.25
+    },
+    "tag_boost": 0.5
+  },
+  "core": {
+    "name_patterns": {
+      "prefixes": [
+        "Сонный",
+        "Голодный",
+        "Весёлый",
+        "Кровавый",
+        "Пьяный",
+        "Тенистый",
+        "Золотой",
+        "Серебряный",
+        "Зелёный",
+        "Железный",
+        "Бронзовый",
+        "Радостный",
+        "Суровый",
+        "Летучий",
+        "Рокочущий",
+        "Удачливый",
+        "Мрачный",
+        "Тихий",
+        "Хитрый",
+        "Подвыпивший"
+      ],
+      "nouns": [
+        "Огр",
+        "Грифон",
+        "Лебедь",
+        "Кабан",
+        "Котёл",
+        "Крестьянин",
+        "Капитан",
+        "Дракон",
+        "Бард",
+        "Кожевник",
+        "Плут",
+        "Ястреб",
+        "Лжец",
+        "Страж",
+        "Кабачок",
+        "Кузнец",
+        "Плутовка",
+        "Кружка",
+        "Лис"
+      ],
+      "variants": [
+        "Таверна «{prefix} {noun}»",
+        "Постоялый двор «{prefix} {noun}»",
+        "Пивная «{prefix} {noun}»",
+        "{prefix} {noun}",
+        "{prefix} {noun} и Нимфа",
+        "Трактир «{prefix} {noun}»"
+      ]
+    },
+    "locations": [
+      {
+        "text_ru": "центральная площадь",
+        "tags": [
+          "market",
+          "busy"
+        ],
+        "rarity": "common"
+      },
+      {
+        "text_ru": "у городских ворот",
+        "tags": [
+          "travelers",
+          "caravans"
+        ],
+        "rarity": "common"
+      },
+      {
+        "text_ru": "в подвале старой башни",
+        "tags": [
+          "mystic",
+          "underground"
+        ],
+        "rarity": "uncommon"
+      }
+    ],
+    "owners": [
+      {
+        "name_ru": "Дэвис Оуэнсби",
+        "race": "human",
+        "traits": [
+          "бывший фермер",
+          "самоварит эль",
+          "болтлив"
+        ],
+        "hooks": [
+          "пропадают коровы — подозревает огров"
+        ],
+        "rarity": "common"
+      },
+      {
+        "name_ru": "Сель'серен",
+        "race": "elf (призрак)",
+        "traits": [
+          "радушная",
+          "заботливая"
+        ],
+        "hooks": [
+          "одеяла сами укрывают гостей"
+        ],
+        "rarity": "uncommon"
+      },
+      {
+        "name_ru": "Магси",
+        "race": "goblin",
+        "traits": [
+          "бывший преступник",
+          "знает жаргон"
+        ],
+        "hooks": [
+          "паладинам — наценка"
+        ],
+        "rarity": "uncommon"
+      },
+      {
+        "name_ru": "Нимуэ",
+        "race": "tiefling",
+        "traits": [
+          "элегантная",
+          "адский декор"
+        ],
+        "hooks": [
+          "иллюзорная аура зла в фундаменте"
+        ],
+        "rarity": "uncommon"
+      },
+      {
+        "name_ru": "Кра’акс Три Когтя",
+        "race": "half-dragon",
+        "traits": [
+          "вежливый",
+          "ненавидит браконьеров"
+        ],
+        "hooks": [
+          "потерял ногу в капкане на сова‑медведя"
+        ],
+        "rarity": "rare"
+      }
+    ],
+    "staff_archetypes": [
+      {
+        "role": "бармен",
+        "race": "human",
+        "traits": [
+          "быстрый",
+          "внимательный"
+        ],
+        "rarity": "common"
+      },
+      {
+        "role": "официантка",
+        "race": "halfling",
+        "traits": [
+          "шустрость",
+          "улыбчивая"
+        ],
+        "rarity": "common"
+      },
+      {
+        "role": "вышибала",
+        "race": "half-orc",
+        "traits": [
+          "молчаливый",
+          "грозный"
+        ],
+        "rarity": "common"
+      },
+      {
+        "role": "повар",
+        "race": "dwarf",
+        "traits": [
+          "перфекционист",
+          "любит соусы"
+        ],
+        "rarity": "common"
+      },
+      {
+        "role": "певец",
+        "race": "elf",
+        "traits": [
+          "баритон",
+          "лиричный"
+        ],
+        "rarity": "uncommon"
+      }
+    ],
+    "ambience": [
+      {
+        "sound": "лязг кружек и кости",
+        "scent": "дубовые бочки",
+        "lighting": "полумрак",
+        "rarity": "common"
+      },
+      {
+        "sound": "лютня и флейта",
+        "scent": "хмель и корица",
+        "lighting": "тёплые свечи",
+        "rarity": "uncommon"
+      }
+    ],
+    "menu": {
+      "drinks": [
+        {
+          "name_ru": "Коппер-Брю светлое",
+          "tags": [
+            "beer",
+            "light"
+          ],
+          "rarity": "common"
+        },
+        {
+          "name_ru": "Эль Дьявольской Розы",
+          "tags": [
+            "ale",
+            "spicy"
+          ],
+          "rarity": "uncommon"
+        },
+        {
+          "name_ru": "Старый Моряк",
+          "tags": [
+            "rum",
+            "strong"
+          ],
+          "rarity": "uncommon"
+        },
+        {
+          "name_ru": "Солнечная вспышка",
+          "tags": [
+            "cocktail",
+            "citrus"
+          ],
+          "rarity": "uncommon"
+        },
+        {
+          "name_ru": "Пьяный угорь",
+          "tags": [
+            "special",
+            "fun"
+          ],
+          "rarity": "uncommon"
+        }
+      ],
+      "meals": [
+        {
+          "name_ru": "Курица в пивном кляре",
+          "tags": [
+            "poultry",
+            "fried"
+          ],
+          "rarity": "common"
+        },
+        {
+          "name_ru": "Рыба в пивном кляре",
+          "tags": [
+            "seafood",
+            "fried"
+          ],
+          "rarity": "common"
+        },
+        {
+          "name_ru": "Яйца с беконом",
+          "tags": [
+            "breakfast"
+          ],
+          "rarity": "common"
+        },
+        {
+          "name_ru": "Пирог мародёра",
+          "tags": [
+            "meat",
+            "pie"
+          ],
+          "rarity": "uncommon"
+        }
+      ],
+      "sides": [
+        {
+          "name_ru": "Свежий хлеб с чесночным маслом",
+          "tags": [
+            "bread"
+          ],
+          "rarity": "common"
+        },
+        {
+          "name_ru": "Оливковый хлеб",
+          "tags": [
+            "bread",
+            "olive"
+          ],
+          "rarity": "common"
+        },
+        {
+          "name_ru": "Ягодный салат",
+          "tags": [
+            "salad",
+            "forest"
+          ],
+          "rarity": "uncommon"
+        }
+      ]
+    },
+    "rooms": [
+      {
+        "type": "общий зал",
+        "beds": 8,
+        "price_sp": 5,
+        "cleanliness": "low",
+        "rarity": "common"
+      },
+      {
+        "type": "частные комнаты",
+        "beds": 1,
+        "price_sp": 12,
+        "cleanliness": "mid",
+        "rarity": "uncommon"
+      }
+    ],
+    "events": [
+      {
+        "type": "выступление барда",
+        "rarity": "common"
+      },
+      {
+        "type": "турнир по кости",
+        "rarity": "common"
+      },
+      {
+        "type": "тайный аукцион",
+        "rarity": "uncommon"
+      }
+    ],
+    "games": {
+      "dice": [
+        {
+          "name_ru": "Тройка на вылет",
+          "style": "кости",
+          "brief": "5к6, тройки=0, меньшая сумма выигрывает",
+          "rarity": "common"
+        },
+        {
+          "name_ru": "Мёртвый глаз",
+          "style": "кости",
+          "brief": "на единицах теряешь лучшие кости; выживает последний",
+          "rarity": "uncommon"
+        }
+      ],
+      "cards": [
+        {
+          "name_ru": "Дурак",
+          "style": "карты",
+          "brief": "отбивная игра, последний с картами проигрывает",
+          "rarity": "common"
+        },
+        {
+          "name_ru": "Пьяница",
+          "style": "карты",
+          "brief": "совпадай масти/номиналы; кто первый сбросит — победил",
+          "rarity": "common"
+        }
+      ],
+      "other": [
+        {
+          "name_ru": "Гоблинское яблочко",
+          "style": "дартс",
+          "brief": "к20 + к6; до 301 очка",
+          "rarity": "common"
+        },
+        {
+          "name_ru": "Фруктовая машина",
+          "style": "автомат",
+          "brief": "три равные кости — джекпот",
+          "rarity": "uncommon"
+        }
+      ]
+    },
+    "constraints": {
+      "exclusive_tags": [
+        [
+          "monastic",
+          "rowdy"
+        ]
+      ],
+      "required_together": [
+        {
+          "if_tag": "sea",
+          "then_any_tags": [
+            "dockside",
+            "sailor",
+            "seafood"
+          ]
+        }
+      ]
+    }
+  },
+  "specials": {
+    "city": {
+      "locations": [
+        {
+          "text_ru": "портовый район",
+          "tags": [
+            "sea",
+            "trade",
+            "dockside"
+          ],
+          "rarity": "common"
+        },
+        {
+          "text_ru": "рынок ремесленников",
+          "tags": [
+            "market",
+            "busy"
+          ],
+          "rarity": "common"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "шум улиц и глашатаи",
+          "scent": "уголь и специи",
+          "lighting": "фонари и витражи",
+          "rarity": "common"
+        }
+      ],
+      "menu_additions": {
+        "drinks": [
+          {
+            "name_ru": "Нулевая тяжесть",
+            "tags": [
+              "cocktail",
+              "cool"
+            ],
+            "rarity": "rare"
+          }
+        ],
+        "meals": [
+          {
+            "name_ru": "Ветчина в пивном кляре",
+            "tags": [
+              "meat",
+              "fried"
+            ],
+            "rarity": "common"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "визит инспектора гильдии",
+          "rarity": "uncommon"
+        }
+      ],
+      "tags": [
+        "urban"
+      ]
+    },
+    "forest": {
+      "locations": [
+        {
+          "text_ru": "на опушке леса",
+          "tags": [
+            "wilds",
+            "fae"
+          ],
+          "rarity": "uncommon"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "стрекот насекомых",
+          "scent": "хвоя и мёд",
+          "lighting": "светлячки",
+          "rarity": "uncommon"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Рагу из огненного жука",
+            "tags": [
+              "spicy",
+              "insect"
+            ],
+            "rarity": "rare"
+          }
+        ],
+        "sides": [
+          {
+            "name_ru": "Ягодный салат",
+            "tags": [
+              "salad",
+              "forest"
+            ],
+            "rarity": "uncommon"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "ночь фейских огней",
+          "rarity": "rare"
+        }
+      ],
+      "tags": [
+        "fae",
+        "wilds"
+      ]
+    },
+    "coastal": {
+      "locations": [
+        {
+          "text_ru": "пещера приливов",
+          "tags": [
+            "sea",
+            "hidden"
+          ],
+          "rarity": "rare"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "морские шанти",
+          "scent": "смола и соль",
+          "lighting": "тускло",
+          "rarity": "common"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Похлёбка из трески",
+            "tags": [
+              "seafood",
+              "soup"
+            ],
+            "rarity": "common"
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Старый Моряк",
+            "tags": [
+              "rum",
+              "strong"
+            ],
+            "rarity": "uncommon"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "аукцион трофеев моря",
+          "rarity": "uncommon"
+        }
+      ],
+      "tags": [
+        "sea",
+        "dockside"
+      ]
+    },
+    "mountain": {
+      "locations": [
+        {
+          "text_ru": "в скальном кармане над ущельем",
+          "tags": [
+            "mountain",
+            "peril"
+          ],
+          "rarity": "rare"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "эхо кузниц",
+          "scent": "дым и камень",
+          "lighting": "канделябры",
+          "rarity": "uncommon"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Жаркое из троллей",
+            "tags": [
+              "meat",
+              "hearty"
+            ],
+            "rarity": "rare"
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Алмазная батарея",
+            "tags": [
+              "cocktail",
+              "steady"
+            ],
+            "rarity": "rare"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "праздник пивоваров",
+          "rarity": "uncommon"
+        }
+      ],
+      "tags": [
+        "dwarf",
+        "mountain"
+      ]
+    },
+    "desert": {
+      "locations": [
+        {
+          "text_ru": "оазис караванов",
+          "tags": [
+            "desert",
+            "caravans"
+          ],
+          "rarity": "uncommon"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "шелест парчи",
+          "scent": "кардамон и пыль",
+          "lighting": "масляные лампы",
+          "rarity": "uncommon"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Вяленое «Пустынное солнце»",
+            "tags": [
+              "scorpion",
+              "jerky"
+            ],
+            "rarity": "rare"
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Абсолютный ноль",
+            "tags": [
+              "cocktail",
+              "chilled"
+            ],
+            "rarity": "uncommon"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "ночь рассказчиков",
+          "rarity": "common"
+        }
+      ],
+      "tags": [
+        "desert"
+      ]
+    },
+    "tundra": {
+      "locations": [
+        {
+          "text_ru": "придорожный дом в тундре",
+          "tags": [
+            "tundra",
+            "roadside"
+          ],
+          "rarity": "uncommon"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "воют ветра",
+          "scent": "копчёное мясо",
+          "lighting": "жаркий очаг",
+          "rarity": "common"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Похлёбка охотника",
+            "tags": [
+              "game",
+              "soup"
+            ],
+            "rarity": "common"
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Синее топливо",
+            "tags": [
+              "cocktail",
+              "hot"
+            ],
+            "rarity": "rare"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "соревнование по выпивке",
+          "rarity": "common"
+        }
+      ],
+      "tags": [
+        "cold"
+      ]
+    },
+    "underground": {
+      "locations": [
+        {
+          "text_ru": "в подземной зале грибных садов",
+          "tags": [
+            "underdark",
+            "mushroom"
+          ],
+          "rarity": "rare"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "капли и отдалённые шаги",
+          "scent": "мох и сырость",
+          "lighting": "биолюминесценция",
+          "rarity": "rare"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Грибная запеканка",
+            "tags": [
+              "mushroom",
+              "umami"
+            ],
+            "rarity": "uncommon"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "чёрный рынок снаряжения",
+          "rarity": "rare"
+        }
+      ],
+      "tags": [
+        "underground"
+      ]
+    },
+    "swamp": {
+      "locations": [
+        {
+          "text_ru": "дом на сваях в болоте",
+          "tags": [
+            "swamp",
+            "mosquito"
+          ],
+          "rarity": "uncommon"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "кваканье и плеск",
+          "scent": "травы и ил",
+          "lighting": "болотные огни",
+          "rarity": "uncommon"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Рыба в пивном кляре",
+            "tags": [
+              "seafood",
+              "fried"
+            ],
+            "rarity": "common"
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Травяной суп (настой)",
+            "tags": [
+              "herbal",
+              "tonic"
+            ],
+            "rarity": "uncommon"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "ночь ловцов светляков",
+          "rarity": "uncommon"
+        }
+      ],
+      "tags": [
+        "swamp"
+      ]
+    },
+    "roadside": {
+      "locations": [
+        {
+          "text_ru": "у перепутья",
+          "tags": [
+            "travelers",
+            "roadside"
+          ],
+          "rarity": "common"
+        }
+      ],
+      "ambience": [
+        {
+          "sound": "скрип телег",
+          "scent": "пыль и солома",
+          "lighting": "фонари на крюках",
+          "rarity": "common"
+        }
+      ],
+      "menu_additions": {
+        "meals": [
+          {
+            "name_ru": "Бекон и яйца",
+            "tags": [
+              "breakfast"
+            ],
+            "rarity": "common"
+          }
+        ],
+        "drinks": [
+          {
+            "name_ru": "Надёжный товарищ",
+            "tags": [
+              "ale",
+              "stout"
+            ],
+            "rarity": "uncommon"
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "борьба/армрестлинг",
+          "rarity": "common"
+        }
+      ],
+      "tags": [
+        "road"
+      ]
+    }
+  },
+  "integration": {
+    "merge_order": [
+      "core",
+      "specials[biome]"
+    ],
+    "merge_rules": {
+      "append_lists": [
+        "locations",
+        "ambience",
+        "events",
+        "staff_archetypes"
+      ],
+      "menu_merge": "core.menu + specials[biome].menu_additions (по категориям)",
+      "owners": "используй core.owners; при желании добавь биом-специфичных владельцев",
+      "constraints": "объединяй, избегая дубликатов пар"
+    },
+    "sampling": {
+      "rarity_weighting": "используй weights.rarity",
+      "tag_boost": "если item.tags ∩ biome_tags != ∅, вес *= (1 + weights.tag_boost * count)"
+    }
+  },
+  "cursor_instructions": {
+    "what_is_this": "JSON для двухступенчатой генерации таверн: сначала случайный набор по ядру, затем подключение спец-данных по местности (биому).",
+    "how_to_use": [
+      "1) Загрузите JSON и распарсьте его как объект db.",
+      "2) Выберите biome из ключей specials (например: city, forest, coastal, mountain, desert, tundra, underground, swamp, roadside).",
+      "3) Соберите пул выбора = core + specials[biome]: списки объединяются, меню дополняется через menu_additions.",
+      "4) При взвешенном выборе применяйте weights.rarity и tag_boost к элементам, у которых теги совпадают с tags выбранного биома.",
+      "5) Сформируйте DRAFT JSON (имя, локация, владелец, персонал, атмосфера, меню, комнаты, события, игры) и передайте в LLM с вашим промптом.",
+      "6) Соблюдайте constraints.exclusive_tags / required_together; при конфликте перегенерируйте проблемный блок.",
+      "7) После интеграции удалите поле cursor_instructions."
+    ],
+    "draft_shape_hint": {
+      "name": "строка",
+      "location": "объект",
+      "owner": "объект",
+      "staff": "массив",
+      "ambience": "объект|массив",
+      "menu": "объект",
+      "rooms": "массив",
+      "events": "массив",
+      "games": "объект",
+      "notes": "строка (опционально)"
+    },
+    "llm_hint": "Просите модель писать 600–900 слов, соблюдать факты из DRAFT и тон (кинематографичный, без излишней «пурпурности»)."
+  }
+}
