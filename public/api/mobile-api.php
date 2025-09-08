@@ -1154,22 +1154,19 @@ try {
             break;
             
         case 'generate_taverns':
-            $biome = $_POST['biome'] ?? '';
-            $rarity = $_POST['rarity'] ?? '';
             $count = (int)($_POST['count'] ?? 1);
             $use_ai = isset($_POST['use_ai']) && $_POST['use_ai'] === 'on';
             
             // Используем тот же генератор таверн что и в ПК версии
-            require_once __DIR__ . '/generate-taverns.php';
+            require_once __DIR__ . '/../../app/Services/SimplifiedTavernGenerator.php';
             
+            $generator = new SimplifiedTavernGenerator();
             $params = [
-                'biome' => $biome,
-                'rarity' => $rarity,
                 'count' => $count,
                 'use_ai' => $use_ai ? 'on' : 'off'
             ];
             
-            $result = generateTaverns($params);
+            $result = $generator->generateTavern($params);
             $response = $result; // Возвращаем полный результат как в ПК версии
             break;
             

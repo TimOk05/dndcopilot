@@ -1,0 +1,400 @@
+{
+    "version": "5.0",
+    "created_at": "2025-01-27T12:00:00.000Z",
+    "updated_at": "2025-01-27T12:00:00.000Z",
+    "locale": ["ru"],
+    "description": "Упрощенная база данных таверн без выбора биомов",
+
+    "weights": {
+        "rarity": {
+            "common": 6,
+            "uncommon": 3,
+            "rare": 1,
+            "legendary": 0.25
+        },
+        "tag_boost": 0.5
+    },
+
+    "core": {
+        "name_patterns": {
+            "prefixes": [
+                "Сонный", "Голодный", "Весёлый", "Кровавый", "Пьяный",
+                "Тенистый", "Золотой", "Серебряный", "Зелёный", "Железный",
+                "Бронзовый", "Радостный", "Суровый", "Летучий", "Рокочущий",
+                "Удачливый", "Мрачный", "Тихий", "Хитрый", "Подвыпивший",
+                "Забытый", "Тайный", "Запретный", "Проклятый", "Благословенный",
+                "Древний", "Новый", "Старый", "Молодой", "Вечный",
+                "Быстрый", "Медленный", "Громкий", "Тихий", "Яркий",
+                "Тёмный", "Светлый", "Тёплый", "Холодный", "Горячий",
+                "Сладкий", "Горький", "Кислый", "Солёный", "Острый",
+                "Мягкий", "Твёрдый", "Гибкий", "Хрупкий", "Прочный",
+                "Богатый", "Бедный", "Знатный", "Простой", "Редкий",
+                "Обычный", "Странный", "Чудесный", "Ужасный", "Прекрасный",
+                "Опасный", "Безопасный", "Тайный", "Открытый", "Скрытый",
+                "Дикий", "Прирученный", "Свободный", "Заключённый", "Потерянный",
+                "Найденный", "Спрятанный", "Обнаруженный", "Забытый", "Вспомненный"
+            ],
+
+            "nouns": [
+                "Огр", "Грифон", "Лебедь", "Кабан", "Котёл",
+                "Крестьянин", "Капитан", "Дракон", "Бард", "Кожевник",
+                "Плут", "Ястреб", "Лжец", "Страж", "Кабачок",
+                "Кузнец", "Плутовка", "Кружка", "Лис",
+                "Волк", "Медведь", "Орёл", "Змея", "Паук",
+                "Сова", "Ворон", "Кот", "Пёс", "Конь",
+                "Бык", "Козёл", "Овца", "Свинья", "Курица",
+                "Рыба", "Краб", "Омар", "Устрица", "Кальмар",
+                "Меч", "Щит", "Копьё", "Лук", "Стрела",
+                "Кольцо", "Корона", "Скипетр", "Жезл", "Посох",
+                "Ключ", "Замок", "Сундук", "Мешок", "Корзина",
+                "Кувшин", "Бокал", "Рог", "Чаша", "Тарелка",
+                "Нож", "Вилка", "Ложка", "Доска", "Скатерть",
+                "Свеча", "Факел", "Лампа", "Фонарь", "Огонь",
+                "Дым", "Пар", "Вода", "Вино", "Пиво",
+                "Мёд", "Соль", "Перец", "Сахар", "Мука",
+                "Хлеб", "Сыр", "Мясо", "Рыба", "Яйцо",
+                "Яблоко", "Груша", "Вишня", "Слива", "Персик",
+                "Виноград", "Клубника", "Малина", "Ежевика", "Черника"
+            ],
+
+            "suffixes": [
+                "и Котёл", "и Кружка", "и Рог", "и Меч", "и Щит",
+                "и Дракон", "и Грифон", "и Волк", "и Медведь", "и Орёл",
+                "и Сова", "и Ворон", "и Лис", "и Заяц", "и Олень",
+                "и Кабан", "и Бык", "и Конь", "и Пёс", "и Кот",
+                "и Рыба", "и Краб", "и Омар", "и Устрица", "и Кальмар",
+                "и Меч", "и Щит", "и Копьё", "и Лук", "и Стрела",
+                "и Кольцо", "и Корона", "и Скипетр", "и Жезл", "и Посох",
+                "и Ключ", "и Замок", "и Сундук", "и Мешок", "и Корзина",
+                "и Кувшин", "и Бокал", "и Рог", "и Чаша", "и Тарелка",
+                "и Нож", "и Вилка", "и Ложка", "и Доска", "и Скатерть",
+                "и Свеча", "и Факел", "и Лампа", "и Фонарь", "и Огонь",
+                "и Дым", "и Пар", "и Вода", "и Вино", "и Пиво",
+                "и Мёд", "и Соль", "и Перец", "и Сахар", "и Мука",
+                "и Хлеб", "и Сыр", "и Мясо", "и Рыба", "и Яйцо",
+                "и Яблоко", "и Груша", "и Вишня", "и Слива", "и Персик",
+                "и Виноград", "и Клубника", "и Малина", "и Ежевика", "и Черника"
+            ]
+        },
+
+        "locations": [{
+                "text_ru": "в центре города",
+                "tags": ["central", "busy", "wealthy"],
+                "rarity": "common"
+            },
+            {
+                "text_ru": "на главной площади",
+                "tags": ["central", "public", "busy"],
+                "rarity": "common"
+            },
+            {
+                "text_ru": "в торговом квартале",
+                "tags": ["commerce", "busy", "wealthy"],
+                "rarity": "common"
+            },
+            {
+                "text_ru": "на окраине города",
+                "tags": ["quiet", "residential", "safe"],
+                "rarity": "common"
+            },
+            {
+                "text_ru": "в портовом районе",
+                "tags": ["water", "busy", "diverse"],
+                "rarity": "common"
+            },
+            {
+                "text_ru": "в старом квартале",
+                "tags": ["historic", "charming", "authentic"],
+                "rarity": "uncommon"
+            },
+            {
+                "text_ru": "в подвале старой башни",
+                "tags": ["mystic", "underground", "ancient"],
+                "rarity": "uncommon"
+            },
+            {
+                "text_ru": "на берегу реки",
+                "tags": ["water", "peaceful", "nature"],
+                "rarity": "common"
+            },
+            {
+                "text_ru": "в старом замке",
+                "tags": ["noble", "historic", "grand"],
+                "rarity": "rare"
+            },
+            {
+                "text_ru": "под мостом",
+                "tags": ["hidden", "secret", "underground"],
+                "rarity": "uncommon"
+            },
+            {
+                "text_ru": "на вершине холма",
+                "tags": ["elevated", "scenic", "isolated"],
+                "rarity": "uncommon"
+            },
+            {
+                "text_ru": "в пещере",
+                "tags": ["natural", "hidden", "mysterious"],
+                "rarity": "rare"
+            }
+        ],
+
+        "owners": [{
+                "name_ru": "Дэвис Оуэнсби",
+                "race": "human",
+                "personality": "дружелюбный и гостеприимный",
+                "background": "бывший солдат",
+                "rarity": "common",
+                "tags": ["friendly", "military", "honest"]
+            },
+            {
+                "name_ru": "Сель'серен",
+                "race": "elf",
+                "personality": "загадочный и мудрый",
+                "background": "древний эльф",
+                "rarity": "uncommon",
+                "tags": ["mysterious", "wise", "ancient"]
+            },
+            {
+                "name_ru": "Магси",
+                "race": "gnome",
+                "personality": "весёлый и изобретательный",
+                "background": "механик и изобретатель",
+                "rarity": "common",
+                "tags": ["cheerful", "inventive", "mechanical"]
+            },
+            {
+                "name_ru": "Нимуэ",
+                "race": "half-elf",
+                "personality": "очаровательная и хитроумная",
+                "background": "бывшая бард",
+                "rarity": "uncommon",
+                "tags": ["charming", "cunning", "musical"]
+            },
+            {
+                "name_ru": "Кра'акс Три Когтя",
+                "race": "dragonborn",
+                "personality": "суровый но справедливый",
+                "background": "бывший воин",
+                "rarity": "rare",
+                "tags": ["stern", "just", "warrior"]
+            },
+            {
+                "name_ru": "Торг",
+                "race": "dwarf",
+                "personality": "упрямый но честный",
+                "background": "бывший кузнец",
+                "rarity": "common",
+                "tags": ["stubborn", "honest", "craftsman"]
+            },
+            {
+                "name_ru": "Лили",
+                "race": "halfling",
+                "personality": "жизнерадостная и заботливая",
+                "background": "бывшая повар",
+                "rarity": "common",
+                "tags": ["cheerful", "caring", "cook"]
+            },
+            {
+                "name_ru": "Гром",
+                "race": "half-orc",
+                "personality": "грубый но добросердечный",
+                "background": "бывший охранник",
+                "rarity": "uncommon",
+                "tags": ["rough", "kindhearted", "guard"]
+            }
+        ],
+
+        "staff_archetypes": [{
+                "role": "бармен",
+                "name_ru": "Торг",
+                "personality": "болтливый и знающий",
+                "rarity": "common",
+                "tags": ["talkative", "knowledgeable", "service"]
+            },
+            {
+                "role": "официантка",
+                "name_ru": "Лили",
+                "personality": "быстрая и внимательная",
+                "rarity": "common",
+                "tags": ["quick", "attentive", "service"]
+            },
+            {
+                "role": "повар",
+                "name_ru": "Гром",
+                "personality": "молчаливый но умелый",
+                "rarity": "common",
+                "tags": ["quiet", "skilled", "cook"]
+            },
+            {
+                "role": "уборщик",
+                "name_ru": "Скрип",
+                "personality": "старательный и незаметный",
+                "rarity": "common",
+                "tags": ["diligent", "unobtrusive", "cleaner"]
+            },
+            {
+                "role": "охранник",
+                "name_ru": "Страж",
+                "personality": "бдительный и сильный",
+                "rarity": "uncommon",
+                "tags": ["vigilant", "strong", "guard"]
+            },
+            {
+                "role": "музыкант",
+                "name_ru": "Мелодия",
+                "personality": "талантливый и артистичный",
+                "rarity": "uncommon",
+                "tags": ["talented", "artistic", "musician"]
+            }
+        ],
+
+        "events": [{
+                "name_ru": "Вечер бардов",
+                "description_ru": "Каждый вечер местные барды собираются для импровизированных выступлений",
+                "rarity": "common",
+                "tags": ["music", "entertainment", "regular"]
+            },
+            {
+                "name_ru": "Турнир по армрестлингу",
+                "description_ru": "Еженедельные соревнования по армрестлингу с призами",
+                "rarity": "common",
+                "tags": ["competition", "sport", "weekly"]
+            },
+            {
+                "name_ru": "Ночной аукцион",
+                "description_ru": "Тайные торги редкими и необычными предметами",
+                "rarity": "rare",
+                "tags": ["auction", "secret", "rare"]
+            },
+            {
+                "name_ru": "Истории путешественников",
+                "description_ru": "Вечера, когда путешественники делятся своими приключениями",
+                "rarity": "uncommon",
+                "tags": ["stories", "travel", "adventure"]
+            },
+            {
+                "name_ru": "Карточные игры",
+                "description_ru": "Регулярные игры в карты с высокими ставками",
+                "rarity": "common",
+                "tags": ["gambling", "cards", "money"]
+            },
+            {
+                "name_ru": "Дегустация вин",
+                "description_ru": "Ежемесячная дегустация редких вин из разных регионов",
+                "rarity": "uncommon",
+                "tags": ["wine", "tasting", "luxury"]
+            }
+        ],
+
+        "menu_items": [{
+                "name_ru": "Жареный кабан",
+                "description_ru": "Сочное мясо кабана, зажаренное на открытом огне",
+                "price": "2 золотых",
+                "rarity": "common",
+                "tags": ["meat", "roasted", "hearty"]
+            },
+            {
+                "name_ru": "Суп из корня мандрагоры",
+                "description_ru": "Магический суп, восстанавливающий силы",
+                "price": "5 золотых",
+                "rarity": "rare",
+                "tags": ["magic", "healing", "soup"]
+            },
+            {
+                "name_ru": "Хлеб с мёдом",
+                "description_ru": "Свежий хлеб, смазанный диким мёдом",
+                "price": "1 золотой",
+                "rarity": "common",
+                "tags": ["bread", "honey", "simple"]
+            },
+            {
+                "name_ru": "Эльфийское вино",
+                "description_ru": "Изысканное вино, выдержанное в дубовых бочках",
+                "price": "3 золотых",
+                "rarity": "uncommon",
+                "tags": ["wine", "elven", "luxury"]
+            },
+            {
+                "name_ru": "Дварфский эль",
+                "description_ru": "Крепкий эль, сваренный по старинному рецепту",
+                "price": "1 золотой",
+                "rarity": "common",
+                "tags": ["ale", "dwarven", "strong"]
+            },
+            {
+                "name_ru": "Сыр с плесенью",
+                "description_ru": "Острый сыр с благородной плесенью",
+                "price": "2 золотых",
+                "rarity": "uncommon",
+                "tags": ["cheese", "moldy", "sharp"]
+            }
+        ],
+
+        "rooms": [{
+                "name_ru": "Общий зал",
+                "description_ru": "Большой зал с длинными столами и скамьями",
+                "capacity": "20 человек",
+                "price": "1 золотой за ночь",
+                "rarity": "common",
+                "tags": ["shared", "large", "cheap"]
+            },
+            {
+                "name_ru": "Комната на двоих",
+                "description_ru": "Уютная комната с двумя кроватями",
+                "capacity": "2 человека",
+                "price": "3 золотых за ночь",
+                "rarity": "common",
+                "tags": ["private", "small", "comfortable"]
+            },
+            {
+                "name_ru": "Люкс",
+                "description_ru": "Роскошная комната с камином и ванной",
+                "capacity": "1 человек",
+                "price": "10 золотых за ночь",
+                "rarity": "rare",
+                "tags": ["luxury", "private", "expensive"]
+            },
+            {
+                "name_ru": "Комната для путешественников",
+                "description_ru": "Простая комната с кроватью и сундуком",
+                "capacity": "1 человек",
+                "price": "2 золотых за ночь",
+                "rarity": "common",
+                "tags": ["simple", "private", "basic"]
+            }
+        ],
+
+        "games": [{
+                "name_ru": "Кости",
+                "description_ru": "Простая игра в кости на деньги",
+                "rarity": "common",
+                "tags": ["dice", "gambling", "simple"]
+            },
+            {
+                "name_ru": "Карты",
+                "description_ru": "Различные карточные игры",
+                "rarity": "common",
+                "tags": ["cards", "gambling", "variety"]
+            },
+            {
+                "name_ru": "Дартс",
+                "description_ru": "Метание дротиков в мишень",
+                "rarity": "common",
+                "tags": ["darts", "skill", "competition"]
+            },
+            {
+                "name_ru": "Шахматы",
+                "description_ru": "Стратегическая игра в шахматы",
+                "rarity": "uncommon",
+                "tags": ["chess", "strategy", "intellectual"]
+            },
+            {
+                "name_ru": "Армрестлинг",
+                "description_ru": "Соревнование в силе рук",
+                "rarity": "common",
+                "tags": ["armwrestling", "strength", "competition"]
+            }
+        ]
+    }
+}
