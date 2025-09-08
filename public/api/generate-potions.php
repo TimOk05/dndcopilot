@@ -1197,4 +1197,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
     }
 }
+
+/**
+ * Функция-обертка для генерации зелий (для использования в мобильной версии)
+ */
+function generatePotions($params) {
+    try {
+        $generator = new PotionGenerator();
+        return $generator->generatePotions($params);
+    } catch (Exception $e) {
+        logMessage('ERROR', 'generatePotions wrapper error: ' . $e->getMessage());
+        return [
+            'success' => false,
+            'error' => $e->getMessage()
+        ];
+    }
+}
 ?>

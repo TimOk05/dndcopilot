@@ -1,0 +1,431 @@
+/* Мобильные темы для D&D Copilot */
+
+
+/* ===== СВЕТЛАЯ ТЕМА (по умолчанию) ===== */
+
+:root {
+    --bg-primary: #f8f4e8;
+    --bg-secondary: #fff9f0;
+    --bg-tertiary: #f0e6d0;
+    --text-primary: #2d1b00;
+    --text-secondary: #4a2e0a;
+    --accent-primary: #a67c52;
+    --accent-secondary: #7c4a02;
+    --border-radius: 12px;
+    --shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    --theme-name: 'Светлая';
+}
+
+
+/* ===== ТЕМНАЯ ТЕМА ===== */
+
+[data-theme="dark"] {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --bg-tertiary: #3a3a3a;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --accent-primary: #8b4513;
+    --accent-secondary: #a0522d;
+    --border-radius: 12px;
+    --shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    --theme-name: 'Темная';
+}
+
+
+/* ===== МИСТИЧЕСКАЯ ТЕМА ===== */
+
+[data-theme="mystic"] {
+    --bg-primary: #0f0f23;
+    --bg-secondary: #1a1a3a;
+    --bg-tertiary: #2a2a4a;
+    --text-primary: #e0e0ff;
+    --text-secondary: #b0b0ff;
+    --accent-primary: #6a0dad;
+    --accent-secondary: #8a2be2;
+    --border-radius: 12px;
+    --shadow: 0 4px 8px rgba(106, 13, 173, 0.3);
+    --theme-name: 'Мистическая';
+}
+
+
+/* ===== ОРАНЖЕВАЯ ТЕМА ===== */
+
+[data-theme="orange"] {
+    --bg-primary: #fff4e6;
+    --bg-secondary: #ffe6cc;
+    --bg-tertiary: #ffd9b3;
+    --text-primary: #8b4513;
+    --text-secondary: #a0522d;
+    --accent-primary: #ff8c00;
+    --accent-secondary: #ff7f00;
+    --border-radius: 12px;
+    --shadow: 0 4px 8px rgba(255, 140, 0, 0.2);
+    --theme-name: 'Оранжевая';
+}
+
+
+/* ===== БАЗОВЫЕ СТИЛИ ===== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', system-ui, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+/* ===== ЗАГОЛОВОК ===== */
+
+.header {
+    background: var(--bg-secondary);
+    padding: 16px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background-color 0.3s ease;
+}
+
+.header h1 {
+    font-family: 'UnifrakturCook', serif;
+    font-size: 2rem;
+    color: var(--accent-primary);
+    margin-bottom: 8px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+
+/* ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМ ===== */
+
+.theme-switcher {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: var(--bg-secondary);
+    border: 2px solid var(--accent-primary);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.theme-switcher:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.theme-switcher::before {
+    content: '🎨';
+    font-size: 1.5rem;
+}
+
+
+/* ===== КОНТЕЙНЕР ===== */
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px 16px;
+}
+
+
+/* ===== КАРТОЧКИ ===== */
+
+.card {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--bg-tertiary);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card h2 {
+    color: var(--accent-primary);
+    margin-bottom: 16px;
+    font-size: 1.5rem;
+    border-bottom: 2px solid var(--accent-primary);
+    padding-bottom: 8px;
+}
+
+
+/* ===== ФОРМЫ ===== */
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.form-group select,
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--bg-tertiary);
+    border-radius: var(--border-radius);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(166, 124, 82, 0.1);
+}
+
+
+/* ===== КНОПКИ ===== */
+
+.btn {
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.btn:hover {
+    background: var(--accent-secondary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background: var(--text-secondary);
+    color: var(--bg-primary);
+}
+
+
+/* ===== РЕЗУЛЬТАТЫ ===== */
+
+.result {
+    background: var(--bg-tertiary);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    margin-top: 16px;
+    border-left: 4px solid var(--accent-primary);
+}
+
+.result h3 {
+    color: var(--accent-primary);
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+}
+
+.result p {
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.result .character-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.stat-item {
+    background: var(--bg-secondary);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--accent-primary);
+}
+
+.stat-item .stat-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.stat-item .stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--accent-primary);
+}
+
+
+/* ===== АДАПТИВНОСТЬ ===== */
+
+@media (max-width: 480px) {
+    .container {
+        padding: 16px 12px;
+    }
+    .card {
+        padding: 16px;
+    }
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    .theme-switcher {
+        width: 45px;
+        height: 45px;
+        top: 15px;
+        right: 15px;
+    }
+    .theme-switcher::before {
+        font-size: 1.3rem;
+    }
+}
+
+
+/* ===== АНИМАЦИИ ===== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+
+/* ===== СПЕЦИАЛЬНЫЕ ЭФФЕКТЫ ДЛЯ ТЕМ ===== */
+
+
+/* Мистическая тема - дополнительные эффекты */
+
+[data-theme="mystic"] .card {
+    border: 1px solid var(--accent-primary);
+    box-shadow: 0 4px 8px rgba(106, 13, 173, 0.2);
+}
+
+[data-theme="mystic"] .btn {
+    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+    box-shadow: 0 4px 8px rgba(106, 13, 173, 0.3);
+}
+
+
+/* Оранжевая тема - дополнительные эффекты */
+
+[data-theme="orange"] .card {
+    border: 1px solid var(--accent-primary);
+    box-shadow: 0 4px 8px rgba(255, 140, 0, 0.1);
+}
+
+[data-theme="orange"] .btn {
+    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+    box-shadow: 0 4px 8px rgba(255, 140, 0, 0.2);
+}
+
+
+/* Темная тема - дополнительные эффекты */
+
+[data-theme="dark"] .card {
+    border: 1px solid var(--accent-primary);
+}
+
+[data-theme="dark"] .btn {
+    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+}
+
+
+/* ===== ИНДИКАТОР ТЕМЫ ===== */
+
+.theme-indicator {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid var(--accent-primary);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.theme-indicator::before {
+    content: 'Тема: ';
+    color: var(--text-secondary);
+}
+
+
+/* ===== ЗАГРУЗКА ===== */
+
+.loading {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    color: var(--text-secondary);
+}
+
+.loading.show {
+    display: block;
+}
+
+.loading::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--accent-primary);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

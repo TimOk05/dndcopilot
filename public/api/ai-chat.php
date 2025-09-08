@@ -371,4 +371,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(['success' => false, 'error' => 'Метод не поддерживается']);
 }
+
+/**
+ * Функция для обработки AI чата (для использования в мобильной версии)
+ */
+function processAiChat($data) {
+    try {
+        $chat = new AIChat();
+        
+        $message = $data['message'] ?? '';
+        $pdf_content = $data['pdf_content'] ?? '';
+        
+        if (empty($message)) {
+            return [
+                'success' => false,
+                'error' => 'Сообщение не может быть пустым'
+            ];
+        }
+        
+        // Если есть PDF контент, добавляем его
+        if (!empty($pdf_content)) {
+            $chat->addPDF($pdf_content);
+        }
+        
+        // Отправляем сообщение
+        $result = $chat->sendMessage($message);
+        
+        return $result;
+        
+    } catch (Exception $e) {
+        logMessage('ERROR', 'processAiChat ошибка: ' . $e->getMessage());
+        return [
+            'success' => false,
+            'error' => $e->getMessage()
+        ];
+    }
+}
 ?>

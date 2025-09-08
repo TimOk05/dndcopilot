@@ -3,6 +3,7 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../app/Services/ai-service.php';
+require_once __DIR__ . '/../../app/Services/ImprovedTavernGenerator.php';
 
 class TavernGenerator {
     private $taverns_db;
@@ -460,7 +461,8 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
     logMessage('INFO', "TavernGenerator: Получен POST запрос с данными: " . json_encode($_POST));
     
     try {
-        $generator = new TavernGenerator();
+        // Используем улучшенный генератор для лучшего качества
+        $generator = new ImprovedTavernGenerator();
         $result = $generator->generateTavern($_POST);
         
         logMessage('INFO', "TavernGenerator: Результат генерации: " . json_encode($result));
@@ -471,6 +473,23 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
             'success' => false,
             'error' => $e->getMessage()
         ], JSON_UNESCAPED_UNICODE);
+    }
+}
+
+/**
+ * Функция-обертка для генерации таверн (для использования в мобильной версии)
+ */
+function generateTaverns($params) {
+    try {
+        // Используем улучшенный генератор для мобильной версии
+        $generator = new ImprovedTavernGenerator();
+        return $generator->generateTavern($params);
+    } catch (Exception $e) {
+        logMessage('ERROR', 'generateTaverns wrapper error: ' . $e->getMessage());
+        return [
+            'success' => false,
+            'error' => $e->getMessage()
+        ];
     }
 }
 ?>
