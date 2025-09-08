@@ -4,62 +4,23 @@ require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../app/Services/dnd-api-service.php';
 require_once __DIR__ . '/../../app/Services/ai-service.php';
 require_once __DIR__ . '/../../app/Services/language-service.php';
+require_once __DIR__ . '/../../app/Services/TranslationService.php';
 
 class CharacterGeneratorV4 {
     private $dnd_api_service;
     private $ai_service;
     private $language_service;
+    private $translation_service;
     private $occupations = [];
     private $race_names = [];
     
-    // Русские названия рас
-    private $race_translations = [
-        'aarakocra' => 'Ааракокра',
-        'aasimar' => 'Аасимар',
-        'bugbear' => 'Багбир',
-        'dragonborn' => 'Драконорожденный',
-        'dwarf' => 'Дварф',
-        'elf' => 'Эльф',
-        'firbolg' => 'Фирболг',
-        'genasi' => 'Генаси',
-        'gnome' => 'Гном',
-        'goblin' => 'Гоблин',
-        'goliath' => 'Голиаф',
-        'half-elf' => 'Полуэльф',
-        'half-orc' => 'Полуорк',
-        'halfling' => 'Полурослик',
-        'human' => 'Человек',
-        'kenku' => 'Кенку',
-        'kobold' => 'Кобольд',
-        'lizardfolk' => 'Людоящер',
-        'orc' => 'Орк',
-        'tabaxi' => 'Табакси',
-        'tiefling' => 'Тифлинг',
-        'triton' => 'Тритон',
-        'yuan-ti' => 'Юань-ти'
-    ];
-    
-    // Русские названия классов
-    private $class_translations = [
-        'barbarian' => 'Варвар',
-        'bard' => 'Бард',
-        'cleric' => 'Жрец',
-        'druid' => 'Друид',
-        'fighter' => 'Воин',
-        'monk' => 'Монах',
-        'paladin' => 'Паладин',
-        'ranger' => 'Следопыт',
-        'rogue' => 'Плут',
-        'sorcerer' => 'Чародей',
-        'warlock' => 'Колдун',
-        'wizard' => 'Волшебник',
-        'artificer' => 'Артифисер'
-    ];
+    // Удалены hardcoded переводы - теперь используется TranslationService
     
     public function __construct() {
         $this->dnd_api_service = new DndApiService();
         $this->ai_service = new AiService(); // Используем основной AI сервис
         $this->language_service = new LanguageService(); // Добавляем Language Service
+        $this->translation_service = TranslationService::getInstance(); // Используем централизованный сервис переводов
         $this->loadData();
     }
     
@@ -133,8 +94,12 @@ class CharacterGeneratorV4 {
             logMessage('INFO', "Начинаем получение данных расы: {$race}");
             $race_data = $this->dnd_api_service->getRaceData($race);
             if (isset($race_data['error'])) {
-                logMessage('WARNING', "API недоступен, используем базовые данные для расы: {$race}");
-                $race_data = $this->getBasicRaceData($race);
+                logMessage('ERROR', "API недоступен для расы: {$race} - " . $race_data['message']);
+                return [
+                    'success' => false,
+                    'error' => 'D&D API недоступен',
+                    'message' => 'Не удалось получить данные расы: ' . $race_data['message']
+                ];
             }
             logMessage('INFO', "Получены данные расы: " . json_encode($race_data, JSON_UNESCAPED_UNICODE));
             
@@ -142,8 +107,12 @@ class CharacterGeneratorV4 {
             logMessage('INFO', "Начинаем получение данных класса: {$class}");
             $class_data = $this->dnd_api_service->getClassData($class);
             if (isset($class_data['error'])) {
-                logMessage('WARNING', "API недоступен, используем базовые данные для класса: {$class}");
-                $class_data = $this->getBasicClassData($class);
+                logMessage('ERROR', "API недоступен для класса: {$class} - " . $class_data['message']);
+                return [
+                    'success' => false,
+                    'error' => 'D&D API недоступен',
+                    'message' => 'Не удалось получить данные класса: ' . $class_data['message']
+                ];
             }
             logMessage('INFO', "Получены данные класса: " . json_encode($class_data, JSON_UNESCAPED_UNICODE));
             
@@ -654,11 +623,12 @@ class CharacterGeneratorV4 {
      * Получение отображаемого названия расы
      */
     private function getRaceDisplayName($race_key, $race_data) {
-        $race_key_lower = strtolower($race_key);
+        // Используем централизованный сервис переводов
+        $translated = $this->translation_service->translateRace($race_key);
         
-        // Сначала проверяем переводы
-        if (isset($this->race_translations[$race_key_lower])) {
-            return $this->race_translations[$race_key_lower];
+        // Если перевод найден, возвращаем его
+        if ($translated !== $race_key) {
+            return $translated;
         }
         
         // Если нет перевода, используем данные из API
@@ -674,11 +644,12 @@ class CharacterGeneratorV4 {
      * Получение отображаемого названия класса
      */
     private function getClassDisplayName($class_key, $class_data) {
-        $class_key_lower = strtolower($class_key);
+        // Используем централизованный сервис переводов
+        $translated = $this->translation_service->translateClass($class_key);
         
-        // Сначала проверяем переводы
-        if (isset($this->class_translations[$class_key_lower])) {
-            return $this->class_translations[$class_key_lower];
+        // Если перевод найден, возвращаем его
+        if ($translated !== $class_key) {
+            return $translated;
         }
         
         // Если нет перевода, используем данные из API
@@ -889,93 +860,7 @@ class CharacterGeneratorV4 {
         return $features;
     }
     
-    /**
-     * Базовые данные расы для fallback
-     */
-    private function getBasicRaceData($race) {
-        $race_key = strtolower($race);
-        
-        $basic_races = [
-            'aarakocra' => [
-                'name' => 'Aarakocra',
-                'speed' => 25,
-                'ability_bonuses' => ['dex' => 2, 'wis' => 1],
-                'traits' => ['Flight', 'Talons'],
-                'languages' => ['Common', 'Aarakocra'],
-                'subraces' => []
-            ],
-            'human' => [
-                'name' => 'Human',
-                'speed' => 30,
-                'ability_bonuses' => ['str' => 1, 'dex' => 1, 'con' => 1, 'int' => 1, 'wis' => 1, 'cha' => 1],
-                'traits' => ['Versatile'],
-                'languages' => ['Common'],
-                'subraces' => []
-            ],
-            'elf' => [
-                'name' => 'Elf',
-                'speed' => 30,
-                'ability_bonuses' => ['dex' => 2],
-                'traits' => ['Darkvision', 'Keen Senses'],
-                'languages' => ['Common', 'Elvish'],
-                'subraces' => []
-            ],
-            'dwarf' => [
-                'name' => 'Dwarf',
-                'speed' => 25,
-                'ability_bonuses' => ['con' => 2],
-                'traits' => ['Darkvision', 'Dwarven Resilience'],
-                'languages' => ['Common', 'Dwarvish'],
-                'subraces' => []
-            ]
-        ];
-        
-        return $basic_races[$race_key] ?? $basic_races['human'];
-    }
-    
-    /**
-     * Базовые данные класса для fallback
-     */
-    private function getBasicClassData($class) {
-        $class_key = strtolower($class);
-        
-        $basic_classes = [
-            'barbarian' => [
-                'name' => 'Barbarian',
-                'hit_die' => 12,
-                'proficiencies' => ['Light Armor', 'Medium Armor', 'Shields', 'Simple Weapons', 'Martial Weapons'],
-                'saving_throws' => ['STR', 'CON'],
-                'spellcasting' => false,
-                'spellcasting_ability' => null
-            ],
-            'fighter' => [
-                'name' => 'Fighter',
-                'hit_die' => 10,
-                'proficiencies' => ['All Armor', 'Shields', 'Simple Weapons', 'Martial Weapons'],
-                'saving_throws' => ['STR', 'CON'],
-                'spellcasting' => false,
-                'spellcasting_ability' => null
-            ],
-            'wizard' => [
-                'name' => 'Wizard',
-                'hit_die' => 6,
-                'proficiencies' => ['Simple Weapons'],
-                'saving_throws' => ['INT', 'WIS'],
-                'spellcasting' => true,
-                'spellcasting_ability' => 'int'
-            ],
-            'cleric' => [
-                'name' => 'Cleric',
-                'hit_die' => 8,
-                'proficiencies' => ['Light Armor', 'Medium Armor', 'Shields', 'Simple Weapons'],
-                'saving_throws' => ['WIS', 'CHA'],
-                'spellcasting' => true,
-                'spellcasting_ability' => 'wis'
-            ]
-        ];
-        
-        return $basic_classes[$class_key] ?? $basic_classes['fighter'];
-    }
+    // Удалены fallback методы - теперь используется только API без hardcoded данных
     
     /**
      * Перевод персонажа на русский язык
