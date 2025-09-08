@@ -24,7 +24,119 @@ if (php_sapi_name() !== 'cli' && isset($_SERVER['REQUEST_METHOD']) && $_SERVER['
 // ===== ОБЪЯВЛЕНИЯ ФУНКЦИЙ =====
 
 /**
- * Генерация персонажа для мобильной версии
+ * Генерация персонажа для мобильной версии (полная версия)
+ */
+if (!function_exists('generateMobileCharacterFull')) {
+function generateMobileCharacterFull($race, $characterClass, $level, $alignment, $gender, $language) {
+    try {
+        // Загружаем данные имен
+        $namesData = null;
+        $namesFile = __DIR__ . '/../../data/pdf/dnd_race_names_ru_v2.json';
+        if (file_exists($namesFile)) {
+            $namesContent = file_get_contents($namesFile);
+            $namesData = json_decode($namesContent, true);
+        }
+        
+        // Генерируем имя
+        $name = generateCharacterName($race, $namesData);
+        
+        // Генерируем характеристики
+        $abilities = generateAbilities();
+        
+        // Рассчитываем производные характеристики
+        $hp = calculateHP($characterClass, $level, $abilities['con']);
+        $ac = calculateAC($characterClass, $abilities['dex']);
+        $speed = 30; // Базовая скорость
+        $initiative = floor(($abilities['dex'] - 10) / 2);
+        $proficiency_bonus = floor(($level - 1) / 4) + 2;
+        
+        // Рассчитываем бонус атаки
+        $primary_ability = getPrimaryAbility($characterClass);
+        $ability_modifier = floor(($abilities[$primary_ability] - 10) / 2);
+        $attack_bonus = $proficiency_bonus + $ability_modifier;
+        
+        // Рассчитываем урон
+        $damage = calculateDamage($characterClass, $abilities, $level);
+        
+        // Получаем основное оружие
+        $main_weapon = getMainWeapon($characterClass);
+        
+        // Получаем спасброски
+        $saving_throws = getSavingThrows($characterClass, $abilities, $proficiency_bonus);
+        
+        // Получаем владения
+        $proficiencies = getProficiencies($characterClass);
+        
+        // Генерируем описание с AI (если доступен)
+        $description = generateCharacterDescriptionWithAI($race, $characterClass, $level);
+        
+        // Получаем особенности класса
+        $features = getClassFeatures($characterClass, $level);
+        
+        // Получаем снаряжение
+        $equipment = getClassEquipment($characterClass);
+        
+        // Получаем заклинания
+        $spells = getClassSpells($characterClass, $level);
+        
+        // Генерируем предысторию
+        $background = generateCharacterBackground($race, $characterClass, $level);
+        
+        // Переводим названия рас и классов
+        $race_display = translateRace($race);
+        $class_display = translateClass($characterClass);
+        
+        $character = [
+            'name' => $name,
+            'race' => $race_display,
+            'class' => $class_display,
+            'level' => $level,
+            'alignment' => translateAlignment($alignment),
+            'gender' => translateGender($gender),
+            'occupation' => getRandomOccupation(),
+            'abilities' => $abilities,
+            'hit_points' => $hp,
+            'armor_class' => $ac,
+            'speed' => $speed,
+            'initiative' => $initiative,
+            'proficiency_bonus' => $proficiency_bonus,
+            'attack_bonus' => $attack_bonus,
+            'damage' => $damage,
+            'main_weapon' => $main_weapon,
+            'proficiencies' => $proficiencies,
+            'saving_throws' => $saving_throws,
+            'features' => $features,
+            'equipment' => $equipment,
+            'spells' => $spells,
+            'description' => $description,
+            'background' => $background,
+            'languages' => ['Общий', translateRaceLanguage($race)]
+        ];
+        
+        return [
+            'success' => true,
+            'character' => $character,
+            'language' => $language,
+            'api_info' => [
+                'dnd_api_used' => false,
+                'ai_api_used' => false,
+                'data_source' => 'Local fallback data',
+                'cache_info' => 'No caching used'
+            ]
+        ];
+    } catch (Exception $e) {
+        logMessage('ERROR', 'Mobile character generation failed: ' . $e->getMessage());
+        return [
+            'success' => false,
+            'error' => $e->getMessage(),
+            'details' => 'Generation failed due to local data processing error'
+        ];
+    }
+}
+}
+
+/**
+ * Генерация персонажа для мобильной версии (упрощенная версия)
  */
 if (!function_exists('generateMobileCharacter')) {
 function generateMobileCharacter($race, $characterClass, $level) {
@@ -430,8 +542,53 @@ function generateCharacterDescriptionWithAI($race, $characterClass, $level) {
         return $result;
     } catch (Exception $e) {
         logMessage('ERROR', 'Mobile AI description failed: ' . $e->getMessage());
-        throw new Exception('AI недоступен для генерации описания: ' . $e->getMessage());
+        // Возвращаем fallback описание вместо исключения
+        return generateFallbackDescription($race, $characterClass, $level);
     }
+}
+}
+
+/**
+ * Генерация fallback описания персонажа
+ */
+if (!function_exists('generateFallbackDescription')) {
+function generateFallbackDescription($race, $characterClass, $level) {
+    $race_display = translateRace($race);
+    $class_display = translateClass($characterClass);
+    
+    $descriptions = [
+        'dragonborn' => 'Чешуйчатая кожа цвета вороненой стали и пронзительные глаза цвета расплавленного золота выдают драконью природу этого существа.',
+        'human' => 'Среднего роста и телосложения, с решительным взглядом и уверенной походкой.',
+        'elf' => 'Стройная фигура, заостренные уши и изящные черты лица выдают эльфийское происхождение.',
+        'dwarf' => 'Крепкое телосложение, густая борода и упорный взгляд характерны для этого представителя горного народа.',
+        'halfling' => 'Невысокий рост, кудрявые волосы и жизнерадостное выражение лица делают этого персонажа узнаваемым.',
+        'gnome' => 'Маленький рост, острые черты лица и любопытный взгляд выдают гномье происхождение.',
+        'tiefling' => 'Рога, хвост и необычный цвет кожи выдают инфернальное происхождение этого персонажа.',
+        'half-elf' => 'Сочетание эльфийской грации и человеческой решительности в чертах лица.',
+        'half-orc' => 'Крупное телосложение, выступающие клыки и мускулистая фигура выдают орчье происхождение.'
+    ];
+    
+    $base_description = $descriptions[$race] ?? "Представитель расы {$race_display}.";
+    
+    $class_descriptions = [
+        'monk' => ' Плавные движения и собранная осанка говорят о дисциплине, привитой в монастыре.',
+        'fighter' => ' Военная выправка и уверенность в движениях выдают опытного воина.',
+        'wizard' => ' В глазах читается мудрость и жажда знаний, а в руках чувствуется магическая сила.',
+        'rogue' => ' Быстрые, точные движения и внимательный взгляд выдают опытного плута.',
+        'cleric' => ' Спокойствие и внутренняя сила говорят о глубокой вере и связи с божеством.',
+        'ranger' => ' Легкая походка и зоркий взгляд выдают опытного следопыта и охотника.',
+        'barbarian' => ' Дикая сила и неукротимый дух читаются в каждом движении.',
+        'bard' => ' Артистичная осанка и обаятельная улыбка выдают талантливого артиста.',
+        'druid' => ' Связь с природой чувствуется в каждом движении и взгляде.',
+        'paladin' => ' Благородная осанка и внутренняя сила говорят о священном долге.',
+        'sorcerer' => ' В глазах плещется магическая энергия, а в движениях чувствуется врожденная сила.',
+        'warlock' => ' Загадочная аура и необычная сила выдают связь с потусторонними силами.',
+        'artificer' => ' Изобретательный взгляд и умелые руки выдают мастера-творца.'
+    ];
+    
+    $class_description = $class_descriptions[$characterClass] ?? " Представитель класса {$class_display}.";
+    
+    return $base_description . $class_description;
 }
 }
 
@@ -594,6 +751,293 @@ function getClassSpells($characterClass, $level) {
 }
 }
 
+/**
+ * Получение основной характеристики класса
+ */
+if (!function_exists('getPrimaryAbility')) {
+function getPrimaryAbility($characterClass) {
+    $primary_abilities = [
+        'fighter' => 'str',
+        'wizard' => 'int',
+        'rogue' => 'dex',
+        'cleric' => 'wis',
+        'ranger' => 'dex',
+        'barbarian' => 'str',
+        'bard' => 'cha',
+        'druid' => 'wis',
+        'monk' => 'dex',
+        'paladin' => 'str',
+        'sorcerer' => 'cha',
+        'warlock' => 'cha',
+        'artificer' => 'int'
+    ];
+    
+    return $primary_abilities[$characterClass] ?? 'str';
+}
+}
+
+/**
+ * Расчет урона
+ */
+if (!function_exists('calculateDamage')) {
+function calculateDamage($characterClass, $abilities, $level) {
+    $primary_ability = getPrimaryAbility($characterClass);
+    $ability_modifier = floor(($abilities[$primary_ability] - 10) / 2);
+    
+    // Базовый урон оружия
+    $base_damage = [
+        'fighter' => '1d8',
+        'wizard' => '1d6',
+        'rogue' => '1d4',
+        'cleric' => '1d8',
+        'ranger' => '1d8',
+        'barbarian' => '1d12',
+        'bard' => '1d8',
+        'druid' => '1d6',
+        'monk' => '1d6',
+        'paladin' => '1d8',
+        'sorcerer' => '1d6',
+        'warlock' => '1d4',
+        'artificer' => '1d8'
+    ];
+    
+    $damage = $base_damage[$characterClass] ?? '1d6';
+    
+    // Форматируем модификатор
+    if ($ability_modifier >= 0) {
+        return $damage . '+' . $ability_modifier;
+    } else {
+        return $damage . $ability_modifier;
+    }
+}
+}
+
+/**
+ * Получение основного оружия
+ */
+if (!function_exists('getMainWeapon')) {
+function getMainWeapon($characterClass) {
+    $weapons = [
+        'fighter' => 'Меч',
+        'wizard' => 'Посох',
+        'rogue' => 'Кинжал',
+        'cleric' => 'Булава',
+        'ranger' => 'Лук',
+        'barbarian' => 'Топор',
+        'bard' => 'Рапира',
+        'druid' => 'Посох',
+        'monk' => 'Кулаки',
+        'paladin' => 'Меч',
+        'sorcerer' => 'Посох',
+        'warlock' => 'Кинжал',
+        'artificer' => 'Молот'
+    ];
+    
+    return $weapons[$characterClass] ?? 'Меч';
+}
+}
+
+/**
+ * Получение спасбросков
+ */
+if (!function_exists('getSavingThrows')) {
+function getSavingThrows($characterClass, $abilities, $proficiency_bonus) {
+    $saving_throws = [];
+    
+    // Определяем спасброски по классу
+    $class_saving_throws = [
+        'fighter' => ['str', 'con'],
+        'wizard' => ['int', 'wis'],
+        'rogue' => ['dex', 'int'],
+        'cleric' => ['wis', 'cha'],
+        'ranger' => ['str', 'dex'],
+        'barbarian' => ['str', 'con'],
+        'bard' => ['dex', 'cha'],
+        'druid' => ['int', 'wis'],
+        'monk' => ['str', 'dex'],
+        'paladin' => ['wis', 'cha'],
+        'sorcerer' => ['con', 'cha'],
+        'warlock' => ['wis', 'cha'],
+        'artificer' => ['con', 'int']
+    ];
+    
+    $proficient_throws = $class_saving_throws[$characterClass] ?? ['str', 'dex'];
+    
+    // Рассчитываем все спасброски
+    $ability_names = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+    $ability_display = ['СИЛ', 'ЛОВ', 'ТЕЛ', 'ИНТ', 'МДР', 'ХАР'];
+    
+    foreach ($ability_names as $index => $ability) {
+        $modifier = floor(($abilities[$ability] - 10) / 2);
+        $bonus = in_array($ability, $proficient_throws) ? $modifier + $proficiency_bonus : $modifier;
+        $saving_throws[$ability_display[$index]] = $bonus;
+    }
+    
+    return $saving_throws;
+}
+}
+
+/**
+ * Получение владений
+ */
+if (!function_exists('getProficiencies')) {
+function getProficiencies($characterClass) {
+    $proficiencies = [
+        'fighter' => ['Все доспехи', 'Щиты', 'Простое оружие', 'Воинское оружие'],
+        'wizard' => ['Кинжалы', 'Дартсы', 'Пращи', 'Посохи', 'Легкие арбалеты'],
+        'rogue' => ['Легкие доспехи', 'Простое оружие', 'Ручные арбалеты', 'Длинные мечи', 'Рапиры', 'Короткие мечи'],
+        'cleric' => ['Легкие доспехи', 'Средние доспехи', 'Щиты', 'Простое оружие'],
+        'ranger' => ['Легкие доспехи', 'Средние доспехи', 'Щиты', 'Простое оружие', 'Воинское оружие'],
+        'barbarian' => ['Легкие доспехи', 'Средние доспехи', 'Щиты', 'Простое оружие', 'Воинское оружие'],
+        'bard' => ['Легкие доспехи', 'Простое оружие', 'Ручные арбалеты', 'Длинные мечи', 'Рапиры', 'Короткие мечи'],
+        'druid' => ['Легкие доспехи', 'Средние доспехи', 'Щиты', 'Булавы', 'Кинжалы', 'Дартсы', 'Джевелины', 'Булавы', 'Посохи', 'Пращи', 'Копья'],
+        'monk' => ['Простое оружие', 'Короткие мечи'],
+        'paladin' => ['Все доспехи', 'Щиты', 'Простое оружие', 'Воинское оружие'],
+        'sorcerer' => ['Кинжалы', 'Дартсы', 'Пращи', 'Посохи', 'Легкие арбалеты'],
+        'warlock' => ['Легкие доспехи', 'Простое оружие'],
+        'artificer' => ['Легкие доспехи', 'Средние доспехи', 'Щиты', 'Простое оружие']
+    ];
+    
+    return $proficiencies[$characterClass] ?? ['Простое оружие'];
+}
+}
+
+/**
+ * Генерация предыстории персонажа
+ */
+if (!function_exists('generateCharacterBackground')) {
+function generateCharacterBackground($race, $characterClass, $level) {
+    $backgrounds = [
+        'Аколит' => 'Вы провели свою жизнь в служении храму, изучая священные тексты и выполняя религиозные обряды.',
+        'Преступник' => 'Вы жили вне закона, зарабатывая на жизнь воровством, мошенничеством и другими незаконными делами.',
+        'Народный герой' => 'Вы были простым человеком, пока не стали героем в глазах народа, защитив их от угрозы.',
+        'Благородный' => 'Вы родились в знатной семье и выросли в роскоши, окруженные слугами и богатством.',
+        'Солдат' => 'Вы служили в армии, участвовали в сражениях и знаете дисциплину военной жизни.',
+        'Мудрец' => 'Вы посвятили свою жизнь изучению знаний, собирая информацию и исследуя тайны мира.',
+        'Моряк' => 'Вы провели большую часть жизни на кораблях, путешествуя по морям и океанам.',
+        'Бродяга' => 'Вы жили на улицах, выживая благодаря своей хитрости и умению находить возможности.'
+    ];
+    
+    return $backgrounds[array_rand($backgrounds)];
+}
+}
+
+/**
+ * Получение случайной профессии
+ */
+if (!function_exists('getRandomOccupation')) {
+function getRandomOccupation() {
+    $occupations = [
+        'Кузнец', 'Торговец', 'Охотник', 'Рыбак', 'Фермер', 'Шахтер', 
+        'Плотник', 'Каменщик', 'Повар', 'Трактирщик', 'Ткач', 'Авантюрист',
+        'Лекарь', 'Писарь', 'Стражник', 'Проводник', 'Картограф', 'Алхимик'
+    ];
+    
+    return $occupations[array_rand($occupations)];
+}
+}
+
+/**
+ * Перевод расы
+ */
+if (!function_exists('translateRace')) {
+function translateRace($race) {
+    $translations = [
+        'human' => 'Человек',
+        'elf' => 'Эльф',
+        'dwarf' => 'Дварф',
+        'halfling' => 'Полурослик',
+        'dragonborn' => 'Драконорождённый',
+        'gnome' => 'Гном',
+        'half-elf' => 'Полуэльф',
+        'half-orc' => 'Полуорк',
+        'tiefling' => 'Тифлинг'
+    ];
+    
+    return $translations[$race] ?? ucfirst($race);
+}
+}
+
+/**
+ * Перевод класса
+ */
+if (!function_exists('translateClass')) {
+function translateClass($class) {
+    $translations = [
+        'fighter' => 'Воин',
+        'wizard' => 'Волшебник',
+        'rogue' => 'Плут',
+        'cleric' => 'Жрец',
+        'ranger' => 'Следопыт',
+        'barbarian' => 'Варвар',
+        'bard' => 'Бард',
+        'druid' => 'Друид',
+        'monk' => 'Монах',
+        'paladin' => 'Паладин',
+        'sorcerer' => 'Чародей',
+        'warlock' => 'Колдун',
+        'artificer' => 'Артифисер'
+    ];
+    
+    return $translations[$class] ?? ucfirst($class);
+}
+}
+
+/**
+ * Перевод мировоззрения
+ */
+if (!function_exists('translateAlignment')) {
+function translateAlignment($alignment) {
+    $translations = [
+        'lawful-good' => 'Законно-добрый',
+        'neutral-good' => 'Нейтрально-добрый',
+        'chaotic-good' => 'Хаотично-добрый',
+        'lawful-neutral' => 'Законно-нейтральный',
+        'neutral' => 'Нейтральный',
+        'chaotic-neutral' => 'Хаотично-нейтральный',
+        'lawful-evil' => 'Законно-злой',
+        'neutral-evil' => 'Нейтрально-злой',
+        'chaotic-evil' => 'Хаотично-злой'
+    ];
+    
+    return $translations[$alignment] ?? 'Нейтральный';
+}
+}
+
+/**
+ * Перевод пола
+ */
+if (!function_exists('translateGender')) {
+function translateGender($gender) {
+    if ($gender === 'random') {
+        $gender = rand(0, 1) ? 'male' : 'female';
+    }
+    
+    return $gender === 'male' ? 'Мужчина' : 'Женщина';
+}
+}
+
+/**
+ * Перевод языка расы
+ */
+if (!function_exists('translateRaceLanguage')) {
+function translateRaceLanguage($race) {
+    $languages = [
+        'human' => 'Общий',
+        'elf' => 'Эльфийский',
+        'dwarf' => 'Дварфский',
+        'halfling' => 'Полуросличий',
+        'dragonborn' => 'Драконий',
+        'gnome' => 'Гномский',
+        'half-elf' => 'Эльфийский',
+        'half-orc' => 'Орчий',
+        'tiefling' => 'Инфернальный'
+    ];
+    
+    return $languages[$race] ?? 'Общий';
+}
+}
+
 // ===== ОСНОВНОЙ КОД =====
 
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
@@ -629,7 +1073,13 @@ try {
             ];
             
             $result = $generator->generateCharacter($params);
-            $response = $result; // Возвращаем полный результат как в ПК версии
+            
+            // Если API недоступен, используем упрощенную генерацию с полными данными
+            if (!$result['success'] && isset($result['error']) && strpos($result['error'], 'API недоступен') !== false) {
+                $response = generateMobileCharacterFull($race, $characterClass, $level, $alignment, $gender, $language);
+            } else {
+                $response = $result; // Возвращаем полный результат как в ПК версии
+            }
             break;
             
         case 'generate_enemy':
