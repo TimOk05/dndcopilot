@@ -364,6 +364,28 @@
             --accent-primary: #8b5a3c;
             --accent-secondary: #6d4429;
         }
+        /* Сепия тема */
+        
+        [data-theme="sepia"] {
+            --bg-primary: #f4f1ea;
+            --bg-secondary: #e8e0d0;
+            --bg-tertiary: #d4c4a8;
+            --text-primary: #3c2f2f;
+            --text-secondary: #5d4e37;
+            --accent-primary: #8b4513;
+            --accent-secondary: #654321;
+        }
+        /* Синяя тема */
+        
+        [data-theme="blue"] {
+            --bg-primary: #e6f3ff;
+            --bg-secondary: #cce7ff;
+            --bg-tertiary: #b3daff;
+            --text-primary: #1a365d;
+            --text-secondary: #2c5282;
+            --accent-primary: #3182ce;
+            --accent-secondary: #2c5282;
+        }
         
         [data-theme="dark"] .header {
             background: var(--bg-secondary);
@@ -494,6 +516,9 @@
         });
 
         // Система тем
+        const themes = ['light', 'dark', 'sepia', 'blue'];
+        const themeIcons = ['🌙', '☀️', '📜', '🌊'];
+
         function loadTheme() {
             const savedTheme = localStorage.getItem('dnd_theme') || 'light';
             setTheme(savedTheme);
@@ -503,15 +528,17 @@
             document.documentElement.setAttribute('data-theme', theme);
             const themeIcon = document.getElementById('theme-icon');
             if (themeIcon) {
-                themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+                const themeIndex = themes.indexOf(theme);
+                themeIcon.textContent = themeIcons[themeIndex] || '🌙';
             }
             localStorage.setItem('dnd_theme', theme);
         }
 
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            setTheme(newTheme);
+            const currentIndex = themes.indexOf(currentTheme);
+            const nextIndex = (currentIndex + 1) % themes.length;
+            setTheme(themes[nextIndex]);
         }
 
         // Управление секциями
@@ -885,6 +912,22 @@
             `;
             addNote(characterInfo);
             closeModal();
+        }
+        
+        function toggleMobileSection(headerElement) {
+            const contentElement = headerElement.nextElementSibling;
+            const toggleIcon = headerElement.querySelector('.toggle-icon');
+            const isCollapsed = contentElement.classList.contains('collapsed');
+            
+            if (isCollapsed) {
+                contentElement.classList.remove('collapsed');
+                contentElement.style.display = 'block';
+                toggleIcon.textContent = '▼';
+            } else {
+                contentElement.classList.add('collapsed');
+                contentElement.style.display = 'none';
+                toggleIcon.textContent = '▶';
+            }
         }
 
         function openEnemyModal() {
