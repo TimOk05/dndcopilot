@@ -1,5 +1,4 @@
 <?php
-    header('Content-Type: application/json');
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../app/Services/dnd-api-service.php';
 require_once __DIR__ . '/../../app/Services/ai-service.php';

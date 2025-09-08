@@ -1,12 +1,10 @@
 <?php
-header('Content-Type: application/json');
-
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../app/Services/ai-service.php';
 require_once __DIR__ . '/../../app/Services/SimplifiedTavernGenerator.php';
 
 // Обработка запроса
-if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+if (php_sapi_name() === 'cli' || (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST')) {
     try {
         $generator = new SimplifiedTavernGenerator();
         $result = $generator->generateTavern($_POST);
@@ -17,7 +15,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
             'error' => $e->getMessage()
         ], JSON_UNESCAPED_UNICODE);
     }
-} elseif (isset($_SERVER['REQUEST_METHOD'])) {
+} else {
     echo json_encode([
         'success' => false,
         'error' => 'Только POST запросы поддерживаются'
