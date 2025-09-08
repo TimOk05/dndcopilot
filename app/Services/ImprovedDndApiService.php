@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/dnd-api-service.php';
+
 /**
  * Улучшенный D&D API сервис с использованием централизованного HTTP клиента
  * Расширяет базовый DndApiService с оптимизациями
@@ -14,9 +16,17 @@ class ImprovedDndApiService extends DndApiService {
         // Инициализируем зависимости
         require_once __DIR__ . '/HttpClient.php';
         require_once __DIR__ . '/TranslationService.php';
+        require_once __DIR__ . '/CacheService.php';
         
         $this->httpClient = new HttpClient();
         $this->translationService = TranslationService::getInstance();
+        $this->cacheService = new CacheService();
+        
+        // Инициализируем api_endpoints из родительского класса
+        $this->api_endpoints = [
+            'open5e' => 'https://api.open5e.com',
+            'dnd5eapi' => 'https://www.dnd5eapi.co/api'
+        ];
     }
     
     /**
@@ -36,6 +46,45 @@ class ImprovedDndApiService extends DndApiService {
     }
     
     /**
+     * Получение данных из кэша
+     */
+    protected function getFromCache($key) {
+        return $this->cacheService->get($key);
+    }
+    
+    /**
+     * Сохранение данных в кэш
+     */
+    protected function saveToCache($key, $data, $ttl = 3600) {
+        return $this->cacheService->set($key, $data, $ttl);
+    }
+    
+    /**
+     * Получение статистики кэша
+     */
+    protected function getCacheStats() {
+        return $this->cacheService->getStats();
+    }
+    
+    /**
+     * Получение статистики API вызовов
+     */
+    protected function getApiCallStats() {
+        return [
+            'total_calls' => $this->httpClient->getTotalCalls(),
+            'successful_calls' => $this->httpClient->getSuccessfulCalls(),
+            'failed_calls' => $this->httpClient->getFailedCalls()
+        ];
+    }
+    
+    /**
+     * Получение времени последней очистки кэша
+     */
+    protected function getLastCacheCleanup() {
+        return $this->cacheService->getLastCleanup();
+    }
+    
+    /**
      * Получение данных расы с улучшенной обработкой ошибок
      */
     public function getRaceData($race) {
@@ -46,7 +95,7 @@ class ImprovedDndApiService extends DndApiService {
         }
         
         try {
-            $url = $this->dnd5e_api_url . '/races/' . strtolower($race);
+            $url = $this->api_endpoints['dnd5eapi'] . '/races/' . strtolower($race);
             $data = $this->makeApiRequest($url);
             
             if ($data === false) {
@@ -81,7 +130,7 @@ class ImprovedDndApiService extends DndApiService {
         }
         
         try {
-            $url = $this->dnd5e_api_url . '/classes/' . strtolower($class);
+            $url = $this->api_endpoints['dnd5eapi'] . '/classes/' . strtolower($class);
             $data = $this->makeApiRequest($url);
             
             if ($data === false) {
@@ -116,7 +165,7 @@ class ImprovedDndApiService extends DndApiService {
         }
         
         try {
-            $url = $this->dnd5e_api_url . '/monsters';
+            $url = $this->api_endpoints['dnd5eapi'] . '/monsters';
             
             // Добавляем параметры фильтрации если есть
             if (!empty($filters)) {
@@ -157,7 +206,7 @@ class ImprovedDndApiService extends DndApiService {
         }
         
         try {
-            $url = $this->dnd5e_api_url . '/monsters/' . strtolower($monsterIndex);
+            $url = $this->api_endpoints['dnd5eapi'] . '/monsters/' . strtolower($monsterIndex);
             $data = $this->makeApiRequest($url);
             
             if ($data === false) {
@@ -184,21 +233,21 @@ class ImprovedDndApiService extends DndApiService {
     /**
      * Получение заклинаний для класса с улучшенной обработкой
      */
-    public function getSpellsForClass($class, $level) {
-        $cacheKey = 'spells_' . strtolower($class) . '_' . $level;
+    public function getSpellsForClass($class_name, $level = 1) {
+        $cacheKey = 'spells_' . strtolower($class_name) . '_' . $level;
         $cached = $this->getFromCache($cacheKey);
         if ($cached !== null) {
             return $cached;
         }
         
         try {
-            $url = $this->dnd5e_api_url . '/classes/' . strtolower($class) . '/spells';
+            $url = $this->api_endpoints['dnd5eapi'] . '/classes/' . strtolower($class_name) . '/spells';
             $data = $this->makeApiRequest($url);
             
             if ($data === false) {
                 return [
                     'error' => 'API недоступен',
-                    'message' => 'Не удалось получить заклинания для класса: ' . $class
+                    'message' => 'Не удалось получить заклинания для класса: ' . $class_name
                 ];
             }
             
@@ -218,7 +267,7 @@ class ImprovedDndApiService extends DndApiService {
             return $data;
             
         } catch (Exception $e) {
-            logMessage('ERROR', "ImprovedDndApiService: Ошибка получения заклинаний для класса $class: " . $e->getMessage());
+            logMessage('ERROR', "ImprovedDndApiService: Ошибка получения заклинаний для класса $class_name: " . $e->getMessage());
             return [
                 'error' => 'API недоступен',
                 'message' => 'Ошибка: ' . $e->getMessage()
@@ -229,21 +278,21 @@ class ImprovedDndApiService extends DndApiService {
     /**
      * Получение снаряжения для класса
      */
-    public function getEquipmentForClass($class) {
-        $cacheKey = 'equipment_' . strtolower($class);
+    public function getEquipmentForClass($class_name) {
+        $cacheKey = 'equipment_' . strtolower($class_name);
         $cached = $this->getFromCache($cacheKey);
         if ($cached !== null) {
             return $cached;
         }
         
         try {
-            $url = $this->dnd5e_api_url . '/classes/' . strtolower($class) . '/starting-equipment';
+            $url = $this->api_endpoints['dnd5eapi'] . '/classes/' . strtolower($class_name) . '/starting-equipment';
             $data = $this->makeApiRequest($url);
             
             if ($data === false) {
                 return [
                     'error' => 'API недоступен',
-                    'message' => 'Не удалось получить снаряжение для класса: ' . $class
+                    'message' => 'Не удалось получить снаряжение для класса: ' . $class_name
                 ];
             }
             
@@ -253,7 +302,7 @@ class ImprovedDndApiService extends DndApiService {
             return $data;
             
         } catch (Exception $e) {
-            logMessage('ERROR', "ImprovedDndApiService: Ошибка получения снаряжения для класса $class: " . $e->getMessage());
+            logMessage('ERROR', "ImprovedDndApiService: Ошибка получения снаряжения для класса $class_name: " . $e->getMessage());
             return [
                 'error' => 'API недоступен',
                 'message' => 'Ошибка: ' . $e->getMessage()
@@ -264,21 +313,21 @@ class ImprovedDndApiService extends DndApiService {
     /**
      * Получение особенностей класса
      */
-    public function getFeaturesForClass($class, $level) {
-        $cacheKey = 'features_' . strtolower($class) . '_' . $level;
+    public function getFeaturesForClass($class_name, $level) {
+        $cacheKey = 'features_' . strtolower($class_name) . '_' . $level;
         $cached = $this->getFromCache($cacheKey);
         if ($cached !== null) {
             return $cached;
         }
         
         try {
-            $url = $this->dnd5e_api_url . '/classes/' . strtolower($class) . '/levels/' . $level;
+            $url = $this->api_endpoints['dnd5eapi'] . '/classes/' . strtolower($class_name) . '/levels/' . $level;
             $data = $this->makeApiRequest($url);
             
             if ($data === false) {
                 return [
                     'error' => 'API недоступен',
-                    'message' => 'Не удалось получить особенности для класса: ' . $class . ' уровня ' . $level
+                    'message' => 'Не удалось получить особенности для класса: ' . $class_name . ' уровня ' . $level
                 ];
             }
             
@@ -288,7 +337,7 @@ class ImprovedDndApiService extends DndApiService {
             return $data;
             
         } catch (Exception $e) {
-            logMessage('ERROR', "ImprovedDndApiService: Ошибка получения особенностей для класса $class уровня $level: " . $e->getMessage());
+            logMessage('ERROR', "ImprovedDndApiService: Ошибка получения особенностей для класса $class_name уровня $level: " . $e->getMessage());
             return [
                 'error' => 'API недоступен',
                 'message' => 'Ошибка: ' . $e->getMessage()
@@ -301,7 +350,7 @@ class ImprovedDndApiService extends DndApiService {
      */
     public function checkApiHealth() {
         try {
-            $url = $this->dnd5e_api_url . '/races';
+            $url = $this->api_endpoints['dnd5eapi'] . '/races';
             $data = $this->makeApiRequest($url);
             
             if ($data === false) {

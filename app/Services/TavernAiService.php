@@ -1,16 +1,22 @@
 <?php
 
+require_once __DIR__ . '/ImprovedAiService.php';
+
 /**
  * Специализированный AI сервис для генерации таверн
  * Устраняет повторения и создает уникальные описания
  */
-class TavernAiService extends AiService {
+class TavernAiService extends ImprovedAiService {
     private $usedPrompts = [];
     private $promptVariations = [];
     
     public function __construct() {
         parent::__construct();
         $this->initializePromptVariations();
+        
+        // Инициализируем зависимости
+        require_once __DIR__ . '/CacheService.php';
+        $this->cacheService = new CacheService();
     }
     
     /**
@@ -53,7 +59,7 @@ class TavernAiService extends AiService {
         $cacheKey = 'tavern_desc_' . md5(json_encode($tavernData));
         
         if ($useCache) {
-            $cached = $this->getFromCache($cacheKey);
+            $cached = $this->cacheService->get($cacheKey);
             if ($cached !== null) {
                 logMessage('DEBUG', 'TavernAiService: Используем кэшированное описание таверны');
                 return $cached;
@@ -65,13 +71,13 @@ class TavernAiService extends AiService {
             $promptStyle = $this->selectUniquePromptStyle();
             $prompt = $this->buildTavernPrompt($tavernData, $promptStyle);
             
-            $result = $this->makeApiRequest($prompt);
+            $result = $this->generateCharacterDescription($prompt, false);
             
             if ($result && !isset($result['error'])) {
                 $description = $this->cleanAiResponse($result);
                 
                 if ($useCache) {
-                    $this->saveToCache($cacheKey, $description, 3600); // 1 час
+                    $this->cacheService->set($cacheKey, $description, 3600); // 1 час
                 }
                 
                 return $description;

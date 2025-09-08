@@ -29,7 +29,7 @@ class ImprovedTavernGenerator {
      * Загрузка базы данных таверн
      */
     private function loadTavernsDatabase() {
-        $db_file = __DIR__ . '/../../data/pdf/taverns_db_v3_1.json';
+        $db_file = __DIR__ . '/../../data/pdf/taverns_db_v4_improved.json';
         
         if (!file_exists($db_file)) {
             throw new Exception('База данных таверн не найдена');
@@ -245,7 +245,7 @@ class ImprovedTavernGenerator {
             $item_key = $this->getItemKey($selected);
             $attempt++;
             
-        } while (in_array($item_key, $this->repetitionTracker[$type]) && $attempt < $max_attempts);
+        } while (isset($this->repetitionTracker[$type]) && in_array($item_key, $this->repetitionTracker[$type]) && $attempt < $max_attempts);
         
         if ($selected) {
             $this->repetitionTracker[$type][] = $item_key;

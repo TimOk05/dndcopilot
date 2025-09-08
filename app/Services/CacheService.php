@@ -209,5 +209,159 @@ class CacheService {
         
         return false;
     }
+    
+    /**
+     * Получение времени последней очистки кэша
+     */
+    public function getLastCleanup() {
+        $cleanupFile = $this->cacheDir . '/.last_cleanup';
+        if (file_exists($cleanupFile)) {
+            return filemtime($cleanupFile);
+        }
+        return null;
+    }
+    
+    /**
+     * Установка времени последней очистки
+     */
+    private function setLastCleanup() {
+        $cleanupFile = $this->cacheDir . '/.last_cleanup';
+        touch($cleanupFile);
+    }
+    
+    /**
+     * Автоматическая очистка устаревших записей
+     */
+    public function autoCleanup() {
+        $deleted = $this->cleanup();
+        if ($deleted > 0) {
+            $this->setLastCleanup();
+        }
+        return $deleted;
+    }
+    
+    /**
+     * Получение размера кэша в байтах
+     */
+    public function getCacheSize() {
+        $files = glob($this->cacheDir . '/*.cache');
+        $totalSize = 0;
+        
+        foreach ($files as $file) {
+            $totalSize += filesize($file);
+        }
+        
+        return $totalSize;
+    }
+    
+    /**
+     * Получение размера кэша в человекочитаемом формате
+     */
+    public function getCacheSizeFormatted() {
+        $size = $this->getCacheSize();
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $unitIndex = 0;
+        
+        while ($size >= 1024 && $unitIndex < count($units) - 1) {
+            $size /= 1024;
+            $unitIndex++;
+        }
+        
+        return round($size, 2) . ' ' . $units[$unitIndex];
+    }
+    
+    /**
+     * Проверка здоровья кэша
+     */
+    public function getHealthStatus() {
+        $stats = $this->getStats();
+        $health = [
+            'status' => 'healthy',
+            'issues' => []
+        ];
+        
+        // Проверяем доступность директории
+        if (!is_dir($this->cacheDir)) {
+            $health['status'] = 'unhealthy';
+            $health['issues'][] = 'Cache directory not accessible';
+        }
+        
+        // Проверяем права на запись
+        if (!is_writable($this->cacheDir)) {
+            $health['status'] = 'unhealthy';
+            $health['issues'][] = 'Cache directory not writable';
+        }
+        
+        // Проверяем количество устаревших файлов
+        if ($stats['expired_files'] > $stats['valid_files'] * 0.5) {
+            $health['status'] = 'warning';
+            $health['issues'][] = 'Too many expired cache files';
+        }
+        
+        // Проверяем размер кэша
+        $cacheSize = $this->getCacheSize();
+        if ($cacheSize > 100 * 1024 * 1024) { // 100MB
+            $health['status'] = 'warning';
+            $health['issues'][] = 'Cache size too large: ' . $this->getCacheSizeFormatted();
+        }
+        
+        return $health;
+    }
+    
+    /**
+     * Получение информации о кэш файле
+     */
+    public function getCacheInfo($key) {
+        $filename = $this->getCacheFilename($key);
+        
+        if (!file_exists($filename)) {
+            return null;
+        }
+        
+        $data = file_get_contents($filename);
+        $cached = json_decode($data, true);
+        
+        if (!$cached) {
+            return null;
+        }
+        
+        return [
+            'key' => $key,
+            'filename' => $filename,
+            'created' => $cached['created'] ?? null,
+            'expires' => $cached['expires'] ?? null,
+            'size' => filesize($filename),
+            'is_expired' => isset($cached['expires']) && time() > $cached['expires']
+        ];
+    }
+    
+    /**
+     * Массовое удаление ключей
+     */
+    public function deleteMultiple($keys) {
+        $deleted = 0;
+        foreach ($keys as $key) {
+            if ($this->delete($key)) {
+                $deleted++;
+            }
+        }
+        return $deleted;
+    }
+    
+    /**
+     * Получение всех ключей кэша
+     */
+    public function getAllKeys() {
+        $files = glob($this->cacheDir . '/*.cache');
+        $keys = [];
+        
+        foreach ($files as $file) {
+            $filename = basename($file, '.cache');
+            // Восстанавливаем оригинальный ключ (это приблизительно)
+            $keys[] = $filename;
+        }
+        
+        return $keys;
+    }
 }
 ?>
