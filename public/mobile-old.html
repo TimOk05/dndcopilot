@@ -11,552 +11,376 @@
     <title>DnD Copilot - Мобильная версия</title>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
-
-    <script>
-        // Инициализация языка при загрузке страницы
-        // Язык зафиксирован на русском
-        let currentLanguage = 'ru';
-    </script>
+    <link rel="stylesheet" href="./assets/css/mobile-themes.css">
 
     <style>
-        /* Базовые стили и сброс */
+        /* Дополнительные стили для мобильной версии */
+        /* Кнопки быстрых действий */
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
         }
         
-         :root {
-            /* Мобильные размеры */
-            --header-height: 60px;
-            --nav-height: 50px;
-            --content-padding: 16px;
-            --border-radius: 12px;
-            --border-radius-large: 16px;
-            --spacing-xs: 8px;
-            --spacing-sm: 12px;
-            --spacing-md: 16px;
-            --spacing-lg: 24px;
-            --spacing-xl: 32px;
-            /* Типографика */
-            --font-primary: 'Roboto', system-ui, sans-serif;
-            --font-display: 'UnifrakturCook', serif;
-            --text-xs: 0.75rem;
-            --text-sm: 0.875rem;
-            --text-base: 1rem;
-            --text-lg: 1.125rem;
-            --text-xl: 1.25rem;
-            --text-2xl: 1.5rem;
-            /* Тени */
-            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
-            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
-            /* Z-index */
-            --z-header: 1000;
-            --z-nav: 900;
-            --z-modal: 1100;
-            --z-overlay: 1050;
-        }
-        /* Светлая тема (по умолчанию) */
-        
-         :root {
-            --bg-primary: #f8f4e8;
-            --bg-secondary: #fff9f0;
-            --bg-tertiary: #f0e6d0;
-            --bg-quaternary: #e8dcc0;
-            --text-primary: #2d1b00;
-            --text-secondary: #4a2e0a;
-            --text-tertiary: #7c4a02;
-            --border-primary: #a67c52;
-            --border-secondary: #8b6b3a;
-            --accent-primary: #a67c52;
-            --accent-secondary: #7c4a02;
-            --accent-success: #2bb07b;
-            --accent-warning: #ffd700;
-            --accent-danger: #b71c1c;
-            --accent-info: #4a90e2;
-            --bg-image: url('assets/backgrounds/light-theme.png');
-        }
-        /* Средняя тема (коричневая) */
-        
-        [data-theme="medium"] {
-            --bg-primary: #2d1810;
-            --bg-secondary: #3d2418;
-            --bg-tertiary: #4d2a20;
-            --bg-quaternary: #5d3028;
-            --text-primary: #f0e6d0;
-            --text-secondary: #e8dcc0;
-            --text-tertiary: #d4c4a0;
-            --border-primary: #8b6b3a;
-            --border-secondary: #a67c52;
-            --accent-primary: #a67c52;
-            --accent-secondary: #8b6b3a;
-            --accent-success: #4ade80;
-            --accent-warning: #fbbf24;
-            --accent-danger: #f87171;
-            --accent-info: #60a5fa;
-            --bg-image: url('assets/backgrounds/orange-theme.png');
-        }
-        /* Тёмная тема */
-        
-        [data-theme="dark"] {
-            --bg-primary: #1a0a0a;
-            --bg-secondary: #2a1a1a;
-            --bg-tertiary: #3a2a2a;
-            --bg-quaternary: #4a3a3a;
-            --text-primary: #f0f0f0;
-            --text-secondary: #d0d0d0;
-            --text-tertiary: #b0b0b0;
-            --border-primary: #b71c1c;
-            --border-secondary: #d32f2f;
-            --accent-primary: #b71c1c;
-            --accent-secondary: #d32f2f;
-            --accent-success: #4ade80;
-            --accent-warning: #fbbf24;
-            --accent-danger: #f87171;
-            --accent-info: #60a5fa;
-            --bg-image: url('assets/backgrounds/dark-theme.png');
-        }
-        /* Мистическая тема */
-        
-        [data-theme="mystic"] {
-            --bg-primary: #1a0a2a;
-            --bg-secondary: #2a1a3a;
-            --bg-tertiary: #3a2a4a;
-            --bg-quaternary: #4a3a5a;
-            --text-primary: #f0f0ff;
-            --text-secondary: #d0d0ff;
-            --text-tertiary: #b0b0ff;
-            --border-primary: #7209b7;
-            --border-secondary: #8b5cf6;
-            --accent-primary: #7209b7;
-            --accent-secondary: #8b5cf6;
-            --accent-success: #4ade80;
-            --accent-warning: #fbbf24;
-            --accent-danger: #f87171;
-            --accent-info: #60a5fa;
-            --bg-image: url('assets/backgrounds/mystic-theme.png');
-        }
-        
-        body {
-            font-family: var(--font-primary);
-            background: var(--bg-primary);
+        .quick-btn {
+            background: var(--bg-secondary);
+            border: 2px solid var(--accent-primary);
+            border-radius: var(--border-radius);
+            padding: 16px 12px;
+            text-align: center;
+            text-decoration: none;
             color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-            min-height: 100vh;
-            position: relative;
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
         }
-        /* Фоновое изображение */
         
-        body::before {
-            content: '';
+        .quick-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .quick-btn .icon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+        /* Модальные окна */
+        
+        .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: var(--bg-image);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.1;
-            z-index: -1;
-        }
-        /* Заголовок */
-        
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: var(--header-height);
-            background: var(--bg-secondary);
-            border-bottom: 2px solid var(--border-primary);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 var(--spacing-md);
-            z-index: var(--z-header);
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .logo {
-            font-family: var(--font-display);
-            font-size: var(--text-xl);
-            color: var(--text-tertiary);
-            font-weight: 700;
-        }
-        
-        .header-controls {
-            display: flex;
-            gap: var(--spacing-xs);
-        }
-        
-        .theme-toggle {
-            background: none;
-            border: 2px solid var(--border-primary);
-            border-radius: var(--border-radius);
-            padding: var(--spacing-xs) var(--spacing-sm);
-            color: var(--text-primary);
-            font-size: var(--text-sm);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .theme-toggle:hover {
-            background: var(--accent-primary);
-            color: var(--bg-secondary);
-        }
-        /* Навигация */
-        
-        .nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: var(--nav-height);
-            background: var(--bg-secondary);
-            border-top: 2px solid var(--border-primary);
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            z-index: var(--z-nav);
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .nav-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: var(--spacing-xs);
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: var(--text-xs);
-            transition: all 0.3s ease;
-            border-radius: var(--border-radius);
-        }
-        
-        .nav-item.active {
-            color: var(--accent-primary);
-            background: var(--bg-tertiary);
-        }
-        
-        .nav-item:hover {
-            color: var(--accent-primary);
-            background: var(--bg-tertiary);
-        }
-        
-        .nav-icon {
-            font-size: var(--text-lg);
-            margin-bottom: 2px;
-            font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        /* Основной контент */
-        
-        .main-content {
-            margin-top: var(--header-height);
-            margin-bottom: var(--nav-height);
-            padding: var(--spacing-md);
-            min-height: calc(100vh - var(--header-height) - var(--nav-height));
-        }
-        /* Секции контента */
-        
-        .content-section {
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        
-        .content-section.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        /* Карточки */
-        
-        .card {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-primary);
-            border-radius: var(--border-radius-large);
-            padding: var(--spacing-lg);
-            margin-bottom: var(--spacing-md);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .card-title {
-            font-size: var(--text-lg);
-            font-weight: 700;
-            color: var(--text-tertiary);
-            margin-bottom: var(--spacing-md);
-            text-align: center;
-        }
-        /* Кнопки */
-        
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: var(--spacing-sm) var(--spacing-lg);
-            background: var(--accent-primary);
-            color: var(--bg-secondary);
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: var(--text-base);
-            font-weight: 500;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-height: 44px;
-            width: 100%;
-            margin-bottom: var(--spacing-sm);
-            font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        
-        .btn:hover {
-            background: var(--accent-secondary);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .btn:active {
-            transform: translateY(0);
-        }
-        
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 2px solid var(--border-primary);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--accent-primary);
-            color: var(--bg-secondary);
-        }
-        /* Поля ввода */
-        
-        .input-group {
-            margin-bottom: var(--spacing-md);
-        }
-        
-        .input-label {
-            display: block;
-            margin-bottom: var(--spacing-xs);
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: var(--text-sm);
-        }
-        
-        .input-field {
-            width: 100%;
-            padding: var(--spacing-sm);
-            background: var(--bg-tertiary);
-            border: 2px solid var(--border-primary);
-            border-radius: var(--border-radius);
-            color: var(--text-primary);
-            font-size: var(--text-base);
-            transition: all 0.3s ease;
-            min-height: 44px;
-        }
-        
-        .input-field:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            background: var(--bg-secondary);
-            box-shadow: 0 0 0 3px rgba(166, 124, 82, 0.1);
-        }
-        /* Списки */
-        
-        .list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .list-item {
-            padding: var(--spacing-sm);
-            border-bottom: 1px solid var(--border-primary);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .list-item:last-child {
-            border-bottom: none;
-        }
-        /* Модальные окна */
-        
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: var(--z-modal);
-            padding: var(--spacing-md);
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
         }
         
         .modal.active {
             display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 20px;
         }
         
         .modal-content {
             background: var(--bg-secondary);
-            border: 2px solid var(--border-primary);
-            border-radius: var(--border-radius-large);
-            padding: var(--spacing-lg);
-            max-width: 90vw;
-            max-height: 80vh;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
             overflow-y: auto;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
         
         .modal-header {
+            padding: 20px 20px 0;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: var(--spacing-lg);
-            padding-bottom: var(--spacing-md);
-            border-bottom: 2px solid var(--border-primary);
+            align-items: center;
         }
         
         .modal-title {
-            font-size: var(--text-lg);
-            font-weight: 700;
-            color: var(--text-tertiary);
+            font-size: 1.3rem;
+            color: var(--accent-primary);
+            margin: 0;
         }
         
         .modal-close {
             background: none;
             border: none;
-            font-size: var(--text-xl);
+            font-size: 1.5rem;
             color: var(--text-secondary);
             cursor: pointer;
-            padding: var(--spacing-xs);
-            border-radius: var(--border-radius);
-            transition: all 0.3s ease;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .modal-close:hover {
-            background: var(--accent-danger);
-            color: var(--bg-secondary);
+        .modal-body {
+            padding: 20px;
         }
-        /* Утилиты */
+        /* Формы */
         
-        .text-center {
-            text-align: center;
-        }
-        
-        .text-left {
-            text-align: left;
+        .form-group {
+            margin-bottom: 16px;
         }
         
-        .text-right {
-            text-align: right;
-        }
-        
-        .mb-sm {
-            margin-bottom: var(--spacing-sm);
-        }
-        
-        .mb-md {
-            margin-bottom: var(--spacing-md);
-        }
-        
-        .mb-lg {
-            margin-bottom: var(--spacing-lg);
-        }
-        
-        .mt-sm {
-            margin-top: var(--spacing-sm);
-        }
-        
-        .mt-md {
-            margin-top: var(--spacing-md);
-        }
-        
-        .mt-lg {
-            margin-top: var(--spacing-lg);
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .visible {
+        .form-group label {
             display: block;
-        }
-        /* Анимации */
-        
-        .fade-in {
-            animation: fadeIn 0.3s ease-in-out;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--text-primary);
         }
         
-        .slide-up {
-            animation: slideUp 0.3s ease-in-out;
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--bg-tertiary);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
         }
         
-        @keyframes slideUp {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+        /* Кнопки */
+        
+        .btn {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 16px;
+        }
+        
+        .btn:hover {
+            background: var(--accent-secondary);
+            transform: translateY(-1px);
+        }
+        
+        .btn:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+        /* Результаты */
+        
+        .result-container {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-primary);
+        }
+        
+        .loading {
+            text-align: center;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #d32f2f;
+        }
+        /* Заметки */
+        
+        .notes-container {
+            margin-top: 24px;
+        }
+        
+        .note-item {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--accent-primary);
+        }
+        
+        .note-content {
+            margin-bottom: 12px;
+        }
+        
+        .note-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            width: auto;
+            margin: 0;
+        }
+        
+        .btn-danger {
+            background: #d32f2f;
+        }
+        
+        .btn-danger:hover {
+            background: #b71c1c;
+        }
+        /* Нижняя навигация */
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--bg-tertiary);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            padding: 8px;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-item.active {
+            color: var(--accent-primary);
+        }
+        
+        .nav-icon {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
         }
         /* Адаптивность */
         
         @media (max-width: 480px) {
-             :root {
-                --content-padding: 12px;
-                --spacing-lg: 20px;
-                --spacing-xl: 28px;
-            }
-            .card {
-                padding: var(--spacing-md);
+            .quick-actions {
+                grid-template-columns: 1fr;
             }
             .modal-content {
-                padding: var(--spacing-md);
+                margin: 10px;
+                max-height: 95vh;
             }
         }
-        /* Специальные стили для мистической темы */
+        /* Скрытие контента */
         
-        [data-theme="mystic"] .card {
-            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+        .hidden {
+            display: none !important;
+        }
+        /* Кнопка переключения темы */
+        
+        .theme-toggle {
+            background: var(--accent-primary);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+        
+        .theme-toggle:hover {
+            background: var(--accent-secondary);
+            transform: scale(1.1);
+        }
+        /* Темная тема */
+        
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #3a3a3a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-primary: #8b5a3c;
+            --accent-secondary: #6d4429;
+        }
+        /* Сепия тема */
+        
+        [data-theme="sepia"] {
+            --bg-primary: #f4f1ea;
+            --bg-secondary: #e8e0d0;
+            --bg-tertiary: #d4c4a8;
+            --text-primary: #3c2f2f;
+            --text-secondary: #5d4e37;
+            --accent-primary: #8b4513;
+            --accent-secondary: #654321;
+        }
+        /* Синяя тема */
+        
+        [data-theme="blue"] {
+            --bg-primary: #e6f3ff;
+            --bg-secondary: #cce7ff;
+            --bg-tertiary: #b3daff;
+            --text-primary: #1a365d;
+            --text-secondary: #2c5282;
+            --accent-primary: #3182ce;
+            --accent-secondary: #2c5282;
+        }
+        
+        [data-theme="dark"] .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+        
+        [data-theme="dark"] .quick-btn {
+            background: var(--bg-secondary);
             border-color: var(--accent-primary);
-            box-shadow: 0 4px 20px rgba(114, 9, 183, 0.2);
+            color: var(--text-primary);
         }
         
-        [data-theme="mystic"] .btn {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            box-shadow: 0 2px 10px rgba(114, 9, 183, 0.3);
+        [data-theme="dark"] .quick-btn:hover {
+            background: var(--accent-primary);
+            color: white;
         }
         
-        [data-theme="mystic"] .btn:hover {
-            box-shadow: 0 4px 15px rgba(114, 9, 183, 0.4);
+        [data-theme="dark"] .modal-content {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .form-group input,
+        [data-theme="dark"] .form-group select,
+        [data-theme="dark"] .form-group textarea {
+            background: var(--bg-primary);
+            border-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .form-group input:focus,
+        [data-theme="dark"] .form-group select:focus,
+        [data-theme="dark"] .form-group textarea:focus {
+            border-color: var(--accent-primary);
+        }
+        
+        [data-theme="dark"] .result-container {
+            background: var(--bg-tertiary);
+            border-left-color: var(--accent-primary);
+        }
+        
+        [data-theme="dark"] .note-item {
+            background: var(--bg-secondary);
+            border-left-color: var(--accent-primary);
+        }
+        
+        [data-theme="dark"] .bottom-nav {
+            background: var(--bg-secondary);
+            border-top-color: var(--bg-tertiary);
         }
     </style>
 </head>
@@ -564,70 +388,273 @@
 <body>
     <!-- Заголовок -->
     <header class="header">
-        <div class="logo">DnD Copilot</div>
-        <div class="header-controls">
-
-            <button class="theme-toggle" onclick="cycleTheme()">🎨</button>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>D&D Copilot</h1>
+                <p>Мобильная версия</p>
+            </div>
+            <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span>
+            </button>
         </div>
     </header>
 
     <!-- Основной контент -->
     <main class="main-content">
-        <!-- Главная страница -->
-        <section id="home" class="content-section active">
-            <div class="card">
-                <h2 class="card-title">🎲 Добро пожаловать в DnD Copilot</h2>
-                <p class="text-center mb-md">Ваш мобильный помощник для игр D&D</p>
+        <!-- Быстрые действия -->
+        <div class="quick-actions">
+            <button class="quick-btn" onclick="openDiceModal()">
+                <span class="icon">🎲</span>
+                Броски костей
+            </button>
+            <button class="quick-btn" onclick="openCharacterModal()">
+                <span class="icon">⚔️</span>
+                Персонажи
+            </button>
+            <button class="quick-btn" onclick="openEnemyModal()">
+                <span class="icon">👹</span>
+                Противники
+            </button>
+            <button class="quick-btn" onclick="openPotionModal()">
+                <span class="icon">🧪</span>
+                Зелья
+            </button>
+            <button class="quick-btn" onclick="openTavernModal()">
+                <span class="icon">🍺</span>
+                Таверны
+            </button>
+            <button class="quick-btn" onclick="openAIModal()">
+                <span class="icon">🤖</span>
+                AI Помощник
+            </button>
+        </div>
 
-                <div class="btn-group">
-                    <button class="btn" onclick="showSection('characters')">
-                        👤 Создать персонажа
-                    </button>
-                    <button class="btn" onclick="showSection('enemies')">
-                        ⚔️ Генератор противников
-                    </button>
-                    <button class="btn" onclick="showSection('potions')">
-                        🧪 Генератор зелий
-                    </button>
-                    <button class="btn" onclick="showSection('taverns')">
-                        🍺 Генератор таверн
-                    </button>
-                    <button class="btn" onclick="showSection('combat')">
-                        🗡️ Система боя
-                    </button>
-                    <button class="btn" onclick="showSection('ai-chat')">
-                        🤖 AI Помощник
-                    </button>
-                    <button class="btn" onclick="showSection('notes')">
-                        📝 Заметки
-                    </button>
+        <!-- Заметки -->
+        <div class="notes-container">
+            <h2>📝 Заметки</h2>
+            <div id="notes-list"></div>
+        </div>
+    </main>
+
+    <!-- Нижняя навигация -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active" onclick="showSection('main')">
+            <span class="nav-icon">🏠</span> Главная
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('notes')">
+            <span class="nav-icon">📝</span> Заметки
+        </a>
+    </nav>
+
+    <!-- Модальные окна будут добавлены через JavaScript -->
+    <div id="modal-container"></div>
+
+    <script>
+        // Глобальные переменные
+        let notes = JSON.parse(localStorage.getItem('dnd_notes') || '[]');
+        let currentSection = 'main';
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNotes();
+            updateNotesDisplay();
+            loadTheme();
+        });
+
+        // Система тем
+        const themes = ['light', 'dark', 'sepia', 'blue'];
+        const themeIcons = ['🌙', '☀️', '📜', '🌊'];
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('dnd_theme') || 'light';
+            setTheme(savedTheme);
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const themeIcon = document.getElementById('theme-icon');
+            if (themeIcon) {
+                const themeIndex = themes.indexOf(theme);
+                themeIcon.textContent = themeIcons[themeIndex] || '🌙';
+            }
+            localStorage.setItem('dnd_theme', theme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const currentIndex = themes.indexOf(currentTheme);
+            const nextIndex = (currentIndex + 1) % themes.length;
+            setTheme(themes[nextIndex]);
+        }
+
+        // Управление секциями
+        function showSection(section) {
+            currentSection = section;
+
+            // Обновляем навигацию
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+
+            // Показываем/скрываем контент
+            if (section === 'notes') {
+                document.querySelector('.quick-actions').style.display = 'none';
+                document.querySelector('.notes-container').style.display = 'block';
+            } else {
+                document.querySelector('.quick-actions').style.display = 'grid';
+                document.querySelector('.notes-container').style.display = 'block';
+            }
+        }
+
+        // Система модальных окон
+        function showModal(content) {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Генератор</h3>
+                        <button class="modal-close" onclick="closeModal()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        ${content}
+                    </div>
                 </div>
+            `;
+
+            document.getElementById('modal-container').appendChild(modal);
+
+            // Закрытие по клику вне модального окна
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        }
+
+        function closeModal() {
+            const modal = document.querySelector('.modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Загрузка заметок
+        function loadNotes() {
+            // Загружаем заметки из localStorage
+            notes = JSON.parse(localStorage.getItem('dnd_notes') || '[]');
+        }
+
+        function saveNotes() {
+            localStorage.setItem('dnd_notes', JSON.stringify(notes));
+        }
+
+        function updateNotesDisplay() {
+            const notesList = document.getElementById('notes-list');
+            if (notes.length === 0) {
+                notesList.innerHTML = '<p style="text-align: center; color: var(--text-secondary); font-style: italic;">Заметок пока нет</p>';
+                return;
+            }
+
+            notesList.innerHTML = notes.map((note, index) => `
+                <div class="note-item">
+                    <div class="note-content">${note}</div>
+                    <div class="note-actions">
+                        <button class="btn btn-small btn-danger" onclick="deleteNote(${index})">Удалить</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteNote(index) {
+            if (confirm('Удалить эту заметку?')) {
+                notes.splice(index, 1);
+                saveNotes();
+                updateNotesDisplay();
+            }
+        }
+
+        function addNote(content) {
+            if (content && content.trim()) {
+                notes.push(content.trim());
+                saveNotes();
+                updateNotesDisplay();
+            }
+        }
+
+        // Заглушки для модальных окон (будут реализованы в следующих этапах)
+        function openDiceModal() {
+            showModal(`
+                <div class="dice-generator">
+                    <div class="generator-header">
+                        <h2>🎲 Броски костей</h2>
+                        <p class="generator-subtitle">Бросьте кости для ваших приключений</p>
+        </div>
+                    
+                    <form id="diceForm" class="dice-form">
+                        <div class="form-group">
+                            <label for="dice-type">Тип костей</label>
+                            <select id="dice-type" name="dice_type" required>
+                                <option value="">Выберите тип костей</option>
+                                <option value="1d4">1d4</option>
+                                <option value="1d6">1d6</option>
+                                <option value="1d8">1d8</option>
+                                <option value="1d10">1d10</option>
+                                <option value="1d12">1d12</option>
+                                <option value="1d20">1d20</option>
+                                <option value="1d100">1d100</option>
+                                <option value="2d6">2d6</option>
+                                <option value="3d6">3d6</option>
+                                <option value="4d6">4d6</option>
+                                <option value="2d20">2d20</option>
+                                <option value="custom">Пользовательский</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" id="custom-dice-group" style="display: none;">
+                            <label for="custom-dice">Пользовательские кости (например: 2d8+3)</label>
+                            <input type="text" id="custom-dice" name="custom_dice" placeholder="2d8+3">
+                </div>
+                        
+                        <div class="form-group">
+                            <label for="dice-label">Комментарий (опционально)</label>
+                            <input type="text" id="dice-label" name="label" placeholder="Например: Атака мечом">
             </div>
 
-            <div class="card">
-                <h3 class="card-title">🎯 Быстрые действия</h3>
-                <div class="quick-actions">
-                    <button class="btn btn-secondary" onclick="rollDice('1d20')">
-                        🎲 1d20
+                        <button type="submit" class="btn">
+                            <span class="btn-icon">🎲</span>
+                            <span class="btn-text">Бросить кости</span>
                     </button>
-                    <button class="btn btn-secondary" onclick="rollDice('2d6')">
-                        🎲 2d6
-                    </button>
-                    <button class="btn btn-secondary" onclick="rollDice('1d100')">
-                        🎲 1d100
-                    </button>
+                    </form>
+                    
+                    <div id="diceResult" class="result-container hidden"></div>
                 </div>
-            </div>
-        </section>
+            `);
 
-        <!-- Генератор персонажей -->
-        <section id="characters" class="content-section">
-            <div class="card">
-                <h2 class="card-title">👤 Генератор персонажей</h2>
+            // Показываем/скрываем поле пользовательских костей
+            document.getElementById('dice-type').addEventListener('change', function() {
+                const customGroup = document.getElementById('custom-dice-group');
+                if (this.value === 'custom') {
+                    customGroup.style.display = 'block';
+                } else {
+                    customGroup.style.display = 'none';
+                }
+            });
+        }
 
-                <div class="input-group">
-                    <label class="input-label">Раса персонажа</label>
-                    <select class="input-field" id="character-race">
+        function openCharacterModal() {
+            showModal(`
+                <div class="character-generator">
+                    <div class="generator-header">
+                        <h2>⚔️ Генератор персонажей</h2>
+                        <p class="generator-subtitle">Создайте полноценного персонажа с использованием D&D API и AI</p>
+                    </div>
+                    
+                    <form id="characterForm" class="character-form">
+                        <div class="form-group">
+                            <label for="character-race">Раса персонажа</label>
+                            <select id="character-race" name="race" required>
                         <option value="">Выберите расу</option>
                         <option value="human">Человек</option>
                         <option value="elf">Эльф</option>
@@ -654,9 +681,9 @@
                     </select>
                 </div>
 
-                <div class="input-group">
-                    <label class="input-label">Класс персонажа</label>
-                    <select class="input-field" id="character-class">
+                        <div class="form-group">
+                            <label for="character-class">Класс персонажа</label>
+                            <select id="character-class" name="class" required>
                         <option value="">Выберите класс</option>
                         <option value="fighter">Воин</option>
                         <option value="wizard">Волшебник</option>
@@ -668,15 +695,15 @@
                         <option value="druid">Друид</option>
                         <option value="monk">Монах</option>
                         <option value="paladin">Паладин</option>
-                        <option value="sorcerer">Чародей</option>
+                                <option value="sorcerer">Чародей</option>
                         <option value="warlock">Колдун</option>
                         <option value="artificer">Изобретатель</option>
                     </select>
                 </div>
 
-                <div class="input-group">
-                    <label class="input-label">Уровень персонажа</label>
-                    <select class="input-field" id="character-level">
+                        <div class="form-group">
+                            <label for="character-level">Уровень персонажа</label>
+                            <select id="character-level" name="level" required>
                         <option value="1">1 уровень</option>
                         <option value="2">2 уровень</option>
                         <option value="3">3 уровень</option>
@@ -700,555 +727,432 @@
                     </select>
                 </div>
 
-                <button class="btn" onclick="generateCharacter()">
-                    🎲 Создать персонажа
+                        <button type="submit" class="btn">
+                            <span class="btn-icon">⚔️</span>
+                            <span class="btn-text">Создать персонажа</span>
                 </button>
+                    </form>
+                    
+                    <div id="characterResult" class="result-container hidden"></div>
             </div>
+            `);
 
-            <div id="character-result" class="card hidden">
-                <h3 class="card-title">👤 Ваш персонаж</h3>
-                <div id="character-content"></div>
-                <button class="btn btn-secondary" onclick="saveToNotes('character')">
-                    💾 Сохранить в заметки
-                </button>
-            </div>
-        </section>
+            // Обработчик формы
+            document.getElementById('characterForm').addEventListener('submit', function(e) {
+                e.preventDefault();
 
-        <!-- Генератор противников -->
-        <section id="enemies" class="content-section">
-            <div class="card">
-                <h2 class="card-title">⚔️ Генератор противников</h2>
+                const race = document.getElementById('character-race').value;
+                const characterClass = document.getElementById('character-class').value;
+                const level = document.getElementById('character-level').value;
 
-                <div class="input-group">
-                    <label class="input-label">Уровень угрозы</label>
-                    <select class="input-field" id="enemy-threat-level">
-                        <option value="">Выберите уровень угрозы</option>
-                        <option value="random">🎲 Случайный</option>
-                        <option value="easy">🟢 Легкий (CR 0-3)</option>
-                        <option value="medium">🟡 Средний (CR 1-7)</option>
-                        <option value="hard">🟠 Сложный (CR 5-12)</option>
-                        <option value="deadly">🔴 Смертельный (CR 10-20)</option>
-                    </select>
-                </div>
+                if (!race || !characterClass || !level) {
+                    alert('Пожалуйста, заполните все поля');
+                    return;
+                }
 
-                <div class="input-group">
-                    <label class="input-label">Или конкретный CR</label>
-                    <select class="input-field" id="enemy-cr">
-                        <option value="">Выберите CR</option>
-                        <option value="0">0</option>
-                        <option value="0.125">1/8</option>
-                        <option value="0.25">1/4</option>
-                        <option value="0.5">1/2</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                    </select>
-                </div>
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const resultDiv = document.getElementById('characterResult');
 
-                <div class="input-group">
-                    <label class="input-label">Количество противников</label>
-                    <input type="number" class="input-field" id="enemy-count" min="1" max="20" value="1">
-                </div>
+                submitBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Создание...</span>';
+                submitBtn.disabled = true;
+                resultDiv.innerHTML = '<div class="loading">Создание персонажа...</div>';
+                resultDiv.classList.remove('hidden');
 
-                <div class="input-group">
-                    <label class="input-label">Тип противника</label>
-                    <select class="input-field" id="enemy-type">
-                        <option value="">Любой тип</option>
-                        <option value="humanoid">Гуманоиды</option>
-                        <option value="beast">Звери</option>
-                        <option value="undead">Нежить</option>
-                        <option value="fiend">Демоны</option>
-                        <option value="dragon">Драконы</option>
-                        <option value="elemental">Стихийные</option>
-                        <option value="celestial">Небожители</option>
-                        <option value="aberration">Аберрации</option>
-                        <option value="construct">Конструкты</option>
-                        <option value="giant">Великаны</option>
-                        <option value="monstrosity">Монстры</option>
-                        <option value="ooze">Слизи</option>
-                        <option value="plant">Растения</option>
-                    </select>
-                </div>
+                // Вызов API
+                const formData = new FormData();
+                formData.append('race', race);
+                formData.append('class', characterClass);
+                formData.append('level', level);
 
-                <div class="input-group">
-                    <label class="input-label">Среда обитания (опционально)</label>
-                    <select class="input-field" id="enemy-environment">
-                        <option value="">Любая среда</option>
-                        <option value="arctic">Арктическая</option>
-                        <option value="coastal">Прибрежная</option>
-                        <option value="desert">Пустынная</option>
-                        <option value="forest">Лесная</option>
-                        <option value="grassland">Равнинная</option>
-                        <option value="hill">Холмистая</option>
-                        <option value="mountain">Горная</option>
-                        <option value="swamp">Болотная</option>
-                        <option value="underdark">Подземелье</option>
-                        <option value="urban">Городская</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">
-                        <input type="checkbox" id="enemy-use-ai" checked>
-                        Использовать AI для описания и тактики
-                    </label>
-                </div>
-
-                <button class="btn" onclick="generateEnemy()">
-                    🎲 Создать противника
-                </button>
-            </div>
-
-            <div id="enemy-result" class="card hidden">
-                <h3 class="card-title">⚔️ Ваш противник</h3>
-                <div id="enemy-content"></div>
-                <button class="btn btn-secondary" onclick="saveToNotes('enemy')">
-                    💾 Сохранить в заметки
-                </button>
-            </div>
-        </section>
-
-        <!-- Генератор зелий -->
-        <section id="potions" class="content-section">
-            <div class="card">
-                <h2 class="card-title">🧪 Генератор зелий</h2>
-
-                <div class="input-group">
-                    <label class="input-label">Количество зелий</label>
-                    <input type="number" class="input-field" id="potion-count" min="1" max="10" value="1">
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Редкость</label>
-                    <select class="input-field" id="potion-rarity">
-                        <option value="">Любая редкость</option>
-                        <option value="common">Обычное</option>
-                        <option value="uncommon">Необычное</option>
-                        <option value="rare">Редкое</option>
-                        <option value="very rare">Очень редкое</option>
-                        <option value="legendary">Легендарное</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Тип зелья</label>
-                    <select class="input-field" id="potion-type">
-                        <option value="">Любой тип</option>
-                        <option value="Восстановление">🩹 Восстановление</option>
-                        <option value="Усиление">💪 Усиление</option>
-                        <option value="Защита">🛡️ Защита</option>
-                        <option value="Иллюзия">👁️ Иллюзия</option>
-                        <option value="Трансмутация">🔄 Трансмутация</option>
-                        <option value="Некромантия">💀 Некромантия</option>
-                        <option value="Прорицание">🔮 Прорицание</option>
-                    </select>
-                </div>
-
-                <button class="btn" onclick="generatePotion()">
-                    🧪 Создать зелья
-                </button>
-            </div>
-
-            <div id="potion-result" class="card hidden">
-                <h3 class="card-title">🧪 Ваши зелья</h3>
-                <div id="potion-content"></div>
-                <button class="btn btn-secondary" onclick="saveToNotes('potion')">
-                    💾 Сохранить в заметки
-                </button>
-            </div>
-        </section>
-
-        <!-- Генератор таверн -->
-        <section id="taverns" class="content-section">
-            <div class="card">
-                <h2 class="card-title">🍺 Генератор таверн</h2>
-
-                <div class="input-group">
-                    <label class="input-label">Биом/Местность</label>
-                    <select class="input-field" id="tavern-biome">
-                        <option value="">Случайная</option>
-                        <option value="city">Город</option>
-                        <option value="forest">Лес</option>
-                        <option value="coastal">Побережье</option>
-                        <option value="mountain">Горы</option>
-                        <option value="desert">Пустыня</option>
-                        <option value="tundra">Тундра</option>
-                        <option value="underground">Подземелье</option>
-                        <option value="swamp">Болото</option>
-                        <option value="roadside">У дороги</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Использовать AI</label>
-                    <select class="input-field" id="tavern-use-ai">
-                        <option value="on">Включено</option>
-                        <option value="off">Отключено</option>
-                    </select>
-                </div>
-
-                <button class="btn" onclick="generateTavern()">
-                    🍺 Создать таверну
-                </button>
-            </div>
-
-            <div id="tavern-result" class="card hidden">
-                <h3 class="card-title">Результат генерации</h3>
-                <div id="tavern-content"></div>
-                <button class="btn btn-secondary" onclick="saveToNotes('tavern')">
-                    💾 Сохранить в заметки
-                </button>
-            </div>
-        </section>
-
-        <!-- Система боя -->
-        <section id="combat" class="content-section">
-            <div class="card">
-                <h2 class="card-title">🗡️ Система боя</h2>
-
-                <div class="input-group">
-                    <label class="input-label">Добавить участника</label>
-                    <input type="text" class="input-field" id="combat-name" placeholder="Имя персонажа">
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Инициатива</label>
-                    <input type="number" class="input-field" id="combat-initiative" placeholder="Модификатор инициативы">
-                </div>
-
-                <button class="btn" onclick="addCombatant()">
-                    ➕ Добавить участника
-                </button>
-            </div>
-
-            <div id="combat-list" class="card">
-                <h3 class="card-title">🎯 Порядок инициативы</h3>
-                <div id="combat-participants"></div>
-                <button class="btn btn-secondary" onclick="nextTurn()">
-                    ⏭️ Следующий ход
-                </button>
-            </div>
-        </section>
-
-        <!-- AI Чат -->
-        <section id="ai-chat" class="content-section">
-            <div class="card">
-                <h2 class="card-title">🤖 AI Помощник</h2>
-
-                <div class="input-group">
-                    <label class="input-label">Ваш вопрос</label>
-                    <textarea class="input-field" id="ai-question" rows="3" placeholder="Задайте вопрос AI помощнику..."></textarea>
-                </div>
-
-                <button class="btn" onclick="askAI()">
-                    🤖 Спросить AI
-                </button>
-            </div>
-
-            <div id="ai-response" class="card hidden">
-                <h3 class="card-title">🤖 Ответ AI</h3>
-                <div id="ai-content"></div>
-                <button class="btn btn-secondary" onclick="saveToNotes('ai')">
-                    💾 Сохранить в заметки
-                </button>
-            </div>
-        </section>
-
-        <!-- Заметки -->
-        <section id="notes" class="content-section">
-            <div class="card">
-                <h2 class="card-title">📝 Заметки</h2>
-
-                <div class="input-group">
-                    <label class="input-label">Новая заметка</label>
-                    <textarea class="input-field" id="new-note" rows="3" placeholder="Введите текст заметки..."></textarea>
-                </div>
-
-                <button class="btn" onclick="addNote()">
-                    ➕ Добавить заметку
-                </button>
-            </div>
-
-            <div id="notes-list" class="card">
-                <h3 class="card-title">📋 Ваши заметки</h3>
-                <div id="notes-content"></div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Навигация -->
-    <nav class="nav">
-        <a href="#" class="nav-item active" onclick="showSection('home')">
-            <div class="nav-icon">🏠</div>
-            <div>Главная</div>
-        </a>
-        <a href="#" class="nav-item" onclick="showSection('characters')">
-            <div class="nav-icon">👤</div>
-            <div>Персонажи</div>
-        </a>
-        <a href="#" class="nav-item" onclick="showSection('enemies')">
-            <div class="nav-icon">⚔️</div>
-            <div>Противники</div>
-        </a>
-        <a href="#" class="nav-item" onclick="showSection('potions')">
-            <div class="nav-icon">🧪</div>
-            <div>Зелья</div>
-        </a>
-        <a href="#" class="nav-item" onclick="showSection('taverns')">
-            <div class="nav-icon">🍺</div>
-            <div>Таверны</div>
-        </a>
-        <a href="#" class="nav-item" onclick="showSection('combat')">
-            <div class="nav-icon">🗡️</div>
-            <div>Бой</div>
-        </a>
-        <a href="#" class="nav-item" onclick="showSection('ai-chat')">
-            <div class="nav-icon">🤖</div>
-            <div>AI</div>
-        </a>
-        <a href="#" class="nav-item" onclick="showSection('notes')">
-            <div class="nav-icon">📝</div>
-            <div>Заметки</div>
-        </a>
-    </nav>
-
-    <!-- Модальное окно для результатов -->
-    <div id="result-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Результат</h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div id="modal-content"></div>
-        </div>
-    </div>
-
-    <script>
-        // Переменные состояния
-        let currentTheme = 'light';
-        let currentSection = 'home';
-        let combatParticipants = [];
-        let currentTurn = 0;
-        let notes = JSON.parse(localStorage.getItem('dnd_notes') || '[]');
-
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', function() {
-            loadTheme();
-            loadNotes();
-            updateCombatDisplay();
-        });
-
-        // Переключение тем
-        function cycleTheme() {
-            const themes = ['light', 'medium', 'dark', 'mystic'];
-            const currentIndex = themes.indexOf(currentTheme);
-            const nextIndex = (currentIndex + 1) % themes.length;
-            setTheme(themes[nextIndex]);
-        }
-
-        function setTheme(theme) {
-            currentTheme = theme;
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('dnd_theme', theme);
-        }
-
-        function loadTheme() {
-            const savedTheme = localStorage.getItem('dnd_theme') || 'light';
-            setTheme(savedTheme);
-        }
-
-        // Навигация
-        function showSection(sectionId) {
-            // Скрываем все секции
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
+                fetch('api/generate-characters.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            displayCharacter(data.character);
+                        } else {
+                            resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || data.message || 'Неизвестная ошибка') + '</div>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка генерации персонажа:', error);
+                        resultDiv.innerHTML = '<div class="error">Ошибка соединения. Попробуйте позже.</div>';
+                    })
+                    .finally(() => {
+                        submitBtn.innerHTML = '<span class="btn-icon">⚔️</span><span class="btn-text">Создать персонажа</span>';
+                        submitBtn.disabled = false;
+                    });
             });
+        }
 
-            // Показываем нужную секцию
-            document.getElementById(sectionId).classList.add('active');
-            currentSection = sectionId;
+        function displayCharacter(character) {
+            const resultDiv = document.getElementById('characterResult');
 
-            // Обновляем навигацию
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Находим соответствующий nav-item
-            const navItems = document.querySelectorAll('.nav-item');
-            const sectionMap = {
-                'home': 0,
-                'characters': 1,
-                'enemies': 2,
-                'potions': 3,
-                'taverns': 4,
-                'combat': 5,
-                'ai-chat': 6,
-                'notes': 7
+            const abilities = character.abilities || {};
+            const abilityTranslations = {
+                'str': 'СИЛ',
+                'strength': 'СИЛ',
+                'dex': 'ЛОВ',
+                'dexterity': 'ЛОВ',
+                'con': 'ТЕЛ',
+                'constitution': 'ТЕЛ',
+                'int': 'ИНТ',
+                'intelligence': 'ИНТ',
+                'wis': 'МДР',
+                'wisdom': 'МДР',
+                'cha': 'ХАР',
+                'charisma': 'ХАР'
             };
 
-            if (sectionMap[sectionId] !== undefined) {
-                navItems[sectionMap[sectionId]].classList.add('active');
+            const abilityMods = Object.keys(abilities).map(ability => {
+                const mod = Math.floor((abilities[ability] - 10) / 2);
+                const translatedAbility = abilityTranslations[ability.toLowerCase()] || ability.toUpperCase();
+                return `${translatedAbility}: ${abilities[ability]} (${mod >= 0 ? '+' : ''}${mod})`;
+            }).join(', ');
+
+            // Правильная обработка features
+            let featuresText = '';
+            if (character.features && Array.isArray(character.features)) {
+                featuresText = character.features.map(feature => {
+                    if (typeof feature === 'string') {
+                        return feature;
+                    } else if (feature && feature.name) {
+                        return feature.name;
+                    } else if (feature && feature.title) {
+                        return feature.title;
+                    }
+                    return 'Неизвестная особенность';
+                }).join(', ');
+            }
+
+            const content = `
+                <div class="character-info">
+                    <h3>${character.name}</h3>
+                    <p><strong>Раса:</strong> ${character.race}</p>
+                    <p><strong>Класс:</strong> ${character.class}</p>
+                    <p><strong>Уровень:</strong> ${character.level}</p>
+                    <p><strong>HP:</strong> ${character.hit_points || character.hp || 'Не указано'}</p>
+                    <p><strong>AC:</strong> ${character.armor_class || character.ac || 'Не указано'}</p>
+                    <p><strong>Характеристики:</strong> ${abilityMods}</p>
+                    ${character.description ? `<p><strong>Описание:</strong> ${character.description}</p>` : ''}
+                    ${featuresText ? `<p><strong>Особенности:</strong> ${featuresText}</p>` : ''}
+                    ${character.equipment && character.equipment.length > 0 ? `<p><strong>Снаряжение:</strong> ${character.equipment.join(', ')}</p>` : ''}
+                    ${character.spells && character.spells.length > 0 ? `<p><strong>Заклинания:</strong> ${character.spells.join(', ')}</p>` : ''}
+                </div>
+                <button class="btn" onclick="addNoteToCharacter('${character.name}', '${character.race}', '${character.class}', '${character.level}')">
+                    💾 Сохранить в заметки
+                </button>
+            `;
+            
+            resultDiv.innerHTML = content;
+        }
+        
+        function addNoteToCharacter(name, race, class_name, level) {
+            const characterInfo = `
+                <div class="character-note-title">${name} - ${race} ${class_name} ${level} уровня</div>
+                <div class="character-note-content">
+                    Персонаж создан через генератор персонажей.
+                </div>
+            `;
+            addNote(characterInfo);
+            closeModal();
+        }
+        
+        function toggleMobileSection(headerElement) {
+            const contentElement = headerElement.nextElementSibling;
+            const toggleIcon = headerElement.querySelector('.toggle-icon');
+            const isCollapsed = contentElement.classList.contains('collapsed');
+            
+            if (isCollapsed) {
+                contentElement.classList.remove('collapsed');
+                contentElement.style.display = 'block';
+                toggleIcon.textContent = '▼';
+            } else {
+                contentElement.classList.add('collapsed');
+                contentElement.style.display = 'none';
+                toggleIcon.textContent = '▶';
             }
         }
 
-        // Генерация персонажей
-        function generateCharacter() {
-            const race = document.getElementById('character-race').value;
-            const characterClass = document.getElementById('character-class').value;
-            const level = document.getElementById('character-level').value;
+        function openEnemyModal() {
+            showModal(`
+                <div class="enemy-generator">
+                    <div class="generator-header">
+                        <h2>👹 Генератор противников</h2>
+                        <p class="generator-subtitle">Создайте подходящих противников для вашей группы</p>
+                </div>
 
-            if (!race || !characterClass || !level) {
-                showModal('Пожалуйста, заполните все поля для создания персонажа.');
-                return;
-            }
+                    <form id="enemyForm" class="enemy-form">
+                        <div class="form-group">
+                            <label for="enemy-threat-level">Уровень угрозы</label>
+                            <select id="enemy-threat-level" name="threat_level" required>
+                                <option value="">Выберите уровень угрозы</option>
+                                <option value="random">🎲 Случайный</option>
+                                <option value="easy">🟢 Легкий (CR 0-3)</option>
+                                <option value="medium">🟡 Средний (CR 1-7)</option>
+                                <option value="hard">🟠 Сложный (CR 5-12)</option>
+                                <option value="deadly">🔴 Смертельный (CR 10-20)</option>
+                            </select>
+            </div>
 
-            // Используем тот же API что и ПК версия
+                        <div class="form-group">
+                            <label for="enemy-count">Количество противников</label>
+                            <input type="number" id="enemy-count" name="count" min="1" max="10" value="1" required>
+            </div>
+                        
+                        <div class="form-group">
+                            <label for="enemy-type">Тип противников</label>
+                            <select id="enemy-type" name="enemy_type">
+                                <option value="">Любой тип</option>
+                                <option value="humanoid">Гуманоиды</option>
+                                <option value="beast">Звери</option>
+                                <option value="undead">Нежить</option>
+                                <option value="fiend">Демоны</option>
+                                <option value="dragon">Драконы</option>
+                                <option value="elemental">Стихийные</option>
+                                <option value="celestial">Небожители</option>
+                                <option value="aberration">Аберрации</option>
+                                <option value="construct">Конструкты</option>
+                                <option value="giant">Великаны</option>
+                                <option value="monstrosity">Монстры</option>
+                                <option value="ooze">Слизи</option>
+                                <option value="plant">Растения</option>
+                            </select>
+                </div>
+
+                        <div class="form-group">
+                            <label for="enemy-environment">Среда обитания</label>
+                            <select id="enemy-environment" name="environment">
+                                <option value="">Любая среда</option>
+                                <option value="arctic">Арктическая</option>
+                                <option value="coastal">Побережье</option>
+                                <option value="desert">Пустыня</option>
+                                <option value="forest">Лес</option>
+                                <option value="grassland">Равнины</option>
+                                <option value="hill">Холмы</option>
+                                <option value="mountain">Горы</option>
+                                <option value="swamp">Болото</option>
+                                <option value="underdark">Подземелье</option>
+                                <option value="underwater">Под водой</option>
+                                <option value="urban">Город</option>
+                            </select>
+            </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="enemy-use-ai" name="use_ai" checked>
+                                Использовать AI для описания и тактики
+                            </label>
+            </div>
+                        
+                        <button type="submit" class="btn">
+                            <span class="btn-icon">👹</span>
+                            <span class="btn-text">Создать противников</span>
+                </button>
+                    </form>
+
+                    <div id="enemyResult" class="result-container hidden"></div>
+            </div>
+            `);
+            
+            // Обработчик формы
+            document.getElementById('enemyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const threatLevel = document.getElementById('enemy-threat-level').value;
+                const count = parseInt(document.getElementById('enemy-count').value) || 1;
+                const enemyType = document.getElementById('enemy-type').value;
+                const enemyEnvironment = document.getElementById('enemy-environment').value;
+                const useAI = document.getElementById('enemy-use-ai').checked;
+
+                if (!threatLevel) {
+                    alert('Пожалуйста, выберите уровень угрозы.');
+                    return;
+                }
+
+                if (count < 1 || count > 20) {
+                    alert('Количество противников должно быть от 1 до 20.');
+                    return;
+                }
+                
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const resultDiv = document.getElementById('enemyResult');
+                
+                submitBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Создание...</span>';
+                submitBtn.disabled = true;
+                resultDiv.innerHTML = '<div class="loading">Создание противников...</div>';
+                resultDiv.classList.remove('hidden');
+                
+                // Вызов API
             const formData = new FormData();
-            formData.append('race', race);
-            formData.append('class', characterClass);
-            formData.append('level', level);
-
-            fetch('api/generate-characters.php', {
+                formData.append('threat_level', threatLevel);
+                formData.append('count', count);
+                formData.append('enemy_type', enemyType);
+                formData.append('environment', enemyEnvironment);
+                formData.append('use_ai', useAI ? 'on' : 'off');
+                
+                fetch('api/generate-enemies.php', {
                     method: 'POST',
                     body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        displayCharacter(data.character);
+                        displayEnemies(data.enemies);
                     } else {
-                        showModal('Ошибка: ' + data.message);
+                        resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || data.message || 'Неизвестная ошибка') + '</div>';
                     }
                 })
                 .catch(error => {
-                    showModal('Ошибка соединения. Попробуйте позже.');
+                    console.error('Ошибка генерации противников:', error);
+                    resultDiv.innerHTML = '<div class="error">Ошибка соединения. Попробуйте позже.</div>';
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = '<span class="btn-icon">👹</span><span class="btn-text">Создать противников</span>';
+                    submitBtn.disabled = false;
                 });
-        }
-
-        function displayCharacter(data) {
-            const abilities = data.abilities || {};
-            const abilityMods = Object.keys(abilities).map(ability => {
-                const mod = Math.floor((abilities[ability] - 10) / 2);
-                return `${ability.toUpperCase()}: ${abilities[ability]} (${mod >= 0 ? '+' : ''}${mod})`;
-            }).join(', ');
-
-            const content = `
-                <div class="character-info">
-                    <h4>${data.name}</h4>
-                    <p><strong>Раса:</strong> ${data.race}</p>
-                    <p><strong>Класс:</strong> ${data.class}</p>
-                    <p><strong>Уровень:</strong> ${data.level}</p>
-                    <p><strong>HP:</strong> ${data.hp}</p>
-                    <p><strong>AC:</strong> ${data.ac}</p>
-                    <p><strong>Характеристики:</strong> ${abilityMods}</p>
-                    <p><strong>Описание:</strong> ${data.description}</p>
-                    ${data.features ? `<p><strong>Особенности:</strong> ${data.features.join(', ')}</p>` : ''}
-                    ${data.equipment ? `<p><strong>Снаряжение:</strong> ${data.equipment.join(', ')}</p>` : ''}
-                    ${data.spells && data.spells.length > 0 ? `<p><strong>Заклинания:</strong> ${data.spells.join(', ')}</p>` : ''}
-                </div>
-            `;
-            
-            document.getElementById('character-content').innerHTML = content;
-            document.getElementById('character-result').classList.remove('hidden');
-        }
-        
-        // Генерация противников
-        function generateEnemy() {
-            const threatLevel = document.getElementById('enemy-threat-level').value;
-            const specificCr = document.getElementById('enemy-cr').value;
-            const count = parseInt(document.getElementById('enemy-count').value) || 1;
-            const enemyType = document.getElementById('enemy-type').value;
-            const enemyEnvironment = document.getElementById('enemy-environment').value;
-            const useAI = document.getElementById('enemy-use-ai').checked;
-
-            let threatLevelParam = '';
-            let message = '';
-
-            if (threatLevel === 'random') {
-                threatLevelParam = 'random';
-                message = 'Генерация случайного уровня угрозы...';
-            } else if (threatLevel) {
-                threatLevelParam = threatLevel;
-                message = `Генерация противника уровня "${threatLevel}"...`;
-            } else if (specificCr) {
-                threatLevelParam = specificCr;
-                message = `Генерация противника с CR ${specificCr}...`;
-            } else {
-                showModal('Пожалуйста, выберите уровень угрозы или конкретный CR.');
-                return;
-            }
-
-            if (count < 1 || count > 20) {
-                showModal('Количество противников должно быть от 1 до 20.');
-                return;
-            }
-
-            // Используем тот же API что и ПК версия
-            const formData = new FormData();
-            formData.append('threat_level', threatLevelParam);
-            formData.append('count', count);
-            formData.append('enemy_type', enemyType);
-            formData.append('environment', enemyEnvironment);
-            formData.append('use_ai', useAI ? 'on' : 'off');
-            
-            showModal(message);
-
-            fetch('api/generate-enemies.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    displayEnemy(data.enemies);
-                    hideModal();
-                } else {
-                    hideModal();
-                    showModal('Ошибка: ' + (data.error || data.message || 'Неизвестная ошибка'));
-                }
-            })
-            .catch(error => {
-                hideModal();
-                console.error('Ошибка генерации противника:', error);
-                showModal('Ошибка соединения. Попробуйте позже.');
             });
         }
+
+        function displayEnemies(enemies) {
+            const resultDiv = document.getElementById('enemyResult');
+            
+            if (Array.isArray(enemies)) {
+                let content = '<div class="enemies-list">';
+                enemies.forEach((enemy, index) => {
+                    content += generateEnemyHTML(enemy, index + 1);
+                });
+                content += '</div>';
+                resultDiv.innerHTML = content;
+            } else {
+                resultDiv.innerHTML = generateEnemyHTML(enemies);
+            }
+        }
         
-        // Генерация зелий
-        function generatePotion() {
+        function generateEnemyHTML(enemy, number = '') {
+            const abilities = enemy.abilities || {};
+            const abilityTranslations = {
+                'str': 'СИЛ', 'strength': 'СИЛ',
+                'dex': 'ЛОВ', 'dexterity': 'ЛОВ', 
+                'con': 'ТЕЛ', 'constitution': 'ТЕЛ',
+                'int': 'ИНТ', 'intelligence': 'ИНТ',
+                'wis': 'МДР', 'wisdom': 'МДР',
+                'cha': 'ХАР', 'charisma': 'ХАР'
+            };
+            
+            const abilityMods = Object.keys(abilities).map(ability => {
+                const mod = Math.floor((abilities[ability] - 10) / 2);
+                const translatedAbility = abilityTranslations[ability.toLowerCase()] || ability.toUpperCase();
+                return `${translatedAbility}: ${abilities[ability]} (${mod >= 0 ? '+' : ''}${mod})`;
+            }).join(', ');
+
+            return `
+                <div class="enemy-info">
+                    <h3>${number ? number + '. ' : ''}${enemy.name}</h3>
+                    <p><strong>Тип:</strong> ${enemy.type || 'Неизвестно'}</p>
+                    <p><strong>CR:</strong> ${enemy.challenge_rating || 'Неизвестно'}</p>
+                    <p><strong>HP:</strong> ${enemy.hit_points || 'Неизвестно'}</p>
+                    <p><strong>AC:</strong> ${enemy.armor_class || 'Неизвестно'}</p>
+                    <p><strong>Скорость:</strong> ${enemy.speed || 'Неизвестно'}</p>
+                    ${abilityMods ? `<p><strong>Характеристики:</strong> ${abilityMods}</p>` : ''}
+                    ${enemy.description ? `<p><strong>Описание:</strong> ${enemy.description}</p>` : ''}
+                    ${enemy.tactics ? `<p><strong>Тактика:</strong> ${enemy.tactics}</p>` : ''}
+                    ${enemy.actions && enemy.actions.length > 0 ? `<p><strong>Действия:</strong> ${enemy.actions.join(', ')}</p>` : ''}
+                </div>
+                <button class="btn" onclick="addNoteToEnemy('${enemy.name}', '${enemy.type || 'Неизвестно'}', '${enemy.challenge_rating || 'Неизвестно'}')">
+                    💾 Сохранить в заметки
+                </button>
+            `;
+        }
+        
+        function addNoteToEnemy(name, type, cr) {
+            const enemyInfo = `
+                <div class="enemy-note-title">${name} - ${type} (CR ${cr})</div>
+                <div class="enemy-note-content">
+                    Противник создан через генератор противников.
+                </div>
+            `;
+            addNote(enemyInfo);
+            closeModal();
+        }
+
+        function openPotionModal() {
+            showModal(`
+                <div class="potion-generator">
+                    <div class="generator-header">
+                        <h2>🧪 Генератор зелий</h2>
+                        <p class="generator-subtitle">Создайте магические зелья для ваших приключений</p>
+                    </div>
+                    
+                    <form id="potionForm" class="potion-form">
+                        <div class="form-group">
+                            <label for="potion-count">Количество зелий</label>
+                            <input type="number" id="potion-count" name="count" min="1" max="10" value="1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="potion-rarity">Редкость</label>
+                            <select id="potion-rarity" name="rarity">
+                                <option value="">Любая редкость</option>
+                                <option value="common">Обычное</option>
+                                <option value="uncommon">Необычное</option>
+                                <option value="rare">Редкое</option>
+                                <option value="very rare">Очень редкое</option>
+                                <option value="legendary">Легендарное</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="potion-type">Тип зелья</label>
+                            <select id="potion-type" name="type">
+                                <option value="">Любой тип</option>
+                                <option value="Восстановление">🩹 Восстановление</option>
+                                <option value="Усиление">💪 Усиление</option>
+                                <option value="Защита">🛡️ Защита</option>
+                                <option value="Урон">⚔️ Урон</option>
+                                <option value="Утилита">🔧 Утилита</option>
+                                <option value="Трансформация">🔄 Трансформация</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn">
+                            <span class="btn-icon">🧪</span>
+                            <span class="btn-text">Создать зелья</span>
+                        </button>
+                    </form>
+                    
+                    <div id="potionResult" class="result-container hidden"></div>
+                </div>
+            `);
+            
+            // Обработчик формы
+            document.getElementById('potionForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
             const count = parseInt(document.getElementById('potion-count').value) || 1;
             const rarity = document.getElementById('potion-rarity').value;
             const type = document.getElementById('potion-type').value;
 
             if (count < 1 || count > 10) {
-                showModal('Количество зелий должно быть от 1 до 10.');
+                    alert('Количество зелий должно быть от 1 до 10.');
                 return;
             }
 
-            showModal('Создание зелий...');
-
-            // Формируем параметры для API с поддержкой языков
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const resultDiv = document.getElementById('potionResult');
+                
+                submitBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Создание...</span>';
+                submitBtn.disabled = true;
+                resultDiv.innerHTML = '<div class="loading">Создание зелий...</div>';
+                resultDiv.classList.remove('hidden');
+                
+                // Вызов API
             const params = new URLSearchParams();
             params.append('action', 'random');
             params.append('count', count);
-            params.append('language', currentLanguage); // Добавляем текущий язык
+                params.append('language', 'ru');
             if (rarity) params.append('rarity', rarity);
             if (type) params.append('type', type);
 
@@ -1257,24 +1161,26 @@
             .then(data => {
                 if (data.success) {
                     displayPotions(data.data);
-                    hideModal();
                 } else {
-                    hideModal();
-                    showModal('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+                        resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || data.message || 'Неизвестная ошибка') + '</div>';
                 }
             })
             .catch(error => {
-                hideModal();
                 console.error('Ошибка генерации зелий:', error);
-                showModal('Ошибка соединения. Попробуйте позже.');
+                    resultDiv.innerHTML = '<div class="error">Ошибка соединения. Попробуйте позже.</div>';
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = '<span class="btn-icon">🧪</span><span class="btn-text">Создать зелья</span>';
+                    submitBtn.disabled = false;
+                });
             });
         }
         
         function displayPotions(potions) {
-            let content = '<div class="potions-list">';
+            const resultDiv = document.getElementById('potionResult');
             
+            let content = '<div class="potions-list">';
             potions.forEach((potion, index) => {
-                // Используем переведенные данные если доступны
                 const displayName = potion.name || 'Неизвестное зелье';
                 const displayRarity = potion.rarity_localized || potion.rarity || 'Неизвестная редкость';
                 const displayType = potion.type_localized || potion.type || 'Неизвестный тип';
@@ -1306,48 +1212,282 @@
                             ${potion.translation_error ? `<div class="translation-warning" style="color: orange; font-size: 0.8em; margin-top: 8px; text-align: center;">⚠️ ${potion.translation_error}</div>` : ''}
                         </div>
                     </div>
+                    <button class="btn" onclick="addNoteToPotion('${displayName}', '${displayRarity}', '${displayType}')">
+                        💾 Сохранить в заметки
+                    </button>
                 `;
             });
-            
             content += '</div>';
-            document.getElementById('potion-content').innerHTML = content;
-            document.getElementById('potion-result').classList.remove('hidden');
+            
+            resultDiv.innerHTML = content;
         }
         
-        // Генерация таверн
-        function generateTavern() {
-            const biome = document.getElementById('tavern-biome').value;
-            const useAi = document.getElementById('tavern-use-ai').value;
+        function addNoteToPotion(name, rarity, type) {
+            const potionInfo = `
+                <div class="potion-note-title">${name} - ${rarity} ${type}</div>
+                <div class="potion-note-content">
+                    Зелье создано через генератор зелий.
+                </div>
+            `;
+            addNote(potionInfo);
+            closeModal();
+        }
 
-            showModal('Создание таверны...');
+        function openTavernModal() {
+            showModal(`
+                <div class="tavern-generator">
+                    <div class="generator-header">
+                        <h2>🍺 Генератор таверн</h2>
+                        <p class="generator-subtitle">Создайте атмосферные места для встреч и отдыха</p>
+                    </div>
+                    
+                    <form id="tavernForm" class="tavern-form">
+                        <div class="form-group">
+                            <label for="tavern-biome">Биом/Местность</label>
+                            <select id="tavern-biome" name="biome">
+                                <option value="">Случайная</option>
+                                <option value="city">Город</option>
+                                <option value="forest">Лес</option>
+                                <option value="coastal">Побережье</option>
+                                <option value="mountain">Горы</option>
+                                <option value="desert">Пустыня</option>
+                                <option value="tundra">Тундра</option>
+                                <option value="underground">Подземелье</option>
+                                <option value="swamp">Болото</option>
+                                <option value="roadside">У дороги</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tavern-use-ai">Использовать AI</label>
+                            <select id="tavern-use-ai" name="use_ai">
+                                <option value="on">Включено</option>
+                                <option value="off">Отключено</option>
+                            </select>
+                </div>
+                        
+                        <button type="submit" class="btn">
+                            <span class="btn-icon">🍺</span>
+                            <span class="btn-text">Создать таверну</span>
+                        </button>
+                    </form>
+                    
+                    <div id="tavernResult" class="result-container hidden"></div>
+                </div>
+            `);
+        }
 
-            // Формируем параметры для API
-            const formData = new FormData();
-            if (biome) formData.append('biome', biome);
-            formData.append('use_ai', useAi);
+        // Обработчик форм
+        document.addEventListener('DOMContentLoaded', function() {
+            // Добавляем обработчик для всех форм
+            document.addEventListener('submit', function(e) {
+                if (e.target.id === 'tavernForm') {
+                    e.preventDefault();
+                    
+                    const biome = document.getElementById('tavern-biome').value;
+                    const useAi = document.getElementById('tavern-use-ai').value;
+                    
+                    const submitBtn = e.target.querySelector('button[type="submit"]');
+                    const resultDiv = document.getElementById('tavernResult');
+                    
+                    submitBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Создание...</span>';
+                    submitBtn.disabled = true;
+                    resultDiv.innerHTML = '<div class="loading">Создание таверны...</div>';
+                    resultDiv.classList.remove('hidden');
+                    
+                    // Вызов API
+                    const formData = new FormData();
+                    if (biome) formData.append('biome', biome);
+                    formData.append('use_ai', useAi);
 
-            fetch('api/generate-taverns.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    displayTavern(data.tavern);
-                    hideModal();
-                } else {
-                    hideModal();
-                    showModal('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+                    fetch('api/generate-taverns.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            displayTavern(data.tavern);
+                        } else {
+                            resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || data.message || 'Неизвестная ошибка') + '</div>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка генерации таверны:', error);
+                        resultDiv.innerHTML = '<div class="error">Ошибка соединения. Попробуйте позже.</div>';
+                    })
+                    .finally(() => {
+                        submitBtn.innerHTML = '<span class="btn-icon">🍺</span><span class="btn-text">Создать таверну</span>';
+                        submitBtn.disabled = false;
+                    });
+                } else if (e.target.id === 'aiForm') {
+                    e.preventDefault();
+                    
+                    const questionInput = document.getElementById('ai-question');
+                    const question = questionInput.value.trim();
+                    
+                    if (!question) {
+                        alert('Пожалуйста, введите вопрос.');
+                        return;
+                    }
+                    
+                    const submitBtn = e.target.querySelector('button[type="submit"]');
+                    const resultDiv = document.getElementById('aiResult');
+                    
+                    submitBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Отправка...</span>';
+                    submitBtn.disabled = true;
+                    resultDiv.innerHTML = '<div class="loading">AI думает...</div>';
+                    resultDiv.classList.remove('hidden');
+                    
+                    // Очищаем поле ввода
+                    questionInput.value = '';
+                    
+                    // Вызов API
+                    const formData = new FormData();
+                    formData.append('action', 'send_message');
+                    formData.append('message', question);
+                    
+                    fetch('api/ai-chat.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            displayAIResponse(data.response);
+                        } else {
+                            resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || data.message || 'Неизвестная ошибка') + '</div>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка AI чата:', error);
+                        resultDiv.innerHTML = '<div class="error">Ошибка соединения. Попробуйте позже.</div>';
+                    })
+                    .finally(() => {
+                        submitBtn.innerHTML = '<span class="btn-icon">🤖</span><span class="btn-text">Спросить AI</span>';
+                        submitBtn.disabled = false;
+                    });
+                } else if (e.target.id === 'diceForm') {
+                    e.preventDefault();
+                    
+                    const diceType = document.getElementById('dice-type').value;
+                    const customDice = document.getElementById('custom-dice').value;
+                    const label = document.getElementById('dice-label').value;
+                    
+                    let dice = diceType;
+                    if (diceType === 'custom') {
+                        dice = customDice;
+                        if (!dice.trim()) {
+                            alert('Пожалуйста, введите пользовательские кости.');
+                            return;
+                        }
+                    } else if (!diceType) {
+                        alert('Пожалуйста, выберите тип костей.');
+                return;
+            }
+            
+                    const submitBtn = e.target.querySelector('button[type="submit"]');
+                    const resultDiv = document.getElementById('diceResult');
+                    
+                    submitBtn.innerHTML = '<span class="btn-icon">⏳</span><span class="btn-text">Бросок...</span>';
+                    submitBtn.disabled = true;
+                    resultDiv.innerHTML = '<div class="loading">Бросаем кости...</div>';
+                    resultDiv.classList.remove('hidden');
+                    
+                    // Вызов API
+                    const formData = new FormData();
+                    formData.append('fast_action', 'dice_result');
+                    formData.append('dice', dice);
+                    if (label) formData.append('label', label);
+                    
+                    fetch('api/dice.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        displayDiceResult(data);
+                    })
+                    .catch(error => {
+                        console.error('Ошибка броска костей:', error);
+                        resultDiv.innerHTML = '<div class="error">Ошибка соединения. Попробуйте позже.</div>';
+                    })
+                    .finally(() => {
+                        submitBtn.innerHTML = '<span class="btn-icon">🎲</span><span class="btn-text">Бросить кости</span>';
+                        submitBtn.disabled = false;
+                    });
                 }
-            })
-            .catch(error => {
-                hideModal();
-                console.error('Ошибка генерации таверны:', error);
-                showModal('Ошибка соединения. Попробуйте позже.');
             });
+        });
+        
+        function displayDiceResult(result) {
+            const resultDiv = document.getElementById('diceResult');
+            
+            const content = `
+                <div class="dice-result" style="background: var(--bg-secondary); border-radius: 8px; padding: 16px; margin: 15px 0;">
+                    <h4 style="color: var(--accent-primary); margin-bottom: 10px;">🎲 Результат броска</h4>
+                    <div style="white-space: pre-wrap; line-height: 1.6;">${result}</div>
+                        </div>
+                <button class="btn" onclick="addNoteToDice('${result.substring(0, 50)}...')">
+                    💾 Сохранить в заметки
+                </button>
+            `;
+            
+            resultDiv.innerHTML = content;
+        }
+        
+        function addNoteToDice(result) {
+            const diceInfo = `
+                <div class="dice-note-title">Бросок костей</div>
+                <div class="dice-note-content">
+                    ${result}
+                </div>
+            `;
+            addNote(diceInfo);
+            closeModal();
+        }
+        
+        function displayAIResponse(response) {
+            const resultDiv = document.getElementById('aiResult');
+            
+            // Очищаем ответ от лишних символов
+            let cleanResponse = response;
+            if (typeof cleanResponse === 'string') {
+                // Убираем лишние пробелы и переносы строк
+                cleanResponse = cleanResponse.replace(/\s+/g, ' ').trim();
+                // Убираем возможные HTML теги
+                cleanResponse = cleanResponse.replace(/<[^>]*>/g, '');
+                // Убираем лишние символы в начале и конце
+                cleanResponse = cleanResponse.replace(/^[^\w\u0400-\u04FF]+|[^\w\u0400-\u04FF]+$/g, '');
+            }
+            
+            const content = `
+                <div class="ai-response" style="background: var(--bg-secondary); border-radius: 8px; padding: 16px; margin: 15px 0;">
+                    <h4 style="color: var(--accent-primary); margin-bottom: 10px;">🤖 Ответ AI</h4>
+                    <div style="white-space: pre-wrap; line-height: 1.6;">${cleanResponse}</div>
+                </div>
+                <button class="btn" onclick="addNoteToAI('${cleanResponse.substring(0, 50)}...')">
+                    💾 Сохранить в заметки
+                </button>
+            `;
+            
+            resultDiv.innerHTML = content;
+        }
+        
+        function addNoteToAI(response) {
+            const aiInfo = `
+                <div class="ai-note-title">AI Ответ</div>
+                <div class="ai-note-content">
+                    ${response}
+                </div>
+            `;
+            addNote(aiInfo);
+            closeModal();
         }
         
         function displayTavern(tavern) {
+            const resultDiv = document.getElementById('tavernResult');
+            
             const name = tavern.name || 'Неизвестная таверна';
             const location = tavern.location?.text_ru || 'Неизвестное место';
             const owner = tavern.owner?.name_ru || 'Неизвестный владелец';
@@ -1358,128 +1498,7 @@
             if (tavern.description) {
                 description = `<div class="tavern-description" style="margin: 15px 0; padding: 15px; background: var(--bg-tertiary); border-radius: 8px;"><p>${tavern.description}</p></div>`;
             } else if (tavern.description_error) {
-                description = `<div class="tavern-description" style="margin: 15px 0; padding: 15px; background: var(--bg-tertiary); border-radius: 8px;"><p style="color: var(--accent-danger);">Ошибка AI: ${tavern.description_error.message}</p></div>`;
-            }
-            
-            let menuHTML = '';
-            if (tavern.menu) {
-                let drinksHTML = '';
-                if (tavern.menu.drinks && tavern.menu.drinks.length > 0) {
-                    drinksHTML = `
-                        <div class="menu-category" style="margin-bottom: 15px;">
-                            <h5 style="color: var(--accent-primary); margin-bottom: 10px;">🍺 Напитки</h5>
-                            ${tavern.menu.drinks.map(drink => `
-                                <div class="menu-item" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 6px; border-left: 3px solid var(--accent-primary);">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                                        <span style="font-weight: 600; color: var(--accent-primary);">${drink.name_ru}</span>
-                                        <span style="color: var(--text-tertiary); font-size: 0.9em;">${drink.formatted_price || 'Цена не указана'}</span>
-                                    </div>
-                                    ${drink.tags ? `<span style="font-size: 0.8em; color: var(--text-tertiary);">${drink.tags.join(', ')}</span>` : ''}
-                                    ${drink.effects ? `<div style="font-size: 0.85em; color: var(--text-secondary); margin-top: 4px; font-style: italic;"><strong>Эффект:</strong> ${drink.effects.text_ru}</div>` : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-                
-                let mealsHTML = '';
-                if (tavern.menu.meals && tavern.menu.meals.length > 0) {
-                    mealsHTML = `
-                        <div class="menu-category" style="margin-bottom: 15px;">
-                            <h5 style="color: var(--accent-primary); margin-bottom: 10px;">🍖 Блюда</h5>
-                            ${tavern.menu.meals.map(meal => `
-                                <div class="menu-item" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 6px; border-left: 3px solid var(--accent-primary);">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                                        <span style="font-weight: 600; color: var(--accent-primary);">${meal.name_ru}</span>
-                                        <span style="color: var(--text-tertiary); font-size: 0.9em;">${meal.formatted_price || 'Цена не указана'}</span>
-                                    </div>
-                                    ${meal.tags ? `<span style="font-size: 0.8em; color: var(--text-tertiary);">${meal.tags.join(', ')}</span>` : ''}
-                                    ${meal.effects ? `<div style="font-size: 0.85em; color: var(--text-secondary); margin-top: 4px; font-style: italic;"><strong>Эффект:</strong> ${meal.effects.text_ru}</div>` : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-                
-                let sidesHTML = '';
-                if (tavern.menu.sides && tavern.menu.sides.length > 0) {
-                    sidesHTML = `
-                        <div class="menu-category" style="margin-bottom: 15px;">
-                            <h5 style="color: var(--accent-primary); margin-bottom: 10px;">🥗 Закуски</h5>
-                            ${tavern.menu.sides.map(side => `
-                                <div class="menu-item" style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 6px; border-left: 3px solid var(--accent-primary);">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                                        <span style="font-weight: 600; color: var(--accent-primary);">${side.name_ru}</span>
-                                        <span style="color: var(--text-tertiary); font-size: 0.9em;">${side.formatted_price || 'Цена не указана'}</span>
-                                    </div>
-                                    ${side.tags ? `<span style="font-size: 0.8em; color: var(--text-tertiary);">${side.tags.join(', ')}</span>` : ''}
-                                    ${side.effects ? `<div style="font-size: 0.85em; color: var(--text-secondary); margin-top: 4px; font-style: italic;"><strong>Эффект:</strong> ${side.effects.text_ru}</div>` : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-                
-                menuHTML = `
-                    <div class="tavern-section" style="margin: 15px 0;">
-                        <h4 style="color: var(--accent-primary); margin-bottom: 15px;">🍽️ Меню</h4>
-                        ${drinksHTML}
-                        ${mealsHTML}
-                        ${sidesHTML}
-                    </div>
-                `;
-            }
-            
-            let staffHTML = '';
-            if (tavern.staff && tavern.staff.length > 0) {
-                staffHTML = `
-                    <div class="tavern-section" style="margin: 15px 0;">
-                        <h4 style="color: var(--accent-primary); margin-bottom: 10px;">👥 Персонал</h4>
-                        ${tavern.staff.map(staff => `
-                            <div style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 6px;">
-                                <strong>${staff.role}</strong> (${staff.race}) - ${staff.traits.join(', ')}
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            let eventsHTML = '';
-            if (tavern.events && tavern.events.length > 0) {
-                eventsHTML = `
-                    <div class="tavern-section" style="margin: 15px 0;">
-                        <h4 style="color: var(--accent-primary); margin-bottom: 10px;">🎭 События</h4>
-                        ${tavern.events.map(event => `
-                            <div style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 6px;">
-                                ${event.type}
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            let gamesHTML = '';
-            if (tavern.games) {
-                const gamesList = [];
-                Object.values(tavern.games).forEach(game => {
-                    if (game) {
-                        let gameInfo = `
-                            <div style="background: var(--bg-secondary); padding: 10px; margin: 5px 0; border-radius: 6px;">
-                                <div style="font-weight: 600; color: var(--accent-primary);">${game.name_ru} (${game.style})</div>
-                                ${game.brief ? `<div style="font-size: 0.9em; color: var(--text-secondary); margin-top: 5px;">${game.brief}</div>` : ''}
-                            </div>
-                        `;
-                        gamesList.push(gameInfo);
-                    }
-                });
-                if (gamesList.length > 0) {
-                    gamesHTML = `
-                        <div class="tavern-section" style="margin: 15px 0;">
-                            <h4 style="color: var(--accent-primary); margin-bottom: 10px;">🎲 Игры</h4>
-                            ${gamesList.join('')}
-                        </div>
-                    `;
-                }
+                description = `<div class="tavern-description" style="margin: 15px 0; padding: 15px; background: var(--bg-tertiary); border-radius: 8px;"><p style="color: #d32f2f;">Ошибка AI: ${tavern.description_error.message}</p></div>`;
             }
             
             const content = `
@@ -1502,321 +1521,52 @@
                         </div>
                     </div>
                     ${description}
-                    ${menuHTML}
-                    ${staffHTML}
-                    ${eventsHTML}
-                    ${gamesHTML}
                 </div>
+                <button class="btn" onclick="addNoteToTavern('${name}', '${biome}')">
+                    💾 Сохранить в заметки
+                </button>
             `;
             
-            document.getElementById('tavern-content').innerHTML = content;
-            document.getElementById('tavern-result').classList.remove('hidden');
+            resultDiv.innerHTML = content;
         }
         
-        function displayEnemy(data) {
-            if (Array.isArray(data)) {
-                // Множественные противники
-                let content = '<div class="enemies-list">';
-                data.forEach((enemy, index) => {
-                    content += generateEnemyHTML(enemy, index + 1);
-                });
-                content += '</div>';
-                document.getElementById('enemy-content').innerHTML = content;
-            } else {
-                // Один противник
-                document.getElementById('enemy-content').innerHTML = generateEnemyHTML(data);
-            }
-            
-            document.getElementById('enemy-result').classList.remove('hidden');
-        }
-        
-        function generateEnemyHTML(enemy, number = '') {
-            const abilities = enemy.abilities || {};
-            const abilityMods = Object.keys(abilities).map(ability => {
-                const mod = Math.floor((abilities[ability] - 10) / 2);
-                return `${ability.toUpperCase()}: ${abilities[ability]} (${mod >= 0 ? '+' : ''}${mod})`;
-            }).join(', ');
-            
-            const actions = Array.isArray(enemy.actions) ? enemy.actions.join(', ') : 
-                           (typeof enemy.actions === 'string' ? enemy.actions : 'Атака');
-            
-            const name = number ? `${enemy.name} ${number}` : enemy.name;
-            
-            return `
-                <div class="enemy-info">
-                    <h4>${name}</h4>
-                    <p><strong>CR:</strong> ${enemy.challenge_rating || enemy.cr || 'Неизвестно'}</p>
-                    <p><strong>Тип:</strong> ${enemy.type || 'Неизвестно'}</p>
-                    <p><strong>HP:</strong> ${enemy.hit_points || enemy.hp || 'Неизвестно'}</p>
-                    <p><strong>AC:</strong> ${enemy.armor_class || enemy.ac || 'Неизвестно'}</p>
-                    <p><strong>Скорость:</strong> ${enemy.speed || '30 ft'}</p>
-                    <p><strong>Характеристики:</strong> ${abilityMods}</p>
-                    <p><strong>Действия:</strong> ${actions}</p>
-                    ${enemy.environment ? `<p><strong>Среда:</strong> ${enemy.environment}</p>` : ''}
-                    ${enemy.description ? `<p><strong>Описание:</strong> ${enemy.description}</p>` : ''}
-                    ${enemy.tactics ? `<p><strong>Тактика:</strong> ${enemy.tactics}</p>` : ''}
+        function addNoteToTavern(name, biome) {
+            const tavernInfo = `
+                <div class="tavern-note-title">${name} - ${biome}</div>
+                <div class="tavern-note-content">
+                    Таверна создана через генератор таверн.
                 </div>
             `;
+            addNote(tavernInfo);
+            closeModal();
         }
-        
-        // Система боя
-        function addCombatant() {
-            const name = document.getElementById('combat-name').value;
-            const initiative = parseInt(document.getElementById('combat-initiative').value) || 0;
-            
-            if (!name) {
-                showModal('Пожалуйста, введите имя участника.');
-                return;
-            }
-            
-            const roll = Math.floor(Math.random() * 20) + 1;
-            const totalInitiative = roll + initiative;
-            
-            combatParticipants.push({
-                name: name,
-                initiative: totalInitiative,
-                roll: roll,
-                modifier: initiative
-            });
-            
-            // Сортируем по инициативе (по убыванию)
-            combatParticipants.sort((a, b) => b.initiative - a.initiative);
-            
-            updateCombatDisplay();
-            
-            // Очищаем поля
-            document.getElementById('combat-name').value = '';
-            document.getElementById('combat-initiative').value = '';
-        }
-        
-        function updateCombatDisplay() {
-            const container = document.getElementById('combat-participants');
-            
-            if (combatParticipants.length === 0) {
-                container.innerHTML = '<p class="text-center">Нет участников боя</p>';
-                return;
-            }
-            
-            let html = '<ul class="list">';
-            combatParticipants.forEach((participant, index) => {
-                const isCurrentTurn = index === currentTurn;
-                html += `
-                    <li class="list-item ${isCurrentTurn ? 'active' : ''}">
-                        <div>
-                            <strong>${participant.name}</strong>
-                            <br>
-                            <small>Инициатива: ${participant.initiative} (${participant.roll} + ${participant.modifier})</small>
-                        </div>
-                        ${isCurrentTurn ? '<span>🎯</span>' : ''}
-                    </li>
-                `;
-            });
-            html += '</ul>';
-            
-            container.innerHTML = html;
-        }
-        
-        function nextTurn() {
-            if (combatParticipants.length === 0) return;
-            
-            currentTurn = (currentTurn + 1) % combatParticipants.length;
-            updateCombatDisplay();
-        }
-        
-        // AI Чат
-        function askAI() {
-            const question = document.getElementById('ai-question').value;
-            
-            if (!question.trim()) {
-                showModal('Пожалуйста, введите вопрос.');
-                return;
-            }
-            
-            // Используем тот же API что и ПК версия
-            const formData = new FormData();
-            formData.append('action', 'send_message');
-            formData.append('message', question);
-            
-            fetch('api/ai-chat.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    displayAIResponse(data.response);
-                } else {
-                    showModal('Ошибка: ' + data.message);
-                }
-            })
-            .catch(error => {
-                showModal('Ошибка соединения. Попробуйте позже.');
-            });
-        }
-        
-        function displayAIResponse(response) {
-            document.getElementById('ai-content').innerHTML = `<p>${response}</p>`;
-            document.getElementById('ai-response').classList.remove('hidden');
-        }
-        
-        // Заметки
-        function addNote() {
-            const noteText = document.getElementById('new-note').value;
-            
-            if (!noteText.trim()) {
-                showModal('Пожалуйста, введите текст заметки.');
-                return;
-            }
-            
-            const note = {
-                id: Date.now(),
-                text: noteText,
-                timestamp: new Date().toLocaleString()
-            };
-            
-            notes.unshift(note);
-            saveNotes();
-            loadNotes();
-            
-            document.getElementById('new-note').value = '';
-        }
-        
-        function loadNotes() {
-            const container = document.getElementById('notes-content');
-            
-            if (notes.length === 0) {
-                container.innerHTML = '<p class="text-center">Нет заметок</p>';
-                return;
-            }
-            
-            let html = '<ul class="list">';
-            notes.forEach(note => {
-                html += `
-                    <li class="list-item">
-                        <div>
-                            <p>${note.text}</p>
-                            <small>${note.timestamp}</small>
-                        </div>
-                        <button onclick="deleteNote(${note.id})" style="background: var(--accent-danger); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px;">×</button>
-                    </li>
-                `;
-            });
-            html += '</ul>';
-            
-            container.innerHTML = html;
-        }
-        
-        function deleteNote(id) {
-            notes = notes.filter(note => note.id !== id);
-            saveNotes();
-            loadNotes();
-        }
-        
-        function saveNotes() {
-            localStorage.setItem('dnd_notes', JSON.stringify(notes));
-        }
-        
-        // Утилиты
-        function rollDice(dice) {
-            const [count, sides] = dice.split('d').map(Number);
-            let total = 0;
-            let rolls = [];
-            
-            for (let i = 0; i < count; i++) {
-                const roll = Math.floor(Math.random() * sides) + 1;
-                rolls.push(roll);
-                total += roll;
-            }
-            
-            const result = count === 1 ? rolls[0] : `${rolls.join(', ')} = ${total}`;
-            showModal(`🎲 Бросок ${dice}: ${result}`);
-        }
-        
-        function generateName(race) {
-            const names = {
-                human: ['Александр', 'Елена', 'Михаил', 'Анна'],
-                elf: ['Леголас', 'Галадриэль', 'Элронд', 'Арвен'],
-                dwarf: ['Гимли', 'Торин', 'Балин', 'Двалин'],
-                halfling: ['Бильбо', 'Фродо', 'Сэм', 'Пиппин']
-            };
-            
-            const raceNames = names[race] || names.human;
-            return raceNames[Math.floor(Math.random() * raceNames.length)];
-        }
-        
-        function generateEnemyName() {
-            const names = ['Гоблин', 'Орк', 'Тролль', 'Дракон', 'Нежить', 'Демон'];
-            return names[Math.floor(Math.random() * names.length)];
-        }
-        
-        function saveToNotes(type) {
-            let content = '';
-            
-            switch(type) {
-                case 'character':
-                    content = document.getElementById('character-content').innerText;
-                    break;
-                case 'enemy':
-                    content = document.getElementById('enemy-content').innerText;
-                    break;
-                case 'ai':
-                    content = document.getElementById('ai-content').innerText;
-                    break;
-                case 'potion':
-                    content = document.getElementById('potion-content').innerText;
-                    break;
-                case 'tavern':
-                    content = document.getElementById('tavern-content').innerText;
-                    break;
-            }
-            
-            if (content) {
-                const note = {
-                    id: Date.now(),
-                    text: `[${type.toUpperCase()}] ${content}`,
-                    timestamp: new Date().toLocaleString()
-                };
-                
-                notes.unshift(note);
-                saveNotes();
-                loadNotes();
-                
-                showModal('Сохранено в заметки!');
-            }
-        }
-        
-        // Модальные окна
-        function showModal(content) {
-            document.getElementById('modal-content').innerHTML = content;
-            document.getElementById('result-modal').classList.add('active');
-        }
-        
-        function hideModal() {
-            document.getElementById('result-modal').classList.remove('active');
-        }
-        
-        function closeModal() {
-            document.getElementById('result-modal').classList.remove('active');
-        }
-        
-        // Закрытие модального окна при клике вне его
-        document.getElementById('result-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
-        
 
-        
-        // Haptic feedback для мобильных устройств
-        if ('vibrate' in navigator) {
-            document.querySelectorAll('button, .nav-item').forEach(element => {
-                element.addEventListener('click', () => {
-                    navigator.vibrate(50);
-                });
-            });
+        function openAIModal() {
+            showModal(`
+                <div class="ai-chat">
+                    <div class="generator-header">
+                        <h2>🤖 AI Помощник</h2>
+                        <p class="generator-subtitle">Задайте вопрос по D&D и получите помощь от AI</p>
+                    </div>
+                    
+                    <form id="aiForm" class="ai-form">
+                        <div class="form-group">
+                            <label for="ai-question">Ваш вопрос</label>
+                            <textarea id="ai-question" name="question" rows="4" placeholder="Например: Как работает магия в D&D? Или: Помоги создать квест для 5 уровня..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn">
+                            <span class="btn-icon">🤖</span>
+                            <span class="btn-text">Спросить AI</span>
+                        </button>
+                    </form>
+                    
+                    <div id="aiResult" class="result-container hidden"></div>
+                </div>
+            `);
         }
     </script>
+    <script src="./assets/js/mobile-themes.js"></script>
 </body>
 
 </html>

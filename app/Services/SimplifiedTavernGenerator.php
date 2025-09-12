@@ -12,8 +12,6 @@ class SimplifiedTavernGenerator {
     private $repetitionTracker;
     
     public function __construct() {
-        require_once __DIR__ . '/TavernAiService.php';
-        $this->ai_service = new TavernAiService();
         $this->cache_dir = __DIR__ . '/../../data/cache/taverns/';
         if (!is_dir($this->cache_dir)) {
             mkdir($this->cache_dir, 0755, true);
@@ -122,44 +120,73 @@ class SimplifiedTavernGenerator {
             // Создаем базовую структуру таверны
             $tavern = [
                 'name' => $name,
-                'location' => $location['text_ru'],
+                'location' => [
+                    'text_ru' => $location['text_ru']
+                ],
                 'owner' => [
-                    'name' => $owner['name_ru'],
+                    'name_ru' => $owner['name_ru'],
                     'race' => $owner['race'],
                     'personality' => $owner['personality'],
                     'background' => $owner['background']
                 ],
                 'staff' => [
-                    'role' => $staff['role'],
-                    'name' => $staff['name_ru'],
-                    'personality' => $staff['personality']
+                    [
+                        'role' => $staff['role'],
+                        'name_ru' => $staff['name_ru'],
+                        'personality' => $staff['personality'],
+                        'race' => $staff['race'] ?? 'человек',
+                        'traits' => [$staff['personality']]
+                    ]
                 ],
-                'event' => [
-                    'name' => $event['name_ru'],
-                    'description' => $event['description_ru']
+                'events' => [
+                    [
+                        'name_ru' => $event['name_ru'],
+                        'description_ru' => $event['description_ru'],
+                        'type' => $event['name_ru']
+                    ]
                 ],
-                'menu_item' => [
-                    'name' => $menu_item['name_ru'],
-                    'description' => $menu_item['description_ru'],
-                    'price' => $menu_item['price']
+                'menu' => [
+                    'drinks' => [
+                        [
+                            'name_ru' => $menu_item['name_ru'],
+                            'description_ru' => $menu_item['description_ru'],
+                            'price' => $menu_item['price'],
+                            'formatted_price' => $menu_item['price']
+                        ]
+                    ]
                 ],
-                'room' => [
-                    'name' => $room['name_ru'],
-                    'description' => $room['description_ru'],
-                    'capacity' => $room['capacity'],
-                    'price' => $room['price']
+                'rooms' => [
+                    [
+                        'type' => $room['name_ru'],
+                        'description_ru' => $room['description_ru'],
+                        'capacity' => $room['capacity'],
+                        'price' => $room['price'],
+                        'beds' => 1,
+                        'cleanliness' => 'хорошая',
+                        'notes_ru' => $room['description_ru']
+                    ]
                 ],
-                'game' => [
-                    'name' => $game['name_ru'],
-                    'description' => $game['description_ru']
+                'games' => [
+                    'main' => [
+                        'name_ru' => $game['name_ru'],
+                        'description_ru' => $game['description_ru'],
+                        'style' => 'традиционная'
+                    ]
                 ]
             ];
             
             // Генерируем AI описание, если включено
             if ($use_ai) {
-                $description = $this->ai_service->generateTavernDescription($tavern);
-                if ($description && !isset($description['error'])) {
-                    $tavern['ai_description'] = $description;
+                try {
+                    require_once __DIR__ . '/TavernAiService.php';
+                    $this->ai_service = new TavernAiService();
+                    $description = $this->ai_service->generateTavernDescription($tavern);
+                    if ($description && !isset($description['error'])) {
+                        $tavern['ai_description'] = $description;
+                    }
+                } catch (Exception $e) {
+                    logMessage('WARNING', 'AI генерация описания не удалась: ' . $e->getMessage());
+                    $tavern['ai_description_error'] = $e->getMessage();
                 }
             }
             

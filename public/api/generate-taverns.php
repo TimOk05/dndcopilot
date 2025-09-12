@@ -1,7 +1,7 @@
 <?php
 // Заголовки для HTTP запросов
 if (php_sapi_name() !== 'cli') {
-header('Content-Type: application/json');
+    header('Content-Type: application/json; charset=utf-8');
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type');
