@@ -385,8 +385,9 @@ class EnemyGenerator {
      * Проверка среды
      */
     private function checkEnvironment($monster, $requested_environment) {
-        if (!isset($monster['environment'])) {
-            return false;
+        // Если environment не указан, считаем что монстр подходит для любой среды
+        if (!isset($monster['environment']) || empty($monster['environment'])) {
+            return true;
         }
         
         $monster_env = strtolower($monster['environment']);

@@ -2642,7 +2642,25 @@ function formatEnemiesFromApi(enemies) {
         out += '<div class="section-content">';
         out += '<div class="info-grid">';
         out += '<div class="info-item"><strong>Тип:</strong> ' + (enemy.type || 'Не определен') + '</div>';
-        out += '<div class="info-item"><strong>Среда:</strong> ' + (enemy.environment || 'Не определена') + '</div>';
+        // Определяем отображаемую среду
+        let displayEnvironment = enemy.environment || 'Любая среда';
+        if (displayEnvironment === 'Любая среда') {
+            // Если у монстра нет environment, показываем выбранную пользователем среду
+            const selectedEnvironment = document.getElementById('enemy-environment')?.value;
+            if (selectedEnvironment) {
+                const environmentNames = {
+                    'forest': 'Лес',
+                    'mountain': 'Горы', 
+                    'desert': 'Пустыня',
+                    'swamp': 'Болота',
+                    'underdark': 'Подземелье',
+                    'urban': 'Город',
+                    'coastal': 'Побережье'
+                };
+                displayEnvironment = environmentNames[selectedEnvironment] || selectedEnvironment;
+            }
+        }
+        out += '<div class="info-item"><strong>Среда:</strong> ' + displayEnvironment + '</div>';
         out += '</div>';
         out += '</div></div>';
         
