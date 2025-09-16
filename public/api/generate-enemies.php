@@ -737,6 +737,7 @@ class EnemyGenerator {
     /**
      * Получение fallback данных монстра для локальной разработки
      */
+    
     private function getFallbackMonsterData($monster_index) {
         $monsterName = basename($monster_index);
         
@@ -807,7 +808,14 @@ class EnemyGenerator {
                     ['name' => 'Scimitar', 'desc' => 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.']
                 ]
             ],
-            'environment' => 'urban, forest',
+            'cultist' => [
+                'name' => 'Cultist',
+                'type' => 'humanoid',
+                'challenge_rating' => '1/8',
+                'hit_points' => '9 (2d8)',
+                'armor_class' => '12 (leather armor)',
+                'speed' => '30 ft.',
+                'environment' => 'urban, forest',
                 'abilities' => [
                     'str' => 11, 'dex' => 12, 'con' => 10,
                     'int' => 10, 'wis' => 11, 'cha' => 10
@@ -816,7 +824,14 @@ class EnemyGenerator {
                     ['name' => 'Scimitar', 'desc' => 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.']
                 ]
             ],
-            'environment' => 'forest, hill, mountain, urban',
+            'skeleton' => [
+                'name' => 'Skeleton',
+                'type' => 'undead',
+                'challenge_rating' => '1/4',
+                'hit_points' => '13 (2d8 + 4)',
+                'armor_class' => '13 (armor scraps)',
+                'speed' => '30 ft.',
+                'environment' => 'forest, hill, mountain, urban',
                 'abilities' => [
                     'str' => 10, 'dex' => 14, 'con' => 15,
                     'int' => 6, 'wis' => 8, 'cha' => 5
@@ -825,7 +840,14 @@ class EnemyGenerator {
                     ['name' => 'Shortsword', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.']
                 ]
             ],
-            'environment' => 'forest, hill, mountain, urban',
+            'zombie' => [
+                'name' => 'Zombie',
+                'type' => 'undead',
+                'challenge_rating' => '1/4',
+                'hit_points' => '22 (3d8 + 9)',
+                'armor_class' => '8',
+                'speed' => '20 ft.',
+                'environment' => 'forest, hill, mountain, urban',
                 'abilities' => [
                     'str' => 13, 'dex' => 6, 'con' => 16,
                     'int' => 3, 'wis' => 6, 'cha' => 5
@@ -834,7 +856,14 @@ class EnemyGenerator {
                     ['name' => 'Slam', 'desc' => 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) bludgeoning damage.']
                 ]
             ],
-            'environment' => 'forest, hill, grassland',
+            'wolf' => [
+                'name' => 'Wolf',
+                'type' => 'beast',
+                'challenge_rating' => '1/4',
+                'hit_points' => '11 (2d8 + 2)',
+                'armor_class' => '13 (natural armor)',
+                'speed' => '40 ft.',
+                'environment' => 'forest, hill, grassland',
                 'abilities' => [
                     'str' => 12, 'dex' => 15, 'con' => 12,
                     'int' => 3, 'wis' => 12, 'cha' => 6
@@ -843,7 +872,14 @@ class EnemyGenerator {
                     ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) piercing damage.']
                 ]
             ],
-            'environment' => 'forest, hill, mountain',
+            'bear' => [
+                'name' => 'Bear',
+                'type' => 'beast',
+                'challenge_rating' => '1',
+                'hit_points' => '19 (3d8 + 6)',
+                'armor_class' => '11 (natural armor)',
+                'speed' => '40 ft., climb 30 ft.',
+                'environment' => 'forest, hill, mountain',
                 'abilities' => [
                     'str' => 15, 'dex' => 10, 'con' => 14,
                     'int' => 2, 'wis' => 13, 'cha' => 7
@@ -852,244 +888,20 @@ class EnemyGenerator {
                     ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) piercing damage.']
                 ]
             ],
-            'environment' => 'forest, hill, mountain',
+            'spider' => [
+                'name' => 'Spider',
+                'type' => 'beast',
+                'challenge_rating' => '0',
+                'hit_points' => '1 (1d4 - 1)',
+                'armor_class' => '12',
+                'speed' => '20 ft., climb 20 ft.',
+                'environment' => 'forest, hill, mountain',
                 'abilities' => [
                     'str' => 2, 'dex' => 14, 'con' => 8,
                     'int' => 1, 'wis' => 10, 'cha' => 2
                 ],
                 'actions' => [
-                    ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 1 piercing damage.']
-                ]
-            ],
-            
-            // Medium (CR 4-7)
-            'environment' => 'hill, mountain',
-                'abilities' => [
-                    'str' => 19, 'dex' => 8, 'con' => 16,
-                    'int' => 5, 'wis' => 7, 'cha' => 7
-                ],
-                'actions' => [
-                    ['name' => 'Greatclub', 'desc' => 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) bludgeoning damage.']
-                ]
-            ],
-            'environment' => 'hill, mountain',
-                'abilities' => [
-                    'str' => 18, 'dex' => 13, 'con' => 20,
-                    'int' => 7, 'wis' => 9, 'cha' => 7
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The troll makes three attacks: one with its bite and two with its claws.']
-                ]
-            ],
-            'environment' => 'hill, mountain',
-                'abilities' => [
-                    'str' => 21, 'dex' => 8, 'con' => 19,
-                    'int' => 5, 'wis' => 9, 'cha' => 6
-                ],
-                'actions' => [
-                    ['name' => 'Greatclub', 'desc' => 'Melee Weapon Attack: +8 to hit, reach 10 ft., one target. Hit: 18 (3d8 + 5) bludgeoning damage.']
-                ]
-            ],
-            'environment' => 'mountain, hill',
-                'abilities' => [
-                    'str' => 19, 'dex' => 10, 'con' => 16,
-                    'int' => 5, 'wis' => 12, 'cha' => 6
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The wyvern makes two attacks: one with its bite and one with its stinger. While flying, it can use its claws in place of one other attack.']
-                ]
-            ],
-            'environment' => 'desert, mountain',
-                'abilities' => [
-                    'str' => 17, 'dex' => 16, 'con' => 17,
-                    'int' => 7, 'wis' => 12, 'cha' => 8
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The manticore makes three attacks: one with its bite and two with its claws or three with its tail spikes.']
-                ]
-            ],
-            'environment' => 'hill, mountain',
-                'abilities' => [
-                    'str' => 21, 'dex' => 8, 'con' => 17,
-                    'int' => 6, 'wis' => 10, 'cha' => 8
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The ettin makes two attacks: one with its battleaxe and one with its morningstar.']
-                ]
-            ],
-            'environment' => 'mountain, hill',
-                'abilities' => [
-                    'str' => 22, 'dex' => 11, 'con' => 20,
-                    'int' => 8, 'wis' => 6, 'cha' => 10
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The cyclops makes two greatclub attacks.']
-                ]
-            ],
-            'environment' => 'swamp, coastal',
-                'abilities' => [
-                    'str' => 20, 'dex' => 12, 'con' => 20,
-                    'int' => 2, 'wis' => 10, 'cha' => 7
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The hydra makes as many bite attacks as it has heads.']
-                ]
-            ],
-            
-            // Hard (CR 8-12)
-            'environment' => 'mountain, hill',
-                'abilities' => [
-                    'str' => 23, 'dex' => 10, 'con' => 21,
-                    'int' => 14, 'wis' => 13, 'cha' => 17
-                ],
-                'actions' => [
-                    ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +11 to hit, reach 10 ft., one target. Hit: 17 (2d10 + 6) piercing damage.']
-                ]
-            ],
-            'environment' => 'mountain, hill',
-                'abilities' => [
-                    'str' => 25, 'dex' => 8, 'con' => 22,
-                    'int' => 6, 'wis' => 10, 'cha' => 7
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The giant makes two greatsword attacks.']
-                ]
-            ],
-            'environment' => 'underdark, mountain',
-                'abilities' => [
-                    'str' => 22, 'dex' => 15, 'con' => 24,
-                    'int' => 12, 'wis' => 13, 'cha' => 20
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The demon makes three attacks: one with its bite, one with its claws, and one with its tail.']
-                ]
-            ],
-            'environment' => 'underdark, mountain',
-                'abilities' => [
-                    'str' => 22, 'dex' => 15, 'con' => 24,
-                    'int' => 12, 'wis' => 13, 'cha' => 20
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The devil makes three attacks: one with its bite, one with its claws, and one with its tail.']
-                ]
-            ],
-            'environment' => 'underdark, urban',
-                'abilities' => [
-                    'str' => 11, 'dex' => 16, 'con' => 16,
-                    'int' => 20, 'wis' => 14, 'cha' => 16
-                ],
-                'actions' => [
-                    ['name' => 'Paralyzing Touch', 'desc' => 'Melee Spell Attack: +12 to hit, reach 5 ft., one creature. Hit: 10 (3d6) cold damage.']
-                ]
-            ],
-            'environment' => 'underdark',
-                'abilities' => [
-                    'str' => 10, 'dex' => 14, 'con' => 18,
-                    'int' => 17, 'wis' => 15, 'cha' => 17
-                ],
-                'actions' => [
-                    ['name' => 'Eye Rays', 'desc' => 'The beholder shoots three of the following magical eye rays at random (reroll duplicates), choosing one to three targets it can see within 120 feet of it.']
-                ]
-            ],
-            'environment' => 'underdark',
-                'abilities' => [
-                    'str' => 15, 'dex' => 12, 'con' => 13,
-                    'int' => 19, 'wis' => 17, 'cha' => 17
-                ],
-                'actions' => [
-                    ['name' => 'Tentacles', 'desc' => 'Melee Weapon Attack: +7 to hit, reach 5 ft., one creature. Hit: 15 (2d10 + 4) psychic damage.']
-                ]
-            ],
-            'environment' => 'urban, forest',
-                'abilities' => [
-                    'str' => 18, 'dex' => 18, 'con' => 18,
-                    'int' => 17, 'wis' => 15, 'cha' => 18
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The vampire makes two attacks, only one of which can be a bite attack.']
-                ]
-            ],
-            
-            // Deadly (CR 13+)
-            'environment' => 'mountain, hill',
-                'abilities' => [
-                    'str' => 30, 'dex' => 10, 'con' => 30,
-                    'int' => 18, 'wis' => 15, 'cha' => 23
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.']
-                ]
-            ],
-            'environment' => 'desert, grassland',
-                'abilities' => [
-                    'str' => 30, 'dex' => 11, 'con' => 30,
-                    'int' => 3, 'wis' => 11, 'cha' => 11
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The tarrasque can use its Frightful Presence. It then makes five attacks: one with its bite, two with its claws, one with its horns, and one with its tail.']
-                ]
-            ],
-            'environment' => 'underdark, mountain',
-                'abilities' => [
-                    'str' => 26, 'dex' => 15, 'con' => 22,
-                    'int' => 20, 'wis' => 16, 'cha' => 22
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The balor makes two attacks: one with its longsword and one with its whip.']
-                ]
-            ],
-            'environment' => 'underdark, mountain',
-                'abilities' => [
-                    'str' => 26, 'dex' => 14, 'con' => 24,
-                    'int' => 22, 'wis' => 18, 'cha' => 24
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The pit fiend makes four attacks: one with its bite, one with its claw, one with its mace, and one with its tail.']
-                ]
-            ],
-            'environment' => 'forest, hill, mountain, urban',
-                'abilities' => [
-                    'str' => 20, 'dex' => 12, 'con' => 24,
-                    'int' => 10, 'wis' => 13, 'cha' => 16
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The undead makes two attacks: one with its bite and one with its claws.']
-                ]
-            ],
-            'environment' => 'urban, mountain',
-                'abilities' => [
-                    'str' => 24, 'dex' => 8, 'con' => 24,
-                    'int' => 3, 'wis' => 11, 'cha' => 1
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The construct makes two attacks: one with its slam and one with its fist.']
-                ]
-            ],
-            'environment' => 'mountain, hill',
-                'abilities' => [
-                    'str' => 26, 'dex' => 22, 'con' => 26,
-                    'int' => 25, 'wis' => 25, 'cha' => 30
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The solar makes two greatsword attacks.']
-                ]
-            ],
-            'environment' => 'mountain, hill',
-                'abilities' => [
-                    'str' => 30, 'dex' => 21, 'con' => 30,
-                    'int' => 21, 'wis' => 22, 'cha' => 27
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The empyrean makes three attacks: two with its fist and one with its maul.']
-                ]
-            ],
-            'environment' => 'coastal, aquatic',
-                'abilities' => [
-                    'str' => 30, 'dex' => 11, 'con' => 25,
-                    'int' => 22, 'wis' => 18, 'cha' => 20
-                ],
-                'actions' => [
-                    ['name' => 'Multiattack', 'desc' => 'The kraken makes three tentacle attacks, each of which can be replaced by one use of Fling.']
+                    ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 1 piercing damage, and the target must make a DC 9 Constitution saving throw, taking 2 (1d4) poison damage on a failed save, or half as much damage on a successful one.']
                 ]
             ]
         ];
