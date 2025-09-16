@@ -31,6 +31,41 @@ class AiService {
     }
     
     /**
+     * Генерация текста через AI API
+     */
+    public function generateText($prompt) {
+        // Проверяем доступность API ключей
+        if (empty($this->api_keys['deepseek']) && empty($this->api_keys['openai']) && empty($this->api_keys['google'])) {
+            return [
+                'error' => 'AI API недоступен',
+                'message' => 'Нет доступных API ключей',
+                'details' => 'Проверьте настройки API ключей в config.php'
+            ];
+        }
+        
+        // Проверяем кэш
+        $cache_key = 'text_' . md5($prompt);
+        $cached = $this->getCachedData($cache_key);
+        if ($cached !== null) {
+            return $cached;
+        }
+        
+        $response = $this->callAiApi($prompt);
+        
+        if ($response && !isset($response['error'])) {
+            $this->cacheData($cache_key, $response);
+            return $response;
+        }
+        
+        // Возвращаем детальную ошибку для диагностики
+        return [
+            'error' => 'AI API недоступен',
+            'message' => 'Не удалось получить ответ от AI API',
+            'details' => $response['details'] ?? 'Проверьте подключение к интернету и настройки API'
+        ];
+    }
+    
+    /**
      * Генерация описания персонажа
      */
     public function generateCharacterDescription($character, $use_ai = true) {
