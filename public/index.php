@@ -104,9 +104,16 @@ if (isset($_POST['fast_action'])) {
     // --- Сохранение заметки инициативы ---
     if ($action === 'save_note') {
         $content = $_POST['content'] ?? '';
+        $title = $_POST['title'] ?? '';
+        
         if ($content) {
+            // Если есть заголовок, добавляем его в начало заметки
+            if ($title) {
+                $content = "<h3>$title</h3>" . $content;
+            }
+            
             $_SESSION['notes'][] = $content;
-            echo 'Заметка сохранена';
+            echo 'OK';
         } else {
             echo 'Ошибка: пустое содержимое';
         }
@@ -812,10 +819,7 @@ function openEnemyModal() {
             if (data.success && data.enemies) {
                 let resultHtml = formatEnemiesFromApi(data.enemies);
                 
-                // Автоматически сохраняем всех противников в заметки
-                data.enemies.forEach(enemy => {
-                    saveEnemyToNotes(enemy);
-                });
+                // Убрано автоматическое сохранение в заметки - пользователь может сохранить вручную
                 
                 resultDiv.innerHTML = resultHtml;
                 

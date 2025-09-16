@@ -209,60 +209,60 @@ class EnemyGenerator {
         
         // Сначала проверяем API монстров
         if (isset($monsters['results']) && !empty($monsters['results'])) {
-            foreach ($monsters['results'] as $monster) {
-                if ($checked_count >= $max_checks) {
+        foreach ($monsters['results'] as $monster) {
+            if ($checked_count >= $max_checks) {
+                break;
+            }
+            $checked_count++;
+            
+            try {
+                // Получаем детали монстра
+                $monster_details = $this->getMonsterDetails($monster['index']);
+                
+                if (!$monster_details || !$this->hasCompleteData($monster_details)) {
+                    continue;
+                }
+                
+            // Проверяем CR
+                if (!isset($monster_details['challenge_rating'])) {
+                    continue;
+                }
+                
+                if (!$this->checkCRRange($monster_details['challenge_rating'], $cr_range)) {
+                    continue;
+                }
+                
+                // Проверяем тип
+                if (!isset($monster_details['type'])) {
+                    continue;
+                }
+                
+                if ($enemy_type && !$this->checkType($monster_details['type'], $enemy_type)) {
+                continue;
+            }
+            
+                // Проверяем среду (необязательно - пропускаем если нет информации)
+                if ($environment && isset($monster_details['environment'])) {
+                    if (!$this->checkEnvironment($monster_details, $environment)) {
+                        continue;
+                    }
+                }
+                
+                // Проверяем совместимость
+                if (!$this->checkCompatibility($monster_details, $cr_range)) {
+                continue;
+            }
+                
+                $filtered[] = $monster_details;
+                
+                // Ограничиваем количество проверенных монстров
+                    if (count($filtered) >= 20) {
                     break;
                 }
-                $checked_count++;
                 
-                try {
-                    // Получаем детали монстра
-                    $monster_details = $this->getMonsterDetails($monster['index']);
-                    
-                    if (!$monster_details || !$this->hasCompleteData($monster_details)) {
-                        continue;
-                    }
-                    
-                    // Проверяем CR
-                    if (!isset($monster_details['challenge_rating'])) {
-                        continue;
-                    }
-                    
-                    if (!$this->checkCRRange($monster_details['challenge_rating'], $cr_range)) {
-                        continue;
-                    }
-                    
-                    // Проверяем тип
-                    if (!isset($monster_details['type'])) {
-                        continue;
-                    }
-                    
-                    if ($enemy_type && !$this->checkType($monster_details['type'], $enemy_type)) {
-                        continue;
-                    }
-                    
-                    // Проверяем среду (необязательно - пропускаем если нет информации)
-                    if ($environment && isset($monster_details['environment'])) {
-                        if (!$this->checkEnvironment($monster_details, $environment)) {
-                            continue;
-                        }
-                    }
-                    
-                    // Проверяем совместимость
-                    if (!$this->checkCompatibility($monster_details, $cr_range)) {
-                        continue;
-                    }
-                    
-                    $filtered[] = $monster_details;
-                    
-                    // Ограничиваем количество проверенных монстров
-                    if (count($filtered) >= 20) {
-                        break;
-                    }
-                    
-                } catch (Exception $e) {
-                    logMessage('WARNING', "EnemyGenerator: Ошибка получения деталей монстра {$monster['name']}: " . $e->getMessage());
-                    continue;
+            } catch (Exception $e) {
+                logMessage('WARNING', "EnemyGenerator: Ошибка получения деталей монстра {$monster['name']}: " . $e->getMessage());
+                continue;
                 }
             }
         }
@@ -408,21 +408,21 @@ class EnemyGenerator {
             ];
             
             // Генерируем описание и тактику с AI (всегда включено)
-            $description_result = $this->generateDescription($monster);
-            if (isset($description_result['error'])) {
+                $description_result = $this->generateDescription($monster);
+                if (isset($description_result['error'])) {
                 logMessage('WARNING', "AI генерация описания не удалась: " . $description_result['message']);
                 $enemy['description'] = "Описание недоступно (AI API недоступен)";
-            } else {
-                $enemy['description'] = $description_result;
-            }
-            
-            $tactics_result = $this->generateTactics($monster);
-            if (isset($tactics_result['error'])) {
+                } else {
+                    $enemy['description'] = $description_result;
+                }
+                
+                $tactics_result = $this->generateTactics($monster);
+                if (isset($tactics_result['error'])) {
                 logMessage('WARNING', "AI генерация тактики не удалась: " . $tactics_result['message']);
                 $enemy['tactics'] = "Тактика недоступна (AI API недоступен)";
-            } else {
-                $enemy['tactics'] = $tactics_result;
-            }
+                } else {
+                    $enemy['tactics'] = $tactics_result;
+                }
             // } else {
             //     // AI всегда включен - это основной функционал
             //     // Если AI отключен, возвращаем ошибку
@@ -631,12 +631,14 @@ class EnemyGenerator {
                    strpos($host, '192.168.') !== false ||
                    strpos($host, '10.0.') !== false;
         
-        // Дополнительная проверка - если это не продакшн домен
+        // Проверяем, является ли это продакшн доменом
         $isProduction = strpos($host, 'tim.dat-studio.com') !== false;
         
         logMessage('INFO', "EnemyGenerator: Host: $host, isLocal: " . ($isLocal ? 'true' : 'false') . ", isProduction: " . ($isProduction ? 'true' : 'false'));
         
-        return $isLocal || !$isProduction;
+        // Fallback данные используются ТОЛЬКО для локальной разработки
+        // На продакшне всегда используются данные из внешних API
+        return $isLocal && !$isProduction;
     }
     
     /**
@@ -645,9 +647,9 @@ class EnemyGenerator {
     private function getFallbackMonstersList() {
         return [
             'results' => [
-                ['name' => 'Goblin', 'url' => '/api/monsters/goblin', 'index' => 'goblin'],
-                ['name' => 'Orc', 'url' => '/api/monsters/orc', 'index' => 'orc'],
+                // Easy (CR 0-3)
                 ['name' => 'Kobold', 'url' => '/api/monsters/kobold', 'index' => 'kobold'],
+                ['name' => 'Goblin', 'url' => '/api/monsters/goblin', 'index' => 'goblin'],
                 ['name' => 'Bandit', 'url' => '/api/monsters/bandit', 'index' => 'bandit'],
                 ['name' => 'Cultist', 'url' => '/api/monsters/cultist', 'index' => 'cultist'],
                 ['name' => 'Skeleton', 'url' => '/api/monsters/skeleton', 'index' => 'skeleton'],
@@ -655,10 +657,27 @@ class EnemyGenerator {
                 ['name' => 'Wolf', 'url' => '/api/monsters/wolf', 'index' => 'wolf'],
                 ['name' => 'Bear', 'url' => '/api/monsters/bear', 'index' => 'bear'],
                 ['name' => 'Spider', 'url' => '/api/monsters/spider', 'index' => 'spider'],
+                ['name' => 'Orc', 'url' => '/api/monsters/orc', 'index' => 'orc'],
+                
+                // Medium (CR 4-7)
+                ['name' => 'Ogre', 'url' => '/api/monsters/ogre', 'index' => 'ogre'],
+                ['name' => 'Troll', 'url' => '/api/monsters/troll', 'index' => 'troll'],
+                ['name' => 'Hill Giant', 'url' => '/api/monsters/hill-giant', 'index' => 'hill-giant'],
+                ['name' => 'Wyvern', 'url' => '/api/monsters/wyvern', 'index' => 'wyvern'],
+                ['name' => 'Manticore', 'url' => '/api/monsters/manticore', 'index' => 'manticore'],
+                
+                // Hard (CR 8-12)
                 ['name' => 'Dragon', 'url' => '/api/monsters/dragon', 'index' => 'dragon'],
                 ['name' => 'Giant', 'url' => '/api/monsters/giant', 'index' => 'giant'],
                 ['name' => 'Demon', 'url' => '/api/monsters/demon', 'index' => 'demon'],
                 ['name' => 'Devil', 'url' => '/api/monsters/devil', 'index' => 'devil'],
+                ['name' => 'Lich', 'url' => '/api/monsters/lich', 'index' => 'lich'],
+                
+                // Deadly (CR 13+)
+                ['name' => 'Ancient Dragon', 'url' => '/api/monsters/ancient-dragon', 'index' => 'ancient-dragon'],
+                ['name' => 'Tarrasque', 'url' => '/api/monsters/tarrasque', 'index' => 'tarrasque'],
+                ['name' => 'Balor', 'url' => '/api/monsters/balor', 'index' => 'balor'],
+                ['name' => 'Pit Fiend', 'url' => '/api/monsters/pit-fiend', 'index' => 'pit-fiend'],
                 ['name' => 'Undead', 'url' => '/api/monsters/undead', 'index' => 'undead'],
                 ['name' => 'Construct', 'url' => '/api/monsters/construct', 'index' => 'construct']
             ]
@@ -673,6 +692,22 @@ class EnemyGenerator {
         
         // Базовые данные для каждого типа монстра
         $fallbackData = [
+            // Easy (CR 0-3)
+            'kobold' => [
+                'name' => 'Kobold',
+                'type' => 'humanoid',
+                'challenge_rating' => '1/8',
+                'hit_points' => '5 (2d6 - 2)',
+                'armor_class' => '12',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 7, 'dex' => 15, 'con' => 9,
+                    'int' => 8, 'wis' => 7, 'cha' => 8
+                ],
+                'actions' => [
+                    ['name' => 'Dagger', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage.']
+                ]
+            ],
             'goblin' => [
                 'name' => 'Goblin',
                 'type' => 'humanoid',
@@ -703,21 +738,190 @@ class EnemyGenerator {
                     ['name' => 'Greataxe', 'desc' => 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 9 (1d12 + 3) slashing damage.']
                 ]
             ],
-            'kobold' => [
-                'name' => 'Kobold',
+            'bandit' => [
+                'name' => 'Bandit',
                 'type' => 'humanoid',
                 'challenge_rating' => '1/8',
-                'hit_points' => '5 (2d6 - 2)',
-                'armor_class' => '12',
+                'hit_points' => '11 (2d8 + 2)',
+                'armor_class' => '12 (leather armor)',
                 'speed' => '30 ft.',
                 'abilities' => [
-                    'str' => 7, 'dex' => 15, 'con' => 9,
-                    'int' => 8, 'wis' => 7, 'cha' => 8
+                    'str' => 11, 'dex' => 12, 'con' => 12,
+                    'int' => 12, 'wis' => 10, 'cha' => 10
                 ],
                 'actions' => [
-                    ['name' => 'Dagger', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage.']
+                    ['name' => 'Scimitar', 'desc' => 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.']
                 ]
             ],
+            'cultist' => [
+                'name' => 'Cultist',
+                'type' => 'humanoid',
+                'challenge_rating' => '1/8',
+                'hit_points' => '9 (2d8)',
+                'armor_class' => '12 (leather armor)',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 11, 'dex' => 12, 'con' => 10,
+                    'int' => 10, 'wis' => 11, 'cha' => 10
+                ],
+                'actions' => [
+                    ['name' => 'Scimitar', 'desc' => 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.']
+                ]
+            ],
+            'skeleton' => [
+                'name' => 'Skeleton',
+                'type' => 'undead',
+                'challenge_rating' => '1/4',
+                'hit_points' => '13 (2d8 + 4)',
+                'armor_class' => '13 (armor scraps)',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 10, 'dex' => 14, 'con' => 15,
+                    'int' => 6, 'wis' => 8, 'cha' => 5
+                ],
+                'actions' => [
+                    ['name' => 'Shortsword', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.']
+                ]
+            ],
+            'zombie' => [
+                'name' => 'Zombie',
+                'type' => 'undead',
+                'challenge_rating' => '1/4',
+                'hit_points' => '22 (3d8 + 9)',
+                'armor_class' => '8',
+                'speed' => '20 ft.',
+                'abilities' => [
+                    'str' => 13, 'dex' => 6, 'con' => 16,
+                    'int' => 3, 'wis' => 6, 'cha' => 5
+                ],
+                'actions' => [
+                    ['name' => 'Slam', 'desc' => 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) bludgeoning damage.']
+                ]
+            ],
+            'wolf' => [
+                'name' => 'Wolf',
+                'type' => 'beast',
+                'challenge_rating' => '1/4',
+                'hit_points' => '11 (2d8 + 2)',
+                'armor_class' => '13 (natural armor)',
+                'speed' => '40 ft.',
+                'abilities' => [
+                    'str' => 12, 'dex' => 15, 'con' => 12,
+                    'int' => 3, 'wis' => 12, 'cha' => 6
+                ],
+                'actions' => [
+                    ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) piercing damage.']
+                ]
+            ],
+            'bear' => [
+                'name' => 'Bear',
+                'type' => 'beast',
+                'challenge_rating' => '1',
+                'hit_points' => '19 (3d8 + 6)',
+                'armor_class' => '11 (natural armor)',
+                'speed' => '40 ft., climb 30 ft.',
+                'abilities' => [
+                    'str' => 15, 'dex' => 10, 'con' => 14,
+                    'int' => 2, 'wis' => 13, 'cha' => 7
+                ],
+                'actions' => [
+                    ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) piercing damage.']
+                ]
+            ],
+            'spider' => [
+                'name' => 'Spider',
+                'type' => 'beast',
+                'challenge_rating' => '0',
+                'hit_points' => '1 (1d4 - 1)',
+                'armor_class' => '12',
+                'speed' => '20 ft., climb 20 ft.',
+                'abilities' => [
+                    'str' => 2, 'dex' => 14, 'con' => 8,
+                    'int' => 1, 'wis' => 10, 'cha' => 2
+                ],
+                'actions' => [
+                    ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 1 piercing damage.']
+                ]
+            ],
+            
+            // Medium (CR 4-7)
+            'ogre' => [
+                'name' => 'Ogre',
+                'type' => 'giant',
+                'challenge_rating' => '2',
+                'hit_points' => '59 (7d10 + 21)',
+                'armor_class' => '11 (hide armor)',
+                'speed' => '40 ft.',
+                'abilities' => [
+                    'str' => 19, 'dex' => 8, 'con' => 16,
+                    'int' => 5, 'wis' => 7, 'cha' => 7
+                ],
+                'actions' => [
+                    ['name' => 'Greatclub', 'desc' => 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) bludgeoning damage.']
+                ]
+            ],
+            'troll' => [
+                'name' => 'Troll',
+                'type' => 'giant',
+                'challenge_rating' => '5',
+                'hit_points' => '84 (8d10 + 40)',
+                'armor_class' => '15 (natural armor)',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 18, 'dex' => 13, 'con' => 20,
+                    'int' => 7, 'wis' => 9, 'cha' => 7
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The troll makes three attacks: one with its bite and two with its claws.']
+                ]
+            ],
+            'hill-giant' => [
+                'name' => 'Hill Giant',
+                'type' => 'giant',
+                'challenge_rating' => '5',
+                'hit_points' => '105 (10d12 + 40)',
+                'armor_class' => '13 (natural armor)',
+                'speed' => '40 ft.',
+                'abilities' => [
+                    'str' => 21, 'dex' => 8, 'con' => 19,
+                    'int' => 5, 'wis' => 9, 'cha' => 6
+                ],
+                'actions' => [
+                    ['name' => 'Greatclub', 'desc' => 'Melee Weapon Attack: +8 to hit, reach 10 ft., one target. Hit: 18 (3d8 + 5) bludgeoning damage.']
+                ]
+            ],
+            'wyvern' => [
+                'name' => 'Wyvern',
+                'type' => 'dragon',
+                'challenge_rating' => '6',
+                'hit_points' => '110 (13d10 + 39)',
+                'armor_class' => '13 (natural armor)',
+                'speed' => '20 ft., fly 80 ft.',
+                'abilities' => [
+                    'str' => 19, 'dex' => 10, 'con' => 16,
+                    'int' => 5, 'wis' => 12, 'cha' => 6
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The wyvern makes two attacks: one with its bite and one with its stinger. While flying, it can use its claws in place of one other attack.']
+                ]
+            ],
+            'manticore' => [
+                'name' => 'Manticore',
+                'type' => 'monstrosity',
+                'challenge_rating' => '3',
+                'hit_points' => '68 (8d10 + 24)',
+                'armor_class' => '14 (natural armor)',
+                'speed' => '30 ft., fly 50 ft.',
+                'abilities' => [
+                    'str' => 17, 'dex' => 16, 'con' => 17,
+                    'int' => 7, 'wis' => 12, 'cha' => 8
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The manticore makes three attacks: one with its bite and two with its claws or three with its tail spikes.']
+                ]
+            ],
+            
+            // Hard (CR 8-12)
             'dragon' => [
                 'name' => 'Dragon',
                 'type' => 'dragon',
@@ -731,6 +935,158 @@ class EnemyGenerator {
                 ],
                 'actions' => [
                     ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +11 to hit, reach 10 ft., one target. Hit: 17 (2d10 + 6) piercing damage.']
+                ]
+            ],
+            'giant' => [
+                'name' => 'Giant',
+                'type' => 'giant',
+                'challenge_rating' => '9',
+                'hit_points' => '162 (13d12 + 78)',
+                'armor_class' => '16 (chain mail)',
+                'speed' => '40 ft.',
+                'abilities' => [
+                    'str' => 25, 'dex' => 8, 'con' => 22,
+                    'int' => 6, 'wis' => 10, 'cha' => 7
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The giant makes two greatsword attacks.']
+                ]
+            ],
+            'demon' => [
+                'name' => 'Demon',
+                'type' => 'fiend',
+                'challenge_rating' => '10',
+                'hit_points' => '200 (16d10 + 112)',
+                'armor_class' => '19 (natural armor)',
+                'speed' => '30 ft., fly 60 ft.',
+                'abilities' => [
+                    'str' => 22, 'dex' => 15, 'con' => 24,
+                    'int' => 12, 'wis' => 13, 'cha' => 20
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The demon makes three attacks: one with its bite, one with its claws, and one with its tail.']
+                ]
+            ],
+            'devil' => [
+                'name' => 'Devil',
+                'type' => 'fiend',
+                'challenge_rating' => '11',
+                'hit_points' => '200 (16d10 + 112)',
+                'armor_class' => '19 (natural armor)',
+                'speed' => '30 ft., fly 60 ft.',
+                'abilities' => [
+                    'str' => 22, 'dex' => 15, 'con' => 24,
+                    'int' => 12, 'wis' => 13, 'cha' => 20
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The devil makes three attacks: one with its bite, one with its claws, and one with its tail.']
+                ]
+            ],
+            'lich' => [
+                'name' => 'Lich',
+                'type' => 'undead',
+                'challenge_rating' => '12',
+                'hit_points' => '135 (18d8 + 54)',
+                'armor_class' => '17 (natural armor)',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 11, 'dex' => 16, 'con' => 16,
+                    'int' => 20, 'wis' => 14, 'cha' => 16
+                ],
+                'actions' => [
+                    ['name' => 'Paralyzing Touch', 'desc' => 'Melee Spell Attack: +12 to hit, reach 5 ft., one creature. Hit: 10 (3d6) cold damage.']
+                ]
+            ],
+            
+            // Deadly (CR 13+)
+            'ancient-dragon' => [
+                'name' => 'Ancient Dragon',
+                'type' => 'dragon',
+                'challenge_rating' => '20',
+                'hit_points' => '546 (28d20 + 280)',
+                'armor_class' => '22 (natural armor)',
+                'speed' => '40 ft., fly 80 ft.',
+                'abilities' => [
+                    'str' => 30, 'dex' => 10, 'con' => 30,
+                    'int' => 18, 'wis' => 15, 'cha' => 23
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.']
+                ]
+            ],
+            'tarrasque' => [
+                'name' => 'Tarrasque',
+                'type' => 'monstrosity',
+                'challenge_rating' => '30',
+                'hit_points' => '676 (33d20 + 330)',
+                'armor_class' => '25 (natural armor)',
+                'speed' => '40 ft.',
+                'abilities' => [
+                    'str' => 30, 'dex' => 11, 'con' => 30,
+                    'int' => 3, 'wis' => 11, 'cha' => 11
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The tarrasque can use its Frightful Presence. It then makes five attacks: one with its bite, two with its claws, one with its horns, and one with its tail.']
+                ]
+            ],
+            'balor' => [
+                'name' => 'Balor',
+                'type' => 'fiend',
+                'challenge_rating' => '19',
+                'hit_points' => '262 (21d12 + 126)',
+                'armor_class' => '19 (natural armor)',
+                'speed' => '40 ft., fly 80 ft.',
+                'abilities' => [
+                    'str' => 26, 'dex' => 15, 'con' => 22,
+                    'int' => 20, 'wis' => 16, 'cha' => 22
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The balor makes two attacks: one with its longsword and one with its whip.']
+                ]
+            ],
+            'pit-fiend' => [
+                'name' => 'Pit Fiend',
+                'type' => 'fiend',
+                'challenge_rating' => '20',
+                'hit_points' => '300 (24d10 + 168)',
+                'armor_class' => '19 (natural armor)',
+                'speed' => '30 ft., fly 60 ft.',
+                'abilities' => [
+                    'str' => 26, 'dex' => 14, 'con' => 24,
+                    'int' => 22, 'wis' => 18, 'cha' => 24
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The pit fiend makes four attacks: one with its bite, one with its claw, one with its mace, and one with its tail.']
+                ]
+            ],
+            'undead' => [
+                'name' => 'Undead',
+                'type' => 'undead',
+                'challenge_rating' => '15',
+                'hit_points' => '200 (16d10 + 112)',
+                'armor_class' => '18 (natural armor)',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 20, 'dex' => 12, 'con' => 24,
+                    'int' => 10, 'wis' => 13, 'cha' => 16
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The undead makes two attacks: one with its bite and one with its claws.']
+                ]
+            ],
+            'construct' => [
+                'name' => 'Construct',
+                'type' => 'construct',
+                'challenge_rating' => '16',
+                'hit_points' => '200 (16d10 + 112)',
+                'armor_class' => '20 (natural armor)',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 24, 'dex' => 8, 'con' => 24,
+                    'int' => 3, 'wis' => 11, 'cha' => 1
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The construct makes two attacks: one with its slam and one with its fist.']
                 ]
             ]
         ];
@@ -754,10 +1110,10 @@ class EnemyGenerator {
                     $translated_name = $this->translateEnemyText($action['name']);
                     $translated_desc = $this->translateEnemyText($action['desc']);
                     
-                    $formatted[] = [
+                $formatted[] = [
                         'name' => $translated_name,
                         'description' => $translated_desc
-                    ];
+                ];
                 } catch (Exception $e) {
                     // Если AI перевод недоступен, пропускаем это действие
                     logMessage('WARNING', "Пропускаем действие '{$action['name']}' из-за ошибки AI перевода");
@@ -785,10 +1141,10 @@ class EnemyGenerator {
                     $translated_name = $this->translateEnemyText($ability['name']);
                     $translated_desc = $this->translateEnemyText($ability['desc']);
                     
-                    $formatted[] = [
+                $formatted[] = [
                         'name' => $translated_name,
                         'description' => $translated_desc
-                    ];
+                ];
                 } catch (Exception $e) {
                     // Если AI перевод недоступен, пропускаем эту способность
                     logMessage('WARNING', "Пропускаем способность '{$ability['name']}' из-за ошибки AI перевода");
@@ -816,10 +1172,10 @@ class EnemyGenerator {
                     $translated_name = $this->translateEnemyText($action['name']);
                     $translated_desc = $this->translateEnemyText($action['desc']);
                     
-                    $formatted[] = [
+                $formatted[] = [
                         'name' => $translated_name,
                         'description' => $translated_desc
-                    ];
+                ];
                 } catch (Exception $e) {
                     // Если AI перевод недоступен, пропускаем это действие
                     logMessage('WARNING', "Пропускаем легендарное действие '{$action['name']}' из-за ошибки AI перевода");
@@ -847,10 +1203,10 @@ class EnemyGenerator {
                     $translated_name = $this->translateEnemyText($action['name']);
                     $translated_desc = $this->translateEnemyText($action['desc']);
                     
-                    $formatted[] = [
+                $formatted[] = [
                         'name' => $translated_name,
                         'description' => $translated_desc
-                    ];
+                ];
                 } catch (Exception $e) {
                     // Если AI перевод недоступен, пропускаем это действие
                     logMessage('WARNING', "Пропускаем действие логова '{$action['name']}' из-за ошибки AI перевода");
@@ -1309,14 +1665,14 @@ class EnemyGenerator {
         
         logMessage('INFO', "EnemyGenerator: Успешный file_get_contents ответ, размер: " . strlen($response) . " байт");
         
-        $decoded = json_decode($response, true);
-        if (json_last_error() === JSON_ERROR_NONE) {
+            $decoded = json_decode($response, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
             logMessage('INFO', "EnemyGenerator: JSON успешно декодирован через file_get_contents");
-            return $decoded;
-        } else {
+                return $decoded;
+            } else {
             logMessage('ERROR', "EnemyGenerator: JSON decode error for $url: " . json_last_error_msg());
-            throw new Exception("Ошибка разбора ответа API");
-        }
+                throw new Exception("Ошибка разбора ответа API");
+            }
     }
 
     /**
@@ -1364,11 +1720,6 @@ class EnemyGenerator {
             return $text;
         }
         
-        // Проверяем, является ли это названием существа (не переводим названия существ)
-        if ($this->isCreatureName($text)) {
-            return $text; // Возвращаем оригинальное название на английском
-        }
-        
         try {
             // Используем AI сервис для перевода
             require_once __DIR__ . '/../../app/Services/ai-service.php';
@@ -1390,41 +1741,6 @@ class EnemyGenerator {
             logMessage('ERROR', "Ошибка AI перевода: " . $e->getMessage());
             throw new Exception('AI перевод недоступен: ' . $e->getMessage());
         }
-    }
-    
-    /**
-     * Проверка, является ли текст названием существа
-     */
-    private function isCreatureName($text) {
-        // Список известных названий существ D&D (не переводим их)
-        $creatureNames = [
-            'Camel', 'Goblin', 'Orc', 'Kobold', 'Bandit', 'Cultist', 'Skeleton', 'Zombie',
-            'Wolf', 'Bear', 'Spider', 'Dragon', 'Giant', 'Demon', 'Devil', 'Undead', 'Construct',
-            'Elf', 'Dwarf', 'Halfling', 'Human', 'Tiefling', 'Dragonborn', 'Gnome', 'Half-Elf',
-            'Half-Orc', 'Aasimar', 'Genasi', 'Goliath', 'Firbolg', 'Kenku', 'Lizardfolk', 'Tabaxi',
-            'Triton', 'Bugbear', 'Hobgoblin', 'Gnoll', 'Yuan-ti', 'Gith', 'Duergar', 'Svirfneblin',
-            'Beholder', 'Mind Flayer', 'Lich', 'Vampire', 'Werewolf', 'Ghost', 'Wraith', 'Specter',
-            'Wight', 'Ghoul', 'Mummy', 'Skeleton', 'Zombie', 'Golem', 'Elemental', 'Genie',
-            'Angel', 'Devil', 'Demon', 'Daemon', 'Celestial', 'Fiend', 'Aberration', 'Beast',
-            'Monstrosity', 'Plant', 'Ooze', 'Construct', 'Undead', 'Dragon', 'Giant', 'Humanoid',
-            'Fey', 'Elemental', 'Celestial', 'Fiend', 'Aberration'
-        ];
-        
-        // Проверяем точное совпадение
-        if (in_array($text, $creatureNames)) {
-            return true;
-        }
-        
-        // Проверяем, начинается ли текст с заглавной буквы и содержит только буквы
-        if (preg_match('/^[A-Z][a-zA-Z\s\-\']+$/', $text)) {
-            // Если это короткий текст (до 3 слов) и начинается с заглавной буквы, скорее всего это название существа
-            $wordCount = count(explode(' ', trim($text)));
-            if ($wordCount <= 3) {
-                return true;
-            }
-        }
-        
-        return false;
     }
     
 }
