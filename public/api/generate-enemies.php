@@ -343,7 +343,42 @@ class EnemyGenerator {
      * Проверка типа
      */
     private function checkType($monster_type, $requested_type) {
-        return strpos(strtolower($monster_type), strtolower($requested_type)) !== false;
+        // Создаем маппинг английских типов на русские
+        $typeMapping = [
+            'humanoid' => ['гуманоид', 'человекоид'],
+            'beast' => ['зверь', 'животное'],
+            'dragon' => ['дракон'],
+            'undead' => ['нежить', 'мертвец'],
+            'fiend' => ['демон', 'дьявол', 'инфернал'],
+            'celestial' => ['небожитель', 'ангел'],
+            'elemental' => ['элементаль', 'стихийник'],
+            'aberration' => ['аберрация', 'чудище'],
+            'monstrosity' => ['чудовище', 'монстр'],
+            'construct' => ['конструкт', 'голем'],
+            'giant' => ['великан'],
+            'fey' => ['фея', 'феи'],
+            'plant' => ['растение', 'растительность'],
+            'ooze' => ['слизь', 'желе']
+        ];
+        
+        $monster_type_lower = strtolower($monster_type);
+        $requested_type_lower = strtolower($requested_type);
+        
+        // Проверяем прямое совпадение
+        if (strpos($monster_type_lower, $requested_type_lower) !== false) {
+            return true;
+        }
+        
+        // Проверяем через маппинг
+        if (isset($typeMapping[$requested_type_lower])) {
+            foreach ($typeMapping[$requested_type_lower] as $russian_type) {
+                if (strpos($monster_type_lower, $russian_type) !== false) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
     
     /**
@@ -659,27 +694,36 @@ class EnemyGenerator {
                 ['name' => 'Spider', 'url' => '/api/monsters/spider', 'index' => 'spider'],
                 ['name' => 'Orc', 'url' => '/api/monsters/orc', 'index' => 'orc'],
                 
-                // Medium (CR 4-7)
-                ['name' => 'Ogre', 'url' => '/api/monsters/ogre', 'index' => 'ogre'],
-                ['name' => 'Troll', 'url' => '/api/monsters/troll', 'index' => 'troll'],
-                ['name' => 'Hill Giant', 'url' => '/api/monsters/hill-giant', 'index' => 'hill-giant'],
-                ['name' => 'Wyvern', 'url' => '/api/monsters/wyvern', 'index' => 'wyvern'],
-                ['name' => 'Manticore', 'url' => '/api/monsters/manticore', 'index' => 'manticore'],
+            // Medium (CR 4-7)
+            ['name' => 'Ogre', 'url' => '/api/monsters/ogre', 'index' => 'ogre'],
+            ['name' => 'Troll', 'url' => '/api/monsters/troll', 'index' => 'troll'],
+            ['name' => 'Hill Giant', 'url' => '/api/monsters/hill-giant', 'index' => 'hill-giant'],
+            ['name' => 'Wyvern', 'url' => '/api/monsters/wyvern', 'index' => 'wyvern'],
+            ['name' => 'Manticore', 'url' => '/api/monsters/manticore', 'index' => 'manticore'],
+            ['name' => 'Ettin', 'url' => '/api/monsters/ettin', 'index' => 'ettin'],
+            ['name' => 'Cyclops', 'url' => '/api/monsters/cyclops', 'index' => 'cyclops'],
+            ['name' => 'Hydra', 'url' => '/api/monsters/hydra', 'index' => 'hydra'],
                 
-                // Hard (CR 8-12)
-                ['name' => 'Dragon', 'url' => '/api/monsters/dragon', 'index' => 'dragon'],
-                ['name' => 'Giant', 'url' => '/api/monsters/giant', 'index' => 'giant'],
-                ['name' => 'Demon', 'url' => '/api/monsters/demon', 'index' => 'demon'],
-                ['name' => 'Devil', 'url' => '/api/monsters/devil', 'index' => 'devil'],
-                ['name' => 'Lich', 'url' => '/api/monsters/lich', 'index' => 'lich'],
+            // Hard (CR 8-12)
+            ['name' => 'Dragon', 'url' => '/api/monsters/dragon', 'index' => 'dragon'],
+            ['name' => 'Giant', 'url' => '/api/monsters/giant', 'index' => 'giant'],
+            ['name' => 'Demon', 'url' => '/api/monsters/demon', 'index' => 'demon'],
+            ['name' => 'Devil', 'url' => '/api/monsters/devil', 'index' => 'devil'],
+            ['name' => 'Lich', 'url' => '/api/monsters/lich', 'index' => 'lich'],
+            ['name' => 'Beholder', 'url' => '/api/monsters/beholder', 'index' => 'beholder'],
+            ['name' => 'Mind Flayer', 'url' => '/api/monsters/mind-flayer', 'index' => 'mind-flayer'],
+            ['name' => 'Vampire', 'url' => '/api/monsters/vampire', 'index' => 'vampire'],
                 
-                // Deadly (CR 13+)
-                ['name' => 'Ancient Dragon', 'url' => '/api/monsters/ancient-dragon', 'index' => 'ancient-dragon'],
-                ['name' => 'Tarrasque', 'url' => '/api/monsters/tarrasque', 'index' => 'tarrasque'],
-                ['name' => 'Balor', 'url' => '/api/monsters/balor', 'index' => 'balor'],
-                ['name' => 'Pit Fiend', 'url' => '/api/monsters/pit-fiend', 'index' => 'pit-fiend'],
-                ['name' => 'Undead', 'url' => '/api/monsters/undead', 'index' => 'undead'],
-                ['name' => 'Construct', 'url' => '/api/monsters/construct', 'index' => 'construct']
+            // Deadly (CR 13+)
+            ['name' => 'Ancient Dragon', 'url' => '/api/monsters/ancient-dragon', 'index' => 'ancient-dragon'],
+            ['name' => 'Tarrasque', 'url' => '/api/monsters/tarrasque', 'index' => 'tarrasque'],
+            ['name' => 'Balor', 'url' => '/api/monsters/balor', 'index' => 'balor'],
+            ['name' => 'Pit Fiend', 'url' => '/api/monsters/pit-fiend', 'index' => 'pit-fiend'],
+            ['name' => 'Undead', 'url' => '/api/monsters/undead', 'index' => 'undead'],
+            ['name' => 'Construct', 'url' => '/api/monsters/construct', 'index' => 'construct'],
+            ['name' => 'Solar', 'url' => '/api/monsters/solar', 'index' => 'solar'],
+            ['name' => 'Empyrean', 'url' => '/api/monsters/empyrean', 'index' => 'empyrean'],
+            ['name' => 'Kraken', 'url' => '/api/monsters/kraken', 'index' => 'kraken']
             ]
         ];
     }
@@ -920,6 +964,51 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The manticore makes three attacks: one with its bite and two with its claws or three with its tail spikes.']
                 ]
             ],
+            'ettin' => [
+                'name' => 'Ettin',
+                'type' => 'giant',
+                'challenge_rating' => '4',
+                'hit_points' => '85 (10d10 + 30)',
+                'armor_class' => '12 (natural armor)',
+                'speed' => '40 ft.',
+                'abilities' => [
+                    'str' => 21, 'dex' => 8, 'con' => 17,
+                    'int' => 6, 'wis' => 10, 'cha' => 8
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The ettin makes two attacks: one with its battleaxe and one with its morningstar.']
+                ]
+            ],
+            'cyclops' => [
+                'name' => 'Cyclops',
+                'type' => 'giant',
+                'challenge_rating' => '6',
+                'hit_points' => '138 (12d12 + 60)',
+                'armor_class' => '14 (natural armor)',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 22, 'dex' => 11, 'con' => 20,
+                    'int' => 8, 'wis' => 6, 'cha' => 10
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The cyclops makes two greatclub attacks.']
+                ]
+            ],
+            'hydra' => [
+                'name' => 'Hydra',
+                'type' => 'monstrosity',
+                'challenge_rating' => '8',
+                'hit_points' => '172 (15d12 + 75)',
+                'armor_class' => '15 (natural armor)',
+                'speed' => '30 ft., swim 30 ft.',
+                'abilities' => [
+                    'str' => 20, 'dex' => 12, 'con' => 20,
+                    'int' => 2, 'wis' => 10, 'cha' => 7
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The hydra makes as many bite attacks as it has heads.']
+                ]
+            ],
             
             // Hard (CR 8-12)
             'dragon' => [
@@ -995,6 +1084,51 @@ class EnemyGenerator {
                 ],
                 'actions' => [
                     ['name' => 'Paralyzing Touch', 'desc' => 'Melee Spell Attack: +12 to hit, reach 5 ft., one creature. Hit: 10 (3d6) cold damage.']
+                ]
+            ],
+            'beholder' => [
+                'name' => 'Beholder',
+                'type' => 'aberration',
+                'challenge_rating' => '13',
+                'hit_points' => '180 (19d10 + 76)',
+                'armor_class' => '18 (natural armor)',
+                'speed' => '0 ft., fly 20 ft. (hover)',
+                'abilities' => [
+                    'str' => 10, 'dex' => 14, 'con' => 18,
+                    'int' => 17, 'wis' => 15, 'cha' => 17
+                ],
+                'actions' => [
+                    ['name' => 'Eye Rays', 'desc' => 'The beholder shoots three of the following magical eye rays at random (reroll duplicates), choosing one to three targets it can see within 120 feet of it.']
+                ]
+            ],
+            'mind-flayer' => [
+                'name' => 'Mind Flayer',
+                'type' => 'aberration',
+                'challenge_rating' => '7',
+                'hit_points' => '71 (13d8 + 13)',
+                'armor_class' => '15 (breastplate)',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 15, 'dex' => 12, 'con' => 13,
+                    'int' => 19, 'wis' => 17, 'cha' => 17
+                ],
+                'actions' => [
+                    ['name' => 'Tentacles', 'desc' => 'Melee Weapon Attack: +7 to hit, reach 5 ft., one creature. Hit: 15 (2d10 + 4) psychic damage.']
+                ]
+            ],
+            'vampire' => [
+                'name' => 'Vampire',
+                'type' => 'undead',
+                'challenge_rating' => '13',
+                'hit_points' => '144 (17d8 + 68)',
+                'armor_class' => '16 (natural armor)',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 18, 'dex' => 18, 'con' => 18,
+                    'int' => 17, 'wis' => 15, 'cha' => 18
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The vampire makes two attacks, only one of which can be a bite attack.']
                 ]
             ],
             
@@ -1087,6 +1221,51 @@ class EnemyGenerator {
                 ],
                 'actions' => [
                     ['name' => 'Multiattack', 'desc' => 'The construct makes two attacks: one with its slam and one with its fist.']
+                ]
+            ],
+            'solar' => [
+                'name' => 'Solar',
+                'type' => 'celestial',
+                'challenge_rating' => '21',
+                'hit_points' => '243 (18d12 + 126)',
+                'armor_class' => '21 (natural armor)',
+                'speed' => '50 ft., fly 150 ft.',
+                'abilities' => [
+                    'str' => 26, 'dex' => 22, 'con' => 26,
+                    'int' => 25, 'wis' => 25, 'cha' => 30
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The solar makes two greatsword attacks.']
+                ]
+            ],
+            'empyrean' => [
+                'name' => 'Empyrean',
+                'type' => 'celestial',
+                'challenge_rating' => '23',
+                'hit_points' => '313 (19d12 + 190)',
+                'armor_class' => '22 (natural armor)',
+                'speed' => '50 ft., fly 50 ft., swim 50 ft.',
+                'abilities' => [
+                    'str' => 30, 'dex' => 21, 'con' => 30,
+                    'int' => 21, 'wis' => 22, 'cha' => 27
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The empyrean makes three attacks: two with its fist and one with its maul.']
+                ]
+            ],
+            'kraken' => [
+                'name' => 'Kraken',
+                'type' => 'monstrosity',
+                'challenge_rating' => '23',
+                'hit_points' => '472 (27d20 + 189)',
+                'armor_class' => '18 (natural armor)',
+                'speed' => '20 ft., swim 60 ft.',
+                'abilities' => [
+                    'str' => 30, 'dex' => 11, 'con' => 25,
+                    'int' => 22, 'wis' => 18, 'cha' => 20
+                ],
+                'actions' => [
+                    ['name' => 'Multiattack', 'desc' => 'The kraken makes three tentacle attacks, each of which can be replaced by one use of Fling.']
                 ]
             ]
         ];
