@@ -314,13 +314,17 @@ class AiService {
         
         if (empty($available_apis)) {
             logMessage('ERROR', 'AI API: Нет доступных API ключей');
-            return null;
+            return [
+                'error' => 'AI API недоступен',
+                'message' => 'Нет доступных API ключей',
+                'details' => 'Проверьте настройки API ключей в config.php'
+            ];
         }
         
         // Пробуем предпочтительный API (DeepSeek)
         if (isset($available_apis['deepseek'])) {
             $response = $this->callSpecificApi('deepseek', $prompt);
-            if ($response) {
+            if ($response && !isset($response['error'])) {
                 logMessage('INFO', 'AI API: Успешно использован DeepSeek');
                 return $response;
             }
@@ -330,7 +334,7 @@ class AiService {
         foreach ($available_apis as $api_name => $api_key) {
             if ($api_name !== 'deepseek') {
                 $response = $this->callSpecificApi($api_name, $prompt);
-                if ($response) {
+                if ($response && !isset($response['error'])) {
                     logMessage('INFO', "AI API: Успешно использован {$api_name}");
                     return $response;
                 }
@@ -338,7 +342,11 @@ class AiService {
         }
         
         logMessage('ERROR', 'AI API: Все доступные API недоступны');
-        return null;
+        return [
+            'error' => 'AI API недоступен',
+            'message' => 'Все доступные API недоступны',
+            'details' => 'Проверьте: 1) Подключение к интернету, 2) API ключи, 3) SSL настройки'
+        ];
     }
     
     /**
@@ -348,7 +356,11 @@ class AiService {
         $api_key = $this->api_keys[$api_name] ?? '';
         if (!$api_key) {
             logMessage('WARNING', "AI API: API ключ для {$api_name} не настроен");
-            return null;
+            return [
+                'error' => 'AI API недоступен',
+                'message' => "API ключ для {$api_name} не настроен",
+                'details' => 'Проверьте настройки API ключей в config.php'
+            ];
         }
         
         logMessage('INFO', "AI API: Попытка вызова {$api_name}");
@@ -362,7 +374,11 @@ class AiService {
                 return $this->callGoogleApi($prompt, $api_key);
             default:
                 logMessage('WARNING', "AI API: Неизвестный API: {$api_name}");
-                return null;
+                return [
+                    'error' => 'AI API недоступен',
+                    'message' => "Неизвестный API: {$api_name}",
+                    'details' => 'Поддерживаются только DeepSeek, OpenAI и Google API'
+                ];
         }
     }
     
@@ -380,7 +396,25 @@ class AiService {
             'temperature' => 0.8
         ];
         
-        return $this->makeApiRequest('https://api.deepseek.com/v1/chat/completions', $data, $api_key);
+        $response = $this->makeApiRequest('https://api.deepseek.com/v1/chat/completions', $data, $api_key);
+        if ($response === null) {
+            return [
+                'error' => 'AI API недоступен',
+                'message' => 'DeepSeek API недоступен',
+                'details' => 'Проверьте подключение к интернету и API ключ'
+            ];
+        }
+        
+        // Извлекаем текст ответа
+        if (isset($response['choices'][0]['message']['content'])) {
+            return trim($response['choices'][0]['message']['content']);
+        }
+        
+        return [
+            'error' => 'AI API недоступен',
+            'message' => 'DeepSeek API вернул неожиданный ответ',
+            'details' => 'Проверьте API ключ и попробуйте снова'
+        ];
     }
     
     /**
@@ -397,7 +431,25 @@ class AiService {
             'temperature' => 0.8
         ];
         
-        return $this->makeApiRequest('https://api.openai.com/v1/chat/completions', $data, $api_key);
+        $response = $this->makeApiRequest('https://api.openai.com/v1/chat/completions', $data, $api_key);
+        if ($response === null) {
+            return [
+                'error' => 'AI API недоступен',
+                'message' => 'OpenAI API недоступен',
+                'details' => 'Проверьте подключение к интернету и API ключ'
+            ];
+        }
+        
+        // Извлекаем текст ответа
+        if (isset($response['choices'][0]['message']['content'])) {
+            return trim($response['choices'][0]['message']['content']);
+        }
+        
+        return [
+            'error' => 'AI API недоступен',
+            'message' => 'OpenAI API вернул неожиданный ответ',
+            'details' => 'Проверьте API ключ и попробуйте снова'
+        ];
     }
     
     /**
@@ -419,7 +471,25 @@ class AiService {
             ]
         ];
         
-        return $this->makeApiRequest("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={$api_key}", $data);
+        $response = $this->makeApiRequest("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={$api_key}", $data);
+        if ($response === null) {
+            return [
+                'error' => 'AI API недоступен',
+                'message' => 'Google API недоступен',
+                'details' => 'Проверьте подключение к интернету и API ключ'
+            ];
+        }
+        
+        // Извлекаем текст ответа
+        if (isset($response['candidates'][0]['content']['parts'][0]['text'])) {
+            return trim($response['candidates'][0]['content']['parts'][0]['text']);
+        }
+        
+        return [
+            'error' => 'AI API недоступен',
+            'message' => 'Google API вернул неожиданный ответ',
+            'details' => 'Проверьте API ключ и попробуйте снова'
+        ];
     }
     
     /**
@@ -431,22 +501,12 @@ class AiService {
             return null;
         }
         
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Увеличиваем таймаут
-        curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/2.0');
-        
-        // Критически важные настройки SSL для обхода проблем
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
-        curl_setopt($ch, CURLOPT_USE_SSL, CURLUSESSL_ALL);
-        
-        // Дополнительные настройки для Windows
-        curl_setopt($ch, CURLOPT_CAINFO, null);
-        curl_setopt($ch, CURLOPT_CAPATH, null);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         
         // Добавляем заголовки
         $headers = ['Content-Type: application/json'];
@@ -458,52 +518,20 @@ class AiService {
         // Выполняем запрос
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        $info = curl_getinfo($ch);
         curl_close($ch);
         
         // Логируем детальную информацию
         logMessage('INFO', "AI API запрос к: {$url}, HTTP код: {$httpCode}");
         
-        if ($response === false) {
-            logMessage('ERROR', "AI API cURL ошибка: {$error} для URL: {$url}");
-            return null;
+        if ($httpCode === 200 && $response) {
+            $result = json_decode($response, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return $result;
+            }
         }
         
-        if ($httpCode !== 200) {
-            logMessage('ERROR', "AI API HTTP ошибка: {$httpCode} для URL: {$url}");
-            logMessage('ERROR', "AI API ответ: {$response}");
-            return null;
-        }
-        
-        $result = json_decode($response, true);
-        
-        // Проверяем, что JSON декодировался корректно
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            logMessage('ERROR', 'AI API вернул неверный JSON: ' . json_last_error_msg());
-            logMessage('ERROR', 'AI API сырой ответ: ' . substr($response, 0, 500));
-            return null;
-        }
-        
-        // Извлекаем текст ответа в зависимости от API
-        $ai_text = null;
-        if (isset($result['choices'][0]['message']['content'])) {
-            $ai_text = trim($result['choices'][0]['message']['content']);
-        } elseif (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
-            $ai_text = trim($result['candidates'][0]['content']['parts'][0]['text']);
-        }
-        
-        if (!$ai_text) {
-            logMessage('WARNING', 'AI API не вернул текстовый ответ');
-            logMessage('DEBUG', 'AI API структура ответа: ' . json_encode($result, JSON_UNESCAPED_UNICODE));
-            return null;
-        }
-        
-        // Очищаем текст от потенциально проблемных символов
-        $ai_text = $this->cleanAiResponse($ai_text);
-        
-        logMessage('INFO', 'AI API успешно вернул ответ длиной: ' . strlen($ai_text));
-        return $ai_text;
+        logMessage('ERROR', "AI API ошибка: HTTP {$httpCode} для URL: {$url}");
+        return null;
     }
     
     /**
