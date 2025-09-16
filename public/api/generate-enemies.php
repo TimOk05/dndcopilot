@@ -148,7 +148,7 @@ class EnemyGenerator {
             }
         }
         
-        // Возвращаем null - это приведет к ошибке (NO_FALLBACK политика)
+        // NO_FALLBACK политика: возвращаем null при недоступности API
         logMessage('ERROR', "EnemyGenerator: API недоступен после всех попыток");
         return null;
     }
@@ -1050,7 +1050,71 @@ class EnemyGenerator {
     private function makeRequest($url) {
         logMessage('INFO', "EnemyGenerator: makeRequest для URL: $url");
         
-        // Используем file_get_contents вместо cURL
+        // Пробуем сначала cURL, если доступен
+        if (function_exists('curl_init')) {
+            return $this->makeCurlRequest($url);
+        }
+        
+        // Fallback на file_get_contents
+        return $this->makeFileGetContentsRequest($url);
+    }
+    
+    /**
+     * Выполнение запроса через cURL
+     */
+    private function makeCurlRequest($url) {
+        logMessage('INFO', "EnemyGenerator: Используем cURL для запроса");
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/1.0');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+        
+        $start_time = microtime(true);
+        $response = curl_exec($ch);
+        $end_time = microtime(true);
+        
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+        
+        $request_time = round(($end_time - $start_time) * 1000, 2);
+        logMessage('INFO', "EnemyGenerator: cURL запрос завершен за {$request_time}ms, HTTP код: $httpCode");
+        
+        if ($response === false || !empty($error)) {
+            logMessage('ERROR', "EnemyGenerator: cURL failed: $error");
+            throw new Exception("Не удалось получить данные от API через cURL: $error");
+        }
+        
+        if ($httpCode !== 200) {
+            logMessage('ERROR', "EnemyGenerator: HTTP код $httpCode для $url");
+            throw new Exception("API вернул код ошибки: $httpCode");
+        }
+        
+        logMessage('INFO', "EnemyGenerator: Успешный cURL ответ, размер: " . strlen($response) . " байт");
+        
+        $decoded = json_decode($response, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            logMessage('INFO', "EnemyGenerator: JSON успешно декодирован через cURL");
+            return $decoded;
+        } else {
+            logMessage('ERROR', "EnemyGenerator: JSON decode error for $url: " . json_last_error_msg());
+            throw new Exception("Ошибка разбора ответа API");
+        }
+    }
+    
+    /**
+     * Выполнение запроса через file_get_contents
+     */
+    private function makeFileGetContentsRequest($url) {
+        logMessage('INFO', "EnemyGenerator: Используем file_get_contents для запроса");
+        
         $context = stream_context_create([
             'http' => [
                 'method' => 'GET',
@@ -1071,7 +1135,7 @@ class EnemyGenerator {
         $end_time = microtime(true);
         
         $request_time = round(($end_time - $start_time) * 1000, 2);
-        logMessage('INFO', "EnemyGenerator: Запрос завершен за {$request_time}ms");
+        logMessage('INFO', "EnemyGenerator: file_get_contents запрос завершен за {$request_time}ms");
         
         if ($response === false) {
             $error = error_get_last();
@@ -1080,15 +1144,16 @@ class EnemyGenerator {
             throw new Exception("Не удалось получить данные от API: $error_msg");
         }
         
-        logMessage('INFO', "EnemyGenerator: Успешный ответ, размер: " . strlen($response) . " байт");
-            $decoded = json_decode($response, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-            logMessage('INFO', "EnemyGenerator: JSON успешно декодирован");
-                return $decoded;
-            } else {
+        logMessage('INFO', "EnemyGenerator: Успешный file_get_contents ответ, размер: " . strlen($response) . " байт");
+        
+        $decoded = json_decode($response, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            logMessage('INFO', "EnemyGenerator: JSON успешно декодирован через file_get_contents");
+            return $decoded;
+        } else {
             logMessage('ERROR', "EnemyGenerator: JSON decode error for $url: " . json_last_error_msg());
-                throw new Exception("Ошибка разбора ответа API");
-            }
+            throw new Exception("Ошибка разбора ответа API");
+        }
     }
 
     /**
