@@ -2670,44 +2670,50 @@ function formatEnemiesFromApi(enemies) {
             // Проверяем, есть ли переведенные названия характеристик
             if (enemy.abilities.СИЛ) {
                 out += '<div class="ability-item"><strong>СИЛ:</strong> ' + enemy.abilities.СИЛ.value + ' (' + (enemy.abilities.СИЛ.modifier >= 0 ? '+' : '') + enemy.abilities.СИЛ.modifier + ')</div>';
-            } else if (enemy.abilities.str) {
-                const strMod = Math.floor((enemy.abilities.str - 10) / 2);
-                out += '<div class="ability-item"><strong>СИЛ:</strong> ' + enemy.abilities.str + ' (' + (strMod >= 0 ? '+' : '') + strMod + ')</div>';
+            } else if (enemy.abilities.str || enemy.abilities.strength) {
+                const strValue = enemy.abilities.str || enemy.abilities.strength;
+                const strMod = Math.floor((strValue - 10) / 2);
+                out += '<div class="ability-item"><strong>СИЛ:</strong> ' + strValue + ' (' + (strMod >= 0 ? '+' : '') + strMod + ')</div>';
             }
             
             if (enemy.abilities.ЛОВ) {
                 out += '<div class="ability-item"><strong>ЛОВ:</strong> ' + enemy.abilities.ЛОВ.value + ' (' + (enemy.abilities.ЛОВ.modifier >= 0 ? '+' : '') + enemy.abilities.ЛОВ.modifier + ')</div>';
-            } else if (enemy.abilities.dex) {
-                const dexMod = Math.floor((enemy.abilities.dex - 10) / 2);
-                out += '<div class="ability-item"><strong>ЛОВ:</strong> ' + enemy.abilities.dex + ' (' + (dexMod >= 0 ? '+' : '') + dexMod + ')</div>';
+            } else if (enemy.abilities.dex || enemy.abilities.dexterity) {
+                const dexValue = enemy.abilities.dex || enemy.abilities.dexterity;
+                const dexMod = Math.floor((dexValue - 10) / 2);
+                out += '<div class="ability-item"><strong>ЛОВ:</strong> ' + dexValue + ' (' + (dexMod >= 0 ? '+' : '') + dexMod + ')</div>';
             }
             
             if (enemy.abilities.ТЕЛ) {
                 out += '<div class="ability-item"><strong>ТЕЛ:</strong> ' + enemy.abilities.ТЕЛ.value + ' (' + (enemy.abilities.ТЕЛ.modifier >= 0 ? '+' : '') + enemy.abilities.ТЕЛ.modifier + ')</div>';
-            } else if (enemy.abilities.con) {
-                const conMod = Math.floor((enemy.abilities.con - 10) / 2);
-                out += '<div class="ability-item"><strong>ТЕЛ:</strong> ' + enemy.abilities.con + ' (' + (conMod >= 0 ? '+' : '') + conMod + ')</div>';
+            } else if (enemy.abilities.con || enemy.abilities.constitution) {
+                const conValue = enemy.abilities.con || enemy.abilities.constitution;
+                const conMod = Math.floor((conValue - 10) / 2);
+                out += '<div class="ability-item"><strong>ТЕЛ:</strong> ' + conValue + ' (' + (conMod >= 0 ? '+' : '') + conMod + ')</div>';
             }
             
             if (enemy.abilities.ИНТ) {
                 out += '<div class="ability-item"><strong>ИНТ:</strong> ' + enemy.abilities.ИНТ.value + ' (' + (enemy.abilities.ИНТ.modifier >= 0 ? '+' : '') + enemy.abilities.ИНТ.modifier + ')</div>';
-            } else if (enemy.abilities.int) {
-                const intMod = Math.floor((enemy.abilities.int - 10) / 2);
-                out += '<div class="ability-item"><strong>ИНТ:</strong> ' + enemy.abilities.int + ' (' + (intMod >= 0 ? '+' : '') + intMod + ')</div>';
+            } else if (enemy.abilities.int || enemy.abilities.intelligence) {
+                const intValue = enemy.abilities.int || enemy.abilities.intelligence;
+                const intMod = Math.floor((intValue - 10) / 2);
+                out += '<div class="ability-item"><strong>ИНТ:</strong> ' + intValue + ' (' + (intMod >= 0 ? '+' : '') + intMod + ')</div>';
             }
             
             if (enemy.abilities.МДР) {
                 out += '<div class="ability-item"><strong>МДР:</strong> ' + enemy.abilities.МДР.value + ' (' + (enemy.abilities.МДР.modifier >= 0 ? '+' : '') + enemy.abilities.МДР.modifier + ')</div>';
-            } else if (enemy.abilities.wis) {
-                const wisMod = Math.floor((enemy.abilities.wis - 10) / 2);
-                out += '<div class="ability-item"><strong>МДР:</strong> ' + enemy.abilities.wis + ' (' + (wisMod >= 0 ? '+' : '') + wisMod + ')</div>';
+            } else if (enemy.abilities.wis || enemy.abilities.wisdom) {
+                const wisValue = enemy.abilities.wis || enemy.abilities.wisdom;
+                const wisMod = Math.floor((wisValue - 10) / 2);
+                out += '<div class="ability-item"><strong>МДР:</strong> ' + wisValue + ' (' + (wisMod >= 0 ? '+' : '') + wisMod + ')</div>';
             }
             
             if (enemy.abilities.ХАР) {
                 out += '<div class="ability-item"><strong>ХАР:</strong> ' + enemy.abilities.ХАР.value + ' (' + (enemy.abilities.ХАР.modifier >= 0 ? '+' : '') + enemy.abilities.ХАР.modifier + ')</div>';
-            } else if (enemy.abilities.cha) {
-                const chaMod = Math.floor((enemy.abilities.cha - 10) / 2);
-                out += '<div class="ability-item"><strong>ХАР:</strong> ' + enemy.abilities.cha + ' (' + (chaMod >= 0 ? '+' : '') + chaMod + ')</div>';
+            } else if (enemy.abilities.cha || enemy.abilities.charisma) {
+                const chaValue = enemy.abilities.cha || enemy.abilities.charisma;
+                const chaMod = Math.floor((chaValue - 10) / 2);
+                out += '<div class="ability-item"><strong>ХАР:</strong> ' + chaValue + ' (' + (chaMod >= 0 ? '+' : '') + chaMod + ')</div>';
             }
             
             out += '</div>';
