@@ -750,6 +750,7 @@ class EnemyGenerator {
                 'hit_points' => '5 (2d6 - 2)',
                 'armor_class' => '12',
                 'speed' => '30 ft.',
+                'environment' => 'forest, hill, mountain',
                 'abilities' => [
                     'str' => 7, 'dex' => 15, 'con' => 9,
                     'int' => 8, 'wis' => 7, 'cha' => 8
@@ -765,6 +766,7 @@ class EnemyGenerator {
                 'hit_points' => '7 (2d6)',
                 'armor_class' => '15 (leather armor, shield)',
                 'speed' => '30 ft.',
+                'environment' => 'forest, hill, mountain',
                 'abilities' => [
                     'str' => 8, 'dex' => 14, 'con' => 10,
                     'int' => 10, 'wis' => 8, 'cha' => 8
@@ -780,6 +782,7 @@ class EnemyGenerator {
                 'hit_points' => '15 (2d8 + 6)',
                 'armor_class' => '13 (hide armor)',
                 'speed' => '30 ft.',
+                'environment' => 'forest, hill, mountain',
                 'abilities' => [
                     'str' => 16, 'dex' => 12, 'con' => 16,
                     'int' => 7, 'wis' => 11, 'cha' => 10
@@ -795,6 +798,7 @@ class EnemyGenerator {
                 'hit_points' => '11 (2d8 + 2)',
                 'armor_class' => '12 (leather armor)',
                 'speed' => '30 ft.',
+                'environment' => 'forest, hill, urban',
                 'abilities' => [
                     'str' => 11, 'dex' => 12, 'con' => 12,
                     'int' => 12, 'wis' => 10, 'cha' => 10
@@ -803,13 +807,7 @@ class EnemyGenerator {
                     ['name' => 'Scimitar', 'desc' => 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.']
                 ]
             ],
-            'cultist' => [
-                'name' => 'Cultist',
-                'type' => 'humanoid',
-                'challenge_rating' => '1/8',
-                'hit_points' => '9 (2d8)',
-                'armor_class' => '12 (leather armor)',
-                'speed' => '30 ft.',
+            'environment' => 'urban, forest',
                 'abilities' => [
                     'str' => 11, 'dex' => 12, 'con' => 10,
                     'int' => 10, 'wis' => 11, 'cha' => 10
@@ -818,13 +816,7 @@ class EnemyGenerator {
                     ['name' => 'Scimitar', 'desc' => 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.']
                 ]
             ],
-            'skeleton' => [
-                'name' => 'Skeleton',
-                'type' => 'undead',
-                'challenge_rating' => '1/4',
-                'hit_points' => '13 (2d8 + 4)',
-                'armor_class' => '13 (armor scraps)',
-                'speed' => '30 ft.',
+            'environment' => 'forest, hill, mountain, urban',
                 'abilities' => [
                     'str' => 10, 'dex' => 14, 'con' => 15,
                     'int' => 6, 'wis' => 8, 'cha' => 5
@@ -833,13 +825,7 @@ class EnemyGenerator {
                     ['name' => 'Shortsword', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.']
                 ]
             ],
-            'zombie' => [
-                'name' => 'Zombie',
-                'type' => 'undead',
-                'challenge_rating' => '1/4',
-                'hit_points' => '22 (3d8 + 9)',
-                'armor_class' => '8',
-                'speed' => '20 ft.',
+            'environment' => 'forest, hill, mountain, urban',
                 'abilities' => [
                     'str' => 13, 'dex' => 6, 'con' => 16,
                     'int' => 3, 'wis' => 6, 'cha' => 5
@@ -848,13 +834,7 @@ class EnemyGenerator {
                     ['name' => 'Slam', 'desc' => 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) bludgeoning damage.']
                 ]
             ],
-            'wolf' => [
-                'name' => 'Wolf',
-                'type' => 'beast',
-                'challenge_rating' => '1/4',
-                'hit_points' => '11 (2d8 + 2)',
-                'armor_class' => '13 (natural armor)',
-                'speed' => '40 ft.',
+            'environment' => 'forest, hill, grassland',
                 'abilities' => [
                     'str' => 12, 'dex' => 15, 'con' => 12,
                     'int' => 3, 'wis' => 12, 'cha' => 6
@@ -863,13 +843,7 @@ class EnemyGenerator {
                     ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) piercing damage.']
                 ]
             ],
-            'bear' => [
-                'name' => 'Bear',
-                'type' => 'beast',
-                'challenge_rating' => '1',
-                'hit_points' => '19 (3d8 + 6)',
-                'armor_class' => '11 (natural armor)',
-                'speed' => '40 ft., climb 30 ft.',
+            'environment' => 'forest, hill, mountain',
                 'abilities' => [
                     'str' => 15, 'dex' => 10, 'con' => 14,
                     'int' => 2, 'wis' => 13, 'cha' => 7
@@ -878,13 +852,7 @@ class EnemyGenerator {
                     ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) piercing damage.']
                 ]
             ],
-            'spider' => [
-                'name' => 'Spider',
-                'type' => 'beast',
-                'challenge_rating' => '0',
-                'hit_points' => '1 (1d4 - 1)',
-                'armor_class' => '12',
-                'speed' => '20 ft., climb 20 ft.',
+            'environment' => 'forest, hill, mountain',
                 'abilities' => [
                     'str' => 2, 'dex' => 14, 'con' => 8,
                     'int' => 1, 'wis' => 10, 'cha' => 2
@@ -895,13 +863,7 @@ class EnemyGenerator {
             ],
             
             // Medium (CR 4-7)
-            'ogre' => [
-                'name' => 'Ogre',
-                'type' => 'giant',
-                'challenge_rating' => '2',
-                'hit_points' => '59 (7d10 + 21)',
-                'armor_class' => '11 (hide armor)',
-                'speed' => '40 ft.',
+            'environment' => 'hill, mountain',
                 'abilities' => [
                     'str' => 19, 'dex' => 8, 'con' => 16,
                     'int' => 5, 'wis' => 7, 'cha' => 7
@@ -910,13 +872,7 @@ class EnemyGenerator {
                     ['name' => 'Greatclub', 'desc' => 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) bludgeoning damage.']
                 ]
             ],
-            'troll' => [
-                'name' => 'Troll',
-                'type' => 'giant',
-                'challenge_rating' => '5',
-                'hit_points' => '84 (8d10 + 40)',
-                'armor_class' => '15 (natural armor)',
-                'speed' => '30 ft.',
+            'environment' => 'hill, mountain',
                 'abilities' => [
                     'str' => 18, 'dex' => 13, 'con' => 20,
                     'int' => 7, 'wis' => 9, 'cha' => 7
@@ -925,13 +881,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The troll makes three attacks: one with its bite and two with its claws.']
                 ]
             ],
-            'hill-giant' => [
-                'name' => 'Hill Giant',
-                'type' => 'giant',
-                'challenge_rating' => '5',
-                'hit_points' => '105 (10d12 + 40)',
-                'armor_class' => '13 (natural armor)',
-                'speed' => '40 ft.',
+            'environment' => 'hill, mountain',
                 'abilities' => [
                     'str' => 21, 'dex' => 8, 'con' => 19,
                     'int' => 5, 'wis' => 9, 'cha' => 6
@@ -940,13 +890,7 @@ class EnemyGenerator {
                     ['name' => 'Greatclub', 'desc' => 'Melee Weapon Attack: +8 to hit, reach 10 ft., one target. Hit: 18 (3d8 + 5) bludgeoning damage.']
                 ]
             ],
-            'wyvern' => [
-                'name' => 'Wyvern',
-                'type' => 'dragon',
-                'challenge_rating' => '6',
-                'hit_points' => '110 (13d10 + 39)',
-                'armor_class' => '13 (natural armor)',
-                'speed' => '20 ft., fly 80 ft.',
+            'environment' => 'mountain, hill',
                 'abilities' => [
                     'str' => 19, 'dex' => 10, 'con' => 16,
                     'int' => 5, 'wis' => 12, 'cha' => 6
@@ -955,13 +899,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The wyvern makes two attacks: one with its bite and one with its stinger. While flying, it can use its claws in place of one other attack.']
                 ]
             ],
-            'manticore' => [
-                'name' => 'Manticore',
-                'type' => 'monstrosity',
-                'challenge_rating' => '3',
-                'hit_points' => '68 (8d10 + 24)',
-                'armor_class' => '14 (natural armor)',
-                'speed' => '30 ft., fly 50 ft.',
+            'environment' => 'desert, mountain',
                 'abilities' => [
                     'str' => 17, 'dex' => 16, 'con' => 17,
                     'int' => 7, 'wis' => 12, 'cha' => 8
@@ -970,13 +908,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The manticore makes three attacks: one with its bite and two with its claws or three with its tail spikes.']
                 ]
             ],
-            'ettin' => [
-                'name' => 'Ettin',
-                'type' => 'giant',
-                'challenge_rating' => '4',
-                'hit_points' => '85 (10d10 + 30)',
-                'armor_class' => '12 (natural armor)',
-                'speed' => '40 ft.',
+            'environment' => 'hill, mountain',
                 'abilities' => [
                     'str' => 21, 'dex' => 8, 'con' => 17,
                     'int' => 6, 'wis' => 10, 'cha' => 8
@@ -985,13 +917,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The ettin makes two attacks: one with its battleaxe and one with its morningstar.']
                 ]
             ],
-            'cyclops' => [
-                'name' => 'Cyclops',
-                'type' => 'giant',
-                'challenge_rating' => '6',
-                'hit_points' => '138 (12d12 + 60)',
-                'armor_class' => '14 (natural armor)',
-                'speed' => '30 ft.',
+            'environment' => 'mountain, hill',
                 'abilities' => [
                     'str' => 22, 'dex' => 11, 'con' => 20,
                     'int' => 8, 'wis' => 6, 'cha' => 10
@@ -1000,13 +926,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The cyclops makes two greatclub attacks.']
                 ]
             ],
-            'hydra' => [
-                'name' => 'Hydra',
-                'type' => 'monstrosity',
-                'challenge_rating' => '8',
-                'hit_points' => '172 (15d12 + 75)',
-                'armor_class' => '15 (natural armor)',
-                'speed' => '30 ft., swim 30 ft.',
+            'environment' => 'swamp, coastal',
                 'abilities' => [
                     'str' => 20, 'dex' => 12, 'con' => 20,
                     'int' => 2, 'wis' => 10, 'cha' => 7
@@ -1017,13 +937,7 @@ class EnemyGenerator {
             ],
             
             // Hard (CR 8-12)
-            'dragon' => [
-                'name' => 'Dragon',
-                'type' => 'dragon',
-                'challenge_rating' => '8',
-                'hit_points' => '200 (16d12 + 96)',
-                'armor_class' => '18 (natural armor)',
-                'speed' => '40 ft., fly 80 ft.',
+            'environment' => 'mountain, hill',
                 'abilities' => [
                     'str' => 23, 'dex' => 10, 'con' => 21,
                     'int' => 14, 'wis' => 13, 'cha' => 17
@@ -1032,13 +946,7 @@ class EnemyGenerator {
                     ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +11 to hit, reach 10 ft., one target. Hit: 17 (2d10 + 6) piercing damage.']
                 ]
             ],
-            'giant' => [
-                'name' => 'Giant',
-                'type' => 'giant',
-                'challenge_rating' => '9',
-                'hit_points' => '162 (13d12 + 78)',
-                'armor_class' => '16 (chain mail)',
-                'speed' => '40 ft.',
+            'environment' => 'mountain, hill',
                 'abilities' => [
                     'str' => 25, 'dex' => 8, 'con' => 22,
                     'int' => 6, 'wis' => 10, 'cha' => 7
@@ -1047,13 +955,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The giant makes two greatsword attacks.']
                 ]
             ],
-            'demon' => [
-                'name' => 'Demon',
-                'type' => 'fiend',
-                'challenge_rating' => '10',
-                'hit_points' => '200 (16d10 + 112)',
-                'armor_class' => '19 (natural armor)',
-                'speed' => '30 ft., fly 60 ft.',
+            'environment' => 'underdark, mountain',
                 'abilities' => [
                     'str' => 22, 'dex' => 15, 'con' => 24,
                     'int' => 12, 'wis' => 13, 'cha' => 20
@@ -1062,13 +964,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The demon makes three attacks: one with its bite, one with its claws, and one with its tail.']
                 ]
             ],
-            'devil' => [
-                'name' => 'Devil',
-                'type' => 'fiend',
-                'challenge_rating' => '11',
-                'hit_points' => '200 (16d10 + 112)',
-                'armor_class' => '19 (natural armor)',
-                'speed' => '30 ft., fly 60 ft.',
+            'environment' => 'underdark, mountain',
                 'abilities' => [
                     'str' => 22, 'dex' => 15, 'con' => 24,
                     'int' => 12, 'wis' => 13, 'cha' => 20
@@ -1077,13 +973,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The devil makes three attacks: one with its bite, one with its claws, and one with its tail.']
                 ]
             ],
-            'lich' => [
-                'name' => 'Lich',
-                'type' => 'undead',
-                'challenge_rating' => '12',
-                'hit_points' => '135 (18d8 + 54)',
-                'armor_class' => '17 (natural armor)',
-                'speed' => '30 ft.',
+            'environment' => 'underdark, urban',
                 'abilities' => [
                     'str' => 11, 'dex' => 16, 'con' => 16,
                     'int' => 20, 'wis' => 14, 'cha' => 16
@@ -1092,13 +982,7 @@ class EnemyGenerator {
                     ['name' => 'Paralyzing Touch', 'desc' => 'Melee Spell Attack: +12 to hit, reach 5 ft., one creature. Hit: 10 (3d6) cold damage.']
                 ]
             ],
-            'beholder' => [
-                'name' => 'Beholder',
-                'type' => 'aberration',
-                'challenge_rating' => '13',
-                'hit_points' => '180 (19d10 + 76)',
-                'armor_class' => '18 (natural armor)',
-                'speed' => '0 ft., fly 20 ft. (hover)',
+            'environment' => 'underdark',
                 'abilities' => [
                     'str' => 10, 'dex' => 14, 'con' => 18,
                     'int' => 17, 'wis' => 15, 'cha' => 17
@@ -1107,13 +991,7 @@ class EnemyGenerator {
                     ['name' => 'Eye Rays', 'desc' => 'The beholder shoots three of the following magical eye rays at random (reroll duplicates), choosing one to three targets it can see within 120 feet of it.']
                 ]
             ],
-            'mind-flayer' => [
-                'name' => 'Mind Flayer',
-                'type' => 'aberration',
-                'challenge_rating' => '7',
-                'hit_points' => '71 (13d8 + 13)',
-                'armor_class' => '15 (breastplate)',
-                'speed' => '30 ft.',
+            'environment' => 'underdark',
                 'abilities' => [
                     'str' => 15, 'dex' => 12, 'con' => 13,
                     'int' => 19, 'wis' => 17, 'cha' => 17
@@ -1122,13 +1000,7 @@ class EnemyGenerator {
                     ['name' => 'Tentacles', 'desc' => 'Melee Weapon Attack: +7 to hit, reach 5 ft., one creature. Hit: 15 (2d10 + 4) psychic damage.']
                 ]
             ],
-            'vampire' => [
-                'name' => 'Vampire',
-                'type' => 'undead',
-                'challenge_rating' => '13',
-                'hit_points' => '144 (17d8 + 68)',
-                'armor_class' => '16 (natural armor)',
-                'speed' => '30 ft.',
+            'environment' => 'urban, forest',
                 'abilities' => [
                     'str' => 18, 'dex' => 18, 'con' => 18,
                     'int' => 17, 'wis' => 15, 'cha' => 18
@@ -1139,13 +1011,7 @@ class EnemyGenerator {
             ],
             
             // Deadly (CR 13+)
-            'ancient-dragon' => [
-                'name' => 'Ancient Dragon',
-                'type' => 'dragon',
-                'challenge_rating' => '20',
-                'hit_points' => '546 (28d20 + 280)',
-                'armor_class' => '22 (natural armor)',
-                'speed' => '40 ft., fly 80 ft.',
+            'environment' => 'mountain, hill',
                 'abilities' => [
                     'str' => 30, 'dex' => 10, 'con' => 30,
                     'int' => 18, 'wis' => 15, 'cha' => 23
@@ -1154,13 +1020,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.']
                 ]
             ],
-            'tarrasque' => [
-                'name' => 'Tarrasque',
-                'type' => 'monstrosity',
-                'challenge_rating' => '30',
-                'hit_points' => '676 (33d20 + 330)',
-                'armor_class' => '25 (natural armor)',
-                'speed' => '40 ft.',
+            'environment' => 'desert, grassland',
                 'abilities' => [
                     'str' => 30, 'dex' => 11, 'con' => 30,
                     'int' => 3, 'wis' => 11, 'cha' => 11
@@ -1169,13 +1029,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The tarrasque can use its Frightful Presence. It then makes five attacks: one with its bite, two with its claws, one with its horns, and one with its tail.']
                 ]
             ],
-            'balor' => [
-                'name' => 'Balor',
-                'type' => 'fiend',
-                'challenge_rating' => '19',
-                'hit_points' => '262 (21d12 + 126)',
-                'armor_class' => '19 (natural armor)',
-                'speed' => '40 ft., fly 80 ft.',
+            'environment' => 'underdark, mountain',
                 'abilities' => [
                     'str' => 26, 'dex' => 15, 'con' => 22,
                     'int' => 20, 'wis' => 16, 'cha' => 22
@@ -1184,13 +1038,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The balor makes two attacks: one with its longsword and one with its whip.']
                 ]
             ],
-            'pit-fiend' => [
-                'name' => 'Pit Fiend',
-                'type' => 'fiend',
-                'challenge_rating' => '20',
-                'hit_points' => '300 (24d10 + 168)',
-                'armor_class' => '19 (natural armor)',
-                'speed' => '30 ft., fly 60 ft.',
+            'environment' => 'underdark, mountain',
                 'abilities' => [
                     'str' => 26, 'dex' => 14, 'con' => 24,
                     'int' => 22, 'wis' => 18, 'cha' => 24
@@ -1199,13 +1047,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The pit fiend makes four attacks: one with its bite, one with its claw, one with its mace, and one with its tail.']
                 ]
             ],
-            'undead' => [
-                'name' => 'Undead',
-                'type' => 'undead',
-                'challenge_rating' => '15',
-                'hit_points' => '200 (16d10 + 112)',
-                'armor_class' => '18 (natural armor)',
-                'speed' => '30 ft.',
+            'environment' => 'forest, hill, mountain, urban',
                 'abilities' => [
                     'str' => 20, 'dex' => 12, 'con' => 24,
                     'int' => 10, 'wis' => 13, 'cha' => 16
@@ -1214,13 +1056,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The undead makes two attacks: one with its bite and one with its claws.']
                 ]
             ],
-            'construct' => [
-                'name' => 'Construct',
-                'type' => 'construct',
-                'challenge_rating' => '16',
-                'hit_points' => '200 (16d10 + 112)',
-                'armor_class' => '20 (natural armor)',
-                'speed' => '30 ft.',
+            'environment' => 'urban, mountain',
                 'abilities' => [
                     'str' => 24, 'dex' => 8, 'con' => 24,
                     'int' => 3, 'wis' => 11, 'cha' => 1
@@ -1229,13 +1065,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The construct makes two attacks: one with its slam and one with its fist.']
                 ]
             ],
-            'solar' => [
-                'name' => 'Solar',
-                'type' => 'celestial',
-                'challenge_rating' => '21',
-                'hit_points' => '243 (18d12 + 126)',
-                'armor_class' => '21 (natural armor)',
-                'speed' => '50 ft., fly 150 ft.',
+            'environment' => 'mountain, hill',
                 'abilities' => [
                     'str' => 26, 'dex' => 22, 'con' => 26,
                     'int' => 25, 'wis' => 25, 'cha' => 30
@@ -1244,13 +1074,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The solar makes two greatsword attacks.']
                 ]
             ],
-            'empyrean' => [
-                'name' => 'Empyrean',
-                'type' => 'celestial',
-                'challenge_rating' => '23',
-                'hit_points' => '313 (19d12 + 190)',
-                'armor_class' => '22 (natural armor)',
-                'speed' => '50 ft., fly 50 ft., swim 50 ft.',
+            'environment' => 'mountain, hill',
                 'abilities' => [
                     'str' => 30, 'dex' => 21, 'con' => 30,
                     'int' => 21, 'wis' => 22, 'cha' => 27
@@ -1259,13 +1083,7 @@ class EnemyGenerator {
                     ['name' => 'Multiattack', 'desc' => 'The empyrean makes three attacks: two with its fist and one with its maul.']
                 ]
             ],
-            'kraken' => [
-                'name' => 'Kraken',
-                'type' => 'monstrosity',
-                'challenge_rating' => '23',
-                'hit_points' => '472 (27d20 + 189)',
-                'armor_class' => '18 (natural armor)',
-                'speed' => '20 ft., swim 60 ft.',
+            'environment' => 'coastal, aquatic',
                 'abilities' => [
                     'str' => 30, 'dex' => 11, 'con' => 25,
                     'int' => 22, 'wis' => 18, 'cha' => 20
