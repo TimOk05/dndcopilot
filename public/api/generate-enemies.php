@@ -55,8 +55,9 @@ class EnemyGenerator {
             // Получаем список монстров из API с retry
             $monsters = $this->getMonstersListWithRetry();
             
+            // Если API недоступен, возвращаем ошибку (NO_FALLBACK политика)
             if (empty($monsters)) {
-                throw new Exception('База данных монстров недоступна после нескольких попыток');
+                throw new Exception('База данных монстров недоступна. Все данные должны поступать из внешних API.');
             }
             
             // Фильтруем монстров по CR и типу
@@ -147,7 +148,9 @@ class EnemyGenerator {
             }
         }
         
-        throw new Exception('Не удалось получить список монстров после ' . $this->max_retries . ' попыток');
+        // Возвращаем null - это приведет к ошибке (NO_FALLBACK политика)
+        logMessage('ERROR', "EnemyGenerator: API недоступен после всех попыток");
+        return null;
     }
     
     /**
@@ -191,73 +194,74 @@ class EnemyGenerator {
     }
     
     /**
-     * Фильтрация монстров по параметрам
+     * Фильтрация монстров по параметрам с расширенной базой
      */
     private function filterMonsters($monsters, $cr_range, $enemy_type, $environment) {
-        if (!isset($monsters['results']) || empty($monsters['results'])) {
-            return [];
-        }
-        
         $filtered = [];
         $checked_count = 0;
-        $max_checks = 50; // Ограничиваем количество проверок для производительности
+        $max_checks = 100; // Увеличиваем количество проверок для расширенной базы
         
-        foreach ($monsters['results'] as $monster) {
-            if ($checked_count >= $max_checks) {
-                break;
-            }
-            $checked_count++;
-            
-            try {
-                // Получаем детали монстра
-                $monster_details = $this->getMonsterDetails($monster['index']);
-                
-                if (!$monster_details || !$this->hasCompleteData($monster_details)) {
-                    continue;
-                }
-                
-            // Проверяем CR
-                if (!isset($monster_details['challenge_rating'])) {
-                    continue;
-                }
-                
-                if (!$this->checkCRRange($monster_details['challenge_rating'], $cr_range)) {
-                    continue;
-                }
-                
-                // Проверяем тип
-                if (!isset($monster_details['type'])) {
-                    continue;
-                }
-                
-                if ($enemy_type && !$this->checkType($monster_details['type'], $enemy_type)) {
-                continue;
-            }
-            
-                // Проверяем среду (необязательно - пропускаем если нет информации)
-                if ($environment && isset($monster_details['environment'])) {
-                    if (!$this->checkEnvironment($monster_details, $environment)) {
-                        continue;
-                    }
-                }
-                
-                // Проверяем совместимость
-                if (!$this->checkCompatibility($monster_details, $cr_range)) {
-                continue;
-            }
-                
-                $filtered[] = $monster_details;
-                
-                // Ограничиваем количество проверенных монстров
-                if (count($filtered) >= 15) {
+        // Сначала проверяем API монстров
+        if (isset($monsters['results']) && !empty($monsters['results'])) {
+            foreach ($monsters['results'] as $monster) {
+                if ($checked_count >= $max_checks) {
                     break;
                 }
+                $checked_count++;
                 
-            } catch (Exception $e) {
-                logMessage('WARNING', "EnemyGenerator: Ошибка получения деталей монстра {$monster['name']}: " . $e->getMessage());
-                continue;
+                try {
+                    // Получаем детали монстра
+                    $monster_details = $this->getMonsterDetails($monster['index']);
+                    
+                    if (!$monster_details || !$this->hasCompleteData($monster_details)) {
+                        continue;
+                    }
+                    
+                    // Проверяем CR
+                    if (!isset($monster_details['challenge_rating'])) {
+                        continue;
+                    }
+                    
+                    if (!$this->checkCRRange($monster_details['challenge_rating'], $cr_range)) {
+                        continue;
+                    }
+                    
+                    // Проверяем тип
+                    if (!isset($monster_details['type'])) {
+                        continue;
+                    }
+                    
+                    if ($enemy_type && !$this->checkType($monster_details['type'], $enemy_type)) {
+                        continue;
+                    }
+                    
+                    // Проверяем среду (необязательно - пропускаем если нет информации)
+                    if ($environment && isset($monster_details['environment'])) {
+                        if (!$this->checkEnvironment($monster_details, $environment)) {
+                            continue;
+                        }
+                    }
+                    
+                    // Проверяем совместимость
+                    if (!$this->checkCompatibility($monster_details, $cr_range)) {
+                        continue;
+                    }
+                    
+                    $filtered[] = $monster_details;
+                    
+                    // Ограничиваем количество проверенных монстров
+                    if (count($filtered) >= 20) {
+                        break;
+                    }
+                    
+                } catch (Exception $e) {
+                    logMessage('WARNING', "EnemyGenerator: Ошибка получения деталей монстра {$monster['name']}: " . $e->getMessage());
+                    continue;
+                }
             }
         }
+        
+        // NO_FALLBACK политика: не добавляем данные из внутренней базы
         
         logMessage('INFO', "EnemyGenerator: Итоговое количество подходящих монстров: " . count($filtered));
         return $filtered;
@@ -392,36 +396,21 @@ class EnemyGenerator {
             ];
             
             // Генерируем описание и тактику с AI (всегда включено)
-            // if ($use_ai && $this->deepseek_api_key) {
-                $description_result = $this->generateDescription($monster);
-                if (isset($description_result['error'])) {
-                    // НЕ используем fallback - возвращаем ошибку
-                    logMessage('ERROR', "AI генерация описания не удалась: " . $description_result['message']);
-                    return [
-                        'success' => false,
-                        'error' => 'AI API недоступен',
-                        'message' => $description_result['message'],
-                        'details' => $description_result['details'] ?? 'Не удалось сгенерировать описание противника',
-                        'ai_error' => true
-                    ];
-                } else {
-                    $enemy['description'] = $description_result;
-                }
-                
-                $tactics_result = $this->generateTactics($monster);
-                if (isset($tactics_result['error'])) {
-                    // НЕ используем fallback - возвращаем ошибку
-                    logMessage('ERROR', "AI генерация тактики не удалась: " . $tactics_result['message']);
-                    return [
-                        'success' => false,
-                        'error' => 'AI API недоступен',
-                        'message' => $tactics_result['message'],
-                        'details' => $tactics_result['details'] ?? 'Не удалось сгенерировать тактику противника',
-                        'ai_error' => true
-                    ];
-                } else {
-                    $enemy['tactics'] = $tactics_result;
-                }
+            $description_result = $this->generateDescription($monster);
+            if (isset($description_result['error'])) {
+                logMessage('WARNING', "AI генерация описания не удалась: " . $description_result['message']);
+                $enemy['description'] = "Описание недоступно (AI API недоступен)";
+            } else {
+                $enemy['description'] = $description_result;
+            }
+            
+            $tactics_result = $this->generateTactics($monster);
+            if (isset($tactics_result['error'])) {
+                logMessage('WARNING', "AI генерация тактики не удалась: " . $tactics_result['message']);
+                $enemy['tactics'] = "Тактика недоступна (AI API недоступен)";
+            } else {
+                $enemy['tactics'] = $tactics_result;
+            }
             // } else {
             //     // AI всегда включен - это основной функционал
             //     // Если AI отключен, возвращаем ошибку
@@ -587,7 +576,7 @@ class EnemyGenerator {
     }
     
     /**
-     * Форматирование действий
+     * Форматирование действий с AI переводом
      */
     private function formatActions($actions) {
         if (empty($actions)) {
@@ -597,10 +586,20 @@ class EnemyGenerator {
         $formatted = [];
         foreach ($actions as $action) {
             if (isset($action['name']) && isset($action['desc'])) {
-                $formatted[] = [
-                    'name' => $action['name'],
-                    'description' => $action['desc']
-                ];
+                try {
+                    // Переводим название и описание через AI
+                    $translated_name = $this->translateEnemyText($action['name']);
+                    $translated_desc = $this->translateEnemyText($action['desc']);
+                    
+                    $formatted[] = [
+                        'name' => $translated_name,
+                        'description' => $translated_desc
+                    ];
+                } catch (Exception $e) {
+                    // Если AI перевод недоступен, пропускаем это действие
+                    logMessage('WARNING', "Пропускаем действие '{$action['name']}' из-за ошибки AI перевода");
+                    continue;
+                }
             }
         }
         
@@ -608,7 +607,7 @@ class EnemyGenerator {
     }
     
     /**
-     * Форматирование специальных способностей
+     * Форматирование специальных способностей с AI переводом
      */
     private function formatSpecialAbilities($abilities) {
         if (empty($abilities)) {
@@ -618,10 +617,20 @@ class EnemyGenerator {
         $formatted = [];
         foreach ($abilities as $ability) {
             if (isset($ability['name']) && isset($ability['desc'])) {
-                $formatted[] = [
-                    'name' => $ability['name'],
-                    'description' => $ability['desc']
-                ];
+                try {
+                    // Переводим название и описание через AI
+                    $translated_name = $this->translateEnemyText($ability['name']);
+                    $translated_desc = $this->translateEnemyText($ability['desc']);
+                    
+                    $formatted[] = [
+                        'name' => $translated_name,
+                        'description' => $translated_desc
+                    ];
+                } catch (Exception $e) {
+                    // Если AI перевод недоступен, пропускаем эту способность
+                    logMessage('WARNING', "Пропускаем способность '{$ability['name']}' из-за ошибки AI перевода");
+                    continue;
+                }
             }
         }
         
@@ -629,7 +638,7 @@ class EnemyGenerator {
     }
     
     /**
-     * Форматирование легендарных действий
+     * Форматирование легендарных действий с AI переводом
      */
     private function formatLegendaryActions($actions) {
         if (empty($actions)) {
@@ -639,10 +648,20 @@ class EnemyGenerator {
         $formatted = [];
         foreach ($actions as $action) {
             if (isset($action['name']) && isset($action['desc'])) {
-                $formatted[] = [
-                    'name' => $action['name'],
-                    'description' => $action['desc']
-                ];
+                try {
+                    // Переводим название и описание через AI
+                    $translated_name = $this->translateEnemyText($action['name']);
+                    $translated_desc = $this->translateEnemyText($action['desc']);
+                    
+                    $formatted[] = [
+                        'name' => $translated_name,
+                        'description' => $translated_desc
+                    ];
+                } catch (Exception $e) {
+                    // Если AI перевод недоступен, пропускаем это действие
+                    logMessage('WARNING', "Пропускаем легендарное действие '{$action['name']}' из-за ошибки AI перевода");
+                    continue;
+                }
             }
         }
         
@@ -650,7 +669,7 @@ class EnemyGenerator {
     }
     
     /**
-     * Форматирование действий логова
+     * Форматирование действий логова с AI переводом
      */
     private function formatLairActions($actions) {
         if (empty($actions)) {
@@ -660,10 +679,20 @@ class EnemyGenerator {
         $formatted = [];
         foreach ($actions as $action) {
             if (isset($action['name']) && isset($action['desc'])) {
-                $formatted[] = [
-                    'name' => $action['name'],
-                    'description' => $action['desc']
-                ];
+                try {
+                    // Переводим название и описание через AI
+                    $translated_name = $this->translateEnemyText($action['name']);
+                    $translated_desc = $this->translateEnemyText($action['desc']);
+                    
+                    $formatted[] = [
+                        'name' => $translated_name,
+                        'description' => $translated_desc
+                    ];
+                } catch (Exception $e) {
+                    // Если AI перевод недоступен, пропускаем это действие
+                    logMessage('WARNING', "Пропускаем действие логова '{$action['name']}' из-за ошибки AI перевода");
+                    continue;
+                }
             }
         }
         
@@ -1093,6 +1122,43 @@ class EnemyGenerator {
         $url = $this->dnd5e_api_url . '/monsters';
         return $this->makeRequest($url);
     }
+    
+    /**
+     * AI перевод текста противника
+     */
+    private function translateEnemyText($text) {
+        if (empty($text)) {
+            return $text;
+        }
+        
+        // Проверяем, нужен ли перевод (если текст уже на русском, не переводим)
+        if (preg_match('/[а-яё]/iu', $text)) {
+            return $text;
+        }
+        
+        try {
+            // Используем AI сервис для перевода
+            require_once __DIR__ . '/../../app/Services/ai-service.php';
+            $ai_service = new AiService();
+            
+            // Создаем промпт для перевода
+            $prompt = "Переведи на русский язык следующий текст из D&D, сохранив игровую терминологию и форматирование:\n\n" . $text;
+            
+            $result = $ai_service->generateText($prompt);
+            
+            if (isset($result['error'])) {
+                logMessage('ERROR', "AI перевод не удался: " . $result['message']);
+                throw new Exception('AI перевод недоступен: ' . $result['message']);
+            }
+            
+            return $result;
+            
+        } catch (Exception $e) {
+            logMessage('ERROR', "Ошибка AI перевода: " . $e->getMessage());
+            throw new Exception('AI перевод недоступен: ' . $e->getMessage());
+        }
+    }
+    
 }
 
 // Обработка запроса

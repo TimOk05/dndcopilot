@@ -393,7 +393,7 @@ function getDiceResult(dice) {
     .then(r => r.text())
     .then(txt => {
         // Добавляем кнопку редактирования комментария
-        const editButton = '<button class="fast-btn" onclick="editDiceComment(\'' + dice + '\', \'' + count + '\', \'' + label + '\')" style="margin-bottom: 10px;">✏️ Редактировать комментарий</button>';
+        const editButton = `<button class="fast-btn" onclick="editDiceComment('${dice}', '${count}', '${label}')" style="margin-bottom: 10px;">✏️ Редактировать комментарий</button>`;
         
         document.getElementById('modal-content').innerHTML = editButton + formatResultSegments(txt, false);
         document.getElementById('modal-save').style.display = '';
@@ -427,7 +427,7 @@ function updateDiceComment(dice, count) {
     .then(r => r.text())
     .then(txt => {
         // Добавляем кнопку редактирования комментария
-        const editButton = '<button class="fast-btn" onclick="editDiceComment(\'' + dice + '\', \'' + count + '\', \'' + newLabel + '\')" style="margin-bottom: 10px;">✏️ Редактировать комментарий</button>';
+        const editButton = `<button class="fast-btn" onclick="editDiceComment('${dice}', '${count}', '${newLabel}')" style="margin-bottom: 10px;">✏️ Редактировать комментарий</button>`;
         
         document.getElementById('modal-content').innerHTML = editButton + formatResultSegments(txt, false);
         document.getElementById('modal-save').style.display = '';
