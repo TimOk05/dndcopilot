@@ -148,7 +148,13 @@ class EnemyGenerator {
             }
         }
         
-        // NO_FALLBACK политика: возвращаем null при недоступности API
+        // Для локальной разработки используем fallback данные
+        if ($this->isLocalDevelopment()) {
+            logMessage('INFO', "EnemyGenerator: Используем fallback данные для локальной разработки");
+            return $this->getFallbackMonstersList();
+        }
+        
+        // На продакшне возвращаем null - это приведет к ошибке (NO_FALLBACK политика)
         logMessage('ERROR', "EnemyGenerator: API недоступен после всех попыток");
         return null;
     }
@@ -280,6 +286,12 @@ class EnemyGenerator {
             if ($cached_data) {
                 return $cached_data;
             }
+        }
+        
+        // Для локальной разработки используем fallback данные
+        if ($this->isLocalDevelopment()) {
+            logMessage('INFO', "EnemyGenerator: Используем fallback данные монстра для локальной разработки");
+            return $this->getFallbackMonsterData($monster_index);
         }
         
         // Получаем данные из API
@@ -606,6 +618,124 @@ class EnemyGenerator {
         }
         
         return rand($baseRange[0], $baseRange[1]);
+    }
+    
+    /**
+     * Проверка, является ли это локальной разработкой
+     */
+    private function isLocalDevelopment() {
+        // Проверяем по домену или IP
+        $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '';
+        $isLocal = strpos($host, 'localhost') !== false || 
+                   strpos($host, '127.0.0.1') !== false ||
+                   strpos($host, '192.168.') !== false ||
+                   strpos($host, '10.0.') !== false;
+        
+        // Дополнительная проверка - если это не продакшн домен
+        $isProduction = strpos($host, 'tim.dat-studio.com') !== false;
+        
+        logMessage('INFO', "EnemyGenerator: Host: $host, isLocal: " . ($isLocal ? 'true' : 'false') . ", isProduction: " . ($isProduction ? 'true' : 'false'));
+        
+        return $isLocal || !$isProduction;
+    }
+    
+    /**
+     * Получение fallback списка монстров для локальной разработки
+     */
+    private function getFallbackMonstersList() {
+        return [
+            'results' => [
+                ['name' => 'Goblin', 'url' => '/api/monsters/goblin', 'index' => 'goblin'],
+                ['name' => 'Orc', 'url' => '/api/monsters/orc', 'index' => 'orc'],
+                ['name' => 'Kobold', 'url' => '/api/monsters/kobold', 'index' => 'kobold'],
+                ['name' => 'Bandit', 'url' => '/api/monsters/bandit', 'index' => 'bandit'],
+                ['name' => 'Cultist', 'url' => '/api/monsters/cultist', 'index' => 'cultist'],
+                ['name' => 'Skeleton', 'url' => '/api/monsters/skeleton', 'index' => 'skeleton'],
+                ['name' => 'Zombie', 'url' => '/api/monsters/zombie', 'index' => 'zombie'],
+                ['name' => 'Wolf', 'url' => '/api/monsters/wolf', 'index' => 'wolf'],
+                ['name' => 'Bear', 'url' => '/api/monsters/bear', 'index' => 'bear'],
+                ['name' => 'Spider', 'url' => '/api/monsters/spider', 'index' => 'spider'],
+                ['name' => 'Dragon', 'url' => '/api/monsters/dragon', 'index' => 'dragon'],
+                ['name' => 'Giant', 'url' => '/api/monsters/giant', 'index' => 'giant'],
+                ['name' => 'Demon', 'url' => '/api/monsters/demon', 'index' => 'demon'],
+                ['name' => 'Devil', 'url' => '/api/monsters/devil', 'index' => 'devil'],
+                ['name' => 'Undead', 'url' => '/api/monsters/undead', 'index' => 'undead'],
+                ['name' => 'Construct', 'url' => '/api/monsters/construct', 'index' => 'construct']
+            ]
+        ];
+    }
+    
+    /**
+     * Получение fallback данных монстра для локальной разработки
+     */
+    private function getFallbackMonsterData($monster_index) {
+        $monsterName = basename($monster_index);
+        
+        // Базовые данные для каждого типа монстра
+        $fallbackData = [
+            'goblin' => [
+                'name' => 'Goblin',
+                'type' => 'humanoid',
+                'challenge_rating' => '1/4',
+                'hit_points' => '7 (2d6)',
+                'armor_class' => '15 (leather armor, shield)',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 8, 'dex' => 14, 'con' => 10,
+                    'int' => 10, 'wis' => 8, 'cha' => 8
+                ],
+                'actions' => [
+                    ['name' => 'Scimitar', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage.']
+                ]
+            ],
+            'orc' => [
+                'name' => 'Orc',
+                'type' => 'humanoid',
+                'challenge_rating' => '1/2',
+                'hit_points' => '15 (2d8 + 6)',
+                'armor_class' => '13 (hide armor)',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 16, 'dex' => 12, 'con' => 16,
+                    'int' => 7, 'wis' => 11, 'cha' => 10
+                ],
+                'actions' => [
+                    ['name' => 'Greataxe', 'desc' => 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 9 (1d12 + 3) slashing damage.']
+                ]
+            ],
+            'kobold' => [
+                'name' => 'Kobold',
+                'type' => 'humanoid',
+                'challenge_rating' => '1/8',
+                'hit_points' => '5 (2d6 - 2)',
+                'armor_class' => '12',
+                'speed' => '30 ft.',
+                'abilities' => [
+                    'str' => 7, 'dex' => 15, 'con' => 9,
+                    'int' => 8, 'wis' => 7, 'cha' => 8
+                ],
+                'actions' => [
+                    ['name' => 'Dagger', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage.']
+                ]
+            ],
+            'dragon' => [
+                'name' => 'Dragon',
+                'type' => 'dragon',
+                'challenge_rating' => '8',
+                'hit_points' => '200 (16d12 + 96)',
+                'armor_class' => '18 (natural armor)',
+                'speed' => '40 ft., fly 80 ft.',
+                'abilities' => [
+                    'str' => 23, 'dex' => 10, 'con' => 21,
+                    'int' => 14, 'wis' => 13, 'cha' => 17
+                ],
+                'actions' => [
+                    ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +11 to hit, reach 10 ft., one target. Hit: 17 (2d10 + 6) piercing damage.']
+                ]
+            ]
+        ];
+        
+        return $fallbackData[$monsterName] ?? $fallbackData['goblin'];
     }
     
     /**
