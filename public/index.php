@@ -2785,19 +2785,7 @@ function formatEnemiesFromApi(enemies) {
         }
         
         // Добавляем кнопку сохранения в заметки
-        if (enemy.is_group && enemy.count > 1) {
-            out += '<div class="save-enemy-section">';
-            out += '<button class="save-enemy-btn" onclick="saveEnemyGroupToNotes(' + JSON.stringify(enemy).replace(/"/g, '&quot;') + ')">';
-            out += '💾 Сохранить группу в заметки';
-            out += '</button>';
-            out += '</div>';
-        } else {
-            out += '<div class="save-enemy-section">';
-            out += '<button class="save-enemy-btn" onclick="saveEnemyToNotes(' + JSON.stringify(enemy).replace(/"/g, '&quot;') + ')">';
-            out += '💾 Сохранить в заметки';
-            out += '</button>';
-            out += '</div>';
-        }
+        // Убираем индивидуальные кнопки сохранения - будет общая кнопка внизу
         
         out += '</div>';
         
