@@ -161,11 +161,11 @@ class EnemyGenerator {
             case 'easy':
                 return ['min' => 0, 'max' => 3, 'display' => 'Легкий (CR 0-3)'];
             case 'medium':
-                return ['min' => 1, 'max' => 7, 'display' => 'Средний (CR 1-7)'];
+                return ['min' => 1, 'max' => 5, 'display' => 'Средний (CR 1-5)'];
             case 'hard':
-                return ['min' => 5, 'max' => 12, 'display' => 'Сложный (CR 5-12)'];
+                return ['min' => 3, 'max' => 8, 'display' => 'Сложный (CR 3-8)'];
             case 'deadly':
-                return ['min' => 10, 'max' => 20, 'display' => 'Смертельный (CR 10-20)'];
+                return ['min' => 6, 'max' => 12, 'display' => 'Смертельный (CR 6-12)'];
             default:
                 // Если передан конкретный CR, возвращаем его как диапазон
                 if (is_numeric($threat_level)) {
@@ -301,6 +301,12 @@ class EnemyGenerator {
         $cr = $this->parseCR($monster['challenge_rating']);
         $type = strtolower($monster['type']);
         
+        // Для высоких уровней сложности (CR >= 6) делаем проверки более гибкими
+        if ($cr_range['min'] >= 6) {
+            // Для deadly уровней разрешаем больше типов монстров
+            return true;
+        }
+        
         // Драконы требуют минимальный CR 1
         if (strpos($type, 'dragon') !== false && $cr_range['min'] < 1) {
             return false;
@@ -311,8 +317,8 @@ class EnemyGenerator {
             return false;
         }
         
-        // Звери ограничены максимальным CR 8
-        if (strpos($type, 'beast') !== false && $cr_range['max'] > 8) {
+        // Звери ограничены максимальным CR 8 (только для низких уровней)
+        if (strpos($type, 'beast') !== false && $cr_range['max'] > 8 && $cr_range['min'] < 6) {
             return false;
         }
         
@@ -1242,11 +1248,18 @@ class EnemyGenerator {
     private function expandCRRange($cr_range) {
         $expanded = $cr_range;
         
-        // Расширяем диапазон на 2 в каждую сторону
-        if ($expanded['min'] > 0) {
-            $expanded['min'] = max(0, $expanded['min'] - 2);
+        // Для высоких уровней расширяем диапазон более агрессивно
+        if ($expanded['min'] >= 6) {
+            // Для deadly уровней расширяем вниз до 3
+            $expanded['min'] = max(0, $expanded['min'] - 4);
+            $expanded['max'] = min(15, $expanded['max'] + 3);
+        } else {
+            // Для остальных уровней расширяем на 2 в каждую сторону
+            if ($expanded['min'] > 0) {
+                $expanded['min'] = max(0, $expanded['min'] - 2);
+            }
+            $expanded['max'] = min(12, $expanded['max'] + 2);
         }
-        $expanded['max'] = min(30, $expanded['max'] + 2);
         
         logMessage('INFO', "EnemyGenerator: Расширенный CR диапазон: " . json_encode($expanded));
         return $expanded;

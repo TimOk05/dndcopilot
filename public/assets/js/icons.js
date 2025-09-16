@@ -7,19 +7,27 @@ class IconManager {
 
     // Получить SVG иконку по имени
     async getIcon(iconName, className = 'svg-icon') {
+        console.log(`Getting icon: ${iconName} with class: ${className}`);
+
         // Проверяем кэш
         if (this.iconCache.has(iconName)) {
+            console.log(`Icon ${iconName} found in cache`);
             return this.createIconElement(this.iconCache.get(iconName), className);
         }
 
         try {
             // Загружаем SVG файл
-            const response = await fetch(`${this.iconPath}${iconName}.svg`);
+            const url = `${this.iconPath}${iconName}.svg`;
+            console.log(`Fetching icon from: ${url}`);
+
+            const response = await fetch(url);
             if (!response.ok) {
-                throw new Error(`Icon ${iconName} not found`);
+                throw new Error(`Icon ${iconName} not found (HTTP ${response.status})`);
             }
 
             const svgContent = await response.text();
+            console.log(`Loaded SVG content for ${iconName}:`, svgContent.substring(0, 100) + '...');
+
             this.iconCache.set(iconName, svgContent);
 
             return this.createIconElement(svgContent, className);
@@ -122,31 +130,58 @@ class IconManager {
 // Создаем глобальный экземпляр
 window.iconManager = new IconManager();
 
+// Дополнительная инициализация через небольшую задержку
+setTimeout(async() => {
+    if (document.readyState === 'complete') {
+        console.log('Page fully loaded, checking for missed icons...');
+        try {
+            await replaceDataIconElements();
+        } catch (error) {
+            console.error('Error in delayed icon initialization:', error);
+        }
+    }
+}, 1000);
+
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', async() => {
-    await window.iconManager.preloadIcons();
+    console.log('DOM loaded, initializing icons...');
 
-    // Заменяем все элементы с data-icon атрибутами
-    replaceDataIconElements();
+    try {
+        await window.iconManager.preloadIcons();
+        console.log('Icons preloaded successfully');
 
-    console.log('Icons preloaded and replaced');
+        // Заменяем все элементы с data-icon атрибутами
+        replaceDataIconElements();
+
+        console.log('Icons initialization completed');
+    } catch (error) {
+        console.error('Error during icons initialization:', error);
+    }
 });
 
 // Функция для замены элементов с data-icon атрибутами
 async function replaceDataIconElements() {
     const elements = document.querySelectorAll('[data-icon]');
+    console.log(`Found ${elements.length} elements with data-icon attributes`);
 
     for (const element of elements) {
         const iconName = element.getAttribute('data-icon');
+        console.log(`Processing icon: ${iconName} for element:`, element);
+
         if (iconName) {
             try {
                 const iconElement = await window.iconManager.getIcon(iconName, element.className);
                 if (iconElement) {
+                    console.log(`Successfully loaded icon ${iconName}:`, iconElement);
                     // Заменяем содержимое элемента на иконку
                     element.innerHTML = iconElement.innerHTML;
+                } else {
+                    console.warn(`No icon element returned for ${iconName}`);
                 }
             } catch (error) {
-                console.warn(`Failed to load icon ${iconName}:`, error);
+                console.error(`Failed to load icon ${iconName}:`, error);
+                // Добавляем временный текст вместо иконки для отладки
+                element.innerHTML = `[${iconName}]`;
             }
         }
     }
