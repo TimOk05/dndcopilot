@@ -379,7 +379,7 @@ class EnemyGenerator {
                 'hit_points' => $this->formatHitPoints($monster['hit_points'] ?? 'Не определено'),
                 'armor_class' => $this->formatArmorClass($monster['armor_class'] ?? 'Не определено'),
                 'speed' => $this->formatSpeed($monster['speed'] ?? 'Не определено'),
-                'abilities' => $this->formatAbilities($monster['abilities'] ?? []),
+                'abilities' => $this->formatAbilities($monster['abilities'] ?? [], $monster['type'] ?? ''),
                 'actions' => $this->formatActions($monster['actions'] ?? []),
                 'special_abilities' => $this->formatSpecialAbilities($monster['special_abilities'] ?? []),
                 'legendary_actions' => $this->formatLegendaryActions($monster['legendary_actions'] ?? []),
@@ -553,11 +553,16 @@ class EnemyGenerator {
     /**
      * Форматирование характеристик
      */
-    private function formatAbilities($abilities) {
+    private function formatAbilities($abilities, $monsterType = '') {
         if (empty($abilities)) {
+            // Генерируем случайные характеристики для каждого монстра
             return [
-                'str' => 10, 'dex' => 10, 'con' => 10,
-                'int' => 10, 'wis' => 10, 'cha' => 10
+                'str' => $this->generateRandomAbility($monsterType),
+                'dex' => $this->generateRandomAbility($monsterType),
+                'con' => $this->generateRandomAbility($monsterType),
+                'int' => $this->generateRandomAbility($monsterType),
+                'wis' => $this->generateRandomAbility($monsterType),
+                'cha' => $this->generateRandomAbility($monsterType)
             ];
         }
         
@@ -568,11 +573,39 @@ class EnemyGenerator {
             if (isset($abilities[$ability])) {
                 $formatted[$ability] = $abilities[$ability];
             } else {
-                $formatted[$ability] = 10;
+                $formatted[$ability] = $this->generateRandomAbility($monsterType);
             }
         }
         
         return $formatted;
+    }
+    
+    /**
+     * Генерация случайной характеристики с учетом типа монстра
+     */
+    private function generateRandomAbility($monsterType = '') {
+        $baseRange = [8, 18];
+        
+        // Корректируем диапазон в зависимости от типа монстра
+        switch (strtolower($monsterType)) {
+            case 'dragon':
+            case 'giant':
+            case 'demon':
+            case 'devil':
+                $baseRange = [12, 20]; // Сильные монстры
+                break;
+            case 'goblin':
+            case 'kobold':
+            case 'imp':
+                $baseRange = [6, 14]; // Слабые монстры
+                break;
+            case 'undead':
+            case 'construct':
+                $baseRange = [10, 16]; // Средние монстры
+                break;
+        }
+        
+        return rand($baseRange[0], $baseRange[1]);
     }
     
     /**
