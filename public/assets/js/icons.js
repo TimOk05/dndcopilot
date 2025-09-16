@@ -18,14 +18,14 @@ class IconManager {
             if (!response.ok) {
                 throw new Error(`Icon ${iconName} not found`);
             }
-            
+
             const svgContent = await response.text();
             this.iconCache.set(iconName, svgContent);
-            
+
             return this.createIconElement(svgContent, className);
         } catch (error) {
-            console.warn(`Failed to load icon ${iconName}:`, error);
-            return this.getFallbackIcon(iconName, className);
+            console.error(`Failed to load icon ${iconName}:`, error);
+            throw error; // Не используем fallback согласно политике NO FALLBACK
         }
     }
 
@@ -34,35 +34,18 @@ class IconManager {
         const wrapper = document.createElement('span');
         wrapper.className = className;
         wrapper.innerHTML = svgContent;
-        
+
         // Удаляем атрибуты размера из SVG, чтобы использовать CSS
         const svg = wrapper.querySelector('svg');
         if (svg) {
             svg.removeAttribute('width');
             svg.removeAttribute('height');
         }
-        
+
         return wrapper;
     }
 
-    // Получить fallback иконку (эмодзи)
-    getFallbackIcon(iconName, className) {
-        const fallbackMap = {
-            'enemy': '👹',
-            'potion': '🧪',
-            'initiative': '⚡',
-            'dice': '🎲',
-            'hero': '🧙‍♂️',
-            'skull': '💀',
-            'crystal-ball-magic-svgrepo-com': '🔮',
-            'description': '📝'
-        };
-
-        const wrapper = document.createElement('span');
-        wrapper.className = className;
-        wrapper.textContent = fallbackMap[iconName] || '❓';
-        return wrapper;
-    }
+    // Fallback система удалена согласно политике NO FALLBACK
 
     // Синхронно получить иконку для использования в innerHTML
     getIconHTML(iconName, className = 'svg-icon') {
@@ -74,32 +57,21 @@ class IconManager {
                 .replace(/<!DOCTYPE[^>]*>/g, '')
                 .replace(/<!--[^>]*-->/g, '')
                 .trim();
-            
+
             // Добавляем класс к SVG
             cleanSvg = cleanSvg.replace('<svg', `<svg class="${className}"`);
             return cleanSvg;
         }
-        
-        // Fallback эмодзи
-        const fallbackMap = {
-            'enemy': '👹',
-            'potion': '🧪',
-            'initiative': '⚡',
-            'dice': '🎲',
-            'hero': '🧙‍♂️',
-            'skull': '💀',
-            'crystal-ball-magic-svgrepo-com': '🔮',
-            'description': '📝'
-        };
-        
-        return `<span class="${className}">${fallbackMap[iconName] || '❓'}</span>`;
+
+        // Fallback система удалена согласно политике NO FALLBACK
+        throw new Error(`Icon ${iconName} not loaded in cache`);
     }
 
     // Предзагрузить все иконки
     async preloadIcons() {
         const iconNames = [
-            'enemy', 'potion', 'initiative', 'dice', 
-            'hero', 'skull', 'crystal-ball-magic-svgrepo-com', 'description'
+            'enemy', 'potion', 'initiative', 'dice',
+            'hero', 'skull', 'crystal-ball-magic-svgrepo-com', 'description', 'loading'
         ];
 
         const loadPromises = iconNames.map(name => this.getIcon(name));
@@ -111,7 +83,7 @@ class IconManager {
         // Карта замен эмодзи -> иконка
         const emojiMap = {
             '👹': 'enemy',
-            '🧪': 'potion', 
+            '🧪': 'potion',
             '⚡': 'initiative',
             '🎲': 'dice',
             '🧙‍♂️': 'hero',
@@ -130,7 +102,7 @@ class IconManager {
             if (element.children.length === 0) { // Только текстовые узлы
                 let text = element.textContent;
                 let hasEmoji = false;
-                
+
                 for (const [emoji, iconName] of Object.entries(emojiMap)) {
                     if (text.includes(emoji)) {
                         hasEmoji = true;
@@ -138,7 +110,7 @@ class IconManager {
                         text = text.replace(new RegExp(emoji, 'g'), iconHTML);
                     }
                 }
-                
+
                 if (hasEmoji) {
                     element.innerHTML = text;
                 }
@@ -151,7 +123,31 @@ class IconManager {
 window.iconManager = new IconManager();
 
 // Инициализация при загрузке страницы
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', async() => {
     await window.iconManager.preloadIcons();
-    console.log('Icons preloaded');
+
+    // Заменяем все элементы с data-icon атрибутами
+    replaceDataIconElements();
+
+    console.log('Icons preloaded and replaced');
 });
+
+// Функция для замены элементов с data-icon атрибутами
+async function replaceDataIconElements() {
+    const elements = document.querySelectorAll('[data-icon]');
+
+    for (const element of elements) {
+        const iconName = element.getAttribute('data-icon');
+        if (iconName) {
+            try {
+                const iconElement = await window.iconManager.getIcon(iconName, element.className);
+                if (iconElement) {
+                    // Заменяем содержимое элемента на иконку
+                    element.innerHTML = iconElement.innerHTML;
+                }
+            } catch (error) {
+                console.warn(`Failed to load icon ${iconName}:`, error);
+            }
+        }
+    }
+}
