@@ -1,7 +1,10 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-// Новый простой AI чат
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../app/Services/ai-service.php';
+
+// AI чат согласно политике NO_FALLBACK
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     
@@ -15,18 +18,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
             
-            // Проверяем доступность cURL
-            if (!function_exists('curl_init')) {
-                $response = "Привет! Я AI помощник для D&D. К сожалению, AI API временно недоступен (отсутствует поддержка cURL), но я могу помочь с базовыми вопросами по D&D. Что вас интересует?";
-            } else {
-                // Здесь можно добавить реальный вызов AI API
-                $response = "Привет! Я AI помощник для D&D. Вы написали: " . $message . ". В данный момент AI API недоступен, но я могу помочь с базовыми вопросами по D&D.";
-            }
+            // Используем AiService для реального AI API
+            $aiService = new AiService();
             
-            echo json_encode([
-                'success' => true,
-                'response' => $response
-            ], JSON_UNESCAPED_UNICODE);
+            // Формируем промпт для D&D контекста
+            $prompt = "Ты - опытный мастер подземелий (DM) для настольной ролевой игры Dungeons & Dragons 5e. Отвечай кратко и информативно на русском языке. Пользователь написал: " . $message;
+            
+            $aiResponse = $aiService->generateText($prompt);
+            
+            // Проверяем результат согласно NO_FALLBACK политике
+            if (is_array($aiResponse) && isset($aiResponse['error'])) {
+                // AI API недоступен - показываем ошибку
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'AI API недоступен',
+                    'message' => $aiResponse['message'],
+                    'details' => $aiResponse['details'] ?? 'Проверьте подключение к интернету и настройки API'
+                ], JSON_UNESCAPED_UNICODE);
+            } else if ($aiResponse && is_string($aiResponse)) {
+                // AI API работает - возвращаем ответ
+                echo json_encode([
+                    'success' => true,
+                    'response' => $aiResponse
+                ], JSON_UNESCAPED_UNICODE);
+            } else {
+                // Неожиданная ошибка
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'Неожиданная ошибка AI API',
+                    'message' => 'AI API вернул неожиданный ответ',
+                    'details' => 'Проверьте логи приложения'
+                ], JSON_UNESCAPED_UNICODE);
+            }
             break;
             
         case 'get_history':
