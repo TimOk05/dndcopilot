@@ -21,8 +21,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Используем AiService для реального AI API
             $aiService = new AiService();
             
-            // Формируем промпт для D&D контекста
-            $prompt = "Ты - опытный мастер подземелий (DM) для настольной ролевой игры Dungeons & Dragons 5e. Отвечай кратко и информативно на русском языке. Пользователь написал: " . $message;
+            // Получаем заметки пользователя
+            $userNotes = $_SESSION['notes'] ?? [];
+            $notesContext = '';
+            
+            if (!empty($userNotes)) {
+                $notesContext = "\n\nЗАМЕТКИ DM:\n";
+                foreach ($userNotes as $note) {
+                    // Очищаем HTML теги из заметок для AI
+                    $cleanNote = strip_tags($note);
+                    $notesContext .= "- " . $cleanNote . "\n";
+                }
+                $notesContext .= "\nИспользуй эти заметки для контекста. Если пользователь спрашивает о персонажах, противниках или других элементах из заметок, ссылайся на них.";
+            }
+            
+            // Формируем промпт для D&D контекста с заметками
+            $prompt = "Ты - опытный мастер подземелий (DM) для настольной ролевой игры Dungeons & Dragons 5e. Отвечай кратко и информативно на русском языке." . $notesContext . "\n\nПользователь написал: " . $message;
             
             $aiResponse = $aiService->generateText($prompt);
             
@@ -56,6 +70,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode([
                 'success' => true,
                 'history' => []
+            ], JSON_UNESCAPED_UNICODE);
+            break;
+            
+        case 'get_notes':
+            // Возвращаем заметки пользователя для AI чата
+            $userNotes = $_SESSION['notes'] ?? [];
+            $cleanNotes = [];
+            
+            foreach ($userNotes as $note) {
+                $cleanNotes[] = strip_tags($note);
+            }
+            
+            echo json_encode([
+                'success' => true,
+                'notes' => $cleanNotes
             ], JSON_UNESCAPED_UNICODE);
             break;
             
