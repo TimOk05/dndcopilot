@@ -589,9 +589,6 @@
                     <button class="btn" onclick="showSection('potions')">
                         🧪 Генератор зелий
                     </button>
-                    <button class="btn" onclick="showSection('combat')">
-                        🗡️ Система боя
-                    </button>
                     <button class="btn" onclick="showSection('ai-chat')">
                         🤖 AI Помощник
                     </button>
@@ -857,34 +854,6 @@
             </div>
         </section>
 
-        <!-- Система боя -->
-        <section id="combat" class="content-section">
-            <div class="card">
-                <h2 class="card-title">🗡️ Система боя</h2>
-
-                <div class="input-group">
-                    <label class="input-label">Добавить участника</label>
-                    <input type="text" class="input-field" id="combat-name" placeholder="Имя персонажа">
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Инициатива</label>
-                    <input type="number" class="input-field" id="combat-initiative" placeholder="Модификатор инициативы">
-                </div>
-
-                <button class="btn" onclick="addCombatant()">
-                    ➕ Добавить участника
-                </button>
-            </div>
-
-            <div id="combat-list" class="card">
-                <h3 class="card-title">🎯 Порядок инициативы</h3>
-                <div id="combat-participants"></div>
-                <button class="btn btn-secondary" onclick="nextTurn()">
-                    ⏭️ Следующий ход
-                </button>
-            </div>
-        </section>
 
         <!-- AI Чат -->
         <section id="ai-chat" class="content-section">
@@ -950,10 +919,6 @@
             <div class="nav-icon">🧪</div>
             <div>Зелья</div>
         </a>
-        <a href="#" class="nav-item" onclick="showSection('combat')">
-            <div class="nav-icon">🗡️</div>
-            <div>Бой</div>
-        </a>
         <a href="#" class="nav-item" onclick="showSection('ai-chat')">
             <div class="nav-icon">🤖</div>
             <div>AI</div>
@@ -979,8 +944,6 @@
         // Переменные состояния
         let currentTheme = 'light';
         let currentSection = 'home';
-        let combatParticipants = [];
-        let currentTurn = 0;
         let notes = JSON.parse(localStorage.getItem('dnd_notes') || '[]');
 
         // Инициализация
@@ -1032,9 +995,8 @@
                 'characters': 1,
                 'enemies': 2,
                 'potions': 3,
-                'combat': 4,
-                'ai-chat': 5,
-                'notes': 6
+                'ai-chat': 4,
+                'notes': 5
             };
 
             if (sectionMap[sectionId] !== undefined) {
@@ -1296,69 +1258,6 @@
             `;
         }
         
-        // Система боя
-        function addCombatant() {
-            const name = document.getElementById('combat-name').value;
-            const initiative = parseInt(document.getElementById('combat-initiative').value) || 0;
-            
-            if (!name) {
-                showModal('Пожалуйста, введите имя участника.');
-                return;
-            }
-            
-            const roll = Math.floor(Math.random() * 20) + 1;
-            const totalInitiative = roll + initiative;
-            
-            combatParticipants.push({
-                name: name,
-                initiative: totalInitiative,
-                roll: roll,
-                modifier: initiative
-            });
-            
-            // Сортируем по инициативе (по убыванию)
-            combatParticipants.sort((a, b) => b.initiative - a.initiative);
-            
-            updateCombatDisplay();
-            
-            // Очищаем поля
-            document.getElementById('combat-name').value = '';
-            document.getElementById('combat-initiative').value = '';
-        }
-        
-        function updateCombatDisplay() {
-            const container = document.getElementById('combat-participants');
-            
-            if (combatParticipants.length === 0) {
-                container.innerHTML = '<p class="text-center">Нет участников боя</p>';
-                return;
-            }
-            
-            let html = '<ul class="list">';
-            combatParticipants.forEach((participant, index) => {
-                const isCurrentTurn = index === currentTurn;
-                html += `
-                    <li class="list-item ${isCurrentTurn ? 'active' : ''}">
-                        <div>
-                            <strong>${participant.name}</strong>
-                            <br>
-                            <small>Инициатива: ${participant.initiative} (${participant.roll} + ${participant.modifier})</small>
-                        </div>
-                        ${isCurrentTurn ? '<span>🎯</span>' : ''}
-                    </li>
-                `;
-            });
-            html += '</ul>';
-            
-            container.innerHTML = html;
-        }
-        
-        function nextTurn() {
-            if (combatParticipants.length === 0) return;
-            
-            currentTurn = (currentTurn + 1) % combatParticipants.length;
-            updateCombatDisplay();
-        }
         
         // AI Чат
         function askAI() {
