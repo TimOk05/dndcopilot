@@ -659,6 +659,12 @@ class EnemyGenerator {
      * Проверка, является ли это локальной разработкой
      */
     private function isLocalDevelopment() {
+        // Если запускается из командной строки, считаем локальной разработкой
+        if (php_sapi_name() === 'cli') {
+            logMessage('INFO', "EnemyGenerator: CLI режим - используем fallback данные");
+            return true;
+        }
+        
         // Проверяем по домену или IP
         $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '';
         $isLocal = strpos($host, 'localhost') !== false || 

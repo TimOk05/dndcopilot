@@ -450,7 +450,7 @@
             try {
                 showLoading('Генерация противника...');
                 
-                const response = await fetch('api/test-enemies-api.php', {
+                const response = await fetch('api/generate-enemies.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -484,7 +484,7 @@
                     params.threat_level = level;
                     params.count = 1;
                     
-                    const response = await fetch('api/test-enemies-api.php', {
+                    const response = await fetch('api/generate-enemies.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -533,7 +533,7 @@
                     params.enemy_type = filter.type;
                     params.environment = filter.environment;
                     
-                    const response = await fetch('api/test-enemies-api.php', {
+                    const response = await fetch('api/generate-enemies.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
