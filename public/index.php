@@ -398,6 +398,9 @@ function getDiceResult(dice) {
         document.getElementById('modal-content').innerHTML = editButton + formatResultSegments(txt, false);
         document.getElementById('modal-save').style.display = '';
         document.getElementById('modal-save').onclick = function() { saveDiceResultAsNote(txt, label); closeModal(); };
+        
+        // Автоматически сохраняем результат броска в заметки
+        saveDiceResultAsNote(txt, label);
     });
 }
 
@@ -429,6 +432,9 @@ function updateDiceComment(dice, count) {
         document.getElementById('modal-content').innerHTML = editButton + formatResultSegments(txt, false);
         document.getElementById('modal-save').style.display = '';
         document.getElementById('modal-save').onclick = function() { saveDiceResultAsNote(txt, newLabel); closeModal(); };
+        
+        // Автоматически сохраняем обновленный результат броска в заметки
+        saveDiceResultAsNote(txt, newLabel);
     });
 }
 // --- Генерация персонажей и противников ---
@@ -609,6 +615,9 @@ function openCharacterModal() {
                                     </button>
                                 </div>
                             `;
+                            
+                            // Автоматически сохраняем персонажа в заметки
+                            saveCharacterToNotes(character);
                         } catch (e) {
                             console.error('Error stringifying character:', e);
                         }
@@ -803,7 +812,10 @@ function openEnemyModal() {
             if (data.success && data.enemies) {
                 let resultHtml = formatEnemiesFromApi(data.enemies);
                 
-
+                // Автоматически сохраняем всех противников в заметки
+                data.enemies.forEach(enemy => {
+                    saveEnemyToNotes(enemy);
+                });
                 
                 resultDiv.innerHTML = resultHtml;
                 
@@ -1532,6 +1544,18 @@ function openPotionModalSimple() {
             console.log('Potion API Response:', data);
             if (data.success && data.data) {
                 let resultHtml = formatPotionsFromApi(data.data);
+                
+                // Автоматически сохраняем все зелья в заметки
+                data.data.forEach(potion => {
+                    const displayName = potion.name || 'Неизвестное зелье';
+                    const displayDescription = potion.description || 'Описание недоступно';
+                    const displayRarity = potion.rarity_localized || potion.rarity || 'Неизвестная редкость';
+                    const displayType = potion.type_localized || potion.type || 'Неизвестный тип';
+                    const effectsHtml = potion.effects ? potion.effects.map(effect => effect).join(', ') : '';
+                    
+                    savePotionAsNote(displayName, displayDescription, displayRarity, displayType, potion.value, potion.weight, effectsHtml);
+                });
+                
                 resultDiv.innerHTML = resultHtml;
                 
                 // Автоматическая прокрутка к результату
