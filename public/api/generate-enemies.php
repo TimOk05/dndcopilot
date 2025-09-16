@@ -148,13 +148,7 @@ class EnemyGenerator {
             }
         }
         
-        // Для локальной разработки используем fallback данные
-        if ($this->isLocalDevelopment()) {
-            logMessage('INFO', "EnemyGenerator: Используем fallback данные для локальной разработки");
-            return $this->getFallbackMonstersList();
-        }
-        
-        // На продакшне возвращаем null - это приведет к ошибке (NO_FALLBACK политика)
+        // Строго запрещено использовать fallback данные - только API
         logMessage('ERROR', "EnemyGenerator: API недоступен после всех попыток");
         return null;
     }
@@ -288,13 +282,7 @@ class EnemyGenerator {
             }
         }
         
-        // Для локальной разработки используем fallback данные
-        if ($this->isLocalDevelopment()) {
-            logMessage('INFO', "EnemyGenerator: Используем fallback данные монстра для локальной разработки");
-            return $this->getFallbackMonsterData($monster_index);
-        }
-        
-        // Получаем данные из API
+        // Строго запрещено использовать fallback данные - только API
         $url = $this->dnd5e_api_url . '/monsters/' . $monster_index;
         $monster_data = $this->makeRequest($url);
         
@@ -656,259 +644,8 @@ class EnemyGenerator {
         return rand($baseRange[0], $baseRange[1]);
     }
     
-    /**
-     * Проверка, является ли это локальной разработкой
-     */
-    private function isLocalDevelopment() {
-        // Если запускается из командной строки, считаем локальной разработкой
-        if (php_sapi_name() === 'cli') {
-            logMessage('INFO', "EnemyGenerator: CLI режим - используем fallback данные");
-            return true;
-        }
-        
-        // Проверяем по домену или IP
-        $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '';
-        $isLocal = strpos($host, 'localhost') !== false || 
-                   strpos($host, '127.0.0.1') !== false ||
-                   strpos($host, '192.168.') !== false ||
-                   strpos($host, '10.0.') !== false;
-        
-        // Проверяем, является ли это продакшн доменом
-        $isProduction = strpos($host, 'tim.dat-studio.com') !== false;
-        
-        logMessage('INFO', "EnemyGenerator: Host: $host, isLocal: " . ($isLocal ? 'true' : 'false') . ", isProduction: " . ($isProduction ? 'true' : 'false'));
-        
-        // Fallback данные используются ТОЛЬКО для локальной разработки
-        // На продакшне всегда используются данные из внешних API
-        return $isLocal && !$isProduction;
-    }
     
-    /**
-     * Получение fallback списка монстров для локальной разработки
-     */
-    private function getFallbackMonstersList() {
-        return [
-            'results' => [
-                // Easy (CR 0-3)
-                ['name' => 'Kobold', 'url' => '/api/monsters/kobold', 'index' => 'kobold'],
-                ['name' => 'Goblin', 'url' => '/api/monsters/goblin', 'index' => 'goblin'],
-                ['name' => 'Bandit', 'url' => '/api/monsters/bandit', 'index' => 'bandit'],
-                ['name' => 'Cultist', 'url' => '/api/monsters/cultist', 'index' => 'cultist'],
-                ['name' => 'Skeleton', 'url' => '/api/monsters/skeleton', 'index' => 'skeleton'],
-                ['name' => 'Zombie', 'url' => '/api/monsters/zombie', 'index' => 'zombie'],
-                ['name' => 'Wolf', 'url' => '/api/monsters/wolf', 'index' => 'wolf'],
-                ['name' => 'Bear', 'url' => '/api/monsters/bear', 'index' => 'bear'],
-                ['name' => 'Spider', 'url' => '/api/monsters/spider', 'index' => 'spider'],
-                ['name' => 'Orc', 'url' => '/api/monsters/orc', 'index' => 'orc'],
-                
-            // Medium (CR 4-7)
-            ['name' => 'Ogre', 'url' => '/api/monsters/ogre', 'index' => 'ogre'],
-            ['name' => 'Troll', 'url' => '/api/monsters/troll', 'index' => 'troll'],
-            ['name' => 'Hill Giant', 'url' => '/api/monsters/hill-giant', 'index' => 'hill-giant'],
-            ['name' => 'Wyvern', 'url' => '/api/monsters/wyvern', 'index' => 'wyvern'],
-            ['name' => 'Manticore', 'url' => '/api/monsters/manticore', 'index' => 'manticore'],
-            ['name' => 'Ettin', 'url' => '/api/monsters/ettin', 'index' => 'ettin'],
-            ['name' => 'Cyclops', 'url' => '/api/monsters/cyclops', 'index' => 'cyclops'],
-            ['name' => 'Hydra', 'url' => '/api/monsters/hydra', 'index' => 'hydra'],
-                
-            // Hard (CR 8-12)
-            ['name' => 'Dragon', 'url' => '/api/monsters/dragon', 'index' => 'dragon'],
-            ['name' => 'Giant', 'url' => '/api/monsters/giant', 'index' => 'giant'],
-            ['name' => 'Demon', 'url' => '/api/monsters/demon', 'index' => 'demon'],
-            ['name' => 'Devil', 'url' => '/api/monsters/devil', 'index' => 'devil'],
-            ['name' => 'Lich', 'url' => '/api/monsters/lich', 'index' => 'lich'],
-            ['name' => 'Beholder', 'url' => '/api/monsters/beholder', 'index' => 'beholder'],
-            ['name' => 'Mind Flayer', 'url' => '/api/monsters/mind-flayer', 'index' => 'mind-flayer'],
-            ['name' => 'Vampire', 'url' => '/api/monsters/vampire', 'index' => 'vampire'],
-                
-            // Deadly (CR 13+)
-            ['name' => 'Ancient Dragon', 'url' => '/api/monsters/ancient-dragon', 'index' => 'ancient-dragon'],
-            ['name' => 'Tarrasque', 'url' => '/api/monsters/tarrasque', 'index' => 'tarrasque'],
-            ['name' => 'Balor', 'url' => '/api/monsters/balor', 'index' => 'balor'],
-            ['name' => 'Pit Fiend', 'url' => '/api/monsters/pit-fiend', 'index' => 'pit-fiend'],
-            ['name' => 'Undead', 'url' => '/api/monsters/undead', 'index' => 'undead'],
-            ['name' => 'Construct', 'url' => '/api/monsters/construct', 'index' => 'construct'],
-            ['name' => 'Solar', 'url' => '/api/monsters/solar', 'index' => 'solar'],
-            ['name' => 'Empyrean', 'url' => '/api/monsters/empyrean', 'index' => 'empyrean'],
-            ['name' => 'Kraken', 'url' => '/api/monsters/kraken', 'index' => 'kraken']
-            ]
-        ];
-    }
     
-    /**
-     * Получение fallback данных монстра для локальной разработки
-     */
-    
-    private function getFallbackMonsterData($monster_index) {
-        $monsterName = basename($monster_index);
-        
-        // Базовые данные для каждого типа монстра
-        $fallbackData = [
-            // Easy (CR 0-3)
-            'kobold' => [
-                'name' => 'Kobold',
-                'type' => 'humanoid',
-                'challenge_rating' => '1/8',
-                'hit_points' => '5 (2d6 - 2)',
-                'armor_class' => '12',
-                'speed' => '30 ft.',
-                'environment' => 'forest, hill, mountain',
-                'abilities' => [
-                    'str' => 7, 'dex' => 15, 'con' => 9,
-                    'int' => 8, 'wis' => 7, 'cha' => 8
-                ],
-                'actions' => [
-                    ['name' => 'Dagger', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage.']
-                ]
-            ],
-            'goblin' => [
-                'name' => 'Goblin',
-                'type' => 'humanoid',
-                'challenge_rating' => '1/4',
-                'hit_points' => '7 (2d6)',
-                'armor_class' => '15 (leather armor, shield)',
-                'speed' => '30 ft.',
-                'environment' => 'forest, hill, mountain',
-                'abilities' => [
-                    'str' => 8, 'dex' => 14, 'con' => 10,
-                    'int' => 10, 'wis' => 8, 'cha' => 8
-                ],
-                'actions' => [
-                    ['name' => 'Scimitar', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage.']
-                ]
-            ],
-            'orc' => [
-                'name' => 'Orc',
-                'type' => 'humanoid',
-                'challenge_rating' => '1/2',
-                'hit_points' => '15 (2d8 + 6)',
-                'armor_class' => '13 (hide armor)',
-                'speed' => '30 ft.',
-                'environment' => 'forest, hill, mountain',
-                'abilities' => [
-                    'str' => 16, 'dex' => 12, 'con' => 16,
-                    'int' => 7, 'wis' => 11, 'cha' => 10
-                ],
-                'actions' => [
-                    ['name' => 'Greataxe', 'desc' => 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 9 (1d12 + 3) slashing damage.']
-                ]
-            ],
-            'bandit' => [
-                'name' => 'Bandit',
-                'type' => 'humanoid',
-                'challenge_rating' => '1/8',
-                'hit_points' => '11 (2d8 + 2)',
-                'armor_class' => '12 (leather armor)',
-                'speed' => '30 ft.',
-                'environment' => 'forest, hill, urban',
-                'abilities' => [
-                    'str' => 11, 'dex' => 12, 'con' => 12,
-                    'int' => 12, 'wis' => 10, 'cha' => 10
-                ],
-                'actions' => [
-                    ['name' => 'Scimitar', 'desc' => 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.']
-                ]
-            ],
-            'cultist' => [
-                'name' => 'Cultist',
-                'type' => 'humanoid',
-                'challenge_rating' => '1/8',
-                'hit_points' => '9 (2d8)',
-                'armor_class' => '12 (leather armor)',
-                'speed' => '30 ft.',
-                'environment' => 'urban, forest',
-                'abilities' => [
-                    'str' => 11, 'dex' => 12, 'con' => 10,
-                    'int' => 10, 'wis' => 11, 'cha' => 10
-                ],
-                'actions' => [
-                    ['name' => 'Scimitar', 'desc' => 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.']
-                ]
-            ],
-            'skeleton' => [
-                'name' => 'Skeleton',
-                'type' => 'undead',
-                'challenge_rating' => '1/4',
-                'hit_points' => '13 (2d8 + 4)',
-                'armor_class' => '13 (armor scraps)',
-                'speed' => '30 ft.',
-                'environment' => 'forest, hill, mountain, urban',
-                'abilities' => [
-                    'str' => 10, 'dex' => 14, 'con' => 15,
-                    'int' => 6, 'wis' => 8, 'cha' => 5
-                ],
-                'actions' => [
-                    ['name' => 'Shortsword', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.']
-                ]
-            ],
-            'zombie' => [
-                'name' => 'Zombie',
-                'type' => 'undead',
-                'challenge_rating' => '1/4',
-                'hit_points' => '22 (3d8 + 9)',
-                'armor_class' => '8',
-                'speed' => '20 ft.',
-                'environment' => 'forest, hill, mountain, urban',
-                'abilities' => [
-                    'str' => 13, 'dex' => 6, 'con' => 16,
-                    'int' => 3, 'wis' => 6, 'cha' => 5
-                ],
-                'actions' => [
-                    ['name' => 'Slam', 'desc' => 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) bludgeoning damage.']
-                ]
-            ],
-            'wolf' => [
-                'name' => 'Wolf',
-                'type' => 'beast',
-                'challenge_rating' => '1/4',
-                'hit_points' => '11 (2d8 + 2)',
-                'armor_class' => '13 (natural armor)',
-                'speed' => '40 ft.',
-                'environment' => 'forest, hill, grassland',
-                'abilities' => [
-                    'str' => 12, 'dex' => 15, 'con' => 12,
-                    'int' => 3, 'wis' => 12, 'cha' => 6
-                ],
-                'actions' => [
-                    ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) piercing damage.']
-                ]
-            ],
-            'bear' => [
-                'name' => 'Bear',
-                'type' => 'beast',
-                'challenge_rating' => '1',
-                'hit_points' => '19 (3d8 + 6)',
-                'armor_class' => '11 (natural armor)',
-                'speed' => '40 ft., climb 30 ft.',
-                'environment' => 'forest, hill, mountain',
-                'abilities' => [
-                    'str' => 15, 'dex' => 10, 'con' => 14,
-                    'int' => 2, 'wis' => 13, 'cha' => 7
-                ],
-                'actions' => [
-                    ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) piercing damage.']
-                ]
-            ],
-            'spider' => [
-                'name' => 'Spider',
-                'type' => 'beast',
-                'challenge_rating' => '0',
-                'hit_points' => '1 (1d4 - 1)',
-                'armor_class' => '12',
-                'speed' => '20 ft., climb 20 ft.',
-                'environment' => 'forest, hill, mountain',
-                'abilities' => [
-                    'str' => 2, 'dex' => 14, 'con' => 8,
-                    'int' => 1, 'wis' => 10, 'cha' => 2
-                ],
-                'actions' => [
-                    ['name' => 'Bite', 'desc' => 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 1 piercing damage, and the target must make a DC 9 Constitution saving throw, taking 2 (1d4) poison damage on a failed save, or half as much damage on a successful one.']
-                ]
-            ]
-        ];
-        
-        return $fallbackData[$monsterName] ?? $fallbackData['goblin'];
-    }
     
     /**
      * Форматирование действий с AI переводом
@@ -1403,7 +1140,7 @@ class EnemyGenerator {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_USERAGENT, 'DnD-Copilot/1.0');
@@ -1457,7 +1194,7 @@ class EnemyGenerator {
                     'User-Agent: DnD-Copilot/1.0',
                     'Accept: application/json'
                 ],
-                'timeout' => 30
+                'timeout' => 60
             ],
             'ssl' => [
                 'verify_peer' => false,

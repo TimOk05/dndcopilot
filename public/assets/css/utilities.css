@@ -997,45 +997,28 @@
     }
 }
 
-<<<<<<< HEAD
+/* ===== GENERATOR STYLES ===== */
 
-/* ===== ENEMY GENERATOR STYLES ===== */
-
-.enemy-generator {
-=======
-/* ===== POTION GENERATOR ===== */
-
+.enemy-generator,
 .potion-generator {
->>>>>>> b86ba888a4274516acb58e29f394e84525f24695
     max-width: 800px;
     margin: 0 auto;
 }
 
-<<<<<<< HEAD
-.enemy-form {
-    background: var(--bg-secondary);
-    padding: var(--space-4);
-    border-radius: var(--radius-lg);
-    margin-bottom: var(--space-4);
-=======
+.enemy-form,
 .potion-form {
     background: var(--bg-secondary);
     border: 1px solid var(--border-primary);
     border-radius: var(--radius-lg);
     padding: var(--space-6);
     margin-bottom: var(--space-6);
->>>>>>> b86ba888a4274516acb58e29f394e84525f24695
 }
 
 .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--space-4);
-<<<<<<< HEAD
-    margin-bottom: var(--space-4);
-=======
     margin-bottom: var(--space-6);
->>>>>>> b86ba888a4274516acb58e29f394e84525f24695
 }
 
 .form-group {
@@ -1045,19 +1028,27 @@
 
 .form-group label {
     font-weight: 600;
-<<<<<<< HEAD
+    color: var(--text-secondary);
     margin-bottom: var(--space-2);
-    color: var(--text-primary);
+    font-size: var(--text-sm);
 }
 
-.form-group select,
-.form-group input {
-    padding: var(--space-2);
-    border: 1px solid var(--border-primary);
-    border-radius: var(--radius-sm);
+.form-group input,
+.form-group select {
+    padding: var(--space-3);
+    border: 1px solid var(--border-tertiary);
+    border-radius: var(--radius-md);
     background: var(--bg-primary);
     color: var(--text-primary);
-    font-size: var(--text-sm);
+    font-size: var(--text-base);
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(166, 124, 82, 0.1);
 }
 
 .form-group select:disabled {
@@ -1254,45 +1245,6 @@
 }
 
 .generate-btn {
-    background: var(--accent-primary);
-    color: var(--text-on-accent);
-    border: none;
-    padding: var(--space-3) var(--space-6);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    font-weight: 600;
-    font-size: var(--text-lg);
-    transition: background-color 0.2s ease;
-    width: 100%;
-}
-
-.generate-btn:hover {
-    background: var(--accent-primary-hover);
-=======
-    color: var(--text-secondary);
-    margin-bottom: var(--space-2);
-    font-size: var(--text-sm);
-}
-
-.form-group input,
-.form-group select {
-    padding: var(--space-3);
-    border: 1px solid var(--border-tertiary);
-    border-radius: var(--radius-md);
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-size: var(--text-base);
-    transition: all 0.2s ease;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(166, 124, 82, 0.1);
-}
-
-.generate-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1313,31 +1265,11 @@
     background: var(--accent-secondary);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
->>>>>>> b86ba888a4274516acb58e29f394e84525f24695
 }
 
 .generate-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-<<<<<<< HEAD
-}
-
-.loading {
-    text-align: center;
-    padding: var(--space-4);
-    color: var(--text-secondary);
-    font-style: italic;
-}
-
-.fallback-notice {
-    background: var(--accent-tertiary);
-    color: var(--text-on-accent);
-    padding: var(--space-3);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-4);
-    text-align: center;
-    font-weight: 600;
-=======
     transform: none;
 }
 
@@ -1519,5 +1451,77 @@
         padding: var(--space-3);
         font-size: var(--text-base);
     }
->>>>>>> b86ba888a4274516acb58e29f394e84525f24695
+}
+
+/* ===== SVG ICONS ===== */
+
+.svg-icon {
+    width: 1.5em;
+    height: 1.5em;
+    fill: currentColor;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.svg-icon-sm {
+    width: 1em;
+    height: 1em;
+}
+
+.svg-icon-lg {
+    width: 2em;
+    height: 2em;
+}
+
+.svg-icon-xl {
+    width: 2.5em;
+    height: 2.5em;
+}
+
+/* Icon color variants */
+.icon-enemy {
+    fill: #dc2626; /* Red for enemies */
+}
+
+.icon-potion {
+    fill: #7c3aed; /* Purple for potions */
+}
+
+.icon-initiative {
+    fill: #059669; /* Green for initiative */
+}
+
+.icon-dice {
+    fill: #d97706; /* Orange for dice */
+}
+
+.icon-hero {
+    fill: #2563eb; /* Blue for heroes */
+}
+
+.icon-skull {
+    fill: #6b7280; /* Gray for skull/death */
+}
+
+.icon-magic {
+    fill: #9333ea; /* Purple for magic */
+}
+
+.icon-description {
+    fill: #374151; /* Dark gray for descriptions */
+}
+
+/* Button icon styles */
+.btn-icon svg {
+    width: 1.2em;
+    height: 1.2em;
+    fill: currentColor;
+}
+
+/* Section icon styles */
+.section-title svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    margin-right: 0.5em;
 }
