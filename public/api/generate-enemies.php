@@ -1364,6 +1364,11 @@ class EnemyGenerator {
             return $text;
         }
         
+        // Проверяем, является ли это названием существа (не переводим названия существ)
+        if ($this->isCreatureName($text)) {
+            return $text; // Возвращаем оригинальное название на английском
+        }
+        
         try {
             // Используем AI сервис для перевода
             require_once __DIR__ . '/../../app/Services/ai-service.php';
@@ -1385,6 +1390,41 @@ class EnemyGenerator {
             logMessage('ERROR', "Ошибка AI перевода: " . $e->getMessage());
             throw new Exception('AI перевод недоступен: ' . $e->getMessage());
         }
+    }
+    
+    /**
+     * Проверка, является ли текст названием существа
+     */
+    private function isCreatureName($text) {
+        // Список известных названий существ D&D (не переводим их)
+        $creatureNames = [
+            'Camel', 'Goblin', 'Orc', 'Kobold', 'Bandit', 'Cultist', 'Skeleton', 'Zombie',
+            'Wolf', 'Bear', 'Spider', 'Dragon', 'Giant', 'Demon', 'Devil', 'Undead', 'Construct',
+            'Elf', 'Dwarf', 'Halfling', 'Human', 'Tiefling', 'Dragonborn', 'Gnome', 'Half-Elf',
+            'Half-Orc', 'Aasimar', 'Genasi', 'Goliath', 'Firbolg', 'Kenku', 'Lizardfolk', 'Tabaxi',
+            'Triton', 'Bugbear', 'Hobgoblin', 'Gnoll', 'Yuan-ti', 'Gith', 'Duergar', 'Svirfneblin',
+            'Beholder', 'Mind Flayer', 'Lich', 'Vampire', 'Werewolf', 'Ghost', 'Wraith', 'Specter',
+            'Wight', 'Ghoul', 'Mummy', 'Skeleton', 'Zombie', 'Golem', 'Elemental', 'Genie',
+            'Angel', 'Devil', 'Demon', 'Daemon', 'Celestial', 'Fiend', 'Aberration', 'Beast',
+            'Monstrosity', 'Plant', 'Ooze', 'Construct', 'Undead', 'Dragon', 'Giant', 'Humanoid',
+            'Fey', 'Elemental', 'Celestial', 'Fiend', 'Aberration'
+        ];
+        
+        // Проверяем точное совпадение
+        if (in_array($text, $creatureNames)) {
+            return true;
+        }
+        
+        // Проверяем, начинается ли текст с заглавной буквы и содержит только буквы
+        if (preg_match('/^[A-Z][a-zA-Z\s\-\']+$/', $text)) {
+            // Если это короткий текст (до 3 слов) и начинается с заглавной буквы, скорее всего это название существа
+            $wordCount = count(explode(' ', trim($text)));
+            if ($wordCount <= 3) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
 }
