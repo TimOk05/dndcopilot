@@ -114,13 +114,24 @@ class IconManager {
 
     // Предзагрузить все иконки
     async preloadIcons() {
+        // Сначала загружаем встроенные иконки
+        this.loadEmbeddedIcons();
+
         const iconNames = [
             'enemy', 'potion', 'initiative', 'dice',
             'hero', 'skull', 'crystal-ball-magic-svgrepo-com', 'description', 'loading'
         ];
 
-        const loadPromises = iconNames.map(name => this.getIcon(name));
-        await Promise.allSettled(loadPromises);
+        // Проверяем какие иконки уже есть в кэше (встроенные)
+        const missingIcons = iconNames.filter(name => !this.iconCache.has(name));
+
+        if (missingIcons.length > 0) {
+            console.log(`Missing icons, trying to load from files: ${missingIcons.join(', ')}`);
+            const loadPromises = missingIcons.map(name => this.getIcon(name));
+            await Promise.allSettled(loadPromises);
+        } else {
+            console.log('All icons loaded from embedded cache');
+        }
     }
 
     // Заменить эмодзи на SVG иконки в существующих элементах
@@ -184,6 +195,9 @@ document.addEventListener('DOMContentLoaded', async() => {
     console.log('DOM loaded, initializing icons...');
 
     try {
+        // Ждем немного чтобы убедиться что window.icons загружен
+        await new Promise(resolve => setTimeout(resolve, 100));
+
         await window.iconManager.preloadIcons();
         console.log('Icons preloaded successfully');
 
