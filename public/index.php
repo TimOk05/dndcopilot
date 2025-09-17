@@ -459,7 +459,7 @@ function openCharacterModal() {
                 <p class="generator-subtitle">Создайте полноценного персонажа с использованием D&D API и AI</p>
             </div>
             
-            <form id="characterForm" class="character-form">
+            <form id="characterForm" class="character-form" method="post">
                 <div class="form-grid-compact">
                     <div class="form-group">
                         <label for="character-race">Раса персонажа</label>
