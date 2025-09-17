@@ -52,6 +52,9 @@ class EnemyGenerator {
             $enemies = [];
             logMessage('INFO', "EnemyGenerator: Начинаем генерацию противников. threat_level: $threat_level, count: $count, enemy_type: $enemy_type, environment: $environment");
             
+            // Логируем начало генерации для мониторинга
+            $this->logMonitor("GENERATION_START: threat_level: $threat_level, count: $count, enemy_type: $enemy_type, environment: $environment");
+            
             // Получаем список монстров из API с retry
             $monsters = $this->getMonstersListWithRetry();
             
@@ -103,6 +106,9 @@ class EnemyGenerator {
                 throw new Exception('Не удалось сгенерировать противников');
             }
             
+            // Логируем успешное завершение генерации
+            $this->logMonitor("GENERATION_SUCCESS: найдено " . count($enemies) . " противников для threat_level: $threat_level");
+            
             return [
                 'success' => true,
                 'enemies' => $enemies,
@@ -115,11 +121,25 @@ class EnemyGenerator {
             
         } catch (Exception $e) {
             logMessage('ERROR', "EnemyGenerator: Ошибка генерации: " . $e->getMessage());
+            
+            // Логируем ошибку генерации для мониторинга
+            $this->logMonitor("GENERATION_ERROR: threat_level: $threat_level, ERROR: " . $e->getMessage());
+            
             return [
                 'success' => false,
                 'error' => $e->getMessage()
             ];
         }
+    }
+    
+    /**
+     * Логирование для мониторинга
+     */
+    private function logMonitor($message) {
+        $log_file = __DIR__ . '/../../data/logs/enemy_monitor.log';
+        $timestamp = date('Y-m-d H:i:s');
+        $log_entry = "[$timestamp] $message\n";
+        file_put_contents($log_file, $log_entry, FILE_APPEND | LOCK_EX);
     }
     
     /**
