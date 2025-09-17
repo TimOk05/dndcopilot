@@ -20,11 +20,14 @@ class DndApiService {
             mkdir($this->cache_dir, 0755, true);
         }
         
-        // Инициализируем PowerShell сервис для локального тестирования
+        // Подключаем PowerShell сервис для локального тестирования
+        if (!class_exists('PowerShellHttpService')) {
+            require_once __DIR__ . '/PowerShellHttpService.php';
+        }
         $this->powershell_service = new PowerShellHttpService();
         
-        // Проверяем доступность интернета
-        $this->checkInternetConnection();
+        // Проверяем доступность интернета (временно отключено для диагностики)
+        // $this->checkInternetConnection();
     }
     
     /**
