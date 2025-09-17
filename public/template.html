@@ -5266,13 +5266,13 @@
                 <div class="user-controls flex gap-2 items-center">
 
                     <!-- Иконка статистики - всегда видна -->
-                    <a href="../app/Controllers/stats.php" class="stats-link" style="display: block !important; visibility: visible !important; opacity: 1 !important;">📊</a>
+                    <a href="../app/Controllers/stats.php" class="stats-link" style="display: block !important; visibility: visible !important; opacity: 1 !important;"><span class="svg-icon icon-stats" data-icon="stats"></span></a>
 
                     <?php if (isAdmin()): ?>
-                    <a href="../app/Controllers/admin.php" class="admin-link" style="display: block !important; visibility: visible !important; opacity: 1 !important;">🔧</a>
+                    <a href="../app/Controllers/admin.php" class="admin-link" style="display: block !important; visibility: visible !important; opacity: 1 !important;"><span class="svg-icon icon-settings" data-icon="settings"></span></a>
                     <?php endif; ?>
 
-                    <button class="logout-btn btn btn-secondary" onclick="logout()">🚪 Выйти</button>
+                    <button class="logout-btn btn btn-secondary" onclick="logout()"><span class="svg-icon icon-logout" data-icon="logout"></span> Выйти</button>
                 </div>
             </div>
 
