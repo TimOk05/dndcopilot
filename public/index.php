@@ -3743,6 +3743,9 @@ function saveAllEnemiesToNotes(enemies) {
 </svg>`
     };
     
+    // Делаем объект icons глобальным для использования в icons.js
+    window.icons = icons;
+    
     function replaceIcons() {
         const elements = document.querySelectorAll('[data-icon]');
         console.log(`Found ${elements.length} elements with data-icon`);

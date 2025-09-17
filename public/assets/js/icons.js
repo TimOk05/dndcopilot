@@ -3,20 +3,34 @@ class IconManager {
     constructor() {
         this.iconCache = new Map();
         this.iconPath = '/icons/';
+        this.loadEmbeddedIcons();
+    }
+
+    // Загрузить встроенные иконки из глобального объекта icons
+    loadEmbeddedIcons() {
+        if (typeof window.icons !== 'undefined') {
+            console.log('Loading embedded icons from window.icons');
+            for (const [name, svgContent] of Object.entries(window.icons)) {
+                this.iconCache.set(name, svgContent);
+                console.log(`Loaded embedded icon: ${name}`);
+            }
+        } else {
+            console.warn('window.icons not found, embedded icons not available');
+        }
     }
 
     // Получить SVG иконку по имени
     async getIcon(iconName, className = 'svg-icon') {
         console.log(`Getting icon: ${iconName} with class: ${className}`);
 
-        // Проверяем кэш
+        // Проверяем кэш (встроенные иконки)
         if (this.iconCache.has(iconName)) {
             console.log(`Icon ${iconName} found in cache`);
             return this.createIconElement(this.iconCache.get(iconName), className);
         }
 
+        // Если встроенная иконка не найдена, пытаемся загрузить из файла
         try {
-            // Загружаем SVG файл
             const url = `${this.iconPath}${iconName}.svg`;
             console.log(`Fetching icon from: ${url}`);
 
