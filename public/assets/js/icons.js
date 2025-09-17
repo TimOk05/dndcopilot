@@ -28,6 +28,11 @@ class IconManager {
             const svgContent = await response.text();
             console.log(`Loaded SVG content for ${iconName}:`, svgContent.substring(0, 100) + '...');
 
+            // Проверяем, что содержимое является валидным SVG
+            if (!svgContent.includes('<svg') || !svgContent.includes('</svg>')) {
+                throw new Error(`Invalid SVG content for ${iconName}`);
+            }
+
             this.iconCache.set(iconName, svgContent);
 
             return this.createIconElement(svgContent, className);
@@ -41,13 +46,31 @@ class IconManager {
     createIconElement(svgContent, className) {
         const wrapper = document.createElement('span');
         wrapper.className = className;
-        wrapper.innerHTML = svgContent;
 
-        // Удаляем атрибуты размера из SVG, чтобы использовать CSS
-        const svg = wrapper.querySelector('svg');
-        if (svg) {
-            svg.removeAttribute('width');
-            svg.removeAttribute('height');
+        // Проверяем, что SVG содержимое корректно
+        if (!svgContent || svgContent.trim() === '') {
+            console.error('Empty SVG content');
+            return wrapper;
+        }
+
+        try {
+            wrapper.innerHTML = svgContent;
+
+            // Удаляем атрибуты размера из SVG, чтобы использовать CSS
+            const svg = wrapper.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                // Убеждаемся, что SVG имеет правильные стили
+                svg.style.width = '1em';
+                svg.style.height = '1em';
+                svg.style.display = 'inline-block';
+            } else {
+                console.error('No SVG element found in content:', svgContent);
+            }
+        } catch (error) {
+            console.error('Error creating icon element:', error);
+            wrapper.innerHTML = '';
         }
 
         return wrapper;
@@ -180,8 +203,8 @@ async function replaceDataIconElements() {
                 }
             } catch (error) {
                 console.error(`Failed to load icon ${iconName}:`, error);
-                // Добавляем временный текст вместо иконки для отладки
-                element.innerHTML = `[${iconName}]`;
+                // Оставляем элемент пустым при ошибке
+                element.innerHTML = '';
             }
         }
     }
