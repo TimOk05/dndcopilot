@@ -3707,12 +3707,11 @@ function saveAllEnemiesToNotes(enemies) {
     // Встроенные SVG иконки из папки icons
     const icons = {
         dice: `<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
-  <circle cx="8" cy="8" r="1.5" fill="currentColor"/>
-  <circle cx="16" cy="16" r="1.5" fill="currentColor"/>
-  <circle cx="8" cy="16" r="1.5" fill="currentColor"/>
-  <circle cx="16" cy="8" r="1.5" fill="currentColor"/>
+  <path d="M12 2L22 8.5V15.5L12 22L2 15.5V8.5L12 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  <path d="M12 2L2 8.5L12 15L22 8.5L12 2Z" fill="currentColor" opacity="0.3"/>
+  <path d="M12 15L22 15.5L12 22L2 15.5L12 15Z" fill="currentColor" opacity="0.6"/>
   <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+  <text x="12" y="16" font-family="Arial, sans-serif" font-size="8" font-weight="bold" text-anchor="middle" fill="currentColor">20</text>
 </svg>`,
         hero: `<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path d="M12 2L13.5 8.5H20L15 13L16.5 19.5L12 15.5L7.5 19.5L9 13L4 8.5H10.5L12 2Z"/>
