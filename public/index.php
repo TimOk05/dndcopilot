@@ -3698,3 +3698,64 @@ function saveAllEnemiesToNotes(enemies) {
     });
 }
 </script>
+
+<script>
+// Простая система загрузки SVG иконок
+(async function() {
+    console.log('Loading icons...');
+    
+    const iconCache = {};
+    
+    async function loadIcon(iconName) {
+        if (iconCache[iconName]) {
+            return iconCache[iconName];
+        }
+        
+        try {
+            const response = await fetch(`/icons/${iconName}.svg`);
+            if (!response.ok) {
+                console.warn(`Icon ${iconName} not found (${response.status})`);
+                return null;
+            }
+            
+            const svgContent = await response.text();
+            iconCache[iconName] = svgContent;
+            return svgContent;
+        } catch (error) {
+            console.warn(`Error loading icon ${iconName}:`, error);
+            return null;
+        }
+    }
+    
+    async function replaceIcons() {
+        const elements = document.querySelectorAll('[data-icon]');
+        console.log(`Found ${elements.length} elements with data-icon`);
+        
+        for (const element of elements) {
+            const iconName = element.getAttribute('data-icon');
+            if (!iconName) continue;
+            
+            try {
+                const svgContent = await loadIcon(iconName);
+                if (svgContent) {
+                    element.innerHTML = svgContent;
+                    element.removeAttribute('data-icon');
+                    console.log(`✓ Loaded icon: ${iconName}`);
+                } else {
+                    console.warn(`✗ Failed to load icon: ${iconName}`);
+                }
+            } catch (error) {
+                console.error(`Error processing icon ${iconName}:`, error);
+            }
+        }
+    }
+    
+    // Запускаем загрузку иконок
+    await replaceIcons();
+    
+    // Дополнительная попытка через небольшую задержку
+    setTimeout(replaceIcons, 1000);
+    
+    console.log('Icon loading completed');
+})();
+</script>
