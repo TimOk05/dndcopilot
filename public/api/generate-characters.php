@@ -114,35 +114,33 @@ class CharacterGeneratorV4 {
             $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
             $language = $params['language'] ?? $this->language_service->getCurrentLanguage();
             
-            // Получаем данные расы из D&D API
+            // Получаем данные расы из D&D API или библиотек
             logMessage('INFO', "Начинаем получение данных расы: {$race}");
             $race_data = $this->getRaceDataFromApi($race);
             if (isset($race_data['error'])) {
-                logMessage('ERROR', "API недоступен для расы: {$race}");
-                logMessage('ERROR', "Детали ошибки расы: " . json_encode($race_data, JSON_UNESCAPED_UNICODE));
-                return [
-                    'success' => false,
-                    'error' => 'API недоступен',
-                    'message' => "Не удалось получить данные расы '{$race}' из внешних API",
-                    'details' => $race_data['message'] ?? 'D&D API недоступен',
-                    'race_error' => $race_data
-                ];
+                logMessage('WARNING', "API недоступен для расы: {$race}, используем библиотеки");
+                // Используем библиотечные данные как fallback
+                $race_library_info = $this->getRaceLibraryInfo($race);
+                if (empty($race_library_info)) {
+                    return [
+                        'success' => false,
+                        'error' => 'Раса не найдена',
+                        'message' => "Раса '{$race}' не найдена ни в API, ни в библиотеках",
+                        'details' => 'Проверьте правильность названия расы'
+                    ];
+                }
+                // Создаем базовые данные расы из библиотеки
+                $race_data = $this->createRaceDataFromLibrary($race, $race_library_info);
             }
             logMessage('INFO', "Получены данные расы: " . json_encode($race_data, JSON_UNESCAPED_UNICODE));
             
-            // Получаем данные класса из D&D API
+            // Получаем данные класса из D&D API или создаем базовые
             logMessage('INFO', "Начинаем получение данных класса: {$class}");
             $class_data = $this->getClassDataFromApi($class);
             if (isset($class_data['error'])) {
-                logMessage('ERROR', "API недоступен для класса: {$class}");
-                logMessage('ERROR', "Детали ошибки класса: " . json_encode($class_data, JSON_UNESCAPED_UNICODE));
-                return [
-                    'success' => false,
-                    'error' => 'API недоступен',
-                    'message' => "Не удалось получить данные класса '{$class}' из внешних API",
-                    'details' => $class_data['message'] ?? 'D&D API недоступен',
-                    'class_error' => $class_data
-                ];
+                logMessage('WARNING', "API недоступен для класса: {$class}, создаем базовые данные");
+                // Создаем базовые данные класса
+                $class_data = $this->createBasicClassData($class);
             }
             logMessage('INFO', "Получены данные класса: " . json_encode($class_data, JSON_UNESCAPED_UNICODE));
             
@@ -649,6 +647,195 @@ class CharacterGeneratorV4 {
         return trim($text);
     }
     
+    /**
+     * Создание базовых данных расы из библиотеки
+     */
+    private function createRaceDataFromLibrary($race_key, $library_info) {
+        return [
+            'name' => ucfirst($race_key),
+            'size' => 'Medium',
+            'speed' => 30,
+            'traits' => [
+                [
+                    'name' => 'Особенности расы',
+                    'description' => $library_info['notes_ru'] ?? 'Особенности расы из библиотеки'
+                ]
+            ],
+            'languages' => ['Общий'],
+            'subraces' => []
+        ];
+    }
+    
+    /**
+     * Создание базовых данных класса из библиотеки механик
+     */
+    private function createBasicClassData($class_key) {
+        // Загружаем библиотеку механик
+        $mechanics_file = __DIR__ . '/../../data/pdf/dnd_npc_mechanics_context_v2.json';
+        $mechanics_data = [];
+        
+        if (file_exists($mechanics_file)) {
+            $mechanics_data = json_decode(file_get_contents($mechanics_file), true);
+        }
+        
+        // Получаем данные класса из библиотеки
+        $class_mechanics = $mechanics_data['classes'][$class_key] ?? [];
+        
+        // Базовые характеристики классов
+        $hit_dice = [
+            'fighter' => 10, 'paladin' => 10, 'ranger' => 10,
+            'barbarian' => 12, 'sorcerer' => 6, 'wizard' => 6,
+            'bard' => 8, 'cleric' => 8, 'druid' => 8,
+            'monk' => 8, 'rogue' => 8, 'warlock' => 8
+        ];
+        
+        // Определяем основные характеристики на основе механик
+        $primary_abilities = [
+            'fighter' => 'str', 'paladin' => 'str', 'ranger' => 'dex',
+            'barbarian' => 'str', 'sorcerer' => 'cha', 'wizard' => 'int',
+            'bard' => 'cha', 'cleric' => 'wis', 'druid' => 'wis',
+            'monk' => 'dex', 'rogue' => 'dex', 'warlock' => 'cha'
+        ];
+        
+        // Создаем базовые данные
+        $class_data = [
+            'name' => ucfirst($class_key),
+            'hit_die' => $hit_dice[$class_key] ?? 8,
+            'primary_ability' => $primary_abilities[$class_key] ?? 'str',
+            'saving_throws' => $class_mechanics['saving_throws'] ?? ['str', 'con'],
+            'casting_category' => $class_mechanics['casting_category'] ?? 'none',
+            'spellcasting_ability' => $class_mechanics['spellcasting_ability'] ?? null,
+            'proficiencies' => [
+                'armor' => $this->getClassArmorProficiencies($class_key),
+                'weapons' => $this->getClassWeaponProficiencies($class_key),
+                'tools' => $this->getClassToolProficiencies($class_key),
+                'saving_throws' => $class_mechanics['saving_throws'] ?? ['str', 'con']
+            ],
+            'features' => $this->getClassFeatures($class_key),
+            'fighting_styles' => $class_mechanics['martial']['fighting_styles'] ?? []
+        ];
+        
+        return $class_data;
+    }
+    
+    /**
+     * Получение владения доспехами для класса
+     */
+    private function getClassArmorProficiencies($class_key) {
+        $armor_proficiencies = [
+            'fighter' => ['light armor', 'medium armor', 'heavy armor', 'shields'],
+            'paladin' => ['light armor', 'medium armor', 'heavy armor', 'shields'],
+            'ranger' => ['light armor', 'medium armor', 'shields'],
+            'barbarian' => ['light armor', 'medium armor', 'shields'],
+            'monk' => [],
+            'rogue' => ['light armor'],
+            'bard' => ['light armor'],
+            'cleric' => ['light armor', 'medium armor', 'shields'],
+            'druid' => ['light armor', 'medium armor', 'shields'],
+            'sorcerer' => [],
+            'wizard' => [],
+            'warlock' => ['light armor']
+        ];
+        
+        return $armor_proficiencies[$class_key] ?? ['light armor'];
+    }
+    
+    /**
+     * Получение владения оружием для класса
+     */
+    private function getClassWeaponProficiencies($class_key) {
+        $weapon_proficiencies = [
+            'fighter' => ['simple weapons', 'martial weapons'],
+            'paladin' => ['simple weapons', 'martial weapons'],
+            'ranger' => ['simple weapons', 'martial weapons'],
+            'barbarian' => ['simple weapons', 'martial weapons'],
+            'monk' => ['simple weapons', 'shortsword'],
+            'rogue' => ['simple weapons', 'hand crossbow', 'longsword', 'rapier', 'shortsword'],
+            'bard' => ['simple weapons', 'hand crossbow', 'longsword', 'rapier', 'shortsword'],
+            'cleric' => ['simple weapons'],
+            'druid' => ['clubs', 'daggers', 'darts', 'javelins', 'maces', 'quarterstaffs', 'scimitars', 'sickles', 'slings', 'spears'],
+            'sorcerer' => ['daggers', 'darts', 'slings', 'quarterstaffs', 'light crossbows'],
+            'wizard' => ['daggers', 'darts', 'slings', 'quarterstaffs', 'light crossbows'],
+            'warlock' => ['simple weapons']
+        ];
+        
+        return $weapon_proficiencies[$class_key] ?? ['simple weapons'];
+    }
+    
+    /**
+     * Получение владения инструментами для класса
+     */
+    private function getClassToolProficiencies($class_key) {
+        $tool_proficiencies = [
+            'bard' => ['three musical instruments'],
+            'rogue' => ['thieves\' tools'],
+            'ranger' => ['one type of musical instrument'],
+            'druid' => ['herbalism kit'],
+            'cleric' => ['one type of musical instrument']
+        ];
+        
+        return $tool_proficiencies[$class_key] ?? [];
+    }
+    
+    /**
+     * Получение способностей класса
+     */
+    private function getClassFeatures($class_key) {
+        $features = [
+            'fighter' => [
+                ['name' => 'Второе дыхание', 'description' => 'Восстановление хитов в бою'],
+                ['name' => 'Стиль боя', 'description' => 'Особые техники боя']
+            ],
+            'paladin' => [
+                ['name' => 'Божественный смысл', 'description' => 'Способность чувствовать нежить'],
+                ['name' => 'Наложение рук', 'description' => 'Исцеление через божественную силу']
+            ],
+            'ranger' => [
+                ['name' => 'Любимый враг', 'description' => 'Бонус против определенных типов существ'],
+                ['name' => 'Естественный исследователь', 'description' => 'Бонусы в дикой природе']
+            ],
+            'barbarian' => [
+                ['name' => 'Ярость', 'description' => 'Боевое безумие с бонусами'],
+                ['name' => 'Неукротимость', 'description' => 'Сопротивление урону']
+            ],
+            'monk' => [
+                ['name' => 'Мастерство в рукопашном бою', 'description' => 'Бонусы к атакам без оружия'],
+                ['name' => 'Ци', 'description' => 'Мистическая энергия для способностей']
+            ],
+            'rogue' => [
+                ['name' => 'Скрытность', 'description' => 'Бонусы к скрытности и ловкости рук'],
+                ['name' => 'Скрытая атака', 'description' => 'Дополнительный урон при преимуществе']
+            ],
+            'bard' => [
+                ['name' => 'Вдохновение барда', 'description' => 'Магические бонусы союзникам'],
+                ['name' => 'Заклинания', 'description' => 'Магические способности']
+            ],
+            'cleric' => [
+                ['name' => 'Заклинания', 'description' => 'Божественная магия'],
+                ['name' => 'Божественный домен', 'description' => 'Особые способности божества']
+            ],
+            'druid' => [
+                ['name' => 'Заклинания', 'description' => 'Магия природы'],
+                ['name' => 'Дикая форма', 'description' => 'Превращение в животных']
+            ],
+            'sorcerer' => [
+                ['name' => 'Заклинания', 'description' => 'Врожденная магия'],
+                ['name' => 'Магическое происхождение', 'description' => 'Источник магической силы']
+            ],
+            'wizard' => [
+                ['name' => 'Заклинания', 'description' => 'Изученная магия'],
+                ['name' => 'Книга заклинаний', 'description' => 'Коллекция изученных заклинаний']
+            ],
+            'warlock' => [
+                ['name' => 'Заклинания', 'description' => 'Пактовая магия'],
+                ['name' => 'Пакт с покровителем', 'description' => 'Договор с могущественным существом']
+            ]
+        ];
+        
+        return $features[$class_key] ?? [
+            ['name' => 'Базовые способности класса', 'description' => 'Стандартные способности класса']
+        ];
+    }
     
     /**
      * Получение отображаемого названия расы
