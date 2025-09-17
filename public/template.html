@@ -813,7 +813,9 @@
         }
         
         .fast-btn {
-            display: inline-block;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
             margin: 0 8px 12px 0;
             padding: 8px 16px;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
@@ -2544,7 +2546,17 @@
         .fast-btn .svg-icon {
             width: 36px;
             height: 36px;
-            margin-right: 10px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        
+        .fast-btn {
+            text-align: center;
+        }
+        
+        .fast-btn>*:not(.svg-icon) {
+            flex: 1;
+            text-align: center;
         }
         /* Иконки в заголовках модальных окон */
         
