@@ -119,11 +119,13 @@ class CharacterGeneratorV4 {
             $race_data = $this->getRaceDataFromApi($race);
             if (isset($race_data['error'])) {
                 logMessage('ERROR', "API недоступен для расы: {$race}");
+                logMessage('ERROR', "Детали ошибки расы: " . json_encode($race_data, JSON_UNESCAPED_UNICODE));
                 return [
                     'success' => false,
                     'error' => 'API недоступен',
                     'message' => "Не удалось получить данные расы '{$race}' из внешних API",
-                    'details' => $race_data['message'] ?? 'D&D API недоступен'
+                    'details' => $race_data['message'] ?? 'D&D API недоступен',
+                    'race_error' => $race_data
                 ];
             }
             logMessage('INFO', "Получены данные расы: " . json_encode($race_data, JSON_UNESCAPED_UNICODE));
@@ -133,11 +135,13 @@ class CharacterGeneratorV4 {
             $class_data = $this->getClassDataFromApi($class);
             if (isset($class_data['error'])) {
                 logMessage('ERROR', "API недоступен для класса: {$class}");
+                logMessage('ERROR', "Детали ошибки класса: " . json_encode($class_data, JSON_UNESCAPED_UNICODE));
                 return [
                     'success' => false,
                     'error' => 'API недоступен',
                     'message' => "Не удалось получить данные класса '{$class}' из внешних API",
-                    'details' => $class_data['message'] ?? 'D&D API недоступен'
+                    'details' => $class_data['message'] ?? 'D&D API недоступен',
+                    'class_error' => $class_data
                 ];
             }
             logMessage('INFO', "Получены данные класса: " . json_encode($class_data, JSON_UNESCAPED_UNICODE));
