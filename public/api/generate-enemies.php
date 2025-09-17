@@ -50,7 +50,7 @@ class EnemyGenerator {
         
         try {
             $enemies = [];
-            logMessage('INFO', "EnemyGenerator: Начинаем генерацию противников. threat_level: $threat_level, count: $count");
+            logMessage('INFO', "EnemyGenerator: Начинаем генерацию противников. threat_level: $threat_level, count: $count, enemy_type: $enemy_type, environment: $environment");
             
             // Получаем список монстров из API с retry
             $monsters = $this->getMonstersListWithRetry();
@@ -237,9 +237,10 @@ class EnemyGenerator {
                     }
                     
                     $monster_cr = $this->parseCR($monster_details['challenge_rating']);
-                    logMessage('DEBUG', "EnemyGenerator: Монстр {$monster_details['name']} имеет CR $monster_cr");
+                    logMessage('DEBUG', "EnemyGenerator: Монстр {$monster_details['name']} имеет CR $monster_cr (диапазон: {$cr_range['min']}-{$cr_range['max']})");
                     
                     if (!$this->checkCRRange($monster_details['challenge_rating'], $cr_range)) {
+                        logMessage('DEBUG', "EnemyGenerator: Монстр {$monster_details['name']} не подходит по CR $monster_cr (нужен {$cr_range['min']}-{$cr_range['max']})");
                         continue;
                     }
                     
@@ -249,18 +250,21 @@ class EnemyGenerator {
                     }
                     
                     if ($enemy_type && !$this->checkType($monster_details['type'], $enemy_type)) {
+                        logMessage('DEBUG', "EnemyGenerator: Монстр {$monster_details['name']} не подходит по типу {$monster_details['type']} (нужен $enemy_type)");
                         continue;
                     }
                     
                     // Проверяем среду (необязательно - пропускаем если нет информации)
                     if ($environment && isset($monster_details['environment'])) {
                         if (!$this->checkEnvironment($monster_details, $environment)) {
+                            logMessage('DEBUG', "EnemyGenerator: Монстр {$monster_details['name']} не подходит по среде {$monster_details['environment']} (нужна $environment)");
                             continue;
                         }
                     }
                     
                     // Проверяем совместимость
                     if (!$this->checkCompatibility($monster_details, $cr_range)) {
+                        logMessage('DEBUG', "EnemyGenerator: Монстр {$monster_details['name']} не прошел проверку совместимости");
                         continue;
                     }
                     
@@ -1464,6 +1468,20 @@ if (isset($_SERVER['REQUEST_METHOD'])) {
                     'success' => true,
                     'environments' => $environments
                 ], JSON_UNESCAPED_UNICODE);
+                break;
+                
+            case 'test':
+                // Тестовый endpoint для проверки работы генератора
+                $test_params = [
+                    'threat_level' => $_GET['threat_level'] ?? 'medium',
+                    'count' => $_GET['count'] ?? 1,
+                    'enemy_type' => $_GET['enemy_type'] ?? '',
+                    'environment' => $_GET['environment'] ?? '',
+                    'use_ai' => 'on'
+                ];
+                
+                $result = $generator->generateEnemies($test_params);
+                echo json_encode($result, JSON_UNESCAPED_UNICODE);
                 break;
                 
             default:
