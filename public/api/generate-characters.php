@@ -649,6 +649,7 @@ class CharacterGeneratorV4 {
         return trim($text);
     }
     
+    
     /**
      * Получение отображаемого названия расы
      */
