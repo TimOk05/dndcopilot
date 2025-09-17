@@ -453,7 +453,7 @@ function openCharacterModal() {
     showModal(`
         <div class="character-generator">
             <div class="generator-header">
-                <h2>&#9876;&#65039; Генератор персонажей</h2>
+                <h2><span class="svg-icon icon-hero" data-icon="hero"></span> Генератор персонажей</h2>
                 <p class="generator-subtitle">Создайте полноценного персонажа с использованием D&D API и AI</p>
             </div>
             
@@ -654,7 +654,7 @@ function openEnemyModal() {
     showModal(`
         <div class="enemy-generator">
             <div class="generator-header">
-                <h2>&#128127; Генератор противников</h2>
+                <h2><span class="svg-icon icon-enemy" data-icon="enemy"></span> Генератор противников</h2>
                 <p class="generator-subtitle">Создайте подходящих противников для вашей группы</p>
             </div>
             
@@ -1463,7 +1463,7 @@ function openPotionModalSimple() {
     showModal(`
         <div class="potion-generator">
             <div class="generator-header">
-                <h2>🧪 Генератор зелий</h2>
+                <h2><span class="svg-icon icon-potion" data-icon="potion"></span> Генератор зелий</h2>
                 <p class="generator-subtitle">Создайте магические зелья различных типов и редкости</p>
             </div>
             
@@ -1754,7 +1754,7 @@ function openInitiativeModal() {
     } else {
         showModal('<div class="initiative-container">' +
             '<div class="initiative-header">' +
-                '<h3>&#9889; Инициатива</h3>' +
+                '<h3><span class="svg-icon icon-initiative" data-icon="initiative"></span> Инициатива</h3>' +
                 '<div class="initiative-stats">' +
                     '<span class="stat-item">Участников: <strong id="initiative-count">0</strong></span>' +
                     '<span class="stat-item">Раунд: <strong id="initiative-round">1</strong></span>' +
