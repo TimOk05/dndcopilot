@@ -1278,13 +1278,87 @@ class EnemyGenerator {
     private function makeRequest($url) {
         logMessage('INFO', "EnemyGenerator: makeRequest для URL: $url");
         
-        // Пробуем сначала cURL, если доступен
+        // Пробуем сначала PowerShell, если доступен
+        if ($this->isPowerShellAvailable()) {
+            return $this->makePowerShellRequest($url);
+        }
+        
+        // Пробуем cURL, если доступен
         if (function_exists('curl_init')) {
             return $this->makeCurlRequest($url);
         }
         
         // Fallback на file_get_contents
         return $this->makeFileGetContentsRequest($url);
+    }
+    
+    /**
+     * Проверка доступности PowerShell
+     */
+    private function isPowerShellAvailable() {
+        if (!function_exists('exec')) {
+            return false;
+        }
+        
+        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+            return false;
+        }
+        
+        $output = [];
+        $return_code = 0;
+        exec('powershell -Command "Write-Output \'TEST\'"', $output, $return_code);
+        
+        return $return_code === 0 && !empty($output) && $output[0] === 'TEST';
+    }
+    
+    /**
+     * Выполнение запроса через PowerShell
+     */
+    private function makePowerShellRequest($url) {
+        logMessage('INFO', "EnemyGenerator: Используем PowerShell для запроса");
+        
+        $temp_file = tempnam(sys_get_temp_dir(), 'dnd_ps_');
+        
+        try {
+            $ps_command = sprintf(
+                'powershell -Command "Invoke-WebRequest -Uri \'%s\' -OutFile \'%s\'"',
+                $url,
+                $temp_file
+            );
+            
+            $output = [];
+            $return_code = 0;
+            exec($ps_command, $output, $return_code);
+            
+            if ($return_code !== 0) {
+                throw new Exception('PowerShell команда завершилась с ошибкой: ' . implode(' ', $output));
+            }
+            
+            if (!file_exists($temp_file)) {
+                throw new Exception('PowerShell не создал файл ответа');
+            }
+            
+            $content = file_get_contents($temp_file);
+            if ($content === false) {
+                throw new Exception('Не удалось прочитать файл ответа');
+            }
+            
+            logMessage('INFO', "EnemyGenerator: PowerShell ответ получен, размер: " . strlen($content) . " байт");
+            
+            $decoded = json_decode($content, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                logMessage('INFO', "EnemyGenerator: JSON успешно декодирован через PowerShell");
+                return $decoded;
+            } else {
+                logMessage('ERROR', "EnemyGenerator: JSON decode error for $url: " . json_last_error_msg());
+                throw new Exception("Ошибка разбора ответа API");
+            }
+            
+        } finally {
+            if (file_exists($temp_file)) {
+                unlink($temp_file);
+            }
+        }
     }
     
     /**
