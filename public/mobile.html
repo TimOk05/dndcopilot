@@ -670,6 +670,13 @@
                     </select>
                 </div>
 
+                <div class="input-group" id="subrace-group" style="display: none;">
+                    <label class="input-label">Подраса</label>
+                    <select class="input-field" id="character-subrace">
+                        <option value="">Выберите подрасу</option>
+                    </select>
+                </div>
+
                 <div class="input-group">
                     <label class="input-label">Класс персонажа</label>
                     <select class="input-field" id="character-class">
@@ -693,28 +700,29 @@
                 <div class="input-group">
                     <label class="input-label">Уровень персонажа</label>
                     <select class="input-field" id="character-level">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
+                        <option value="1">1 уровень</option>
+                        <option value="2">2 уровень</option>
+                        <option value="3">3 уровень</option>
+                        <option value="4">4 уровень</option>
+                        <option value="5">5 уровень</option>
+                        <option value="6">6 уровень</option>
+                        <option value="7">7 уровень</option>
+                        <option value="8">8 уровень</option>
+                        <option value="9">9 уровень</option>
+                        <option value="10">10 уровень</option>
+                        <option value="11">11 уровень</option>
+                        <option value="12">12 уровень</option>
+                        <option value="13">13 уровень</option>
+                        <option value="14">14 уровень</option>
+                        <option value="15">15 уровень</option>
+                        <option value="16">16 уровень</option>
+                        <option value="17">17 уровень</option>
+                        <option value="18">18 уровень</option>
+                        <option value="19">19 уровень</option>
+                        <option value="20">20 уровень</option>
                     </select>
                 </div>
+
 
                 <div class="input-group">
                     <label class="input-label">Метод характеристик</label>
@@ -1081,14 +1089,155 @@
             }
         }
 
+        // Управление подрасами
+        const subraceData = {
+            'elf': [{
+                value: 'high_elf',
+                text: 'Высший эльф'
+            }, {
+                value: 'wood_elf',
+                text: 'Лесной эльф'
+            }, {
+                value: 'dark_elf',
+                text: 'Темный эльф (Дроу)'
+            }, {
+                value: 'eladrin',
+                text: 'Эладрин'
+            }, {
+                value: 'sea_elf',
+                text: 'Морской эльф'
+            }],
+            'dwarf': [{
+                value: 'mountain_dwarf',
+                text: 'Горный дворф'
+            }, {
+                value: 'hill_dwarf',
+                text: 'Холмовой дворф'
+            }, {
+                value: 'duergar',
+                text: 'Дуэргар'
+            }],
+            'halfling': [{
+                value: 'lightfoot_halfling',
+                text: 'Легконогий полурослик'
+            }, {
+                value: 'stout_halfling',
+                text: 'Крепкий полурослик'
+            }, {
+                value: 'ghostwise_halfling',
+                text: 'Призрачно-мудрый полурослик'
+            }],
+            'gnome': [{
+                value: 'forest_gnome',
+                text: 'Лесной гном'
+            }, {
+                value: 'rock_gnome',
+                text: 'Скальный гном'
+            }, {
+                value: 'deep_gnome',
+                text: 'Глубинный гном'
+            }],
+            'dragonborn': [{
+                value: 'black_dragonborn',
+                text: 'Черный драконорожденный'
+            }, {
+                value: 'blue_dragonborn',
+                text: 'Синий драконорожденный'
+            }, {
+                value: 'brass_dragonborn',
+                text: 'Латунный драконорожденный'
+            }, {
+                value: 'bronze_dragonborn',
+                text: 'Бронзовый драконорожденный'
+            }, {
+                value: 'copper_dragonborn',
+                text: 'Медный драконорожденный'
+            }, {
+                value: 'gold_dragonborn',
+                text: 'Золотой драконорожденный'
+            }, {
+                value: 'green_dragonborn',
+                text: 'Зеленый драконорожденный'
+            }, {
+                value: 'red_dragonborn',
+                text: 'Красный драконорожденный'
+            }, {
+                value: 'silver_dragonborn',
+                text: 'Серебряный драконорожденный'
+            }, {
+                value: 'white_dragonborn',
+                text: 'Белый драконорожденный'
+            }],
+            'tiefling': [{
+                value: 'standard_tiefling',
+                text: 'Стандартный тифлинг'
+            }, {
+                value: 'variant_tiefling',
+                text: 'Вариантный тифлинг'
+            }, {
+                value: 'feral_tiefling',
+                text: 'Дикий тифлинг'
+            }],
+            'genasi': [{
+                value: 'air_genasi',
+                text: 'Воздушный генаси'
+            }, {
+                value: 'earth_genasi',
+                text: 'Земной генаси'
+            }, {
+                value: 'fire_genasi',
+                text: 'Огненный генаси'
+            }, {
+                value: 'water_genasi',
+                text: 'Водный генаси'
+            }],
+            'githyanki': [{
+                value: 'standard_githyanki',
+                text: 'Стандартный гитиянки'
+            }],
+            'githzerai': [{
+                value: 'standard_githzerai',
+                text: 'Стандартный гитзерэи'
+            }]
+        };
+
+        document.getElementById('character-race').addEventListener('change', function() {
+            const selectedRace = this.value;
+            const subraceGroup = document.getElementById('subrace-group');
+            const subraceSelect = document.getElementById('character-subrace');
+
+            // Очищаем список подрас
+            subraceSelect.innerHTML = '<option value="">Выберите подрасу</option>';
+
+            // Показываем/скрываем группу подрас
+            if (subraceData[selectedRace]) {
+                subraceGroup.style.display = 'block';
+
+                // Добавляем подрасы
+                subraceData[selectedRace].forEach(subrace => {
+                    const option = document.createElement('option');
+                    option.value = subrace.value;
+                    option.textContent = subrace.text;
+                    subraceSelect.appendChild(option);
+                });
+            } else {
+                subraceGroup.style.display = 'none';
+            }
+        });
+
         // Генерация персонажей
         function generateCharacter() {
             const race = document.getElementById('character-race').value;
+            const subrace = document.getElementById('character-subrace').value;
             const characterClass = document.getElementById('character-class').value;
             const level = document.getElementById('character-level').value;
+            const abilityMethod = document.getElementById('ability-method').value;
+            const alignment = document.getElementById('character-alignment').value;
+            const gender = document.getElementById('character-gender').value;
+            const background = document.getElementById('character-background').value;
 
             if (!race || !characterClass || !level) {
-                showModal('Пожалуйста, заполните все поля для создания персонажа.');
+                showModal('Пожалуйста, заполните все обязательные поля для создания персонажа.');
                 return;
             }
 
@@ -1096,8 +1245,13 @@
             const formData = new FormData();
             formData.append('action', 'generate_character');
             formData.append('race', race);
+            if (subrace) formData.append('subrace', subrace);
             formData.append('class', characterClass);
             formData.append('level', level);
+            if (abilityMethod) formData.append('ability_method', abilityMethod);
+            if (alignment) formData.append('alignment', alignment);
+            if (gender) formData.append('gender', gender);
+            if (background) formData.append('background', background);
 
             fetch('api/mobile-api.php', {
                     method: 'POST',

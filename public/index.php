@@ -459,8 +459,9 @@ function openCharacterModal() {
                 <p class="generator-subtitle">Создайте полноценного персонажа с использованием D&D API и AI</p>
             </div>
             
-            <form id="characterForm" class="character-form" method="post">
-                <div class="form-grid-compact">
+            <div id="characterFormContainer">
+                <form id="characterForm" class="character-form" method="post">
+                    <div class="form-grid-compact">
                     <div class="form-group">
                         <label for="character-race">Раса персонажа</label>
                         <select id="character-race" name="race" required>
@@ -512,6 +513,13 @@ function openCharacterModal() {
                         </select>
                     </div>
                     
+                    <div class="form-group" id="subrace-group" style="display: none;">
+                        <label for="character-subrace">Подраса</label>
+                        <select id="character-subrace" name="subrace">
+                            <option value="">Выберите подрасу</option>
+                        </select>
+                    </div>
+                    
                     <div class="form-group">
                         <label for="character-class">Класс персонажа</label>
                         <select id="character-class" name="class" required>
@@ -533,9 +541,31 @@ function openCharacterModal() {
                     </div>
                     
                     <div class="form-group">
-                        <label for="character-level">Уровень персонажа</label>
-                        <input type="number" id="character-level" name="level" min="1" max="20" value="1" required>
+                        <label for="character-level">Уровень</label>
+                        <select id="character-level" name="level" required>
+                            <option value="1">1 уровень</option>
+                            <option value="2">2 уровень</option>
+                            <option value="3">3 уровень</option>
+                            <option value="4">4 уровень</option>
+                            <option value="5">5 уровень</option>
+                            <option value="6">6 уровень</option>
+                            <option value="7">7 уровень</option>
+                            <option value="8">8 уровень</option>
+                            <option value="9">9 уровень</option>
+                            <option value="10">10 уровень</option>
+                            <option value="11">11 уровень</option>
+                            <option value="12">12 уровень</option>
+                            <option value="13">13 уровень</option>
+                            <option value="14">14 уровень</option>
+                            <option value="15">15 уровень</option>
+                            <option value="16">16 уровень</option>
+                            <option value="17">17 уровень</option>
+                            <option value="18">18 уровень</option>
+                            <option value="19">19 уровень</option>
+                            <option value="20">20 уровень</option>
+                        </select>
                     </div>
+                    
                     
                     <div class="form-group">
                         <label for="ability-method">Метод генерации характеристик</label>
@@ -599,6 +629,8 @@ function openCharacterModal() {
                 </button>
             </form>
             
+            </div>
+            
             <div id="characterProgress" class="progress-container" style="display: none;">
                 <div class="progress-bar">
                     <div class="progress-fill"></div>
@@ -606,24 +638,118 @@ function openCharacterModal() {
                 <div class="progress-text">Создание персонажа...</div>
             </div>
             
-            <div id="characterResult" class="result-container"></div>
+            <div id="characterResult" class="character-result" style="display: none;"></div>
+            
+            <div id="characterControls" class="character-controls" style="display: none;">
+                <button class="control-btn regenerate-btn" onclick="regenerateCharacter()">
+                    🔄 Повторить генерацию
+                </button>
+                <button class="control-btn new-btn" onclick="newCharacter()">
+                    ✨ Новая генерация
+                </button>
+                <button class="control-btn save-btn" onclick="saveCharacterToNotes()">
+                    💾 Сохранить в заметки
+                </button>
+            </div>
         </div>
     `);
     
     document.getElementById('modal-save').style.display = 'none';
+    
+    // Управление подрасами
+    const subraceData = {
+        'elf': [
+            { value: 'high_elf', text: 'Высший эльф' },
+            { value: 'wood_elf', text: 'Лесной эльф' },
+            { value: 'dark_elf', text: 'Темный эльф (Дроу)' },
+            { value: 'eladrin', text: 'Эладрин' },
+            { value: 'sea_elf', text: 'Морской эльф' }
+        ],
+        'dwarf': [
+            { value: 'mountain_dwarf', text: 'Горный дворф' },
+            { value: 'hill_dwarf', text: 'Холмовой дворф' },
+            { value: 'duergar', text: 'Дуэргар' }
+        ],
+        'halfling': [
+            { value: 'lightfoot_halfling', text: 'Легконогий полурослик' },
+            { value: 'stout_halfling', text: 'Крепкий полурослик' },
+            { value: 'ghostwise_halfling', text: 'Призрачно-мудрый полурослик' }
+        ],
+        'gnome': [
+            { value: 'forest_gnome', text: 'Лесной гном' },
+            { value: 'rock_gnome', text: 'Скальный гном' },
+            { value: 'deep_gnome', text: 'Глубинный гном' }
+        ],
+        'dragonborn': [
+            { value: 'black_dragonborn', text: 'Черный драконорожденный' },
+            { value: 'blue_dragonborn', text: 'Синий драконорожденный' },
+            { value: 'brass_dragonborn', text: 'Латунный драконорожденный' },
+            { value: 'bronze_dragonborn', text: 'Бронзовый драконорожденный' },
+            { value: 'copper_dragonborn', text: 'Медный драконорожденный' },
+            { value: 'gold_dragonborn', text: 'Золотой драконорожденный' },
+            { value: 'green_dragonborn', text: 'Зеленый драконорожденный' },
+            { value: 'red_dragonborn', text: 'Красный драконорожденный' },
+            { value: 'silver_dragonborn', text: 'Серебряный драконорожденный' },
+            { value: 'white_dragonborn', text: 'Белый драконорожденный' }
+        ],
+        'tiefling': [
+            { value: 'standard_tiefling', text: 'Стандартный тифлинг' },
+            { value: 'variant_tiefling', text: 'Вариантный тифлинг' },
+            { value: 'feral_tiefling', text: 'Дикий тифлинг' }
+        ],
+        'genasi': [
+            { value: 'air_genasi', text: 'Воздушный генаси' },
+            { value: 'earth_genasi', text: 'Земной генаси' },
+            { value: 'fire_genasi', text: 'Огненный генаси' },
+            { value: 'water_genasi', text: 'Водный генаси' }
+        ],
+        'githyanki': [
+            { value: 'standard_githyanki', text: 'Стандартный гитиянки' }
+        ],
+        'githzerai': [
+            { value: 'standard_githzerai', text: 'Стандартный гитзерэи' }
+        ]
+    };
+    
+    document.getElementById('character-race').addEventListener('change', function() {
+        const selectedRace = this.value;
+        const subraceGroup = document.getElementById('subrace-group');
+        const subraceSelect = document.getElementById('character-subrace');
+        
+        // Очищаем список подрас
+        subraceSelect.innerHTML = '<option value="">Выберите подрасу</option>';
+        
+        // Показываем/скрываем группу подрас
+        if (subraceData[selectedRace]) {
+            subraceGroup.style.display = 'block';
+            
+            // Добавляем подрасы
+            subraceData[selectedRace].forEach(subrace => {
+                const option = document.createElement('option');
+                option.value = subrace.value;
+                option.textContent = subrace.text;
+                subraceSelect.appendChild(option);
+            });
+        } else {
+            subraceGroup.style.display = 'none';
+        }
+    });
     
     // Добавляем обработчик формы
     document.getElementById('characterForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
         const formData = new FormData(this);
-        const submitBtn = this.querySelector('button[type="submit"]');
+        const formContainer = document.getElementById('characterFormContainer');
         const resultDiv = document.getElementById('characterResult');
         const progressDiv = document.getElementById('characterProgress');
+        const controlsDiv = document.getElementById('characterControls');
         
         // Скрываем форму и показываем прогресс
-        this.style.display = 'none';
+        formContainer.style.display = 'none';
         progressDiv.style.display = 'block';
+        controlsDiv.style.display = 'none';
+        resultDiv.style.display = 'none';
         
         // Анимация прогресса
         const progressFill = progressDiv.querySelector('.progress-fill');
@@ -659,28 +785,23 @@ function openCharacterModal() {
             
             setTimeout(() => {
                 progressDiv.style.display = 'none';
-                this.style.display = 'block';
                 
                 if (data.success) {
                     const character = data.character || data.npc; // Поддержка старого и нового формата
                     resultDiv.innerHTML = formatCharacterFromApi(character);
+                    resultDiv.style.display = 'block';
+                    controlsDiv.style.display = 'flex';
                     
-                    // Добавляем кнопку сохранения в заметки
+                    // Сохраняем данные персонажа для повторной генерации
+                    window.currentCharacterData = character;
+                    window.currentFormData = formData;
+                    
+                    // Автоматически сохраняем персонажа в заметки
                     if (character && typeof character === 'object') {
                         try {
-                            const characterJson = JSON.stringify(character).replace(/"/g, '&quot;');
-                            resultDiv.innerHTML += `
-                                <div class="save-character-section">
-                                    <button class="save-character-btn" onclick="saveCharacterToNotes(${characterJson})">
-                                        💾 Сохранить в заметки
-                                    </button>
-                                </div>
-                            `;
-                            
-                            // Автоматически сохраняем персонажа в заметки
                             saveCharacterToNotes(character);
                         } catch (e) {
-                            console.error('Error stringifying character:', e);
+                            console.error('Error saving character:', e);
                         }
                     }
                     
@@ -690,17 +811,193 @@ function openCharacterModal() {
                     }, 100);
                 } else {
                     resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || 'Неизвестная ошибка') + '</div>';
+                    resultDiv.style.display = 'block';
+                    formContainer.style.display = 'block';
                 }
             }, 500);
         })
         .catch(error => {
             clearInterval(progressInterval);
             progressDiv.style.display = 'none';
-            this.style.display = 'block';
+            formContainer.style.display = 'block';
             console.error('Generation error:', error);
             resultDiv.innerHTML = '<div class="error">Ошибка сети: ' + error.message + '</div>';
+            resultDiv.style.display = 'block';
         });
     });
+}
+
+// --- Функции управления персонажами ---
+function regenerateCharacter() {
+    if (!window.currentFormData) {
+        console.error('Нет данных для повторной генерации');
+        return;
+    }
+    
+    const formContainer = document.getElementById('characterFormContainer');
+    const resultDiv = document.getElementById('characterResult');
+    const progressDiv = document.getElementById('characterProgress');
+    const controlsDiv = document.getElementById('characterControls');
+    
+    // Скрываем результат и показываем прогресс
+    resultDiv.style.display = 'none';
+    controlsDiv.style.display = 'none';
+    progressDiv.style.display = 'block';
+    
+    // Анимация прогресса
+    const progressFill = progressDiv.querySelector('.progress-fill');
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress > 90) progress = 90;
+        progressFill.style.width = progress + '%';
+    }, 200);
+    
+    fetch('api/generate-characters.php', {
+        method: 'POST',
+        body: window.currentFormData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.text().then(text => {
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('JSON parse error:', e);
+                console.error('Response text:', text);
+                throw new Error('Ошибка парсинга JSON: ' + e.message);
+            }
+        });
+    })
+    .then(data => {
+        clearInterval(progressInterval);
+        progressFill.style.width = '100%';
+        
+        setTimeout(() => {
+            progressDiv.style.display = 'none';
+            
+            if (data.success) {
+                const character = data.character || data.npc;
+                resultDiv.innerHTML = formatCharacterFromApi(character);
+                resultDiv.style.display = 'block';
+                controlsDiv.style.display = 'flex';
+                
+                // Обновляем данные персонажа
+                window.currentCharacterData = character;
+                
+                // Автоматически сохраняем персонажа в заметки
+                if (character && typeof character === 'object') {
+                    try {
+                        saveCharacterToNotes(character);
+                    } catch (e) {
+                        console.error('Error saving character:', e);
+                    }
+                }
+                
+                // Автоматическая прокрутка к результату
+                setTimeout(() => {
+                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } else {
+                resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || 'Неизвестная ошибка') + '</div>';
+                resultDiv.style.display = 'block';
+                controlsDiv.style.display = 'flex';
+            }
+        }, 500);
+    })
+    .catch(error => {
+        clearInterval(progressInterval);
+        progressDiv.style.display = 'none';
+        console.error('Generation error:', error);
+        resultDiv.innerHTML = '<div class="error">Ошибка сети: ' + error.message + '</div>';
+        resultDiv.style.display = 'block';
+        controlsDiv.style.display = 'flex';
+    });
+}
+
+function newCharacter() {
+    const formContainer = document.getElementById('characterFormContainer');
+    const resultDiv = document.getElementById('characterResult');
+    const progressDiv = document.getElementById('characterProgress');
+    const controlsDiv = document.getElementById('characterControls');
+    
+    // Показываем форму и скрываем результат
+    formContainer.style.display = 'block';
+    resultDiv.style.display = 'none';
+    progressDiv.style.display = 'none';
+    controlsDiv.style.display = 'none';
+    
+    // Очищаем форму
+    document.getElementById('characterForm').reset();
+    
+    // Скрываем группу подрас
+    const subraceGroup = document.getElementById('subrace-group');
+    if (subraceGroup) {
+        subraceGroup.style.display = 'none';
+    }
+    
+    // Очищаем сохраненные данные
+    window.currentCharacterData = null;
+    window.currentFormData = null;
+    
+    // Прокручиваем к началу формы
+    formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function saveCharacterToNotes(character = null) {
+    const characterToSave = character || window.currentCharacterData;
+    
+    if (!characterToSave) {
+        console.error('Нет данных персонажа для сохранения');
+        return;
+    }
+    
+    try {
+        // Создаем полное содержимое заметки с именем персонажа как заголовком
+        const noteContent = `
+            <div class="character-note">
+                <div class="character-note-title">${characterToSave.name || 'Персонаж'}</div>
+                <div class="character-note-info">
+                    <div><strong>Раса:</strong> ${characterToSave.race || 'Не указана'}</div>
+                    <div><strong>Класс:</strong> ${characterToSave.class || 'Не указан'}</div>
+                    <div><strong>Уровень:</strong> ${characterToSave.level || '1'}</div>
+                    <div><strong>Пол:</strong> ${characterToSave.gender || 'Не указан'}</div>
+                    <div><strong>Мировоззрение:</strong> ${characterToSave.alignment || 'Не указано'}</div>
+                    <div><strong>Происхождение:</strong> ${characterToSave.background || 'Не указано'}</div>
+                </div>
+                <div class="character-note-content">
+                    ${formatCharacterFromApi(characterToSave)}
+                </div>
+            </div>
+        `;
+        
+        // Добавляем заметку в сессию
+        fetch('api/users.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `action=add_note&content=${encodeURIComponent(noteContent)}&title=${encodeURIComponent(characterToSave.name || 'Персонаж')}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Персонаж сохранен в заметки');
+                // Обновляем страницу для отображения новой заметки
+                location.reload();
+            } else {
+                console.error('Ошибка сохранения персонажа:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка сохранения персонажа:', error);
+        });
+        
+    } catch (e) {
+        console.error('Ошибка сохранения персонажа:', e);
+    }
 }
 
 // --- Функция открытия генерации противников ---
@@ -2535,64 +2832,459 @@ function formatCharacterFromApi(character) {
     }
     
     // Заклинания
-    if (character.spells && Array.isArray(character.spells) && character.spells.length > 0) {
+    if (character.spells && (Array.isArray(character.spells) || typeof character.spells === 'object')) {
         out += '<div class="character-section">';
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">🔮 Заклинания <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
-        out += '<div class="spell-list">';
-        character.spells.forEach(spell => {
-            if (typeof spell === 'object' && spell && spell.name) {
-                // Новый формат с детальной информацией
-                out += '<div class="spell-item">';
-                out += '<div class="spell-header" onclick="toggleSpellDetails(this)">';
-                out += '<span class="spell-name">' + safeText(spell.name) + '</span>';
-                out += '<span class="spell-level">' + (spell.level || '?') + ' уровень</span>';
-                out += '<span class="spell-school">' + safeText(spell.school || 'Неизвестно') + '</span>';
-                out += '<span class="spell-toggle">▼</span>';
-                out += '</div>';
-                out += '<div class="spell-details" style="display: none;">';
-                out += '<div class="spell-info">';
-                out += '<div><strong>Время накладывания:</strong> ' + safeText(spell.casting_time || 'Не указано') + '</div>';
-                out += '<div><strong>Дистанция:</strong> ' + safeText(spell.range || 'Не указана') + '</div>';
-                out += '<div><strong>Компоненты:</strong> ' + safeText(spell.components || 'Не указаны') + '</div>';
-                out += '<div><strong>Длительность:</strong> ' + safeText(spell.duration || 'Не указана') + '</div>';
-                if (spell.damage) {
-                    out += '<div><strong>Урон:</strong> ' + safeText(spell.damage) + '</div>';
-                }
-                out += '</div>';
-                if (spell.description) {
-                    out += '<div class="spell-description">' + safeText(spell.description) + '</div>';
-                }
-                out += '</div>';
-                out += '</div>';
-            } else if (typeof spell === 'string' && spell) {
-                // Старый формат (просто строка)
-                out += '<div class="spell-item">';
-                out += '<div class="spell-name">' + safeText(spell) + '</div>';
+        
+        // Если это новая структура заклинаний (объект)
+        if (typeof character.spells === 'object' && !Array.isArray(character.spells)) {
+            if (character.spells.spellcasting_ability) {
+                out += '<div class="spell-info"><strong>Способность заклинаний:</strong> ' + safeText(character.spells.spellcasting_ability) + '</div>';
+            }
+            
+            if (character.spells.spell_slots) {
+                out += '<div class="spell-info"><strong>Слоты заклинаний:</strong> ' + safeText(JSON.stringify(character.spells.spell_slots)) + '</div>';
+            }
+            
+            if (character.spells.known_spells && character.spells.known_spells.length > 0) {
+                out += '<div class="spell-category"><strong>Известные заклинания:</strong></div>';
+                out += '<div class="spell-list">';
+                character.spells.known_spells.forEach(spell => {
+                    out += '<div class="spell-item">';
+                    out += '<span class="spell-name">' + safeText(spell.name) + '</span>';
+                    out += '<span class="spell-level">' + safeText(spell.level) + ' уровень</span>';
+                    out += '</div>';
+                });
                 out += '</div>';
             }
-        });
-        out += '</div>';
+            
+            if (character.spells.spells_by_level) {
+                out += '<div class="spell-category"><strong>Доступные заклинания по уровням:</strong></div>';
+                for (let level in character.spells.spells_by_level) {
+                    if (character.spells.spells_by_level[level].length > 0) {
+                        out += '<div class="spell-level-category"><strong>' + level + ' уровень:</strong></div>';
+                        out += '<div class="spell-list">';
+                        character.spells.spells_by_level[level].forEach(spell => {
+                            out += '<div class="spell-item">';
+                            out += '<span class="spell-name">' + safeText(spell) + '</span>';
+                            out += '</div>';
+                        });
+                        out += '</div>';
+                    }
+                }
+            }
+        } else {
+            // Старая структура (массив)
+            out += '<div class="spell-list">';
+            character.spells.forEach(spell => {
+                if (typeof spell === 'object' && spell && spell.name) {
+                    // Новый формат с детальной информацией
+                    out += '<div class="spell-item">';
+                    out += '<div class="spell-header" onclick="toggleSpellDetails(this)">';
+                    out += '<span class="spell-name">' + safeText(spell.name) + '</span>';
+                    out += '<span class="spell-level">' + (spell.level || '?') + ' уровень</span>';
+                    out += '<span class="spell-school">' + safeText(spell.school || 'Неизвестно') + '</span>';
+                    out += '<span class="spell-toggle">▼</span>';
+                    out += '</div>';
+                    out += '<div class="spell-details" style="display: none;">';
+                    out += '<div class="spell-info">';
+                    out += '<div><strong>Время накладывания:</strong> ' + safeText(spell.casting_time || 'Не указано') + '</div>';
+                    out += '<div><strong>Дистанция:</strong> ' + safeText(spell.range || 'Не указана') + '</div>';
+                    out += '<div><strong>Компоненты:</strong> ' + safeText(spell.components || 'Не указаны') + '</div>';
+                    out += '<div><strong>Длительность:</strong> ' + safeText(spell.duration || 'Не указана') + '</div>';
+                    if (spell.damage) {
+                        out += '<div><strong>Урон:</strong> ' + safeText(spell.damage) + '</div>';
+                    }
+                    out += '</div>';
+                    if (spell.description) {
+                        out += '<div class="spell-description">' + safeText(spell.description) + '</div>';
+                    }
+                    out += '</div>';
+                    out += '</div>';
+                } else if (typeof spell === 'string' && spell) {
+                    // Старый формат (просто строка)
+                    out += '<div class="spell-item">';
+                    out += '<div class="spell-name">' + safeText(spell) + '</div>';
+                    out += '</div>';
+                }
+            });
+            out += '</div>';
+        }
+        
         out += '</div></div>';
     }
     
     // Снаряжение
-    if (character.equipment && Array.isArray(character.equipment) && character.equipment.length > 0) {
+    if (character.equipment && (Array.isArray(character.equipment) || typeof character.equipment === 'object')) {
         out += '<div class="character-section">';
         out += '<div class="section-title collapsed" onclick="toggleSection(this)">🎒 Снаряжение <span class="toggle-icon">▶</span></div>';
         out += '<div class="section-content collapsed">';
-        out += '<ul class="equipment-list">';
-        character.equipment.forEach(item => {
-            if (item && typeof item === 'string') {
-                out += '<li>' + safeText(item) + '</li>';
+        
+        // Если это новая структура снаряжения (объект)
+        if (typeof character.equipment === 'object' && !Array.isArray(character.equipment)) {
+            if (character.equipment.weapons && character.equipment.weapons.length > 0) {
+                out += '<div class="equipment-category"><strong>⚔️ Оружие:</strong><ul>';
+                character.equipment.weapons.forEach(weapon => {
+                    out += '<li>' + safeText(weapon) + '</li>';
+                });
+                out += '</ul></div>';
             }
-        });
-        out += '</ul>';
+            
+            if (character.equipment.armor && character.equipment.armor.length > 0) {
+                out += '<div class="equipment-category"><strong>🛡️ Броня:</strong><ul>';
+                character.equipment.armor.forEach(armor => {
+                    out += '<li>' + safeText(armor) + '</li>';
+                });
+                out += '</ul></div>';
+            }
+            
+            if (character.equipment.shields && character.equipment.shields.length > 0) {
+                out += '<div class="equipment-category"><strong>🛡️ Щиты:</strong><ul>';
+                character.equipment.shields.forEach(shield => {
+                    out += '<li>' + safeText(shield) + '</li>';
+                });
+                out += '</ul></div>';
+            }
+            
+            if (character.equipment.tools && character.equipment.tools.length > 0) {
+                out += '<div class="equipment-category"><strong>🔧 Инструменты:</strong><ul>';
+                character.equipment.tools.forEach(tool => {
+                    out += '<li>' + safeText(tool) + '</li>';
+                });
+                out += '</ul></div>';
+            }
+            
+            if (character.equipment.items && character.equipment.items.length > 0) {
+                out += '<div class="equipment-category"><strong>🎒 Базовое снаряжение:</strong><ul>';
+                character.equipment.items.forEach(item => {
+                    out += '<li>' + safeText(item) + '</li>';
+                });
+                out += '</ul></div>';
+            }
+            
+            if (character.equipment.background_items && character.equipment.background_items.length > 0) {
+                out += '<div class="equipment-category"><strong>📜 От происхождения:</strong><ul>';
+                character.equipment.background_items.forEach(item => {
+                    out += '<li>' + safeText(item) + '</li>';
+                });
+                out += '</ul></div>';
+            }
+            
+            if (character.equipment.money) {
+                out += '<div class="equipment-category"><strong>💰 Деньги:</strong> ' + safeText(character.equipment.money) + '</div>';
+            }
+        } else {
+            // Старая структура (массив)
+            out += '<ul class="equipment-list">';
+            character.equipment.forEach(item => {
+                if (item && typeof item === 'string') {
+                    out += '<li>' + safeText(item) + '</li>';
+                }
+            });
+            out += '</ul>';
+        }
+        
         out += '</div></div>';
     }
     
     out += '</div>';
     return out;
+}
+
+// Добавляем CSS стили для категорий снаряжения
+const equipmentStyles = `
+    <style>
+        .equipment-category {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid #ff6b35;
+        }
+        
+        .equipment-category ul {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 0 0;
+        }
+        
+        .equipment-category li {
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .equipment-category strong {
+            color: #ff6b35;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .spell-info {
+            margin: 10px 0;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            border-left: 3px solid #4CAF50;
+        }
+        
+        .spell-category {
+            margin: 15px 0 10px 0;
+            padding: 8px;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 6px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .spell-level-category {
+            margin: 10px 0 5px 0;
+            padding: 5px;
+            background: rgba(76, 175, 80, 0.05);
+            border-radius: 4px;
+            border-left: 3px solid #4CAF50;
+        }
+        
+        .spell-list {
+            margin: 10px 0;
+        }
+        
+        .spell-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+            border-left: 2px solid #4CAF50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .spell-name {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .spell-level {
+            color: #ff6b35;
+            font-size: 0.9em;
+        }
+        
+        .character-result {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .character-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 160px;
+            justify-content: center;
+        }
+        
+        .regenerate-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        .regenerate-btn:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .new-btn {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+        }
+        
+        .new-btn:hover {
+            background: linear-gradient(135deg, #1976D2, #1565C0);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+        
+        .save-btn {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            color: white;
+        }
+        
+        .save-btn:hover {
+            background: linear-gradient(135deg, #F57C00, #EF6C00);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+        
+        .character-form {
+            transition: all 0.3s ease;
+        }
+        
+        .form-grid-compact {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .form-group select,
+        .form-group input {
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .generate-btn:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .progress-text {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .character-note {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .character-note-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        .character-note-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+        
+        .character-note-info div {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .character-note-content {
+            margin-top: 20px;
+        }
+        
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            margin: 10px 0;
+        }
+    </style>
+`;
+
+// Добавляем стили в head документа
+if (!document.getElementById('equipment-styles')) {
+    const styleElement = document.createElement('div');
+    styleElement.id = 'equipment-styles';
+    styleElement.innerHTML = equipmentStyles;
+    document.head.appendChild(styleElement);
 }
 
 // --- Перевод названий действий ---
