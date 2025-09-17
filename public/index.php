@@ -453,7 +453,7 @@ function openCharacterModal() {
     showModal(`
         <div class="character-generator">
             <div class="generator-header">
-                <h2><span class="svg-icon icon-hero" data-icon="hero"></span> Генератор персонажей</h2>
+                <h2>Генератор персонажей</h2>
                 <p class="generator-subtitle">Создайте полноценного персонажа с использованием D&D API и AI</p>
             </div>
             
@@ -654,7 +654,7 @@ function openEnemyModal() {
     showModal(`
         <div class="enemy-generator">
             <div class="generator-header">
-                <h2><span class="svg-icon icon-enemy" data-icon="enemy"></span> Генератор противников</h2>
+                <h2>Генератор противников</h2>
                 <p class="generator-subtitle">Создайте подходящих противников для вашей группы</p>
             </div>
             
@@ -1463,7 +1463,7 @@ function openPotionModalSimple() {
     showModal(`
         <div class="potion-generator">
             <div class="generator-header">
-                <h2><span class="svg-icon icon-potion" data-icon="potion"></span> Генератор зелий</h2>
+                <h2>Генератор зелий</h2>
                 <p class="generator-subtitle">Создайте магические зелья различных типов и редкости</p>
             </div>
             
