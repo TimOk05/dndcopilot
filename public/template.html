@@ -831,7 +831,7 @@
             font-weight: 700;
             text-shadow: 2px 2px 4px rgba(45, 27, 0, 0.9);
             position: relative;
-            overflow: hidden;
+            overflow: visible;
         }
         /* Стили для иконок в кнопках */
         
@@ -2546,7 +2546,10 @@
         .fast-btn .svg-icon {
             width: 36px;
             height: 36px;
-            margin-right: 6px;
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
             flex-shrink: 0;
         }
         /* Иконки в заголовках модальных окон */
