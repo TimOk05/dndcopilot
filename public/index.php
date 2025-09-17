@@ -374,6 +374,172 @@ $template = str_replace('{{chat_messages}}', $chatMsgs, $template);
 $template = str_replace('{{notes_block}}', $notesBlock, $template);
 echo $template;
 ?>
+
+<!-- Новые генераторы с расширенными библиотеками -->
+<div class="new-generators-section" style="margin-top: 40px;">
+    <h2 style="text-align: center; margin-bottom: 30px; color: var(--text-primary);">📚 Расширенные генераторы</h2>
+    
+    <!-- Генератор квестов -->
+    <div class="quest-generator" style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: var(--space-6); margin-bottom: var(--space-6); border: 2px solid var(--border-primary);">
+        <div class="generator-header" style="display: flex; align-items: center; margin-bottom: var(--space-6);">
+            <span class="svg-icon" data-icon="dice" style="width: 48px; height: 48px; margin-right: var(--space-4); color: var(--accent-primary);"></span>
+            <div>
+                <h3 style="margin: 0; color: var(--text-primary);">🗺️ Генератор квестов</h3>
+                <p style="margin: 5px 0 0 0; color: var(--text-secondary); font-size: var(--text-sm);">Создайте уникальные квесты и приключения для ваших игроков</p>
+            </div>
+        </div>
+        
+        <form id="questForm" style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: var(--space-4); align-items: end;">
+            <div>
+                <label style="display: block; margin-bottom: var(--space-2); color: var(--text-primary); font-weight: bold;">Тип квеста:</label>
+                <select name="quest_type" style="width: 100%; padding: var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary);">
+                    <option value="adventure">Приключение</option>
+                    <option value="mystery">Тайна</option>
+                    <option value="rescue">Спасение</option>
+                    <option value="exploration">Исследование</option>
+                    <option value="combat">Боевой</option>
+                    <option value="social">Социальный</option>
+                </select>
+            </div>
+            
+            <div>
+                <label style="display: block; margin-bottom: var(--space-2); color: var(--text-primary); font-weight: bold;">Сложность:</label>
+                <select name="difficulty" style="width: 100%; padding: var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary);">
+                    <option value="easy">Легкий</option>
+                    <option value="medium" selected>Средний</option>
+                    <option value="hard">Сложный</option>
+                    <option value="deadly">Смертельный</option>
+                </select>
+            </div>
+            
+            <div>
+                <label style="display: block; margin-bottom: var(--space-2); color: var(--text-primary); font-weight: bold;">Тема:</label>
+                <select name="theme" style="width: 100%; padding: var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary);">
+                    <option value="fantasy" selected>Фэнтези</option>
+                    <option value="horror">Ужасы</option>
+                    <option value="steampunk">Стимпанк</option>
+                    <option value="cyberpunk">Киберпанк</option>
+                    <option value="medieval">Средневековье</option>
+                    <option value="pirates">Пираты</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="generate-btn" style="background: var(--accent-primary); color: white; border: none; padding: var(--space-3) var(--space-6); border-radius: var(--radius-md); cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: var(--space-2);">
+                <span class="svg-icon" data-icon="dice" style="width: 20px; height: 20px;"></span>
+                Создать квест
+            </button>
+        </form>
+        
+        <div id="questResult" class="result-container" style="margin-top: var(--space-6);"></div>
+    </div>
+    
+    <!-- Генератор лора -->
+    <div class="lore-generator" style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: var(--space-6); margin-bottom: var(--space-6); border: 2px solid var(--border-primary);">
+        <div class="generator-header" style="display: flex; align-items: center; margin-bottom: var(--space-6);">
+            <span class="svg-icon" data-icon="description" style="width: 48px; height: 48px; margin-right: var(--space-4); color: var(--accent-primary);"></span>
+            <div>
+                <h3 style="margin: 0; color: var(--text-primary);">📖 Генератор лора</h3>
+                <p style="margin: 5px 0 0 0; color: var(--text-secondary); font-size: var(--text-sm);">Создайте богатый лор и предыстории для вашего игрового мира</p>
+            </div>
+        </div>
+        
+        <form id="loreForm" style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: var(--space-4); align-items: end;">
+            <div>
+                <label style="display: block; margin-bottom: var(--space-2); color: var(--text-primary); font-weight: bold;">Тип лора:</label>
+                <select name="lore_type" style="width: 100%; padding: var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary);">
+                    <option value="location" selected>Локация</option>
+                    <option value="character">Персонаж</option>
+                    <option value="organization">Организация</option>
+                    <option value="artifact">Артефакт</option>
+                    <option value="event">Событие</option>
+                    <option value="culture">Культура</option>
+                </select>
+            </div>
+            
+            <div>
+                <label style="display: block; margin-bottom: var(--space-2); color: var(--text-primary); font-weight: bold;">Сеттинг:</label>
+                <select name="setting" style="width: 100%; padding: var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary);">
+                    <option value="medieval" selected>Средневековье</option>
+                    <option value="renaissance">Ренессанс</option>
+                    <option value="victorian">Викторианская эпоха</option>
+                    <option value="modern">Современность</option>
+                    <option value="post-apocalyptic">Постапокалипсис</option>
+                    <option value="space">Космос</option>
+                </select>
+            </div>
+            
+            <div>
+                <label style="display: block; margin-bottom: var(--space-2); color: var(--text-primary); font-weight: bold;">Настроение:</label>
+                <select name="mood" style="width: 100%; padding: var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary);">
+                    <option value="mysterious" selected>Таинственное</option>
+                    <option value="heroic">Героическое</option>
+                    <option value="dark">Мрачное</option>
+                    <option value="whimsical">Причудливое</option>
+                    <option value="epic">Эпическое</option>
+                    <option value="intimate">Интимное</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="generate-btn" style="background: var(--accent-primary); color: white; border: none; padding: var(--space-3) var(--space-6); border-radius: var(--radius-md); cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: var(--space-2);">
+                <span class="svg-icon" data-icon="description" style="width: 20px; height: 20px;"></span>
+                Создать лор
+            </button>
+        </form>
+        
+        <div id="loreResult" class="result-container" style="margin-top: var(--space-6);"></div>
+    </div>
+    
+    <!-- Генератор заклинаний -->
+    <div class="spell-generator" style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: var(--space-6); margin-bottom: var(--space-6); border: 2px solid var(--border-primary);">
+        <div class="generator-header" style="display: flex; align-items: center; margin-bottom: var(--space-6);">
+            <span class="svg-icon" data-icon="crystal-ball" style="width: 48px; height: 48px; margin-right: var(--space-4); color: var(--accent-primary);"></span>
+            <div>
+                <h3 style="margin: 0; color: var(--text-primary);">✨ Генератор заклинаний</h3>
+                <p style="margin: 5px 0 0 0; color: var(--text-secondary); font-size: var(--text-sm);">Получите подробную информацию о заклинаниях из всех доступных источников</p>
+            </div>
+        </div>
+        
+        <form id="spellForm" style="display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); align-items: end;">
+            <div>
+                <label style="display: block; margin-bottom: var(--space-2); color: var(--text-primary); font-weight: bold;">Название заклинания:</label>
+                <input type="text" name="spell_name" placeholder="Например: Fireball, Healing Word, Magic Missile..." style="width: 100%; padding: var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary);">
+            </div>
+            
+            <button type="submit" class="generate-btn" style="background: var(--accent-primary); color: white; border: none; padding: var(--space-3) var(--space-6); border-radius: var(--radius-md); cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: var(--space-2);">
+                <span class="svg-icon" data-icon="crystal-ball" style="width: 20px; height: 20px;"></span>
+                Найти заклинание
+            </button>
+        </form>
+        
+        <div id="spellResult" class="result-container" style="margin-top: var(--space-6);"></div>
+    </div>
+    
+    <!-- Генератор монстров -->
+    <div class="monster-generator" style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: var(--space-6); margin-bottom: var(--space-6); border: 2px solid var(--border-primary);">
+        <div class="generator-header" style="display: flex; align-items: center; margin-bottom: var(--space-6);">
+            <span class="svg-icon" data-icon="skull" style="width: 48px; height: 48px; margin-right: var(--space-4); color: var(--accent-primary);"></span>
+            <div>
+                <h3 style="margin: 0; color: var(--text-primary);">👹 Генератор монстров</h3>
+                <p style="margin: 5px 0 0 0; color: var(--text-secondary); font-size: var(--text-sm);">Получите подробную информацию о монстрах из всех доступных источников</p>
+            </div>
+        </div>
+        
+        <form id="monsterForm" style="display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); align-items: end;">
+            <div>
+                <label style="display: block; margin-bottom: var(--space-2); color: var(--text-primary); font-weight: bold;">Название монстра:</label>
+                <input type="text" name="monster_name" placeholder="Например: Dragon, Goblin, Orc, Troll..." style="width: 100%; padding: var(--space-3); border: 1px solid var(--border-primary); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-primary);">
+            </div>
+            
+            <button type="submit" class="generate-btn" style="background: var(--accent-primary); color: white; border: none; padding: var(--space-3) var(--space-6); border-radius: var(--radius-md); cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: var(--space-2);">
+                <span class="svg-icon" data-icon="skull" style="width: 20px; height: 20px;"></span>
+                Найти монстра
+            </button>
+        </form>
+        
+        <div id="monsterResult" class="result-container" style="margin-top: var(--space-6);"></div>
+    </div>
+</div>
+
 <script>
 // --- Dice Modal Steps ---
 function openDiceStep1() {
@@ -3754,6 +3920,359 @@ function saveAllEnemiesToNotes(enemies) {
     
     // Делаем объект icons глобальным для использования в icons.js
     window.icons = icons;
+    
+    // Обработчики для новых генераторов
+    document.addEventListener('DOMContentLoaded', function() {
+        // Генератор квестов
+        const questForm = document.getElementById('questForm');
+        if (questForm) {
+            questForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                generateQuest();
+            });
+        }
+        
+        // Генератор лора
+        const loreForm = document.getElementById('loreForm');
+        if (loreForm) {
+            loreForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                generateLore();
+            });
+        }
+        
+        // Генератор заклинаний
+        const spellForm = document.getElementById('spellForm');
+        if (spellForm) {
+            spellForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                generateSpell();
+            });
+        }
+        
+        // Генератор монстров
+        const monsterForm = document.getElementById('monsterForm');
+        if (monsterForm) {
+            monsterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                generateMonster();
+            });
+        }
+    });
+    
+    // Функция генерации квеста
+    function generateQuest() {
+        const form = document.getElementById('questForm');
+        const formData = new FormData(form);
+        const resultDiv = document.getElementById('questResult');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        submitBtn.innerHTML = '<span class="svg-icon" data-icon="loading" style="width: 20px; height: 20px;"></span> Создание...';
+        submitBtn.disabled = true;
+        resultDiv.innerHTML = '<div class="loading">Создание квеста...</div>';
+        
+        const params = new URLSearchParams();
+        params.append('action', 'generate_quest');
+        params.append('type', formData.get('quest_type'));
+        params.append('difficulty', formData.get('difficulty'));
+        params.append('theme', formData.get('theme'));
+        
+        fetch('api/external-services.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: params.toString()
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.quest) {
+                const quest = data.quest;
+                resultDiv.innerHTML = `
+                    <div class="quest-result" style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: var(--space-6); border-left: 4px solid var(--accent-primary);">
+                        <div class="quest-header" style="display: flex; align-items: center; margin-bottom: var(--space-4);">
+                            <span class="svg-icon" data-icon="dice" style="width: 32px; height: 32px; margin-right: var(--space-3); color: var(--accent-primary);"></span>
+                            <h3 style="margin: 0; color: var(--text-primary);">${quest.type} квест</h3>
+                            <span style="margin-left: auto; background: var(--accent-primary); color: white; padding: var(--space-1) var(--space-3); border-radius: var(--radius-sm); font-size: var(--text-sm);">${quest.difficulty}</span>
+                        </div>
+                        <div class="quest-content" style="color: var(--text-primary); line-height: var(--line-height-relaxed);">
+                            ${quest.description.replace(/\n/g, '<br>')}
+                        </div>
+                        <div class="quest-meta" style="margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-primary); font-size: var(--text-sm); color: var(--text-secondary);">
+                            <strong>Тема:</strong> ${quest.theme} | <strong>Сложность:</strong> ${quest.difficulty} | <strong>Источник:</strong> ${data.source}
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `<div class="error">Ошибка: ${data.error || 'Неизвестная ошибка'}</div>`;
+            }
+        })
+        .catch(error => {
+            console.error('Quest generation error:', error);
+            resultDiv.innerHTML = '<div class="error">Ошибка при создании квеста</div>';
+        })
+        .finally(() => {
+            submitBtn.innerHTML = '<span class="svg-icon" data-icon="dice" style="width: 20px; height: 20px;"></span> Создать квест';
+            submitBtn.disabled = false;
+        });
+    }
+    
+    // Функция генерации лора
+    function generateLore() {
+        const form = document.getElementById('loreForm');
+        const formData = new FormData(form);
+        const resultDiv = document.getElementById('loreResult');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        submitBtn.innerHTML = '<span class="svg-icon" data-icon="loading" style="width: 20px; height: 20px;"></span> Создание...';
+        submitBtn.disabled = true;
+        resultDiv.innerHTML = '<div class="loading">Создание лора...</div>';
+        
+        const params = new URLSearchParams();
+        params.append('action', 'generate_lore');
+        params.append('type', formData.get('lore_type'));
+        params.append('setting', formData.get('setting'));
+        params.append('mood', formData.get('mood'));
+        
+        fetch('api/external-services.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: params.toString()
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.lore) {
+                const lore = data.lore;
+                resultDiv.innerHTML = `
+                    <div class="lore-result" style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: var(--space-6); border-left: 4px solid var(--accent-primary);">
+                        <div class="lore-header" style="display: flex; align-items: center; margin-bottom: var(--space-4);">
+                            <span class="svg-icon" data-icon="description" style="width: 32px; height: 32px; margin-right: var(--space-3); color: var(--accent-primary);"></span>
+                            <h3 style="margin: 0; color: var(--text-primary);">${lore.type}</h3>
+                            <span style="margin-left: auto; background: var(--accent-primary); color: white; padding: var(--space-1) var(--space-3); border-radius: var(--radius-sm); font-size: var(--text-sm);">${lore.setting}</span>
+                        </div>
+                        <div class="lore-content" style="color: var(--text-primary); line-height: var(--line-height-relaxed);">
+                            ${lore.description.replace(/\n/g, '<br>')}
+                        </div>
+                        <div class="lore-meta" style="margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-primary); font-size: var(--text-sm); color: var(--text-secondary);">
+                            <strong>Тип:</strong> ${lore.type} | <strong>Сеттинг:</strong> ${lore.setting} | <strong>Настроение:</strong> ${lore.mood} | <strong>Источник:</strong> ${data.source}
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `<div class="error">Ошибка: ${data.error || 'Неизвестная ошибка'}</div>`;
+            }
+        })
+        .catch(error => {
+            console.error('Lore generation error:', error);
+            resultDiv.innerHTML = '<div class="error">Ошибка при создании лора</div>';
+        })
+        .finally(() => {
+            submitBtn.innerHTML = '<span class="svg-icon" data-icon="description" style="width: 20px; height: 20px;"></span> Создать лор';
+            submitBtn.disabled = false;
+        });
+    }
+    
+    // Функция поиска заклинания
+    function generateSpell() {
+        const form = document.getElementById('spellForm');
+        const formData = new FormData(form);
+        const spellName = formData.get('spell_name').trim();
+        const resultDiv = document.getElementById('spellResult');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        if (!spellName) {
+            alert('Введите название заклинания');
+            return;
+        }
+        
+        submitBtn.innerHTML = '<span class="svg-icon" data-icon="loading" style="width: 20px; height: 20px;"></span> Поиск...';
+        submitBtn.disabled = true;
+        resultDiv.innerHTML = '<div class="loading">Поиск заклинания...</div>';
+        
+        const params = new URLSearchParams();
+        params.append('action', 'get_comprehensive_spell');
+        params.append('spell', spellName);
+        
+        fetch('api/dnd-libraries.php?' + params.toString())
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.data) {
+                let html = '<div class="spell-results">';
+                
+                Object.keys(data.data).forEach(source => {
+                    const spellData = data.data[source];
+                    html += `
+                        <div class="spell-source" style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: var(--space-6); margin-bottom: var(--space-4); border-left: 4px solid var(--accent-primary);">
+                            <div class="spell-header" style="display: flex; align-items: center; margin-bottom: var(--space-4);">
+                                <span class="svg-icon" data-icon="crystal-ball" style="width: 32px; height: 32px; margin-right: var(--space-3); color: var(--accent-primary);"></span>
+                                <h3 style="margin: 0; color: var(--text-primary);">${spellName}</h3>
+                                <span style="margin-left: auto; background: var(--accent-primary); color: white; padding: var(--space-1) var(--space-3); border-radius: var(--radius-sm); font-size: var(--text-sm);">${source}</span>
+                            </div>
+                            <div class="spell-content" style="color: var(--text-primary); line-height: var(--line-height-relaxed);">
+                                ${typeof spellData === 'string' ? spellData.replace(/\n/g, '<br>') : JSON.stringify(spellData, null, 2).replace(/\n/g, '<br>')}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                html += `<div style="margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-primary); font-size: var(--text-sm); color: var(--text-secondary);">
+                    <strong>Найдено источников:</strong> ${data.total_sources} | <strong>Источники:</strong> ${data.sources_used.join(', ')}
+                </div>`;
+                
+                resultDiv.innerHTML = html;
+            } else {
+                resultDiv.innerHTML = `<div class="error">Ошибка: ${data.error || 'Заклинание не найдено'}</div>`;
+            }
+        })
+        .catch(error => {
+            console.error('Spell search error:', error);
+            resultDiv.innerHTML = '<div class="error">Ошибка при поиске заклинания</div>';
+        })
+        .finally(() => {
+            submitBtn.innerHTML = '<span class="svg-icon" data-icon="crystal-ball" style="width: 20px; height: 20px;"></span> Найти заклинание';
+            submitBtn.disabled = false;
+        });
+    }
+    
+    // Функция поиска монстра
+    function generateMonster() {
+        const form = document.getElementById('monsterForm');
+        const formData = new FormData(form);
+        const monsterName = formData.get('monster_name').trim();
+        const resultDiv = document.getElementById('monsterResult');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        if (!monsterName) {
+            alert('Введите название монстра');
+            return;
+        }
+        
+        submitBtn.innerHTML = '<span class="svg-icon" data-icon="loading" style="width: 20px; height: 20px;"></span> Поиск...';
+        submitBtn.disabled = true;
+        resultDiv.innerHTML = '<div class="loading">Поиск монстра...</div>';
+        
+        const params = new URLSearchParams();
+        params.append('action', 'get_comprehensive_monster');
+        params.append('monster', monsterName);
+        
+        fetch('api/dnd-libraries.php?' + params.toString())
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.data) {
+                let html = '<div class="monster-results">';
+                
+                Object.keys(data.data).forEach(source => {
+                    const monsterData = data.data[source];
+                    html += `
+                        <div class="monster-source" style="background: var(--bg-primary); border-radius: var(--radius-lg); padding: var(--space-6); margin-bottom: var(--space-4); border-left: 4px solid var(--accent-primary);">
+                            <div class="monster-header" style="display: flex; align-items: center; margin-bottom: var(--space-4);">
+                                <span class="svg-icon" data-icon="skull" style="width: 32px; height: 32px; margin-right: var(--space-3); color: var(--accent-primary);"></span>
+                                <h3 style="margin: 0; color: var(--text-primary);">${monsterName}</h3>
+                                <span style="margin-left: auto; background: var(--accent-primary); color: white; padding: var(--space-1) var(--space-3); border-radius: var(--radius-sm); font-size: var(--text-sm);">${source}</span>
+                            </div>
+                            <div class="monster-content" style="color: var(--text-primary); line-height: var(--line-height-relaxed);">
+                                ${typeof monsterData === 'string' ? monsterData.replace(/\n/g, '<br>') : JSON.stringify(monsterData, null, 2).replace(/\n/g, '<br>')}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                html += `<div style="margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-primary); font-size: var(--text-sm); color: var(--text-secondary);">
+                    <strong>Найдено источников:</strong> ${data.total_sources} | <strong>Источники:</strong> ${data.sources_used.join(', ')}
+                </div>`;
+                
+                resultDiv.innerHTML = html;
+            } else {
+                resultDiv.innerHTML = `<div class="error">Ошибка: ${data.error || 'Монстр не найден'}</div>`;
+            }
+        })
+        .catch(error => {
+            console.error('Monster search error:', error);
+            resultDiv.innerHTML = '<div class="error">Ошибка при поиске монстра</div>';
+        })
+        .finally(() => {
+            submitBtn.innerHTML = '<span class="svg-icon" data-icon="skull" style="width: 20px; height: 20px;"></span> Найти монстра';
+            submitBtn.disabled = false;
+        });
+    }
+    
+    // Внешние сервисы
+    window.externalServices = {
+        // Генерация имен персонажей
+        generateNames: async function(race = 'human', gender = 'any', count = 1) {
+            try {
+                const response = await fetch('api/external-services.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `action=generate_names&race=${race}&gender=${gender}&count=${count}`
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    return result.names;
+                } else {
+                    console.error('Ошибка генерации имен:', result.error);
+                    return [];
+                }
+            } catch (error) {
+                console.error('Ошибка запроса генерации имен:', error);
+                return [];
+            }
+        },
+        
+        // Бросок костей
+        rollDice: async function(diceString = '1d20') {
+            try {
+                const response = await fetch('api/external-services.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `action=roll_dice&dice=${diceString}`
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    return result;
+                } else {
+                    console.error('Ошибка броска костей:', result.error);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Ошибка запроса броска костей:', error);
+                return null;
+            }
+        },
+        
+        // Получение погоды
+        getWeather: async function(location = 'Moscow') {
+            try {
+                const response = await fetch('api/external-services.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `action=get_weather&location=${location}`
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    return result;
+                } else {
+                    console.error('Ошибка получения погоды:', result.error);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Ошибка запроса погоды:', error);
+                return null;
+            }
+        }
+    };
     
     function replaceIcons() {
         const elements = document.querySelectorAll('[data-icon]');
