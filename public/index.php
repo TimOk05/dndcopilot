@@ -3711,20 +3711,34 @@ function saveAllEnemiesToNotes(enemies) {
             return iconCache[iconName];
         }
         
-        try {
-            const response = await fetch(`/icons/${iconName}.svg`);
-            if (!response.ok) {
-                console.warn(`Icon ${iconName} not found (${response.status})`);
-                return null;
+        // Пробуем разные пути
+        const possiblePaths = [
+            `./icons/${iconName}.svg`,
+            `icons/${iconName}.svg`,
+            `/dnd/public/icons/${iconName}.svg`,
+            `public/icons/${iconName}.svg`
+        ];
+        
+        for (const iconUrl of possiblePaths) {
+            try {
+                console.log(`Trying to fetch icon from: ${iconUrl}`);
+                
+                const response = await fetch(iconUrl);
+                if (response.ok) {
+                    const svgContent = await response.text();
+                    iconCache[iconName] = svgContent;
+                    console.log(`✓ Successfully loaded icon ${iconName} from ${iconUrl}`);
+                    return svgContent;
+                } else {
+                    console.warn(`Icon ${iconName} not found (${response.status}) at ${iconUrl}`);
+                }
+            } catch (error) {
+                console.warn(`Error loading icon ${iconName} from ${iconUrl}:`, error);
             }
-            
-            const svgContent = await response.text();
-            iconCache[iconName] = svgContent;
-            return svgContent;
-        } catch (error) {
-            console.warn(`Error loading icon ${iconName}:`, error);
-            return null;
         }
+        
+        console.error(`Failed to load icon ${iconName} from all paths`);
+        return null;
     }
     
     async function replaceIcons() {
