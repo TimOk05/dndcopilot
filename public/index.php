@@ -465,49 +465,49 @@ function openCharacterModal() {
                         <label for="character-race">Раса персонажа</label>
                         <select id="character-race" name="race" required>
                             <option value="">Выберите расу</option>
-                            <option value="human">Человек</option>
-                            <option value="elf">Эльф</option>
-                            <option value="dwarf">Дварф</option>
-                            <option value="halfling">Полурослик</option>
-                            <option value="orc">Орк</option>
-                            <option value="tiefling">Тифлинг</option>
-                            <option value="dragonborn">Драконорожденный</option>
-                            <option value="gnome">Гном</option>
-                            <option value="half-elf">Полуэльф</option>
-                            <option value="half-orc">Полуорк</option>
-                            <option value="tabaxi">Табакси</option>
                             <option value="aarakocra">Ааракокра</option>
-                            <option value="goblin">Гоблин</option>
-                            <option value="kenku">Кенку</option>
-                            <option value="lizardfolk">Ящеролюд</option>
-                            <option value="triton">Тритон</option>
-                            <option value="yuan-ti">Юань-ти</option>
-                            <option value="goliath">Голиаф</option>
-                            <option value="firbolg">Фирболг</option>
-                            <option value="bugbear">Багбир</option>
-                            <option value="hobgoblin">Хобгоблин</option>
-                            <option value="kobold">Кобольд</option>
                             <option value="aasimar">Аасимар</option>
-                            <option value="drow">Дроу</option>
-                            <option value="duergar">Дуэргар</option>
-                            <option value="eladrin">Эладрин</option>
-                            <option value="genasi">Генаси</option>
-                            <option value="githyanki">Гитиянки</option>
-                            <option value="githzerai">Гитзерэи</option>
-                            <option value="shadar-kai">Шадар-кай</option>
                             <option value="astral elf">Астральный эльф</option>
                             <option value="autognome">Автогном</option>
-                            <option value="giff">Гифф</option>
-                            <option value="hadozee">Хадози</option>
-                            <option value="plasmoid">Плазмоид</option>
-                            <option value="thri-kreen">Три-крин</option>
+                            <option value="bugbear">Багбир</option>
                             <option value="chromatic dragonborn">Хроматический драконорожденный</option>
-                            <option value="gem dragonborn">Драгоценный драконорожденный</option>
-                            <option value="metallic dragonborn">Металлический драконорожденный</option>
+                            <option value="custom lineage">Кастомная родословная</option>
                             <option value="dhampir">Дампир</option>
+                            <option value="dragonborn">Драконорожденный</option>
+                            <option value="drow">Дроу</option>
+                            <option value="duergar">Дуэргар</option>
+                            <option value="dwarf">Дварф</option>
+                            <option value="eladrin">Эладрин</option>
+                            <option value="elf">Эльф</option>
+                            <option value="firbolg">Фирболг</option>
+                            <option value="gem dragonborn">Драгоценный драконорожденный</option>
+                            <option value="genasi">Генаси</option>
+                            <option value="giff">Гифф</option>
+                            <option value="githyanki">Гитиянки</option>
+                            <option value="githzerai">Гитзерэи</option>
+                            <option value="gnome">Гном</option>
+                            <option value="goblin">Гоблин</option>
+                            <option value="goliath">Голиаф</option>
+                            <option value="hadozee">Хадози</option>
+                            <option value="half-elf">Полуэльф</option>
+                            <option value="half-orc">Полуорк</option>
+                            <option value="halfling">Полурослик</option>
                             <option value="hexblood">Гексблад</option>
-                            <option value="reborn">Возрожденный</option>
+                            <option value="hobgoblin">Хобгоблин</option>
+                            <option value="human">Человек</option>
+                            <option value="kenku">Кенку</option>
+                            <option value="kobold">Кобольд</option>
+                            <option value="lizardfolk">Ящеролюд</option>
+                            <option value="metallic dragonborn">Металлический драконорожденный</option>
+                            <option value="orc">Орк</option>
                             <option value="owlin">Оулин</option>
+                            <option value="plasmoid">Плазмоид</option>
+                            <option value="reborn">Возрожденный</option>
+                            <option value="shadar-kai">Шадар-кай</option>
+                            <option value="tabaxi">Табакси</option>
+                            <option value="thri-kreen">Три-крин</option>
+                            <option value="tiefling">Тифлинг</option>
+                            <option value="triton">Тритон</option>
                             <option value="yuan-ti pureblood">Юань-ти Чистокровный</option>
                         </select>
                     </div>
@@ -516,19 +516,19 @@ function openCharacterModal() {
                         <label for="character-class">Класс персонажа</label>
                         <select id="character-class" name="class" required>
                             <option value="">Выберите класс</option>
-                            <option value="fighter">Воин</option>
-                            <option value="wizard">Волшебник</option>
-                            <option value="rogue">Плут</option>
-                            <option value="cleric">Жрец</option>
-                            <option value="ranger">Следопыт</option>
+                            <option value="artificer">Изобретатель</option>
                             <option value="barbarian">Варвар</option>
                             <option value="bard">Бард</option>
+                            <option value="cleric">Жрец</option>
                             <option value="druid">Друид</option>
+                            <option value="fighter">Воин</option>
                             <option value="monk">Монах</option>
                             <option value="paladin">Паладин</option>
+                            <option value="ranger">Следопыт</option>
+                            <option value="rogue">Плут</option>
                             <option value="sorcerer">Чародей</option>
                             <option value="warlock">Колдун</option>
-                            <option value="artificer">Изобретатель</option>
+                            <option value="wizard">Волшебник</option>
                         </select>
                     </div>
                     
@@ -538,18 +538,27 @@ function openCharacterModal() {
                     </div>
                     
                     <div class="form-group">
+                        <label for="ability-method">Метод генерации характеристик</label>
+                        <select id="ability-method" name="ability_method">
+                            <option value="standard_array">Standard Array (15,14,13,12,10,8)</option>
+                            <option value="point_buy">Point Buy (27 очков)</option>
+                            <option value="roll_4d6">4d6 drop lowest</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
                         <label for="character-alignment">Мировоззрение</label>
                         <select id="character-alignment" name="alignment">
                             <option value="random">Случайное</option>
-                            <option value="lawful-good">Законно-добрый</option>
-                            <option value="neutral-good">Нейтрально-добрый</option>
-                            <option value="chaotic-good">Хаотично-добрый</option>
-                            <option value="lawful-neutral">Законно-нейтральный</option>
-                            <option value="neutral">Нейтральный</option>
-                            <option value="chaotic-neutral">Хаотично-нейтральный</option>
-                            <option value="lawful-evil">Законно-злой</option>
-                            <option value="neutral-evil">Нейтрально-злой</option>
-                            <option value="chaotic-evil">Хаотично-злой</option>
+                            <option value="lawful_good">Законопослушный добрый</option>
+                            <option value="neutral_good">Нейтральный добрый</option>
+                            <option value="chaotic_good">Хаотичный добрый</option>
+                            <option value="lawful_neutral">Законопослушный нейтральный</option>
+                            <option value="true_neutral">Истинно нейтральный</option>
+                            <option value="chaotic_neutral">Хаотичный нейтральный</option>
+                            <option value="lawful_evil">Законопослушный злой</option>
+                            <option value="neutral_evil">Нейтральный злой</option>
+                            <option value="chaotic_evil">Хаотичный злой</option>
                         </select>
                     </div>
                     
@@ -559,6 +568,27 @@ function openCharacterModal() {
                             <option value="random">Случайный</option>
                             <option value="male">Мужской</option>
                             <option value="female">Женский</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="character-background">Происхождение</label>
+                        <select id="character-background" name="background">
+                            <option value="random">Случайное</option>
+                            <option value="acolyte">Служитель культа</option>
+                            <option value="charlatan">Мошенник</option>
+                            <option value="criminal">Преступник</option>
+                            <option value="entertainer">Артист</option>
+                            <option value="folk_hero">Народный герой</option>
+                            <option value="guild_artisan">Гильдейский ремесленник</option>
+                            <option value="hermit">Отшельник</option>
+                            <option value="noble">Дворянин</option>
+                            <option value="outlander">Чужеземец</option>
+                            <option value="sage">Мудрец</option>
+                            <option value="sailor">Моряк</option>
+                            <option value="soldier">Солдат</option>
+                            <option value="spy">Шпион</option>
+                            <option value="urchin">Бродяга</option>
                         </select>
                     </div>
                 </div>

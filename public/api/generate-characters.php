@@ -18,19 +18,19 @@ class CharacterGeneratorV4 {
     public function __construct() {
         try {
             error_log("Creating DndApiService...");
-            $this->dnd_api_service = new DndApiService();
+        $this->dnd_api_service = new DndApiService();
             error_log("DndApiService created successfully");
             
             error_log("Creating AiService...");
-            $this->ai_service = new AiService(); // Используем основной AI сервис
+        $this->ai_service = new AiService(); // Используем основной AI сервис
             error_log("AiService created successfully");
             
             error_log("Creating LanguageService...");
-            $this->language_service = new LanguageService(); // Добавляем Language Service
+        $this->language_service = new LanguageService(); // Добавляем Language Service
             error_log("LanguageService created successfully");
             
             error_log("Loading data...");
-            $this->loadData();
+        $this->loadData();
             error_log("Data loaded successfully");
         } catch (Exception $e) {
             error_log("Error in CharacterGeneratorV4 constructor: " . $e->getMessage());
@@ -113,8 +113,10 @@ class CharacterGeneratorV4 {
             $race = $params['race'] ?? 'human';
             $class = $params['class'] ?? 'fighter';
             $level = (int)($params['level'] ?? 1);
-            $alignment = $params['alignment'] ?? 'neutral';
+            $alignment = $params['alignment'] ?? 'random';
             $gender = $params['gender'] ?? 'random';
+            $background = $params['background'] ?? 'random';
+            $ability_method = $params['ability_method'] ?? 'standard_array';
             $use_ai = isset($params['use_ai']) && $params['use_ai'] === 'on';
             $language = $params['language'] ?? $this->language_service->getCurrentLanguage();
             
@@ -153,7 +155,7 @@ class CharacterGeneratorV4 {
             logMessage('INFO', "Получена дополнительная информация о расе: " . json_encode($race_library_info, JSON_UNESCAPED_UNICODE));
             
             // Генерируем характеристики
-            $abilities = $this->generateAbilities($race_data, $level);
+            $abilities = $this->generateAbilities($race_data, $level, $ability_method);
             
             // Получаем заклинания, снаряжение и способности
             $spells = $this->dnd_api_service->getSpellsForClass($class, $level);
@@ -182,6 +184,7 @@ class CharacterGeneratorV4 {
                 'level' => $level,
                 'alignment' => $this->getAlignmentText($alignment),
                 'gender' => $this->getGenderText($gender),
+                'background' => $this->getBackgroundText($background),
                 'occupation' => $this->getRandomOccupation(),
                 'abilities' => $abilities,
                 'hit_points' => $this->calculateHP($class_data, $abilities['con'], $level),
@@ -301,13 +304,24 @@ class CharacterGeneratorV4 {
             throw new Exception('Уровень персонажа должен быть от 1 до 20');
         }
         
-        $valid_races = ['human', 'elf', 'dwarf', 'halfling', 'orc', 'tiefling', 'dragonborn', 'gnome', 'half-elf', 'half-orc', 'tabaxi', 'aarakocra', 'goblin', 'kenku', 'lizardfolk', 'triton', 'yuan-ti', 'goliath', 'firbolg', 'bugbear', 'hobgoblin', 'kobold'];
+        $valid_races = [
+            'aarakocra', 'aasimar', 'astral elf', 'autognome', 'bugbear', 'chromatic dragonborn', 
+            'custom lineage', 'dhampir', 'dragonborn', 'drow', 'duergar', 'dwarf', 'eladrin', 
+            'elf', 'firbolg', 'gem dragonborn', 'genasi', 'giff', 'githyanki', 'githzerai', 
+            'gnome', 'goblin', 'goliath', 'hadozee', 'half-elf', 'half-orc', 'halfling', 
+            'hexblood', 'hobgoblin', 'human', 'kenku', 'kobold', 'lizardfolk', 'metallic dragonborn', 
+            'orc', 'owlin', 'plasmoid', 'reborn', 'shadar-kai', 'tabaxi', 'thri-kreen', 
+            'tiefling', 'triton', 'yuan-ti pureblood'
+        ];
         $race = $params['race'] ?? 'human';
         if (!in_array($race, $valid_races)) {
             throw new Exception('Неверная раса персонажа');
         }
         
-        $valid_classes = ['fighter', 'wizard', 'rogue', 'cleric', 'ranger', 'barbarian', 'bard', 'druid', 'monk', 'paladin', 'sorcerer', 'warlock', 'artificer'];
+        $valid_classes = [
+            'artificer', 'barbarian', 'bard', 'cleric', 'druid', 'fighter', 'monk', 
+            'paladin', 'ranger', 'rogue', 'sorcerer', 'warlock', 'wizard'
+        ];
         $class = $params['class'] ?? 'fighter';
         if (!in_array($class, $valid_classes)) {
             throw new Exception('Неверный класс персонажа');
@@ -317,19 +331,23 @@ class CharacterGeneratorV4 {
     /**
      * Генерация характеристик
      */
-    private function generateAbilities($race_data, $level = 1) {
+    private function generateAbilities($race_data, $level = 1, $method = 'standard_array') {
         // Получаем ключ расы для определения особенностей
         $race_key = strtolower($race_data['name'] ?? 'human');
         
-        // Генерируем характеристики по правилам D&D (4d6, убираем минимальный)
-        $abilities = [
-            'str' => $this->rollAbilityScore(),
-            'dex' => $this->rollAbilityScore(),
-            'con' => $this->rollAbilityScore(),
-            'int' => $this->rollAbilityScore(),
-            'wis' => $this->rollAbilityScore(),
-            'cha' => $this->rollAbilityScore()
-        ];
+        // Выбираем метод генерации характеристик
+        switch ($method) {
+            case 'point_buy':
+                $abilities = $this->generatePointBuyAbilities();
+                break;
+            case 'roll_4d6':
+                $abilities = $this->generate4d6Abilities();
+                break;
+            case 'standard_array':
+            default:
+                $abilities = $this->generateStandardArrayAbilities();
+                break;
+        }
         
         // Определяем приоритеты расы для перераспределения характеристик
         $race_priorities = [
@@ -402,14 +420,13 @@ class CharacterGeneratorV4 {
         
         $priorities = $race_priorities[$race_key] ?? ['str', 'dex', 'con', 'int', 'wis', 'cha'];
         
-        // Сортируем сгенерированные значения по убыванию
-        $values = array_values($abilities);
-        rsort($values);
-        
         // Перераспределяем значения согласно приоритетам расы
+        // Самое высокое значение (15) идет в первую характеристику приоритета
         $new_abilities = [];
+        $sorted_values = [15, 14, 13, 12, 10, 8]; // Уже отсортированы по убыванию
+        
         foreach ($priorities as $index => $ability) {
-            $new_abilities[$ability] = $values[$index] ?? 10;
+            $new_abilities[$ability] = $sorted_values[$index];
         }
         
         // Применяем расовые бонусы если есть
@@ -425,6 +442,79 @@ class CharacterGeneratorV4 {
         logMessage('INFO', "Сгенерированы характеристики для расы {$race_key}: " . json_encode($new_abilities, JSON_UNESCAPED_UNICODE));
         
         return $new_abilities;
+    }
+    
+    /**
+     * Генерация характеристик методом Standard Array
+     */
+    private function generateStandardArrayAbilities() {
+        $standard_array = [15, 14, 13, 12, 10, 8];
+        shuffle($standard_array); // Перемешиваем для случайности
+        
+        return [
+            'str' => $standard_array[0],
+            'dex' => $standard_array[1], 
+            'con' => $standard_array[2],
+            'int' => $standard_array[3],
+            'wis' => $standard_array[4],
+            'cha' => $standard_array[5]
+        ];
+    }
+    
+    /**
+     * Генерация характеристик методом Point Buy (27 очков)
+     */
+    private function generatePointBuyAbilities() {
+        // Point Buy costs: 8=0, 9=1, 10=2, 11=3, 12=4, 13=5, 14=7, 15=9
+        $point_costs = [8 => 0, 9 => 1, 10 => 2, 11 => 3, 12 => 4, 13 => 5, 14 => 7, 15 => 9];
+        $total_points = 27;
+        
+        // Начинаем с базовых значений 8
+        $abilities = [
+            'str' => 8,
+            'dex' => 8,
+            'con' => 8,
+            'int' => 8,
+            'wis' => 8,
+            'cha' => 8
+        ];
+        
+        $points_used = 0;
+        
+        // Распределяем очки случайным образом
+        while ($points_used < $total_points) {
+            $ability = array_rand($abilities);
+            $current_value = $abilities[$ability];
+            
+            // Не повышаем выше 15
+            if ($current_value >= 15) continue;
+            
+            $new_value = $current_value + 1;
+            $cost = $point_costs[$new_value] - $point_costs[$current_value];
+            
+            if ($points_used + $cost <= $total_points) {
+                $abilities[$ability] = $new_value;
+                $points_used += $cost;
+            } else {
+                break; // Не хватает очков
+            }
+        }
+        
+        return $abilities;
+    }
+    
+    /**
+     * Генерация характеристик методом 4d6 drop lowest
+     */
+    private function generate4d6Abilities() {
+        return [
+            'str' => $this->rollAbilityScore(),
+            'dex' => $this->rollAbilityScore(),
+            'con' => $this->rollAbilityScore(),
+            'int' => $this->rollAbilityScore(),
+            'wis' => $this->rollAbilityScore(),
+            'cha' => $this->rollAbilityScore()
+        ];
     }
     
     /**
@@ -548,10 +638,11 @@ class CharacterGeneratorV4 {
     }
     
     /**
-     * Расчет инициативы
+     * Расчет инициативы (модификатор ловкости)
      */
-    private function calculateInitiative($dex_modifier) {
-        return floor(($dex_modifier - 10) / 2);
+    private function calculateInitiative($dex_score) {
+        $modifier = floor(($dex_score - 10) / 2);
+        return $modifier >= 0 ? "+{$modifier}" : (string)$modifier;
     }
     
     /**
@@ -638,8 +729,12 @@ class CharacterGeneratorV4 {
     private function getMainWeaponFromApi($class_data) {
         $weapon_proficiencies = $class_data['proficiencies']['weapons'] ?? [];
         
+        logMessage('INFO', 'Проверяем владения оружием: ' . json_encode($weapon_proficiencies));
+        logMessage('INFO', 'Загружено оружия: ' . count($this->weapons));
+        
         if (empty($weapon_proficiencies)) {
-            return 'Базовое оружие';
+            logMessage('WARNING', 'У класса нет владений оружием, используем fallback');
+            return $this->getFallbackWeapon($class_data['name'] ?? 'fighter');
         }
         
         // Используем библиотеку оружия
@@ -668,7 +763,14 @@ class CharacterGeneratorV4 {
             }
         }
         
-        // Fallback - базовые оружия для классов
+        // Fallback - используем базовые оружия для классов
+        return $this->getFallbackWeapon($class_data['name'] ?? 'fighter');
+    }
+    
+    /**
+     * Получение fallback оружия для класса
+     */
+    private function getFallbackWeapon($class_name) {
         $class_weapons = [
             'fighter' => ['Длинный меч', 'Боевой топор', 'Копье'],
             'paladin' => ['Длинный меч', 'Булава', 'Молот'],
@@ -684,10 +786,12 @@ class CharacterGeneratorV4 {
             'warlock' => ['Кинжал', 'Легкий арбалет', 'Простой посох']
         ];
         
-        $class_key = strtolower($class_data['name'] ?? 'fighter');
+        $class_key = strtolower($class_name);
         $weapons = $class_weapons[$class_key] ?? ['Короткий меч'];
         
-        return $weapons[array_rand($weapons)];
+        $selected_weapon = $weapons[array_rand($weapons)];
+        logMessage('INFO', "Выбрано fallback оружие для {$class_name}: {$selected_weapon}");
+        return $selected_weapon;
     }
     
     /**
@@ -761,6 +865,50 @@ class CharacterGeneratorV4 {
         }
         
         return $gender === 'male' ? 'Мужчина' : 'Женщина';
+    }
+    
+    /**
+     * Получение текста происхождения
+     */
+    private function getBackgroundText($background) {
+        if ($background === 'random') {
+            $backgrounds = [
+                'acolyte' => 'Служитель культа',
+                'charlatan' => 'Мошенник',
+                'criminal' => 'Преступник',
+                'entertainer' => 'Артист',
+                'folk_hero' => 'Народный герой',
+                'guild_artisan' => 'Гильдейский ремесленник',
+                'hermit' => 'Отшельник',
+                'noble' => 'Дворянин',
+                'outlander' => 'Чужеземец',
+                'sage' => 'Мудрец',
+                'sailor' => 'Моряк',
+                'soldier' => 'Солдат',
+                'spy' => 'Шпион',
+                'urchin' => 'Бродяга'
+            ];
+            return $backgrounds[array_rand($backgrounds)];
+        }
+        
+        $background_map = [
+            'acolyte' => 'Служитель культа',
+            'charlatan' => 'Мошенник',
+            'criminal' => 'Преступник',
+            'entertainer' => 'Артист',
+            'folk_hero' => 'Народный герой',
+            'guild_artisan' => 'Гильдейский ремесленник',
+            'hermit' => 'Отшельник',
+            'noble' => 'Дворянин',
+            'outlander' => 'Чужеземец',
+            'sage' => 'Мудрец',
+            'sailor' => 'Моряк',
+            'soldier' => 'Солдат',
+            'spy' => 'Шпион',
+            'urchin' => 'Бродяга'
+        ];
+        
+        return $background_map[$background] ?? 'Случайное';
     }
     
     /**
