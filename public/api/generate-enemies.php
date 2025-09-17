@@ -72,6 +72,14 @@ class EnemyGenerator {
                 $expanded_range = $this->expandCRRange($cr_range);
                 $filtered_monsters = $this->filterMonsters($monsters, $expanded_range, $enemy_type, $environment);
                 logMessage('INFO', "EnemyGenerator: После расширения найдено монстров: " . count($filtered_monsters));
+                
+                // Если все еще не найдено, пробуем максимально широкий диапазон
+                if (empty($filtered_monsters)) {
+                    logMessage('INFO', "EnemyGenerator: Все еще не найдены монстры, используем максимально широкий диапазон");
+                    $wide_range = ['min' => 0, 'max' => 15, 'display' => 'Широкий диапазон (CR 0-15)'];
+                    $filtered_monsters = $this->filterMonsters($monsters, $wide_range, '', ''); // Убираем фильтры типа и среды
+                    logMessage('INFO', "EnemyGenerator: После максимального расширения найдено монстров: " . count($filtered_monsters));
+                }
             }
             
             if (empty($filtered_monsters)) {
@@ -162,18 +170,18 @@ class EnemyGenerator {
             case 'easy':
                 return ['min' => 0, 'max' => 3, 'display' => 'Легкий (CR 0-3)'];
             case 'medium':
-                return ['min' => 1, 'max' => 5, 'display' => 'Средний (CR 1-5)'];
+                return ['min' => 1, 'max' => 4, 'display' => 'Средний (CR 1-4)'];
             case 'hard':
-                return ['min' => 3, 'max' => 8, 'display' => 'Сложный (CR 3-8)'];
+                return ['min' => 2, 'max' => 6, 'display' => 'Сложный (CR 2-6)'];
             case 'deadly':
-                return ['min' => 6, 'max' => 12, 'display' => 'Смертельный (CR 6-12)'];
+                return ['min' => 5, 'max' => 12, 'display' => 'Смертельный (CR 5-12)'];
             default:
                 // Если передан конкретный CR, возвращаем его как диапазон
                 if (is_numeric($threat_level)) {
                     $cr = (float)$threat_level;
                     return ['min' => $cr, 'max' => $cr, 'display' => "CR $cr"];
                 }
-                return ['min' => 1, 'max' => 5, 'display' => 'Средний (CR 1-5)'];
+                return ['min' => 1, 'max' => 4, 'display' => 'Средний (CR 1-4)'];
         }
     }
     
@@ -1366,17 +1374,21 @@ class EnemyGenerator {
     private function expandCRRange($cr_range) {
         $expanded = $cr_range;
         
-        // Для высоких уровней расширяем диапазон более агрессивно
-        if ($expanded['min'] >= 6) {
-            // Для deadly уровней расширяем вниз до 3
+        // Агрессивное расширение для всех уровней
+        if ($expanded['min'] >= 5) {
+            // Для deadly уровней расширяем вниз до 1
             $expanded['min'] = max(0, $expanded['min'] - 4);
             $expanded['max'] = min(15, $expanded['max'] + 3);
+        } elseif ($expanded['min'] >= 2) {
+            // Для hard уровней расширяем вниз до 0
+            $expanded['min'] = max(0, $expanded['min'] - 2);
+            $expanded['max'] = min(8, $expanded['max'] + 2);
         } else {
-            // Для остальных уровней расширяем на 2 в каждую сторону
+            // Для easy и medium уровней расширяем на 1-2 в каждую сторону
             if ($expanded['min'] > 0) {
-                $expanded['min'] = max(0, $expanded['min'] - 2);
+                $expanded['min'] = max(0, $expanded['min'] - 1);
             }
-            $expanded['max'] = min(12, $expanded['max'] + 2);
+            $expanded['max'] = min(6, $expanded['max'] + 2);
         }
         
         logMessage('INFO', "EnemyGenerator: Расширенный CR диапазон: " . json_encode($expanded));
