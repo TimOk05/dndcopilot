@@ -60,10 +60,11 @@ class EnemyGenerator {
                 throw new Exception('База данных монстров недоступна. Все данные должны поступать из внешних API.');
             }
             
-            // Фильтруем монстров по CR и типу
-            logMessage('INFO', "EnemyGenerator: Фильтруем монстров. CR range: " . json_encode($cr_range));
-            $filtered_monsters = $this->filterMonsters($monsters, $cr_range, $enemy_type, $environment);
-            logMessage('INFO', "EnemyGenerator: После фильтрации найдено монстров: " . count($filtered_monsters));
+        // Фильтруем монстров по CR и типу
+        logMessage('INFO', "EnemyGenerator: Фильтруем монстров. CR range: " . json_encode($cr_range));
+        logMessage('INFO', "EnemyGenerator: Всего монстров в API: " . (isset($monsters['results']) ? count($monsters['results']) : 0));
+        $filtered_monsters = $this->filterMonsters($monsters, $cr_range, $enemy_type, $environment);
+        logMessage('INFO', "EnemyGenerator: После фильтрации найдено монстров: " . count($filtered_monsters));
             
             // Если не найдено монстров, пробуем расширить диапазон
             if (empty($filtered_monsters)) {
@@ -199,71 +200,79 @@ class EnemyGenerator {
     private function filterMonsters($monsters, $cr_range, $enemy_type, $environment) {
         $filtered = [];
         $checked_count = 0;
-        $max_checks = 100; // Увеличиваем количество проверок для расширенной базы
+        $max_checks = 200; // Увеличиваем количество проверок для расширенной базы
+        
+        logMessage('INFO', "EnemyGenerator: Начинаем фильтрацию монстров. CR: {$cr_range['min']}-{$cr_range['max']}");
         
         // Сначала проверяем API монстров
         if (isset($monsters['results']) && !empty($monsters['results'])) {
-        foreach ($monsters['results'] as $monster) {
-            if ($checked_count >= $max_checks) {
-                break;
-            }
-            $checked_count++;
+            logMessage('INFO', "EnemyGenerator: Проверяем " . count($monsters['results']) . " монстров из API");
             
-            try {
-                // Получаем детали монстра
-                $monster_details = $this->getMonsterDetails($monster['index']);
-                
-                if (!$monster_details || !$this->hasCompleteData($monster_details)) {
-                    continue;
-                }
-                
-            // Проверяем CR
-                if (!isset($monster_details['challenge_rating'])) {
-                    continue;
-                }
-                
-                if (!$this->checkCRRange($monster_details['challenge_rating'], $cr_range)) {
-                    continue;
-                }
-                
-                // Проверяем тип
-                if (!isset($monster_details['type'])) {
-                    continue;
-                }
-                
-                if ($enemy_type && !$this->checkType($monster_details['type'], $enemy_type)) {
-                continue;
-            }
-            
-                // Проверяем среду (необязательно - пропускаем если нет информации)
-                if ($environment && isset($monster_details['environment'])) {
-                    if (!$this->checkEnvironment($monster_details, $environment)) {
-                        continue;
-                    }
-                }
-                
-                // Проверяем совместимость
-                if (!$this->checkCompatibility($monster_details, $cr_range)) {
-                continue;
-            }
-                
-                $filtered[] = $monster_details;
-                
-                // Ограничиваем количество проверенных монстров
-                    if (count($filtered) >= 20) {
+            foreach ($monsters['results'] as $monster) {
+                if ($checked_count >= $max_checks) {
+                    logMessage('INFO', "EnemyGenerator: Достигнут лимит проверок ($max_checks)");
                     break;
                 }
+                $checked_count++;
                 
-            } catch (Exception $e) {
-                logMessage('WARNING', "EnemyGenerator: Ошибка получения деталей монстра {$monster['name']}: " . $e->getMessage());
-                continue;
+                try {
+                    // Получаем детали монстра
+                    $monster_details = $this->getMonsterDetails($monster['index']);
+                    
+                    if (!$monster_details || !$this->hasCompleteData($monster_details)) {
+                        continue;
+                    }
+                    
+                    // Проверяем CR
+                    if (!isset($monster_details['challenge_rating'])) {
+                        continue;
+                    }
+                    
+                    $monster_cr = $this->parseCR($monster_details['challenge_rating']);
+                    logMessage('DEBUG', "EnemyGenerator: Монстр {$monster_details['name']} имеет CR $monster_cr");
+                    
+                    if (!$this->checkCRRange($monster_details['challenge_rating'], $cr_range)) {
+                        continue;
+                    }
+                    
+                    // Проверяем тип
+                    if (!isset($monster_details['type'])) {
+                        continue;
+                    }
+                    
+                    if ($enemy_type && !$this->checkType($monster_details['type'], $enemy_type)) {
+                        continue;
+                    }
+                    
+                    // Проверяем среду (необязательно - пропускаем если нет информации)
+                    if ($environment && isset($monster_details['environment'])) {
+                        if (!$this->checkEnvironment($monster_details, $environment)) {
+                            continue;
+                        }
+                    }
+                    
+                    // Проверяем совместимость
+                    if (!$this->checkCompatibility($monster_details, $cr_range)) {
+                        continue;
+                    }
+                    
+                    logMessage('INFO', "EnemyGenerator: Монстр {$monster_details['name']} (CR $monster_cr) подходит");
+                    $filtered[] = $monster_details;
+                    
+                    // Ограничиваем количество проверенных монстров
+                    if (count($filtered) >= 20) {
+                        logMessage('INFO', "EnemyGenerator: Найдено достаточно монстров (20)");
+                        break;
+                    }
+                    
+                } catch (Exception $e) {
+                    logMessage('WARNING', "EnemyGenerator: Ошибка получения деталей монстра {$monster['name']}: " . $e->getMessage());
+                    continue;
                 }
             }
         }
         
-        // NO_FALLBACK политика: не добавляем данные из внутренней базы
-        
-        logMessage('INFO', "EnemyGenerator: Итоговое количество подходящих монстров: " . count($filtered));
+        logMessage('INFO', "EnemyGenerator: Проверено монстров: $checked_count, найдено подходящих: " . count($filtered));
         return $filtered;
     }
     
@@ -334,40 +343,60 @@ class EnemyGenerator {
     }
     
     /**
-     * Проверка типа
+     * Проверка типа существ D&D 5e
      */
     private function checkType($monster_type, $requested_type) {
-        // Создаем маппинг английских типов на русские
-        $typeMapping = [
-            'humanoid' => ['гуманоид', 'человекоид'],
-            'beast' => ['зверь', 'животное'],
-            'dragon' => ['дракон'],
-            'undead' => ['нежить', 'мертвец'],
-            'fiend' => ['демон', 'дьявол', 'инфернал'],
-            'celestial' => ['небожитель', 'ангел'],
-            'elemental' => ['элементаль', 'стихийник'],
-            'aberration' => ['аберрация', 'чудище'],
-            'monstrosity' => ['чудовище', 'монстр'],
-            'construct' => ['конструкт', 'голем'],
-            'giant' => ['великан'],
-            'fey' => ['фея', 'феи'],
-            'plant' => ['растение', 'растительность'],
-            'ooze' => ['слизь', 'желе']
+        // Официальные типы существ D&D 5e
+        $dnd5eTypes = [
+            'aberration' => ['аберрация', 'чудище', 'aberration'],
+            'beast' => ['зверь', 'животное', 'beast'],
+            'celestial' => ['небожитель', 'ангел', 'celestial'],
+            'construct' => ['конструкт', 'голем', 'construct'],
+            'dragon' => ['дракон', 'dragon'],
+            'elemental' => ['элементаль', 'стихийник', 'elemental'],
+            'fey' => ['фея', 'феи', 'fey'],
+            'fiend' => ['демон', 'дьявол', 'инфернал', 'fiend'],
+            'giant' => ['великан', 'giant'],
+            'humanoid' => ['гуманоид', 'человекоид', 'humanoid'],
+            'monstrosity' => ['чудовище', 'монстр', 'monstrosity'],
+            'ooze' => ['слизь', 'желе', 'ooze'],
+            'plant' => ['растение', 'растительность', 'plant'],
+            'swarm' => ['рой', 'swarm'],
+            'undead' => ['нежить', 'мертвец', 'undead']
         ];
         
-        $monster_type_lower = strtolower($monster_type);
-        $requested_type_lower = strtolower($requested_type);
+        $monster_type_lower = strtolower(trim($monster_type));
+        $requested_type_lower = strtolower(trim($requested_type));
         
-        // Проверяем прямое совпадение
-        if (strpos($monster_type_lower, $requested_type_lower) !== false) {
+        // Проверяем прямое совпадение (для английских названий)
+        if ($monster_type_lower === $requested_type_lower) {
             return true;
         }
         
-        // Проверяем через маппинг
-        if (isset($typeMapping[$requested_type_lower])) {
-            foreach ($typeMapping[$requested_type_lower] as $russian_type) {
-                if (strpos($monster_type_lower, $russian_type) !== false) {
+        // Проверяем через маппинг типов D&D 5e
+        foreach ($dnd5eTypes as $english_type => $aliases) {
+            // Если запрашиваемый тип совпадает с английским названием
+            if ($requested_type_lower === $english_type) {
+                // Проверяем, содержит ли тип монстра это название
+                if (strpos($monster_type_lower, $english_type) !== false) {
                     return true;
+                }
+                // Проверяем все алиасы
+                foreach ($aliases as $alias) {
+                    if (strpos($monster_type_lower, strtolower($alias)) !== false) {
+                        return true;
+                    }
+                }
+            }
+            // Если запрашиваемый тип совпадает с русским алиасом
+            elseif (in_array($requested_type_lower, array_map('strtolower', $aliases))) {
+                if (strpos($monster_type_lower, $english_type) !== false) {
+                    return true;
+                }
+                foreach ($aliases as $alias) {
+                    if (strpos($monster_type_lower, strtolower($alias)) !== false) {
+                        return true;
+                    }
                 }
             }
         }
@@ -376,7 +405,7 @@ class EnemyGenerator {
     }
     
     /**
-     * Проверка среды
+     * Проверка среды обитания D&D 5e
      */
     private function checkEnvironment($monster, $requested_environment) {
         // Если environment не указан, считаем что монстр подходит для любой среды
@@ -384,29 +413,117 @@ class EnemyGenerator {
             return true;
         }
         
-        $monster_env = strtolower($monster['environment']);
-        $requested_env = strtolower($requested_environment);
+        $monster_env = strtolower(trim($monster['environment']));
+        $requested_env = strtolower(trim($requested_environment));
         
-        // Маппинг сред
-        $environment_mapping = [
-            'forest' => ['forest', 'grassland', 'hill'],
-            'mountain' => ['mountain', 'hill'],
-            'desert' => ['desert'],
-            'swamp' => ['swamp', 'marsh'],
-            'underdark' => ['underdark', 'cave'],
-            'water' => ['aquatic', 'coastal'],
-            'urban' => ['urban', 'city']
+        // Официальные среды обитания D&D 5e
+        $dnd5eEnvironments = [
+            'arctic' => ['арктика', 'лед', 'холод', 'arctic', 'tundra'],
+            'coastal' => ['побережье', 'берег', 'coastal', 'shore'],
+            'desert' => ['пустыня', 'пески', 'desert'],
+            'forest' => ['лес', 'деревья', 'forest', 'woodland', 'jungle'],
+            'grassland' => ['степи', 'равнины', 'grassland', 'plains', 'prairie'],
+            'hill' => ['холмы', 'горы', 'hill', 'mountain', 'hills'],
+            'mountain' => ['горы', 'горная', 'mountain', 'alpine'],
+            'swamp' => ['болото', 'топи', 'swamp', 'marsh', 'bog'],
+            'underdark' => ['подземье', 'пещеры', 'underdark', 'cave', 'underground'],
+            'underwater' => ['подводная', 'вода', 'underwater', 'aquatic', 'ocean'],
+            'urban' => ['город', 'поселение', 'urban', 'city', 'town', 'village']
         ];
         
-        if (isset($environment_mapping[$requested_env])) {
-            foreach ($environment_mapping[$requested_env] as $env) {
-                if (strpos($monster_env, $env) !== false) {
+        // Проверяем прямое совпадение
+        if (strpos($monster_env, $requested_env) !== false) {
+            return true;
+        }
+        
+        // Проверяем через маппинг сред D&D 5e
+        foreach ($dnd5eEnvironments as $english_env => $aliases) {
+            // Если запрашиваемая среда совпадает с английским названием
+            if ($requested_env === $english_env) {
+                // Проверяем, содержит ли среда монстра это название
+                if (strpos($monster_env, $english_env) !== false) {
                     return true;
+                }
+                // Проверяем все алиасы
+                foreach ($aliases as $alias) {
+                    if (strpos($monster_env, strtolower($alias)) !== false) {
+                        return true;
+                    }
+                }
+            }
+            // Если запрашиваемая среда совпадает с русским алиасом
+            elseif (in_array($requested_env, array_map('strtolower', $aliases))) {
+                if (strpos($monster_env, $english_env) !== false) {
+                    return true;
+                }
+                foreach ($aliases as $alias) {
+                    if (strpos($monster_env, strtolower($alias)) !== false) {
+                        return true;
+                    }
                 }
             }
         }
         
-        return strpos($monster_env, $requested_env) !== false;
+        // Дополнительная проверка для множественных сред (монстр может жить в нескольких местах)
+        if (strpos($monster_env, ',') !== false) {
+            $environments = explode(',', $monster_env);
+            foreach ($environments as $env) {
+                $env = trim(strtolower($env));
+                if ($env === $requested_env) {
+                    return true;
+                }
+                // Проверяем через маппинг для каждой среды
+                foreach ($dnd5eEnvironments as $english_env => $aliases) {
+                    if ($env === $english_env && in_array($requested_env, array_map('strtolower', $aliases))) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Получить список доступных типов существ D&D 5e
+     */
+    public function getAvailableTypes() {
+        return [
+            'aberration' => 'Аберрация',
+            'beast' => 'Зверь',
+            'celestial' => 'Небожитель',
+            'construct' => 'Конструкт',
+            'dragon' => 'Дракон',
+            'elemental' => 'Элементаль',
+            'fey' => 'Фей',
+            'fiend' => 'Исчадие',
+            'giant' => 'Великан',
+            'humanoid' => 'Гуманоид',
+            'monstrosity' => 'Чудовище',
+            'ooze' => 'Слизь',
+            'plant' => 'Растение',
+            'swarm' => 'Рой',
+            'undead' => 'Нежить'
+        ];
+    }
+    
+    /**
+     * Получить список доступных сред обитания D&D 5e
+     */
+    public function getAvailableEnvironments() {
+        return [
+            'arctic' => 'Арктика',
+            'coastal' => 'Побережье',
+            'desert' => 'Пустыня',
+            'forest' => 'Лес',
+            'grassland' => 'Степи/Равнины',
+            'hill' => 'Холмы',
+            'mountain' => 'Горы',
+            'swamp' => 'Болото',
+            'underdark' => 'Подземье',
+            'underwater' => 'Подводная среда',
+            'urban' => 'Город/Поселение'
+        ];
     }
     
     /**
@@ -850,28 +967,29 @@ class EnemyGenerator {
     }
     
     /**
-     * Перевод типов существ на русский
+     * Перевод типов существ D&D 5e на русский
      */
     private function translateType($type) {
         $translations = [
+            'aberration' => 'Аберрация',
             'beast' => 'Зверь',
-            'humanoid' => 'Гуманоид',
-            'dragon' => 'Дракон',
-            'giant' => 'Великан',
-            'undead' => 'Нежить',
-            'fiend' => 'Исчадие',
             'celestial' => 'Небожитель',
+            'construct' => 'Конструкт',
+            'dragon' => 'Дракон',
             'elemental' => 'Элементаль',
             'fey' => 'Фей',
+            'fiend' => 'Исчадие',
+            'giant' => 'Великан',
+            'humanoid' => 'Гуманоид',
             'monstrosity' => 'Чудовище',
             'ooze' => 'Слизь',
             'plant' => 'Растение',
-            'construct' => 'Конструкт',
-            'aberration' => 'Аберрация',
-            'swarm' => 'Рой'
+            'swarm' => 'Рой',
+            'undead' => 'Нежить'
         ];
         
-        return $translations[strtolower($type)] ?? $type;
+        $type_lower = strtolower(trim($type));
+        return $translations[$type_lower] ?? $type;
     }
     
     /**
@@ -1312,21 +1430,53 @@ class EnemyGenerator {
 }
 
 // Обработка запроса
-if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    logMessage('INFO', "EnemyGenerator: Получен POST запрос с данными: " . json_encode($_POST));
+if (isset($_SERVER['REQUEST_METHOD'])) {
+    $generator = new EnemyGenerator();
     
-    try {
-        $generator = new EnemyGenerator();
-        $result = $generator->generateEnemies($_POST);
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        // Обработка GET запросов для получения списков фильтров
+        $action = $_GET['action'] ?? '';
         
-        logMessage('INFO', "EnemyGenerator: Результат генерации: " . json_encode($result));
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    } catch (Exception $e) {
-        logMessage('ERROR', "EnemyGenerator: Критическая ошибка: " . $e->getMessage());
-        echo json_encode([
-            'success' => false,
-            'error' => $e->getMessage()
-        ], JSON_UNESCAPED_UNICODE);
+        switch ($action) {
+            case 'types':
+                $types = $generator->getAvailableTypes();
+                echo json_encode([
+                    'success' => true,
+                    'types' => $types
+                ], JSON_UNESCAPED_UNICODE);
+                break;
+                
+            case 'environments':
+                $environments = $generator->getAvailableEnvironments();
+                echo json_encode([
+                    'success' => true,
+                    'environments' => $environments
+                ], JSON_UNESCAPED_UNICODE);
+                break;
+                
+            default:
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'Неизвестное действие'
+                ], JSON_UNESCAPED_UNICODE);
+        }
+        
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Обработка POST запросов для генерации противников
+        logMessage('INFO', "EnemyGenerator: Получен POST запрос с данными: " . json_encode($_POST));
+        
+        try {
+            $result = $generator->generateEnemies($_POST);
+            
+            logMessage('INFO', "EnemyGenerator: Результат генерации: " . json_encode($result));
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        } catch (Exception $e) {
+            logMessage('ERROR', "EnemyGenerator: Критическая ошибка: " . $e->getMessage());
+            echo json_encode([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], JSON_UNESCAPED_UNICODE);
+        }
     }
 }
 ?>
