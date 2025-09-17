@@ -487,6 +487,28 @@ function openCharacterModal() {
                             <option value="bugbear">Багбир</option>
                             <option value="hobgoblin">Хобгоблин</option>
                             <option value="kobold">Кобольд</option>
+                            <option value="aasimar">Аасимар</option>
+                            <option value="drow">Дроу</option>
+                            <option value="duergar">Дуэргар</option>
+                            <option value="eladrin">Эладрин</option>
+                            <option value="genasi">Генаси</option>
+                            <option value="githyanki">Гитиянки</option>
+                            <option value="githzerai">Гитзерэи</option>
+                            <option value="shadar-kai">Шадар-кай</option>
+                            <option value="astral elf">Астральный эльф</option>
+                            <option value="autognome">Автогном</option>
+                            <option value="giff">Гифф</option>
+                            <option value="hadozee">Хадози</option>
+                            <option value="plasmoid">Плазмоид</option>
+                            <option value="thri-kreen">Три-крин</option>
+                            <option value="chromatic dragonborn">Хроматический драконорожденный</option>
+                            <option value="gem dragonborn">Драгоценный драконорожденный</option>
+                            <option value="metallic dragonborn">Металлический драконорожденный</option>
+                            <option value="dhampir">Дампир</option>
+                            <option value="hexblood">Гексблад</option>
+                            <option value="reborn">Возрожденный</option>
+                            <option value="owlin">Оулин</option>
+                            <option value="yuan-ti pureblood">Юань-ти Чистокровный</option>
                         </select>
                     </div>
                     

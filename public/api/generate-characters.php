@@ -11,6 +11,7 @@ class CharacterGeneratorV4 {
     private $language_service;
     private $occupations = [];
     private $race_names = [];
+    private $weapons = [];
     
     // Переводы будут получаться из внешних API через LanguageService
     
@@ -47,6 +48,9 @@ class CharacterGeneratorV4 {
         
         // Загружаем имена
         $this->loadRaceNames();
+        
+        // Загружаем оружие
+        $this->loadWeapons();
     }
     
     /**
@@ -267,6 +271,28 @@ class CharacterGeneratorV4 {
     }
     
     /**
+     * Загрузка оружия из библиотеки механик
+     */
+    private function loadWeapons() {
+        try {
+            $mechanics_file = __DIR__ . '/../../data/pdf/dnd_npc_mechanics_context_v2.json';
+            if (file_exists($mechanics_file)) {
+                $mechanics_data = json_decode(file_get_contents($mechanics_file), true);
+                if (isset($mechanics_data['weapons'])) {
+                    $this->weapons = $mechanics_data['weapons'];
+                    logMessage('INFO', 'Загружено ' . count($this->weapons) . ' видов оружия');
+                } else {
+                    logMessage('WARNING', 'Структура файла механик некорректна - нет секции weapons');
+                }
+            } else {
+                logMessage('WARNING', 'Файл с механиками не найден: ' . $mechanics_file);
+            }
+        } catch (Exception $e) {
+            logMessage('ERROR', 'Ошибка загрузки оружия: ' . $e->getMessage());
+        }
+    }
+    
+    /**
      * Валидация параметров
      */
     private function validateParams($params) {
@@ -292,6 +318,10 @@ class CharacterGeneratorV4 {
      * Генерация характеристик
      */
     private function generateAbilities($race_data, $level = 1) {
+        // Получаем ключ расы для определения особенностей
+        $race_key = strtolower($race_data['name'] ?? 'human');
+        
+        // Генерируем характеристики по правилам D&D (4d6, убираем минимальный)
         $abilities = [
             'str' => $this->rollAbilityScore(),
             'dex' => $this->rollAbilityScore(),
@@ -301,28 +331,100 @@ class CharacterGeneratorV4 {
             'cha' => $this->rollAbilityScore()
         ];
         
-        // Применяем бонусы расы из API данных
+        // Определяем приоритеты расы для перераспределения характеристик
+        $race_priorities = [
+            // Основные расы из PHB
+            'human' => ['str', 'dex', 'con', 'int', 'wis', 'cha'],
+            'elf' => ['dex', 'int', 'wis', 'str', 'con', 'cha'],
+            'dwarf' => ['con', 'str', 'wis', 'dex', 'int', 'cha'],
+            'halfling' => ['dex', 'con', 'cha', 'str', 'wis', 'int'],
+            'gnome' => ['int', 'dex', 'con', 'str', 'wis', 'cha'],
+            'half-elf' => ['cha', 'dex', 'con', 'str', 'int', 'wis'],
+            'half-orc' => ['str', 'con', 'dex', 'wis', 'int', 'cha'],
+            'tiefling' => ['cha', 'int', 'dex', 'con', 'str', 'wis'],
+            'dragonborn' => ['str', 'cha', 'con', 'dex', 'wis', 'int'],
+            
+            // Расы из Volo's Guide
+            'aarakocra' => ['dex', 'wis', 'con', 'str', 'int', 'cha'],
+            'aasimar' => ['cha', 'wis', 'con', 'str', 'dex', 'int'],
+            'bugbear' => ['str', 'dex', 'con', 'int', 'wis', 'cha'],
+            'firbolg' => ['wis', 'str', 'con', 'dex', 'int', 'cha'],
+            'goblin' => ['dex', 'con', 'int', 'str', 'wis', 'cha'],
+            'goliath' => ['str', 'con', 'dex', 'wis', 'int', 'cha'],
+            'hobgoblin' => ['int', 'con', 'str', 'dex', 'wis', 'cha'],
+            'kenku' => ['dex', 'wis', 'con', 'int', 'str', 'cha'],
+            'kobold' => ['dex', 'int', 'con', 'str', 'wis', 'cha'],
+            'lizardfolk' => ['con', 'wis', 'str', 'dex', 'int', 'cha'],
+            'orc' => ['str', 'con', 'dex', 'wis', 'int', 'cha'],
+            'tabaxi' => ['dex', 'cha', 'con', 'wis', 'str', 'int'],
+            'triton' => ['cha', 'con', 'str', 'dex', 'wis', 'int'],
+            'yuan-ti pureblood' => ['cha', 'int', 'con', 'dex', 'str', 'wis'],
+            
+            // Расы из Mordenkainen's Tome of Foes
+            'drow' => ['dex', 'cha', 'int', 'str', 'con', 'wis'],
+            'duergar' => ['con', 'str', 'int', 'dex', 'wis', 'cha'],
+            'eladrin' => ['dex', 'cha', 'int', 'str', 'con', 'wis'],
+            'genasi' => ['con', 'dex', 'str', 'int', 'wis', 'cha'],
+            'githyanki' => ['str', 'int', 'con', 'dex', 'wis', 'cha'],
+            'githzerai' => ['int', 'wis', 'con', 'dex', 'str', 'cha'],
+            'shadar-kai' => ['dex', 'con', 'int', 'str', 'wis', 'cha'],
+            
+            // Расы из Tasha's Cauldron
+            'custom lineage' => ['str', 'dex', 'con', 'int', 'wis', 'cha'],
+            
+            // Расы из Spelljammer
+            'astral elf' => ['dex', 'int', 'wis', 'str', 'con', 'cha'],
+            'autognome' => ['con', 'int', 'dex', 'str', 'wis', 'cha'],
+            'giff' => ['str', 'con', 'dex', 'int', 'wis', 'cha'],
+            'hadozee' => ['dex', 'str', 'con', 'int', 'wis', 'cha'],
+            'plasmoid' => ['con', 'dex', 'str', 'int', 'wis', 'cha'],
+            'thri-kreen' => ['dex', 'wis', 'con', 'str', 'int', 'cha'],
+            
+            // Расы из Fizban's Treasury
+            'chromatic dragonborn' => ['str', 'cha', 'con', 'dex', 'wis', 'int'],
+            'gem dragonborn' => ['str', 'cha', 'con', 'dex', 'wis', 'int'],
+            'metallic dragonborn' => ['str', 'cha', 'con', 'dex', 'wis', 'int'],
+            
+            // Расы из Van Richten's Guide
+            'dhampir' => ['dex', 'con', 'str', 'int', 'wis', 'cha'],
+            'hexblood' => ['cha', 'con', 'int', 'dex', 'str', 'wis'],
+            'reborn' => ['con', 'str', 'dex', 'int', 'wis', 'cha'],
+            
+            // Расы из Strixhaven
+            'owlin' => ['dex', 'wis', 'con', 'str', 'int', 'cha'],
+            
+            // Расы из Radiant Citadel
+            'hadozee' => ['dex', 'str', 'con', 'int', 'wis', 'cha'],
+            
+            // Расы из Bigby's Glory
+            'giff' => ['str', 'con', 'dex', 'int', 'wis', 'cha'],
+        ];
+        
+        $priorities = $race_priorities[$race_key] ?? ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+        
+        // Сортируем сгенерированные значения по убыванию
+        $values = array_values($abilities);
+        rsort($values);
+        
+        // Перераспределяем значения согласно приоритетам расы
+        $new_abilities = [];
+        foreach ($priorities as $index => $ability) {
+            $new_abilities[$ability] = $values[$index] ?? 10;
+        }
+        
+        // Применяем расовые бонусы если есть
         if (isset($race_data['ability_bonuses'])) {
             foreach ($race_data['ability_bonuses'] as $ability => $bonus) {
-                if (isset($abilities[$ability])) {
-                    $abilities[$ability] += $bonus;
-                    $abilities[$ability] = min(20, $abilities[$ability]);
+                if (isset($new_abilities[$ability])) {
+                    $new_abilities[$ability] += $bonus;
+                    $new_abilities[$ability] = min(20, $new_abilities[$ability]);
                 }
             }
         }
         
-        // Улучшение характеристик с уровнем
-        $ability_improvements = floor(($level - 1) / 4);
-        if ($ability_improvements > 0) {
-            $ability_names = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
-            for ($i = 0; $i < $ability_improvements; $i++) {
-                $ability = $ability_names[array_rand($ability_names)];
-                $abilities[$ability] += 2;
-                $abilities[$ability] = min(20, $abilities[$ability]);
-            }
-        }
+        logMessage('INFO', "Сгенерированы характеристики для расы {$race_key}: " . json_encode($new_abilities, JSON_UNESCAPED_UNICODE));
         
-        return $abilities;
+        return $new_abilities;
     }
     
     /**
@@ -375,16 +477,9 @@ class CharacterGeneratorV4 {
                 return $name;
             }
             
-            // В крайнем случае имена другого пола
-            if ($gender === 'male' && isset($raceData['female']) && !empty($raceData['female'])) {
-                $name = $raceData['female'][array_rand($raceData['female'])];
-                logMessage('INFO', "Выбрано женское имя для мужского персонажа: {$name}");
-                return $name;
-            } elseif ($gender === 'female' && isset($raceData['male']) && !empty($raceData['male'])) {
-                $name = $raceData['male'][array_rand($raceData['male'])];
-                logMessage('INFO', "Выбрано мужское имя для женского персонажа: {$name}");
-                return $name;
-            }
+            // НЕ используем имена другого пола - это неправильно
+            logMessage('WARNING', "Нет подходящих имен для пола '{$gender}' в расе '{$race}'");
+            return "Имя не найдено";
         }
         
         // Если имена не найдены в библиотеке, возвращаем ошибку
@@ -538,20 +633,61 @@ class CharacterGeneratorV4 {
     }
     
     /**
-     * Получение основного оружия из API данных
+     * Получение основного оружия из библиотеки
      */
     private function getMainWeaponFromApi($class_data) {
-        // Пытаемся получить снаряжение из API
-        $equipment = $this->dnd_api_service->getEquipmentForClass($class_data['name'] ?? 'unknown');
+        $weapon_proficiencies = $class_data['proficiencies']['weapons'] ?? [];
         
-        if (isset($equipment['error'])) {
-            logMessage('WARNING', "Не удалось получить снаряжение для определения оружия");
-            return "Оружие не определено";
+        if (empty($weapon_proficiencies)) {
+            return 'Базовое оружие';
         }
         
-        // Здесь можно добавить логику анализа снаряжения для определения основного оружия
-        // Пока возвращаем базовое оружие
-        return "Базовое оружие";
+        // Используем библиотеку оружия
+        if (!empty($this->weapons)) {
+            $available_weapons = [];
+            
+            foreach ($weapon_proficiencies as $proficiency) {
+                foreach ($this->weapons as $weapon_name => $weapon_data) {
+                    $weapon_type = $weapon_data['type'] ?? '';
+                    $weapon_category = $weapon_data['category'] ?? '';
+                    
+                    if ($proficiency === 'simple weapons' && $weapon_category === 'simple') {
+                        $available_weapons[] = $weapon_name;
+                    } elseif ($proficiency === 'martial weapons' && $weapon_category === 'martial') {
+                        $available_weapons[] = $weapon_name;
+                    } elseif (strpos($proficiency, strtolower($weapon_name)) !== false) {
+                        $available_weapons[] = $weapon_name;
+                    }
+                }
+            }
+            
+            if (!empty($available_weapons)) {
+                $selected_weapon = $available_weapons[array_rand($available_weapons)];
+                logMessage('INFO', "Выбрано оружие: {$selected_weapon}");
+                return $selected_weapon;
+            }
+        }
+        
+        // Fallback - базовые оружия для классов
+        $class_weapons = [
+            'fighter' => ['Длинный меч', 'Боевой топор', 'Копье'],
+            'paladin' => ['Длинный меч', 'Булава', 'Молот'],
+            'ranger' => ['Длинный лук', 'Короткий меч', 'Копье'],
+            'barbarian' => ['Боевой топор', 'Большой меч', 'Булава'],
+            'monk' => ['Цеп', 'Копье', 'Короткий меч'],
+            'rogue' => ['Короткий меч', 'Кинжал', 'Рапира'],
+            'bard' => ['Рапира', 'Короткий меч', 'Длинный лук'],
+            'cleric' => ['Булава', 'Молот', 'Боевой посох'],
+            'druid' => ['Боевой посох', 'Копье', 'Серп'],
+            'sorcerer' => ['Кинжал', 'Дротик', 'Легкий арбалет'],
+            'wizard' => ['Кинжал', 'Дротик', 'Легкий арбалет'],
+            'warlock' => ['Кинжал', 'Легкий арбалет', 'Простой посох']
+        ];
+        
+        $class_key = strtolower($class_data['name'] ?? 'fighter');
+        $weapons = $class_weapons[$class_key] ?? ['Короткий меч'];
+        
+        return $weapons[array_rand($weapons)];
     }
     
     /**
