@@ -12,49 +12,7 @@ class CharacterGeneratorV4 {
     private $occupations = [];
     private $race_names = [];
     
-    // Русские названия рас
-    private $race_translations = [
-        'aarakocra' => 'Ааракокра',
-        'aasimar' => 'Аасимар',
-        'bugbear' => 'Багбир',
-        'dragonborn' => 'Драконорожденный',
-        'dwarf' => 'Дварф',
-        'elf' => 'Эльф',
-        'firbolg' => 'Фирболг',
-        'genasi' => 'Генаси',
-        'gnome' => 'Гном',
-        'goblin' => 'Гоблин',
-        'goliath' => 'Голиаф',
-        'half-elf' => 'Полуэльф',
-        'half-orc' => 'Полуорк',
-        'halfling' => 'Полурослик',
-        'human' => 'Человек',
-        'kenku' => 'Кенку',
-        'kobold' => 'Кобольд',
-        'lizardfolk' => 'Людоящер',
-        'orc' => 'Орк',
-        'tabaxi' => 'Табакси',
-        'tiefling' => 'Тифлинг',
-        'triton' => 'Тритон',
-        'yuan-ti' => 'Юань-ти'
-    ];
-    
-    // Русские названия классов
-    private $class_translations = [
-        'barbarian' => 'Варвар',
-        'bard' => 'Бард',
-        'cleric' => 'Жрец',
-        'druid' => 'Друид',
-        'fighter' => 'Воин',
-        'monk' => 'Монах',
-        'paladin' => 'Паладин',
-        'ranger' => 'Следопыт',
-        'rogue' => 'Плут',
-        'sorcerer' => 'Чародей',
-        'warlock' => 'Колдун',
-        'wizard' => 'Волшебник',
-        'artificer' => 'Артифисер'
-    ];
+    // Переводы будут получаться из внешних API через LanguageService
     
     public function __construct() {
         $this->dnd_api_service = new DndApiService();
@@ -84,10 +42,15 @@ class CharacterGeneratorV4 {
                 $jsonData = json_decode(file_get_contents($jsonFile), true);
                 if (isset($jsonData['data']['occupations'])) {
                     $this->occupations = $jsonData['data']['occupations'];
+                    logMessage('INFO', 'Загружено ' . count($this->occupations) . ' профессий');
+                } else {
+                    logMessage('WARNING', 'Структура файла профессий некорректна');
                 }
+            } else {
+                logMessage('WARNING', 'Файл с профессиями не найден: ' . $jsonFile);
             }
         } catch (Exception $e) {
-            logMessage('ERROR', 'Failed to load occupations: ' . $e->getMessage());
+            logMessage('ERROR', 'Ошибка загрузки профессий: ' . $e->getMessage());
         }
     }
     
@@ -104,10 +67,15 @@ class CharacterGeneratorV4 {
                         $raceKey = strtolower($raceData['race']);
                         $this->race_names[$raceKey] = $raceData;
                     }
+                    logMessage('INFO', 'Загружены имена для ' . count($this->race_names) . ' рас');
+                } else {
+                    logMessage('WARNING', 'Структура файла имен рас некорректна');
                 }
+            } else {
+                logMessage('WARNING', 'Файл с именами рас не найден: ' . $jsonFile);
             }
         } catch (Exception $e) {
-            logMessage('ERROR', 'Failed to load race names: ' . $e->getMessage());
+            logMessage('ERROR', 'Ошибка загрузки имен рас: ' . $e->getMessage());
         }
     }
     
@@ -131,21 +99,35 @@ class CharacterGeneratorV4 {
             
             // Получаем данные расы из D&D API
             logMessage('INFO', "Начинаем получение данных расы: {$race}");
-            $race_data = $this->dnd_api_service->getRaceData($race);
+            $race_data = $this->getRaceDataFromApi($race);
             if (isset($race_data['error'])) {
-                logMessage('WARNING', "API недоступен, используем базовые данные для расы: {$race}");
-                $race_data = $this->getBasicRaceData($race);
+                logMessage('ERROR', "API недоступен для расы: {$race}");
+                return [
+                    'success' => false,
+                    'error' => 'API недоступен',
+                    'message' => "Не удалось получить данные расы '{$race}' из внешних API",
+                    'details' => $race_data['message'] ?? 'D&D API недоступен'
+                ];
             }
             logMessage('INFO', "Получены данные расы: " . json_encode($race_data, JSON_UNESCAPED_UNICODE));
             
             // Получаем данные класса из D&D API
             logMessage('INFO', "Начинаем получение данных класса: {$class}");
-            $class_data = $this->dnd_api_service->getClassData($class);
+            $class_data = $this->getClassDataFromApi($class);
             if (isset($class_data['error'])) {
-                logMessage('WARNING', "API недоступен, используем базовые данные для класса: {$class}");
-                $class_data = $this->getBasicClassData($class);
+                logMessage('ERROR', "API недоступен для класса: {$class}");
+                return [
+                    'success' => false,
+                    'error' => 'API недоступен',
+                    'message' => "Не удалось получить данные класса '{$class}' из внешних API",
+                    'details' => $class_data['message'] ?? 'D&D API недоступен'
+                ];
             }
             logMessage('INFO', "Получены данные класса: " . json_encode($class_data, JSON_UNESCAPED_UNICODE));
+            
+            // Получаем дополнительную информацию о расе из библиотек
+            $race_library_info = $this->getRaceLibraryInfo($race);
+            logMessage('INFO', "Получена дополнительная информация о расе: " . json_encode($race_library_info, JSON_UNESCAPED_UNICODE));
             
             // Генерируем характеристики
             $abilities = $this->generateAbilities($race_data, $level);
@@ -185,16 +167,20 @@ class CharacterGeneratorV4 {
                 'initiative' => $this->calculateInitiative($abilities['dex']),
                 'proficiency_bonus' => $this->calculateProficiencyBonus($level),
                 'attack_bonus' => $this->calculateAttackBonus($class_data, $abilities, $level),
-                'damage' => $this->calculateDamage($this->getClassDisplayName($class, $class_data), $abilities, $level),
-                'main_weapon' => $this->getMainWeapon($this->getClassDisplayName($class, $class_data)),
-                'proficiencies' => $this->translateProficiencies($class_data['proficiencies'] ?? []),
+                'damage' => $this->calculateDamage($class_data, $abilities, $level),
+                'main_weapon' => $this->getMainWeaponFromApi($class_data),
+                'proficiencies' => $this->processProficiencies($class_data['proficiencies'] ?? []),
                 'spells' => $this->processSpells($spells, $class_data, $level),
                 'features' => $this->processFeatures($features, $class_data, $level),
                 'equipment' => $equipment,
                 'saving_throws' => $this->getSavingThrows($class_data, $abilities),
                 'race_traits' => $race_data['traits'] ?? [],
                 'languages' => $race_data['languages'] ?? ['Общий'],
-                'subraces' => $race_data['subraces'] ?? []
+                'subraces' => $race_data['subraces'] ?? [],
+                'race_style' => $race_library_info['style'] ?? '',
+                'race_notes' => $race_library_info['notes_ru'] ?? '',
+                'race_surnames' => $race_library_info['surnames'] ?? [],
+                'race_clans' => $race_library_info['clans'] ?? []
             ];
             
             // Генерируем описание и предысторию с AI (всегда включено)
@@ -345,37 +331,46 @@ class CharacterGeneratorV4 {
             $gender = rand(0, 1) ? 'male' : 'female';
         }
         
+        logMessage('INFO', "Генерируем имя для расы '{$race}' и пола '{$gender}'");
+        
         // Пытаемся получить имена из загруженных данных
         if (isset($this->race_names[$race])) {
             $raceData = $this->race_names[$race];
+            logMessage('INFO', "Найдены данные для расы '{$race}': " . json_encode(array_keys($raceData), JSON_UNESCAPED_UNICODE));
             
             // Сначала ищем имена для конкретного пола
-            if ($gender === 'male' && isset($raceData['male_names']) && !empty($raceData['male_names'])) {
-                return $raceData['male_names'][array_rand($raceData['male_names'])];
-            } elseif ($gender === 'female' && isset($raceData['female_names']) && !empty($raceData['female_names'])) {
-                return $raceData['female_names'][array_rand($raceData['female_names'])];
+            if ($gender === 'male' && isset($raceData['male']) && !empty($raceData['male'])) {
+                $name = $raceData['male'][array_rand($raceData['male'])];
+                logMessage('INFO', "Выбрано мужское имя: {$name}");
+                return $name;
+            } elseif ($gender === 'female' && isset($raceData['female']) && !empty($raceData['female'])) {
+                $name = $raceData['female'][array_rand($raceData['female'])];
+                logMessage('INFO', "Выбрано женское имя: {$name}");
+                return $name;
             }
             
             // Затем унисекс имена
-            if (isset($raceData['unisex_names']) && !empty($raceData['unisex_names'])) {
-                return $raceData['unisex_names'][array_rand($raceData['unisex_names'])];
+            if (isset($raceData['unisex']) && !empty($raceData['unisex'])) {
+                $name = $raceData['unisex'][array_rand($raceData['unisex'])];
+                logMessage('INFO', "Выбрано унисекс имя: {$name}");
+                return $name;
             }
             
             // В крайнем случае имена другого пола
-            if ($gender === 'male' && isset($raceData['female_names']) && !empty($raceData['female_names'])) {
-                return $raceData['female_names'][array_rand($raceData['female_names'])];
-            } elseif ($gender === 'female' && isset($raceData['male_names']) && !empty($raceData['male_names'])) {
-                return $raceData['male_names'][array_rand($raceData['male_names'])];
+            if ($gender === 'male' && isset($raceData['female']) && !empty($raceData['female'])) {
+                $name = $raceData['female'][array_rand($raceData['female'])];
+                logMessage('INFO', "Выбрано женское имя для мужского персонажа: {$name}");
+                return $name;
+            } elseif ($gender === 'female' && isset($raceData['male']) && !empty($raceData['male'])) {
+                $name = $raceData['male'][array_rand($raceData['male'])];
+                logMessage('INFO', "Выбрано мужское имя для женского персонажа: {$name}");
+                return $name;
             }
         }
         
-        // Если ничего не найдено, используем базовые имена
-        $basic_names = [
-            'male' => ['Торин', 'Арагорн', 'Боромир', 'Фродо', 'Сэм'],
-            'female' => ['Арвен', 'Галадриэль', 'Эовин', 'Розалинда', 'Морвен']
-        ];
-        
-        return $basic_names[$gender][array_rand($basic_names[$gender])];
+        // Если имена не найдены в библиотеке, возвращаем ошибку
+        logMessage('WARNING', "Имена для расы '{$race}' и пола '{$gender}' не найдены в библиотеке");
+        return "Имя не найдено";
     }
     
     /**
@@ -384,15 +379,14 @@ class CharacterGeneratorV4 {
     private function getRandomOccupation() {
         if (!empty($this->occupations) && is_array($this->occupations)) {
             $occupation = $this->occupations[array_rand($this->occupations)];
-            return is_string($occupation) ? $occupation : 'Авантюрист';
+            $occupation_name = is_string($occupation) ? $occupation : 'Авантюрист';
+            logMessage('INFO', "Выбрана профессия: {$occupation_name}");
+            return $occupation_name;
         }
         
-        $basic_occupations = [
-            'Кузнец', 'Торговец', 'Охотник', 'Рыбак', 'Фермер', 'Шахтер', 
-            'Плотник', 'Каменщик', 'Повар', 'Трактирщик', 'Ткач', 'Авантюрист'
-        ];
-        
-        return $basic_occupations[array_rand($basic_occupations)];
+        // Если профессии не найдены в библиотеке, возвращаем ошибку
+        logMessage('WARNING', "Профессии не найдены в библиотеке");
+        return "Профессия не найдена";
     }
     
     /**
@@ -421,10 +415,19 @@ class CharacterGeneratorV4 {
         
         // Базовый AC зависит от класса
         $base_ac = 10;
-        if (in_array('Все доспехи', $class_data['proficiencies'] ?? [])) {
-            $base_ac = 16; // Кольчуга
-        } elseif (in_array('Легкие доспехи', $class_data['proficiencies'] ?? [])) {
-            $base_ac = 12; // Кожаные доспехи
+        $proficiencies = $class_data['proficiencies'] ?? [];
+        
+        // Проверяем владения доспехами
+        foreach ($proficiencies as $prof) {
+            $prof_lower = strtolower($prof);
+            if (strpos($prof_lower, 'heavy armor') !== false || strpos($prof_lower, 'all armor') !== false) {
+                $base_ac = 16; // Кольчуга
+                break;
+            } elseif (strpos($prof_lower, 'medium armor') !== false) {
+                $base_ac = 14; // Кожаные доспехи
+            } elseif (strpos($prof_lower, 'light armor') !== false) {
+                $base_ac = 12; // Кожаные доспехи
+            }
         }
         
         return $base_ac + $dex_bonus;
@@ -449,16 +452,17 @@ class CharacterGeneratorV4 {
      */
     private function calculateAttackBonus($class_data, $abilities, $level) {
         $proficiency_bonus = $this->calculateProficiencyBonus($level);
+        $class_name = $class_data['name'] ?? 'unknown';
         
-        // Определяем основную характеристику для атаки
+        // Определяем основную характеристику для атаки на основе класса
         $primary_ability = 'str';
-        if (in_array($class_data['name'], ['Плут', 'Следопыт', 'Монах'])) {
+        if (in_array(strtolower($class_name), ['rogue', 'ranger', 'monk'])) {
             $primary_ability = 'dex';
-        } elseif (in_array($class_data['name'], ['Волшебник', 'Артифисер'])) {
+        } elseif (in_array(strtolower($class_name), ['wizard', 'artificer'])) {
             $primary_ability = 'int';
-        } elseif (in_array($class_data['name'], ['Жрец', 'Друид'])) {
+        } elseif (in_array(strtolower($class_name), ['cleric', 'druid'])) {
             $primary_ability = 'wis';
-        } elseif (in_array($class_data['name'], ['Бард', 'Чародей', 'Колдун', 'Паладин'])) {
+        } elseif (in_array(strtolower($class_name), ['bard', 'sorcerer', 'warlock', 'paladin'])) {
             $primary_ability = 'cha';
         }
         
@@ -469,16 +473,25 @@ class CharacterGeneratorV4 {
     /**
      * Расчет урона
      */
-    private function calculateDamage($class_name, $abilities, $level) {
+    private function calculateDamage($class_data, $abilities, $level) {
+        $class_name = $class_data['name'] ?? 'unknown';
+        
+        // Определяем основную характеристику для атаки на основе класса
         $primary_ability = 'str';
-        if (in_array($class_name, ['Плут', 'Следопыт', 'Монах'])) {
+        if (in_array(strtolower($class_name), ['rogue', 'ranger', 'monk'])) {
             $primary_ability = 'dex';
+        } elseif (in_array(strtolower($class_name), ['wizard', 'artificer'])) {
+            $primary_ability = 'int';
+        } elseif (in_array(strtolower($class_name), ['cleric', 'druid'])) {
+            $primary_ability = 'wis';
+        } elseif (in_array(strtolower($class_name), ['bard', 'sorcerer', 'warlock', 'paladin'])) {
+            $primary_ability = 'cha';
         }
         
         $ability_modifier = floor(($abilities[$primary_ability] - 10) / 2);
         
-        // Определяем базовый урон оружия в зависимости от уровня
-        $base_damage = $this->getBaseWeaponDamage($class_name, $level);
+        // Получаем урон из API данных
+        $base_damage = $this->getWeaponDamageFromApi($class_data, $level);
         
         // Форматируем модификатор правильно
         if ($ability_modifier >= 0) {
@@ -489,72 +502,37 @@ class CharacterGeneratorV4 {
     }
     
     /**
-     * Получение базового урона оружия по классу и уровню
+     * Получение урона оружия из API данных класса
      */
-    private function getBaseWeaponDamage($class_name, $level) {
-        // Базовый урон для разных классов
-        $base_damage = [
-            'Варвар' => '1d12', // Топор
-            'Воин' => '1d8',    // Меч
-            'Плут' => '1d4',    // Кинжал
-            'Монах' => '1d6',   // Кулаки
-            'Паладин' => '1d8', // Меч
-            'Следопыт' => '1d8', // Лук
-            'Волшебник' => '1d6', // Посох
-            'Жрец' => '1d8',    // Булава
-            'Бард' => '1d8',    // Рапира
-            'Друид' => '1d6',   // Посох
-            'Чародей' => '1d6', // Посох
-            'Колдун' => '1d4',  // Кинжал
-            'Артифисер' => '1d8' // Молот
-        ];
+    private function getWeaponDamageFromApi($class_data, $level) {
+        // Пытаемся получить снаряжение из API
+        $equipment = $this->dnd_api_service->getEquipmentForClass($class_data['name'] ?? 'unknown');
         
-        $damage = $base_damage[$class_name] ?? '1d6';
-        
-        // Увеличиваем урон с уровнем для воинских классов
-        if (in_array($class_name, ['Варвар', 'Воин', 'Паладин', 'Следопыт'])) {
-            if ($level >= 5) {
-                // Дополнительная атака на 5 уровне
-                $damage = '2' . substr($damage, 1);
-            }
-            if ($level >= 11) {
-                // Третья атака для Воина на 11 уровне
-                if ($class_name === 'Воин') {
-                    $damage = '3' . substr($damage, 1);
-                }
-            }
-            if ($level >= 20) {
-                // Четвертая атака для Воина на 20 уровне
-                if ($class_name === 'Воин') {
-                    $damage = '4' . substr($damage, 1);
-                }
-            }
+        if (isset($equipment['error'])) {
+            logMessage('WARNING', "Не удалось получить снаряжение для расчета урона");
+            return '1d6'; // Минимальный урон как fallback
         }
         
-        return $damage;
+        // Здесь можно добавить логику анализа снаряжения для определения урона
+        // Пока возвращаем базовый урон
+        return '1d6';
     }
     
     /**
-     * Получение основного оружия
+     * Получение основного оружия из API данных
      */
-    private function getMainWeapon($class_name) {
-        $weapons = [
-            'Воин' => 'Меч',
-            'Плут' => 'Кинжал',
-            'Волшебник' => 'Посох',
-            'Жрец' => 'Булава',
-            'Следопыт' => 'Лук',
-            'Варвар' => 'Топор',
-            'Бард' => 'Рапира',
-            'Друид' => 'Посох',
-            'Монах' => 'Кулаки',
-            'Паладин' => 'Меч',
-            'Чародей' => 'Посох',
-            'Колдун' => 'Кинжал',
-            'Артифисер' => 'Молот'
-        ];
+    private function getMainWeaponFromApi($class_data) {
+        // Пытаемся получить снаряжение из API
+        $equipment = $this->dnd_api_service->getEquipmentForClass($class_data['name'] ?? 'unknown');
         
-        return $weapons[$class_name] ?? 'Меч';
+        if (isset($equipment['error'])) {
+            logMessage('WARNING', "Не удалось получить снаряжение для определения оружия");
+            return "Оружие не определено";
+        }
+        
+        // Здесь можно добавить логику анализа снаряжения для определения основного оружия
+        // Пока возвращаем базовое оружие
+        return "Базовое оружие";
     }
     
     /**
@@ -654,67 +632,36 @@ class CharacterGeneratorV4 {
      * Получение отображаемого названия расы
      */
     private function getRaceDisplayName($race_key, $race_data) {
-        $race_key_lower = strtolower($race_key);
-        
-        // Сначала проверяем переводы
-        if (isset($this->race_translations[$race_key_lower])) {
-            return $this->race_translations[$race_key_lower];
-        }
-        
-        // Если нет перевода, используем данные из API
+        // Используем данные из API
         if (isset($race_data['name'])) {
             return $race_data['name'];
         }
         
-        // Fallback на оригинальное название
-        return ucfirst($race_key);
+        // Если нет данных из API, возвращаем ошибку
+        logMessage('WARNING', "Название расы не найдено для: {$race_key}");
+        return "Раса не определена";
     }
     
     /**
      * Получение отображаемого названия класса
      */
     private function getClassDisplayName($class_key, $class_data) {
-        $class_key_lower = strtolower($class_key);
-        
-        // Сначала проверяем переводы
-        if (isset($this->class_translations[$class_key_lower])) {
-            return $this->class_translations[$class_key_lower];
-        }
-        
-        // Если нет перевода, используем данные из API
+        // Используем данные из API
         if (isset($class_data['name'])) {
             return $class_data['name'];
         }
         
-        // Fallback на оригинальное название
-        return ucfirst($class_key);
+        // Если нет данных из API, возвращаем ошибку
+        logMessage('WARNING', "Название класса не найдено для: {$class_key}");
+        return "Класс не определён";
     }
     
     /**
-     * Перевод владений на русский язык
+     * Обработка владений (переводы будут получаться из LanguageService)
      */
-    private function translateProficiencies($proficiencies) {
-        $translations = [
-            'Light Armor' => 'Легкие доспехи',
-            'Medium Armor' => 'Средние доспехи',
-            'Heavy Armor' => 'Тяжелые доспехи',
-            'Shields' => 'Щиты',
-            'Simple Weapons' => 'Простое оружие',
-            'Martial Weapons' => 'Воинское оружие',
-            'Saving Throw: STR' => 'Спасбросок: СИЛ',
-            'Saving Throw: DEX' => 'Спасбросок: ЛОВ',
-            'Saving Throw: CON' => 'Спасбросок: ТЕЛ',
-            'Saving Throw: INT' => 'Спасбросок: ИНТ',
-            'Saving Throw: WIS' => 'Спасбросок: МДР',
-            'Saving Throw: CHA' => 'Спасбросок: ХАР'
-        ];
-        
-        $translated = [];
-        foreach ($proficiencies as $prof) {
-            $translated[] = $translations[$prof] ?? $prof;
-        }
-        
-        return $translated;
+    private function processProficiencies($proficiencies) {
+        // Возвращаем владения как есть, переводы будут обрабатываться через LanguageService
+        return is_array($proficiencies) ? $proficiencies : [];
     }
     
     /**
@@ -833,148 +780,63 @@ class CharacterGeneratorV4 {
      * Обработка способностей класса
      */
     private function processFeatures($features, $class_data, $level) {
-        if (empty($features)) {
-            // Генерируем базовые способности для класса
-            $class_name = $this->getClassDisplayName($class_data['name'], $class_data);
-            return $this->generateBasicFeatures($class_name, $level);
+        if (empty($features) || isset($features['error'])) {
+            // Пытаемся получить способности из API
+            $class_name = $class_data['name'] ?? 'unknown';
+            $api_features = $this->getClassFeaturesFromApi($class_name, $level);
+            
+            if (!isset($api_features['error'])) {
+                return $api_features;
+            }
+            
+            // Если API недоступен, возвращаем пустой массив
+            logMessage('WARNING', "Способности класса '{$class_name}' уровня {$level} не найдены в API");
+            return [];
         }
         
         return $features;
     }
     
     /**
-     * Генерация базовых способностей для класса
+     * Получение способностей класса из API (без fallback)
      */
-    private function generateBasicFeatures($class_name, $level) {
-        $features = [];
+    private function getClassFeaturesFromApi($class_name, $level) {
+        return $this->dnd_api_service->getClassFeatures($class_name, $level);
+    }
+    
+    /**
+     * Получение данных расы из API (без fallback)
+     */
+    private function getRaceDataFromApi($race) {
+        return $this->dnd_api_service->getRaceData($race);
+    }
+    
+    /**
+     * Получение дополнительной информации о расе из библиотек
+     */
+    private function getRaceLibraryInfo($race) {
+        $race = strtolower($race);
         
-        switch ($class_name) {
-            case 'Варвар':
-                if ($level >= 1) $features[] = ['name' => 'Ярость', 'description' => 'В бою вы можете впасть в ярость, получая преимущества в атаке и сопротивлении к урону.'];
-                if ($level >= 2) $features[] = ['name' => 'Безрассудная атака', 'description' => 'Вы можете атаковать безрассудно, получая преимущество, но давая врагам преимущество против вас.'];
-                if ($level >= 3) $features[] = ['name' => 'Путь варвара', 'description' => 'Вы выбираете путь, который формирует природу вашей ярости.'];
-                if ($level >= 5) $features[] = ['name' => 'Дополнительная атака', 'description' => 'Вы можете атаковать дважды вместо одного раза, когда используете действие Атака.'];
-                if ($level >= 7) $features[] = ['name' => 'Дикий инстинкт', 'description' => 'Вы получаете преимущество к инициативе.'];
-                if ($level >= 9) $features[] = ['name' => 'Брутальный критический удар', 'description' => 'Вы можете бросить дополнительную кость урона оружия при критическом ударе.'];
-                break;
-                
-            case 'Воин':
-                if ($level >= 1) $features[] = ['name' => 'Боевой стиль', 'description' => 'Вы выбираете стиль боя, который отражает вашу специализацию.'];
-                if ($level >= 2) $features[] = ['name' => 'Второе дыхание', 'description' => 'Вы можете использовать второе дыхание, чтобы восстановить здоровье.'];
-                if ($level >= 3) $features[] = ['name' => 'Боевой мастер', 'description' => 'Вы выбираете архетип, который отражает вашу специализацию.'];
-                if ($level >= 5) $features[] = ['name' => 'Дополнительная атака', 'description' => 'Вы можете атаковать дважды вместо одного раза, когда используете действие Атака.'];
-                if ($level >= 7) $features[] = ['name' => 'Боевой инстинкт', 'description' => 'Вы получаете преимущество к инициативе.'];
-                if ($level >= 9) $features[] = ['name' => 'Улучшенная критическая атака', 'description' => 'Вы можете бросить дополнительную кость урона оружия при критическом ударе.'];
-                break;
-                
-            case 'Плут':
-                if ($level >= 1) $features[] = ['name' => 'Скрытность', 'description' => 'Вы получаете бонус к проверкам Скрытности и Атлетики.'];
-                if ($level >= 2) $features[] = ['name' => 'Хитрость', 'description' => 'Вы можете использовать бонусное действие для выполнения определенных действий.'];
-                if ($level >= 3) $features[] = ['name' => 'Архетип плута', 'description' => 'Вы выбираете архетип, который отражает вашу специализацию.'];
-                if ($level >= 5) $features[] = ['name' => 'Неуловимость', 'description' => 'Вы получаете сопротивление к урону от заклинаний.'];
-                if ($level >= 7) $features[] = ['name' => 'Уклонение', 'description' => 'Вы можете использовать реакцию, чтобы уменьшить урон от атаки.'];
-                if ($level >= 9) $features[] = ['name' => 'Мастерство', 'features' => 'Вы получаете бонус к проверкам характеристик.'];
-                break;
-                
-            case 'Монах':
-                if ($level >= 1) $features[] = ['name' => 'Боевые искусства', 'description' => 'Вы можете использовать боевые искусства для увеличения урона.'];
-                if ($level >= 2) $features[] = ['name' => 'Ки', 'description' => 'Вы получаете доступ к ки-способностям.'];
-                if ($level >= 3) $features[] = ['name' => 'Путь монаха', 'description' => 'Вы выбираете путь, который формирует ваши способности.'];
-                if ($level >= 5) $features[] = ['name' => 'Дополнительная атака', 'description' => 'Вы можете атаковать дважды вместо одного раза, когда используете действие Атака.'];
-                if ($level >= 7) $features[] = ['name' => 'Уклонение', 'description' => 'Вы можете использовать реакцию, чтобы уменьшить урон от атаки.'];
-                if ($level >= 9) $features[] = ['name' => 'Улучшенное движение', 'description' => 'Вы получаете бонус к скорости.'];
-                break;
+        if (isset($this->race_names[$race])) {
+            $raceData = $this->race_names[$race];
+            
+            return [
+                'style' => $raceData['style'] ?? '',
+                'notes_ru' => $raceData['notes_ru'] ?? '',
+                'surnames' => $raceData['surnames'] ?? [],
+                'clans' => $raceData['clans'] ?? [],
+                'subraces' => $raceData['subraces'] ?? []
+            ];
         }
         
-        return $features;
+        return [];
     }
     
     /**
-     * Базовые данные расы для fallback
+     * Получение данных класса из API (без fallback)
      */
-    private function getBasicRaceData($race) {
-        $race_key = strtolower($race);
-        
-        $basic_races = [
-            'aarakocra' => [
-                'name' => 'Aarakocra',
-                'speed' => 25,
-                'ability_bonuses' => ['dex' => 2, 'wis' => 1],
-                'traits' => ['Flight', 'Talons'],
-                'languages' => ['Common', 'Aarakocra'],
-                'subraces' => []
-            ],
-            'human' => [
-                'name' => 'Human',
-                'speed' => 30,
-                'ability_bonuses' => ['str' => 1, 'dex' => 1, 'con' => 1, 'int' => 1, 'wis' => 1, 'cha' => 1],
-                'traits' => ['Versatile'],
-                'languages' => ['Common'],
-                'subraces' => []
-            ],
-            'elf' => [
-                'name' => 'Elf',
-                'speed' => 30,
-                'ability_bonuses' => ['dex' => 2],
-                'traits' => ['Darkvision', 'Keen Senses'],
-                'languages' => ['Common', 'Elvish'],
-                'subraces' => []
-            ],
-            'dwarf' => [
-                'name' => 'Dwarf',
-                'speed' => 25,
-                'ability_bonuses' => ['con' => 2],
-                'traits' => ['Darkvision', 'Dwarven Resilience'],
-                'languages' => ['Common', 'Dwarvish'],
-                'subraces' => []
-            ]
-        ];
-        
-        return $basic_races[$race_key] ?? $basic_races['human'];
-    }
-    
-    /**
-     * Базовые данные класса для fallback
-     */
-    private function getBasicClassData($class) {
-        $class_key = strtolower($class);
-        
-        $basic_classes = [
-            'barbarian' => [
-                'name' => 'Barbarian',
-                'hit_die' => 12,
-                'proficiencies' => ['Light Armor', 'Medium Armor', 'Shields', 'Simple Weapons', 'Martial Weapons'],
-                'saving_throws' => ['STR', 'CON'],
-                'spellcasting' => false,
-                'spellcasting_ability' => null
-            ],
-            'fighter' => [
-                'name' => 'Fighter',
-                'hit_die' => 10,
-                'proficiencies' => ['All Armor', 'Shields', 'Simple Weapons', 'Martial Weapons'],
-                'saving_throws' => ['STR', 'CON'],
-                'spellcasting' => false,
-                'spellcasting_ability' => null
-            ],
-            'wizard' => [
-                'name' => 'Wizard',
-                'hit_die' => 6,
-                'proficiencies' => ['Simple Weapons'],
-                'saving_throws' => ['INT', 'WIS'],
-                'spellcasting' => true,
-                'spellcasting_ability' => 'int'
-            ],
-            'cleric' => [
-                'name' => 'Cleric',
-                'hit_die' => 8,
-                'proficiencies' => ['Light Armor', 'Medium Armor', 'Shields', 'Simple Weapons'],
-                'saving_throws' => ['WIS', 'CHA'],
-                'spellcasting' => true,
-                'spellcasting_ability' => 'wis'
-            ]
-        ];
-        
-        return $basic_classes[$class_key] ?? $basic_classes['fighter'];
+    private function getClassDataFromApi($class) {
+        return $this->dnd_api_service->getClassData($class);
     }
     
     /**
