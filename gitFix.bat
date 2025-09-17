@@ -1,3 +1,3 @@
 git add .
-git commit -m "fix enemy"
+git commit -m "fix API"
 git push

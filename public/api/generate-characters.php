@@ -421,12 +421,12 @@ class CharacterGeneratorV4 {
         foreach ($proficiencies as $prof) {
             $prof_lower = strtolower($prof);
             if (strpos($prof_lower, 'heavy armor') !== false || strpos($prof_lower, 'all armor') !== false) {
-                $base_ac = 16; // Кольчуга
+            $base_ac = 16; // Кольчуга
                 break;
             } elseif (strpos($prof_lower, 'medium armor') !== false) {
                 $base_ac = 14; // Кожаные доспехи
             } elseif (strpos($prof_lower, 'light armor') !== false) {
-                $base_ac = 12; // Кожаные доспехи
+            $base_ac = 12; // Кожаные доспехи
             }
         }
         
@@ -891,13 +891,25 @@ class CharacterGeneratorV4 {
 // Обработка запроса
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
+        // Логируем начало обработки
+        error_log("Character generation request started");
+        
         $generator = new CharacterGeneratorV4();
+        error_log("CharacterGeneratorV4 created successfully");
+        
         $result = $generator->generateCharacter($_POST);
+        error_log("Character generation completed");
+        
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     } catch (Exception $e) {
+        error_log("Character generation error: " . $e->getMessage());
+        error_log("Error file: " . $e->getFile() . " line: " . $e->getLine());
+        
         echo json_encode([
             'success' => false,
-            'error' => $e->getMessage()
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
         ], JSON_UNESCAPED_UNICODE);
     }
 } elseif (isset($_SERVER['REQUEST_METHOD'])) {
