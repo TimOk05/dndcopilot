@@ -15,10 +15,27 @@ class CharacterGeneratorV4 {
     // Переводы будут получаться из внешних API через LanguageService
     
     public function __construct() {
-        $this->dnd_api_service = new DndApiService();
-        $this->ai_service = new AiService(); // Используем основной AI сервис
-        $this->language_service = new LanguageService(); // Добавляем Language Service
-        $this->loadData();
+        try {
+            error_log("Creating DndApiService...");
+            $this->dnd_api_service = new DndApiService();
+            error_log("DndApiService created successfully");
+            
+            error_log("Creating AiService...");
+            $this->ai_service = new AiService(); // Используем основной AI сервис
+            error_log("AiService created successfully");
+            
+            error_log("Creating LanguageService...");
+            $this->language_service = new LanguageService(); // Добавляем Language Service
+            error_log("LanguageService created successfully");
+            
+            error_log("Loading data...");
+            $this->loadData();
+            error_log("Data loaded successfully");
+        } catch (Exception $e) {
+            error_log("Error in CharacterGeneratorV4 constructor: " . $e->getMessage());
+            error_log("Constructor error file: " . $e->getFile() . " line: " . $e->getLine());
+            throw $e;
+        }
     }
     
     /**
@@ -891,8 +908,21 @@ class CharacterGeneratorV4 {
 // Обработка запроса
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        // Логируем начало обработки
-        error_log("Character generation request started");
+        // Проверяем доступность всех файлов
+        if (!file_exists(__DIR__ . '/../../config/config.php')) {
+            throw new Exception("Config file not found");
+        }
+        if (!file_exists(__DIR__ . '/../../app/Services/dnd-api-service.php')) {
+            throw new Exception("DndApiService file not found");
+        }
+        if (!file_exists(__DIR__ . '/../../app/Services/ai-service.php')) {
+            throw new Exception("AiService file not found");
+        }
+        if (!file_exists(__DIR__ . '/../../app/Services/language-service.php')) {
+            throw new Exception("LanguageService file not found");
+        }
+        
+        error_log("All required files exist");
         
         $generator = new CharacterGeneratorV4();
         error_log("CharacterGeneratorV4 created successfully");
