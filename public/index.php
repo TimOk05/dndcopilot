@@ -459,60 +459,173 @@ function openCharacterModal() {
                 <p class="generator-subtitle">Создайте полноценного персонажа с использованием D&D API и AI</p>
             </div>
             
-            <div id="characterFormContainer">
-                <form id="characterForm" class="character-form" method="post">
-                    <div class="form-grid-compact">
-                    <div class="form-group">
-                        <label for="character-race">Раса персонажа</label>
-                        <select id="character-race" name="race" required>
-                            <option value="">Выберите расу</option>
-                            <option value="aarakocra">Ааракокра</option>
-                            <option value="aasimar">Аасимар</option>
-                            <option value="astral elf">Астральный эльф</option>
-                            <option value="autognome">Автогном</option>
-                            <option value="bugbear">Багбир</option>
-                            <option value="chromatic dragonborn">Хроматический драконорожденный</option>
-                            <option value="custom lineage">Кастомная родословная</option>
-                            <option value="dhampir">Дампир</option>
-                            <option value="dragonborn">Драконорожденный</option>
-                            <option value="drow">Дроу</option>
-                            <option value="duergar">Дуэргар</option>
-                            <option value="dwarf">Дварф</option>
-                            <option value="eladrin">Эладрин</option>
-                            <option value="elf">Эльф</option>
-                            <option value="firbolg">Фирболг</option>
-                            <option value="gem dragonborn">Драгоценный драконорожденный</option>
-                            <option value="genasi">Генаси</option>
-                            <option value="giff">Гифф</option>
-                            <option value="githyanki">Гитиянки</option>
-                            <option value="githzerai">Гитзерэи</option>
-                            <option value="gnome">Гном</option>
-                            <option value="goblin">Гоблин</option>
-                            <option value="goliath">Голиаф</option>
-                            <option value="hadozee">Хадози</option>
-                            <option value="half-elf">Полуэльф</option>
-                            <option value="half-orc">Полуорк</option>
-                            <option value="halfling">Полурослик</option>
-                            <option value="hexblood">Гексблад</option>
-                            <option value="hobgoblin">Хобгоблин</option>
-                            <option value="human">Человек</option>
-                            <option value="kenku">Кенку</option>
-                            <option value="kobold">Кобольд</option>
-                            <option value="lizardfolk">Ящеролюд</option>
-                            <option value="metallic dragonborn">Металлический драконорожденный</option>
-                            <option value="orc">Орк</option>
-                            <option value="owlin">Оулин</option>
-                            <option value="plasmoid">Плазмоид</option>
-                            <option value="reborn">Возрожденный</option>
-                            <option value="shadar-kai">Шадар-кай</option>
-                            <option value="tabaxi">Табакси</option>
-                            <option value="thri-kreen">Три-крин</option>
-                            <option value="tiefling">Тифлинг</option>
-                            <option value="triton">Тритон</option>
-                            <option value="yuan-ti pureblood">Юань-ти Чистокровный</option>
-                        </select>
+            <!-- Форма генератора персонажей -->
+            <div id="characterGeneratorContainer" class="character-generator-container">
+                <form id="characterForm" class="character-form-new" method="post">
+                    <!-- Первая строка: Раса и Класс -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="character-race">Раса персонажа</label>
+                            <div class="select-wrapper">
+                                <select id="character-race" name="race" required>
+                                    <option value="">Выберите расу</option>
+                                    <option value="aarakocra">Ааракокра</option>
+                                    <option value="aasimar">Аасимар</option>
+                                    <option value="astral elf">Астральный эльф</option>
+                                    <option value="autognome">Автогном</option>
+                                    <option value="bugbear">Багбир</option>
+                                    <option value="dragonborn" data-subraces='["chromatic dragonborn", "metallic dragonborn", "gem dragonborn"]'>Драконорожденный</option>
+                                    <option value="custom lineage">Кастомная родословная</option>
+                                    <option value="dhampir">Дампир</option>
+                                    <option value="drow" data-subraces='["drow"]'>Дроу</option>
+                                    <option value="duergar">Дуэргар</option>
+                                    <option value="dwarf" data-subraces='["dwarf"]'>Дварф</option>
+                                    <option value="eladrin">Эладрин</option>
+                                    <option value="elf" data-subraces='["elf", "drow", "sea elf", "astral elf", "eladrin", "shadar-kai"]'>Эльф</option>
+                                    <option value="firbolg">Фирболг</option>
+                                    <option value="genasi" data-subraces='["genasi"]'>Генаси</option>
+                                    <option value="giff">Гифф</option>
+                                    <option value="githyanki">Гитиянки</option>
+                                    <option value="githzerai">Гитзерэи</option>
+                                    <option value="gnome" data-subraces='["gnome"]'>Гном</option>
+                                    <option value="goblin">Гоблин</option>
+                                    <option value="goliath">Голиаф</option>
+                                    <option value="hadozee">Хадози</option>
+                                    <option value="half-elf">Полуэльф</option>
+                                    <option value="half-orc">Полуорк</option>
+                                    <option value="halfling" data-subraces='["halfling"]'>Полурослик</option>
+                                    <option value="hexblood">Гексблад</option>
+                                    <option value="hobgoblin">Хобгоблин</option>
+                                    <option value="human">Человек</option>
+                                    <option value="kenku">Кенку</option>
+                                    <option value="kobold">Кобольд</option>
+                                    <option value="lizardfolk">Ящеролюд</option>
+                                    <option value="orc">Орк</option>
+                                    <option value="owlin">Оулин</option>
+                                    <option value="plasmoid">Плазмоид</option>
+                                    <option value="reborn">Возрожденный</option>
+                                    <option value="tabaxi">Табакси</option>
+                                    <option value="thri-kreen">Три-крин</option>
+                                    <option value="tiefling" data-subraces='["tiefling"]'>Тифлинг</option>
+                                    <option value="triton">Тритон</option>
+                                    <option value="yuan-ti pureblood">Юань-ти Чистокровный</option>
+                                </select>
+                                <div class="subrace-tooltip" id="subraceTooltip"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="character-class">Класс персонажа</label>
+                            <select id="character-class" name="class" required>
+                                <option value="">Выберите класс</option>
+                                <option value="artificer">Изобретатель</option>
+                                <option value="barbarian">Варвар</option>
+                                <option value="bard">Бард</option>
+                                <option value="cleric">Жрец</option>
+                                <option value="druid">Друид</option>
+                                <option value="fighter">Воин</option>
+                                <option value="monk">Монах</option>
+                                <option value="paladin">Паладин</option>
+                                <option value="ranger">Следопыт</option>
+                                <option value="rogue">Плут</option>
+                                <option value="sorcerer">Чародей</option>
+                                <option value="warlock">Колдун</option>
+                                <option value="wizard">Волшебник</option>
+                            </select>
+                        </div>
                     </div>
                     
+                    <!-- Вторая строка: Уровень и Пол -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="character-level">Уровень персонажа</label>
+                            <select id="character-level" name="level" required>
+                                <option value="1">1 уровень</option>
+                                <option value="2">2 уровень</option>
+                                <option value="3">3 уровень</option>
+                                <option value="4">4 уровень</option>
+                                <option value="5">5 уровень</option>
+                                <option value="6">6 уровень</option>
+                                <option value="7">7 уровень</option>
+                                <option value="8">8 уровень</option>
+                                <option value="9">9 уровень</option>
+                                <option value="10">10 уровень</option>
+                                <option value="11">11 уровень</option>
+                                <option value="12">12 уровень</option>
+                                <option value="13">13 уровень</option>
+                                <option value="14">14 уровень</option>
+                                <option value="15">15 уровень</option>
+                                <option value="16">16 уровень</option>
+                                <option value="17">17 уровень</option>
+                                <option value="18">18 уровень</option>
+                                <option value="19">19 уровень</option>
+                                <option value="20">20 уровень</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="character-gender">Пол персонажа</label>
+                            <select id="character-gender" name="gender">
+                                <option value="random">Случайный</option>
+                                <option value="male">Мужской</option>
+                                <option value="female">Женский</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Третья строка: Мировоззрение и Происхождение -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="character-alignment">Мировоззрение</label>
+                            <select id="character-alignment" name="alignment">
+                                <option value="random">Случайное</option>
+                                <option value="lawful_good">Законопослушный добрый</option>
+                                <option value="neutral_good">Нейтральный добрый</option>
+                                <option value="chaotic_good">Хаотичный добрый</option>
+                                <option value="lawful_neutral">Законопослушный нейтральный</option>
+                                <option value="true_neutral">Истинно нейтральный</option>
+                                <option value="chaotic_neutral">Хаотичный нейтральный</option>
+                                <option value="lawful_evil">Законопослушный злой</option>
+                                <option value="neutral_evil">Нейтральный злой</option>
+                                <option value="chaotic_evil">Хаотичный злой</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="character-background">Происхождение</label>
+                            <select id="character-background" name="background">
+                                <option value="random">Случайное</option>
+                                <option value="acolyte">Служитель культа</option>
+                                <option value="charlatan">Мошенник</option>
+                                <option value="criminal">Преступник</option>
+                                <option value="entertainer">Артист</option>
+                                <option value="folk_hero">Народный герой</option>
+                                <option value="guild_artisan">Гильдейский ремесленник</option>
+                                <option value="hermit">Отшельник</option>
+                                <option value="noble">Дворянин</option>
+                                <option value="outlander">Чужеземец</option>
+                                <option value="sage">Мудрец</option>
+                                <option value="sailor">Моряк</option>
+                                <option value="soldier">Солдат</option>
+                                <option value="spy">Шпион</option>
+                                <option value="urchin">Бродяга</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Четвертая строка: Метод генерации характеристик -->
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="ability-method">Метод генерации характеристик</label>
+                            <select id="ability-method" name="ability_method">
+                                <option value="standard_array">Standard Array (15,14,13,12,10,8)</option>
+                                <option value="point_buy">Point Buy (27 очков)</option>
+                                <option value="roll_4d6">4d6 drop lowest</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Скрытое поле для подрасы -->
                     <div class="form-group" id="subrace-group" style="display: none;">
                         <label for="character-subrace">Подраса</label>
                         <select id="character-subrace" name="subrace">
@@ -520,115 +633,11 @@ function openCharacterModal() {
                         </select>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="character-class">Класс персонажа</label>
-                        <select id="character-class" name="class" required>
-                            <option value="">Выберите класс</option>
-                            <option value="artificer">Изобретатель</option>
-                            <option value="barbarian">Варвар</option>
-                            <option value="bard">Бард</option>
-                            <option value="cleric">Жрец</option>
-                            <option value="druid">Друид</option>
-                            <option value="fighter">Воин</option>
-                            <option value="monk">Монах</option>
-                            <option value="paladin">Паладин</option>
-                            <option value="ranger">Следопыт</option>
-                            <option value="rogue">Плут</option>
-                            <option value="sorcerer">Чародей</option>
-                            <option value="warlock">Колдун</option>
-                            <option value="wizard">Волшебник</option>
-                        </select>
+                    <!-- Кнопка генерации -->
+                    <div class="form-actions">
+                        <button type="submit" class="generate-btn">🎲 Создать персонажа</button>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="character-level">Уровень</label>
-                        <select id="character-level" name="level" required>
-                            <option value="1">1 уровень</option>
-                            <option value="2">2 уровень</option>
-                            <option value="3">3 уровень</option>
-                            <option value="4">4 уровень</option>
-                            <option value="5">5 уровень</option>
-                            <option value="6">6 уровень</option>
-                            <option value="7">7 уровень</option>
-                            <option value="8">8 уровень</option>
-                            <option value="9">9 уровень</option>
-                            <option value="10">10 уровень</option>
-                            <option value="11">11 уровень</option>
-                            <option value="12">12 уровень</option>
-                            <option value="13">13 уровень</option>
-                            <option value="14">14 уровень</option>
-                            <option value="15">15 уровень</option>
-                            <option value="16">16 уровень</option>
-                            <option value="17">17 уровень</option>
-                            <option value="18">18 уровень</option>
-                            <option value="19">19 уровень</option>
-                            <option value="20">20 уровень</option>
-                        </select>
-                    </div>
-                    
-                    
-                    <div class="form-group">
-                        <label for="ability-method">Метод генерации характеристик</label>
-                        <select id="ability-method" name="ability_method">
-                            <option value="standard_array">Standard Array (15,14,13,12,10,8)</option>
-                            <option value="point_buy">Point Buy (27 очков)</option>
-                            <option value="roll_4d6">4d6 drop lowest</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="character-alignment">Мировоззрение</label>
-                        <select id="character-alignment" name="alignment">
-                            <option value="random">Случайное</option>
-                            <option value="lawful_good">Законопослушный добрый</option>
-                            <option value="neutral_good">Нейтральный добрый</option>
-                            <option value="chaotic_good">Хаотичный добрый</option>
-                            <option value="lawful_neutral">Законопослушный нейтральный</option>
-                            <option value="true_neutral">Истинно нейтральный</option>
-                            <option value="chaotic_neutral">Хаотичный нейтральный</option>
-                            <option value="lawful_evil">Законопослушный злой</option>
-                            <option value="neutral_evil">Нейтральный злой</option>
-                            <option value="chaotic_evil">Хаотичный злой</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="character-gender">Пол персонажа</label>
-                        <select id="character-gender" name="gender">
-                            <option value="random">Случайный</option>
-                            <option value="male">Мужской</option>
-                            <option value="female">Женский</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="character-background">Происхождение</label>
-                        <select id="character-background" name="background">
-                            <option value="random">Случайное</option>
-                            <option value="acolyte">Служитель культа</option>
-                            <option value="charlatan">Мошенник</option>
-                            <option value="criminal">Преступник</option>
-                            <option value="entertainer">Артист</option>
-                            <option value="folk_hero">Народный герой</option>
-                            <option value="guild_artisan">Гильдейский ремесленник</option>
-                            <option value="hermit">Отшельник</option>
-                            <option value="noble">Дворянин</option>
-                            <option value="outlander">Чужеземец</option>
-                            <option value="sage">Мудрец</option>
-                            <option value="sailor">Моряк</option>
-                            <option value="soldier">Солдат</option>
-                            <option value="spy">Шпион</option>
-                            <option value="urchin">Бродяга</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <button type="submit" class="generate-btn">
-                    <span class="btn-icon"><span class="svg-icon icon-hero" data-icon="hero"></span></span>
-                    <span class="btn-text">Создать персонажа</span>
-                </button>
-            </form>
-            
+                </form>
             </div>
             
             <div id="characterProgress" class="progress-container" style="display: none;">
@@ -638,19 +647,7 @@ function openCharacterModal() {
                 <div class="progress-text">Создание персонажа...</div>
             </div>
             
-            <div id="characterResult" class="character-result" style="display: none;"></div>
-            
-            <div id="characterControls" class="character-controls" style="display: none;">
-                <button class="control-btn regenerate-btn" onclick="regenerateCharacter()">
-                    🔄 Повторить генерацию
-                </button>
-                <button class="control-btn new-btn" onclick="newCharacter()">
-                    ✨ Новая генерация
-                </button>
-                <button class="control-btn save-btn" onclick="saveCharacterToNotes()">
-                    💾 Сохранить в заметки
-                </button>
-            </div>
+            <div id="characterResult" class="result-container"></div>
         </div>
     `);
     
@@ -740,16 +737,26 @@ function openCharacterModal() {
         e.preventDefault();
         
         const formData = new FormData(this);
-        const formContainer = document.getElementById('characterFormContainer');
+        const submitBtn = this.querySelector('button[type="submit"]');
         const resultDiv = document.getElementById('characterResult');
         const progressDiv = document.getElementById('characterProgress');
-        const controlsDiv = document.getElementById('characterControls');
+        const generatorContainer = document.getElementById('characterGeneratorContainer');
+        
+        // Сохраняем параметры формы для повторной генерации
+        const formParams = {
+            race: formData.get('race'),
+            subrace: formData.get('subrace'),
+            class: formData.get('class'),
+            level: formData.get('level'),
+            alignment: formData.get('alignment'),
+            gender: formData.get('gender'),
+            background: formData.get('background'),
+            ability_method: formData.get('ability_method')
+        };
         
         // Скрываем форму и показываем прогресс
-        formContainer.style.display = 'none';
+        generatorContainer.style.display = 'none';
         progressDiv.style.display = 'block';
-        controlsDiv.style.display = 'none';
-        resultDiv.style.display = 'none';
         
         // Анимация прогресса
         const progressFill = progressDiv.querySelector('.progress-fill');
@@ -785,23 +792,28 @@ function openCharacterModal() {
             
             setTimeout(() => {
                 progressDiv.style.display = 'none';
+                this.style.display = 'block';
                 
                 if (data.success) {
                     const character = data.character || data.npc; // Поддержка старого и нового формата
                     resultDiv.innerHTML = formatCharacterFromApi(character);
-                    resultDiv.style.display = 'block';
-                    controlsDiv.style.display = 'flex';
                     
-                    // Сохраняем данные персонажа для повторной генерации
-                    window.currentCharacterData = character;
-                    window.currentFormData = formData;
-                    
-                    // Автоматически сохраняем персонажа в заметки
+                    // Добавляем кнопку сохранения в заметки
                     if (character && typeof character === 'object') {
                         try {
+                            const characterJson = JSON.stringify(character).replace(/"/g, '&quot;');
+                            resultDiv.innerHTML += `
+                                <div class="save-character-section">
+                                    <button class="save-character-btn" onclick="saveCharacterToNotes(${characterJson})">
+                                        💾 Сохранить в заметки
+                                    </button>
+                                </div>
+                            `;
+                            
+                            // Автоматически сохраняем персонажа в заметки
                             saveCharacterToNotes(character);
                         } catch (e) {
-                            console.error('Error saving character:', e);
+                            console.error('Error stringifying character:', e);
                         }
                     }
                     
@@ -811,193 +823,17 @@ function openCharacterModal() {
                     }, 100);
                 } else {
                     resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || 'Неизвестная ошибка') + '</div>';
-                    resultDiv.style.display = 'block';
-                    formContainer.style.display = 'block';
                 }
             }, 500);
         })
         .catch(error => {
             clearInterval(progressInterval);
             progressDiv.style.display = 'none';
-            formContainer.style.display = 'block';
+            this.style.display = 'block';
             console.error('Generation error:', error);
             resultDiv.innerHTML = '<div class="error">Ошибка сети: ' + error.message + '</div>';
-            resultDiv.style.display = 'block';
         });
     });
-}
-
-// --- Функции управления персонажами ---
-function regenerateCharacter() {
-    if (!window.currentFormData) {
-        console.error('Нет данных для повторной генерации');
-        return;
-    }
-    
-    const formContainer = document.getElementById('characterFormContainer');
-    const resultDiv = document.getElementById('characterResult');
-    const progressDiv = document.getElementById('characterProgress');
-    const controlsDiv = document.getElementById('characterControls');
-    
-    // Скрываем результат и показываем прогресс
-    resultDiv.style.display = 'none';
-    controlsDiv.style.display = 'none';
-    progressDiv.style.display = 'block';
-    
-    // Анимация прогресса
-    const progressFill = progressDiv.querySelector('.progress-fill');
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-        progress += Math.random() * 15;
-        if (progress > 90) progress = 90;
-        progressFill.style.width = progress + '%';
-    }, 200);
-    
-    fetch('api/generate-characters.php', {
-        method: 'POST',
-        body: window.currentFormData
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        return response.text().then(text => {
-            try {
-                return JSON.parse(text);
-            } catch (e) {
-                console.error('JSON parse error:', e);
-                console.error('Response text:', text);
-                throw new Error('Ошибка парсинга JSON: ' + e.message);
-            }
-        });
-    })
-    .then(data => {
-        clearInterval(progressInterval);
-        progressFill.style.width = '100%';
-        
-        setTimeout(() => {
-            progressDiv.style.display = 'none';
-            
-            if (data.success) {
-                const character = data.character || data.npc;
-                resultDiv.innerHTML = formatCharacterFromApi(character);
-                resultDiv.style.display = 'block';
-                controlsDiv.style.display = 'flex';
-                
-                // Обновляем данные персонажа
-                window.currentCharacterData = character;
-                
-                // Автоматически сохраняем персонажа в заметки
-                if (character && typeof character === 'object') {
-                    try {
-                        saveCharacterToNotes(character);
-                    } catch (e) {
-                        console.error('Error saving character:', e);
-                    }
-                }
-                
-                // Автоматическая прокрутка к результату
-                setTimeout(() => {
-                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
-            } else {
-                resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || 'Неизвестная ошибка') + '</div>';
-                resultDiv.style.display = 'block';
-                controlsDiv.style.display = 'flex';
-            }
-        }, 500);
-    })
-    .catch(error => {
-        clearInterval(progressInterval);
-        progressDiv.style.display = 'none';
-        console.error('Generation error:', error);
-        resultDiv.innerHTML = '<div class="error">Ошибка сети: ' + error.message + '</div>';
-        resultDiv.style.display = 'block';
-        controlsDiv.style.display = 'flex';
-    });
-}
-
-function newCharacter() {
-    const formContainer = document.getElementById('characterFormContainer');
-    const resultDiv = document.getElementById('characterResult');
-    const progressDiv = document.getElementById('characterProgress');
-    const controlsDiv = document.getElementById('characterControls');
-    
-    // Показываем форму и скрываем результат
-    formContainer.style.display = 'block';
-    resultDiv.style.display = 'none';
-    progressDiv.style.display = 'none';
-    controlsDiv.style.display = 'none';
-    
-    // Очищаем форму
-    document.getElementById('characterForm').reset();
-    
-    // Скрываем группу подрас
-    const subraceGroup = document.getElementById('subrace-group');
-    if (subraceGroup) {
-        subraceGroup.style.display = 'none';
-    }
-    
-    // Очищаем сохраненные данные
-    window.currentCharacterData = null;
-    window.currentFormData = null;
-    
-    // Прокручиваем к началу формы
-    formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function saveCharacterToNotes(character = null) {
-    const characterToSave = character || window.currentCharacterData;
-    
-    if (!characterToSave) {
-        console.error('Нет данных персонажа для сохранения');
-        return;
-    }
-    
-    try {
-        // Создаем полное содержимое заметки с именем персонажа как заголовком
-        const noteContent = `
-            <div class="character-note">
-                <div class="character-note-title">${characterToSave.name || 'Персонаж'}</div>
-                <div class="character-note-info">
-                    <div><strong>Раса:</strong> ${characterToSave.race || 'Не указана'}</div>
-                    <div><strong>Класс:</strong> ${characterToSave.class || 'Не указан'}</div>
-                    <div><strong>Уровень:</strong> ${characterToSave.level || '1'}</div>
-                    <div><strong>Пол:</strong> ${characterToSave.gender || 'Не указан'}</div>
-                    <div><strong>Мировоззрение:</strong> ${characterToSave.alignment || 'Не указано'}</div>
-                    <div><strong>Происхождение:</strong> ${characterToSave.background || 'Не указано'}</div>
-                </div>
-                <div class="character-note-content">
-                    ${formatCharacterFromApi(characterToSave)}
-                </div>
-            </div>
-        `;
-        
-        // Добавляем заметку в сессию
-        fetch('api/users.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `action=add_note&content=${encodeURIComponent(noteContent)}&title=${encodeURIComponent(characterToSave.name || 'Персонаж')}`
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('Персонаж сохранен в заметки');
-                // Обновляем страницу для отображения новой заметки
-                location.reload();
-            } else {
-                console.error('Ошибка сохранения персонажа:', data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка сохранения персонажа:', error);
-        });
-        
-    } catch (e) {
-        console.error('Ошибка сохранения персонажа:', e);
-    }
 }
 
 // --- Функция открытия генерации противников ---
@@ -3069,212 +2905,190 @@ const equipmentStyles = `
             font-size: 0.9em;
         }
         
-        .character-result {
-            margin-top: 20px;
-            padding: 20px;
+        /* Новые стили для интерфейса генератора */
+        .character-generator-container {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            max-height: 70vh;
-            overflow-y: auto;
         }
         
-        .character-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .control-btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 160px;
-            justify-content: center;
-        }
-        
-        .regenerate-btn {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
-        }
-        
-        .regenerate-btn:hover {
-            background: linear-gradient(135deg, #45a049, #3d8b40);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-        }
-        
-        .new-btn {
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-            color: white;
-        }
-        
-        .new-btn:hover {
-            background: linear-gradient(135deg, #1976D2, #1565C0);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-        }
-        
-        .save-btn {
-            background: linear-gradient(135deg, #FF9800, #F57C00);
-            color: white;
-        }
-        
-        .save-btn:hover {
-            background: linear-gradient(135deg, #F57C00, #EF6C00);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
-        }
-        
-        .character-form {
-            transition: all 0.3s ease;
-        }
-        
-        .form-grid-compact {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .form-group {
+        .character-form-new {
             display: flex;
             flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            align-items: end;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .form-row .form-group.full-width {
+            flex: 1;
         }
         
         .form-group label {
-            margin-bottom: 5px;
+            display: block;
+            margin-bottom: 8px;
             font-weight: 600;
-            color: var(--text-primary);
-        }
-        
-        .form-group select,
-        .form-group input {
-            padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
+            color: #e0e0e0;
             font-size: 14px;
         }
         
-        .form-group select:focus,
-        .form-group input:focus {
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group select:focus {
             outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+        }
+        
+        .form-group select option {
+            background: #2a2a2a;
+            color: #ffffff;
+        }
+        
+        .select-wrapper {
+            position: relative;
+        }
+        
+        .subrace-tooltip {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #ff6b35;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 5px;
+            z-index: 1000;
+            display: none;
+            color: #ffffff;
+            font-size: 12px;
+        }
+        
+        .subrace-tooltip.show {
+            display: block;
+        }
+        
+        .subrace-tooltip h4 {
+            margin: 0 0 8px 0;
+            color: #ff6b35;
+            font-size: 14px;
+        }
+        
+        .subrace-tooltip ul {
+            margin: 0;
+            padding-left: 16px;
+        }
+        
+        .subrace-tooltip li {
+            margin: 4px 0;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
         }
         
         .generate-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #4CAF50, #45a049);
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
             color: white;
             border: none;
+            padding: 16px 32px;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
         }
         
         .generate-btn:hover {
-            background: linear-gradient(135deg, #45a049, #3d8b40);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
         }
         
-        .progress-container {
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Кнопки управления результатами */
+        .result-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
             margin: 20px 0;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            text-align: center;
+            flex-wrap: wrap;
         }
         
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #45a049);
-            border-radius: 4px;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-        
-        .progress-text {
-            color: var(--text-primary);
+        .result-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
             font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .character-note {
-            margin: 20px 0;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .result-btn.regenerate {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
         }
         
-        .character-note-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #4CAF50;
-            margin-bottom: 15px;
-            text-align: center;
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 10px;
+        .result-btn.new {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
         }
         
-        .character-note-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
+        .result-btn.save {
+            background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+            color: white;
         }
         
-        .character-note-info div {
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .result-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         
-        .character-note-content {
-            margin-top: 20px;
-        }
-        
-        .error {
-            color: #ff6b6b;
-            background: rgba(255, 107, 107, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 107, 107, 0.3);
-            margin: 10px 0;
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .result-btn {
+                width: 200px;
+                justify-content: center;
+            }
         }
     </style>
 `;

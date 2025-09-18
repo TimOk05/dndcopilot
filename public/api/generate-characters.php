@@ -1040,7 +1040,7 @@ class CharacterGeneratorV4 {
         }
         
         // Заклинания 3 уровня
-        if ($level >= 5) {
+            if ($level >= 5) {
             $spells[3] = $this->getLevel3Spells($class);
         }
         
