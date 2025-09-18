@@ -722,9 +722,14 @@ function openCharacterModal() {
 // --- Функции динамической загрузки данных ---
 function loadCharacterData() {
     console.log('Начинаем загрузку данных персонажа...');
-    loadRaces();
-    loadClasses();
-    loadBackgrounds();
+    
+    // Небольшая задержка для гарантии загрузки DOM
+    setTimeout(() => {
+        console.log('DOM должен быть готов, начинаем загрузку...');
+        loadRaces();
+        loadClasses();
+        loadBackgrounds();
+    }, 100);
 }
 
 function loadRaces() {
@@ -769,14 +774,24 @@ function loadRaces() {
 }
 
 function loadClasses() {
+    console.log('Загружаем классы...');
     const classSelect = document.getElementById('character-class');
-    if (!classSelect) return;
+    if (!classSelect) {
+        console.error('Элемент character-class не найден');
+        return;
+    }
     
+    console.log('Отправляем запрос к API для классов...');
     // Загружаем классы из D&D API
     fetch('api/dnd-libraries.php?type=classes')
-        .then(response => response.json())
+        .then(response => {
+            console.log('Получен ответ от API для классов:', response.status);
+            return response.json();
+        })
         .then(data => {
+            console.log('Данные классов получены:', data);
             if (data.success && data.classes) {
+                console.log('Успешно получены классы:', data.classes.length);
                 classSelect.innerHTML = '<option value="">Выберите класс</option>';
                 data.classes.forEach(cls => {
                     const option = document.createElement('option');
@@ -784,7 +799,9 @@ function loadClasses() {
                     option.textContent = cls.name;
                     classSelect.appendChild(option);
                 });
+                console.log('Классы добавлены в select');
             } else {
+                console.error('Ошибка в данных API для классов:', data);
                 classSelect.innerHTML = '<option value="">Ошибка загрузки классов</option>';
             }
         })
@@ -795,9 +812,14 @@ function loadClasses() {
 }
 
 function loadBackgrounds() {
+    console.log('Загружаем происхождения...');
     const backgroundSelect = document.getElementById('character-background');
-    if (!backgroundSelect) return;
+    if (!backgroundSelect) {
+        console.error('Элемент character-background не найден');
+        return;
+    }
     
+    console.log('Отправляем запрос к API для происхождений...');
     // Загружаем происхождения из D&D API
     fetch('api/dnd-libraries.php?type=backgrounds')
         .then(response => response.json())
