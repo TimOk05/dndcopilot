@@ -5464,7 +5464,7 @@
         </div>
     </div>
 
-    <script src="assets/js/mobile.js"></script>
+    <!-- Мобильная версия будет переписана -->
     <script>
         // JS для модального окна и заметок будет добавлен через PHP
 
@@ -5598,18 +5598,7 @@
             }
         }
 
-        // Регистрация Service Worker для PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(function(registration) {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    })
-                    .catch(function(error) {
-                        console.log('ServiceWorker registration failed: ', error);
-                    });
-            });
-        }
+        // Регистрация Service Worker для PWA будет переписана для новой мобильной версии
 
         // Функция отправки сообщения в AI чат
         function sendAIMessage() {

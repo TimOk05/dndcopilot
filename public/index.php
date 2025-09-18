@@ -2,32 +2,9 @@
 session_start();
 require_once '../app/Middleware/auth.php';
 
-// Безопасная загрузка Language Service
-try {
-    require_once '../app/Services/language-service.php';
-} catch (Exception $e) {
-    // Если Language Service недоступен, продолжаем без него
-    error_log("Language Service error: " . $e->getMessage());
-}
+// Language Service будет переписан для новой архитектуры
 
-// Автоматическое определение мобильного устройства и переадресация
-function isMobileDevice() {
-    $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-    $mobileKeywords = ['Android', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone', 'Mobile', 'Opera Mini'];
-    
-    foreach ($mobileKeywords as $keyword) {
-        if (stripos($userAgent, $keyword) !== false) {
-            return true;
-        }
-    }
-    
-    // Дополнительная проверка по ширине экрана (если доступна)
-    if (isset($_GET['screen_width']) && $_GET['screen_width'] <= 768) {
-        return true;
-    }
-    
-    return false;
-}
+// Мобильная версия будет переписана позже
 
 // Проверяем авторизацию
 if (!isLoggedIn()) {
@@ -35,27 +12,13 @@ if (!isLoggedIn()) {
     exit;
 }
 
-// Если это мобильное устройство, перенаправляем на мобильную версию
-if (isMobileDevice()) {
-    header('Location: mobile.html');
-    exit;
-}
+// Мобильная версия временно отключена
 
 // Получаем имя текущего пользователя
 $currentUser = $_SESSION['username'] ?? 'Пользователь';
 
-// Инициализируем Language Service безопасно
-$languageService = null;
-$currentLanguage = 'ru'; // По умолчанию русский
-try {
-    if (class_exists('LanguageService')) {
-        $languageService = new LanguageService();
-        $currentLanguage = $languageService->getCurrentLanguage();
-    }
-} catch (Exception $e) {
-    error_log("Language Service initialization error: " . $e->getMessage());
-    $currentLanguage = 'ru'; // Fallback на русский
-}
+// Язык по умолчанию - русский
+$currentLanguage = 'ru';
 
 
 
@@ -1911,10 +1874,7 @@ let currentInitiativeIndex = 0;
 let currentRound = 1;
 
 function openInitiativeModal() {
-    if (document.body.classList.contains('mobile-device')) {
-        openSimpleInitiativeModal();
-    } else {
-        showModal('<div class="initiative-container">' +
+    showModal('<div class="initiative-container">' +
             '<div class="initiative-header">' +
                 '<h3><span class="svg-icon icon-initiative" data-icon="initiative"></span> Инициатива</h3>' +
                 '<div class="initiative-stats">' +

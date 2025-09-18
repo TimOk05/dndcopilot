@@ -10,23 +10,7 @@ define('DB_PASS', '');
 // API ключи
 function getApiKey($service) {
     $apiKeys = [
-        'deepseek' => 'sk-1e898ddba737411e948af435d767e893', // ✅ Работающий API ключ DeepSeek
-        'openai' => '',   // ❌ OpenAI временно отключен
-        'google' => '',   // ❌ Google не нужен
-        'openweathermap' => '', // 🌤️ API ключ для погоды
-        'translate' => '', // 🌍 API ключ для переводов
-        'image_generation' => '', // 🎨 API ключ для генерации изображений
-        
-        // Новые D&D API ключи
-        'dnd5eapi' => '', // 🎲 D&D 5e API (бесплатный)
-        'open5e' => '', // 📚 Open5e API (бесплатный)
-        'spell_api' => '', // ✨ API заклинаний
-        'monster_api' => '', // 👹 API монстров
-        'lore_generator' => '', // 📖 Генератор лора
-        'quest_generator' => '', // 🗺️ Генератор квестов
-        'npc_generator' => '', // 👤 Генератор NPC
-        'dice_api' => '', // 🎯 API бросков костей
-        'name_generator' => '' // 📝 Генератор имен
+        'deepseek' => '', // 🔑 API ключ DeepSeek для AI генерации
     ];
     
     return $apiKeys[$service] ?? '';
@@ -217,12 +201,7 @@ function setCORSHeaders() {
 
 // Настройки AI API
 define('DEEPSEEK_API_URL', 'https://api.deepseek.com/v1/chat/completions');
-define('OPENAI_API_URL', 'https://api.openai.com/v1/chat/completions');
-define('GOOGLE_API_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent');
 define('API_TIMEOUT', 15);
-
-// Настройки D&D API
-define('DND_API_URL', 'https://www.dnd5eapi.co/api');
 
 // Проверка поддержки OpenSSL
 define('OPENSSL_AVAILABLE', extension_loaded('openssl'));
