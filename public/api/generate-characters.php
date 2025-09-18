@@ -310,7 +310,9 @@ class CharacterGeneratorV4 {
             'gnome', 'goblin', 'goliath', 'hadozee', 'half-elf', 'half-orc', 'halfling', 
             'hexblood', 'hobgoblin', 'human', 'kenku', 'kobold', 'lizardfolk', 'metallic dragonborn', 
             'orc', 'owlin', 'plasmoid', 'reborn', 'shadar-kai', 'tabaxi', 'thri-kreen', 
-            'tiefling', 'triton', 'yuan-ti pureblood'
+            'tiefling', 'triton', 'yuan-ti pureblood', 'vedalken', 'verdan', 'simic hybrid',
+            'gith', 'grung', 'kalashtar', 'kender', 'centaur', 'warforged', 'leonin', 'locathah',
+            'loxodon', 'minotaur', 'satyr', 'tortle', 'fairy', 'harengon'
         ];
         $race = $params['race'] ?? 'human';
         if (!in_array($race, $valid_races)) {
@@ -740,46 +742,57 @@ class CharacterGeneratorV4 {
      * Получение основного оружия из библиотеки механик
      */
     private function getMainWeaponFromApi($class_data) {
-        $weapon_proficiencies = $class_data['proficiencies']['weapons'] ?? [];
+        $class_name = $class_data['name'] ?? 'unknown';
         
-        logMessage('INFO', 'Проверяем владения оружием: ' . json_encode($weapon_proficiencies));
-        logMessage('INFO', 'Загружено оружия: ' . count($this->weapons));
-        
-        if (empty($weapon_proficiencies)) {
-            logMessage('WARNING', 'У класса нет владений оружием');
+        // Получаем данные класса из библиотеки механик
+        $mechanics_file = __DIR__ . '/../../data/pdf/dnd_npc_mechanics_context_v2.json';
+        if (!file_exists($mechanics_file)) {
+            logMessage('ERROR', 'Файл библиотеки механик не найден');
             return "Оружие не найдено";
         }
         
-        // Используем библиотеку оружия из механик
-        if (!empty($this->weapons)) {
-            $available_weapons = [];
+        $mechanics_data = json_decode(file_get_contents($mechanics_file), true);
+        $class_mechanics = $mechanics_data['classes'][$class_name] ?? [];
+        
+        if (empty($class_mechanics)) {
+            logMessage('WARNING', "Класс '{$class_name}' не найден в библиотеке механик");
+            return "Оружие не найдено";
+        }
+        
+        // Получаем оружие из библиотеки механик
+        $weapons = $mechanics_data['weapons'] ?? [];
+        if (empty($weapons)) {
+            logMessage('WARNING', 'Список оружия не найден в библиотеке механик');
+            return "Оружие не найдено";
+        }
+        
+        // Фильтруем оружие по владениям класса
+        $weapon_proficiencies = $class_mechanics['proficiencies']['weapons'] ?? [];
+        $available_weapons = [];
+        
+        foreach ($weapons as $weapon) {
+            $weapon_name = $weapon['name'] ?? '';
+            $weapon_type = $weapon['type'] ?? '';
             
-            foreach ($weapon_proficiencies as $proficiency) {
-                foreach ($this->weapons as $weapon_name => $weapon_data) {
-                    $weapon_type = $weapon_data['type'] ?? '';
-                    $weapon_category = $weapon_data['category'] ?? '';
-                    
-                    // Проверяем соответствие владений и категории оружия
-                    if ($proficiency === 'simple weapons' && $weapon_category === 'simple') {
-                        $available_weapons[] = $weapon_name;
-                    } elseif ($proficiency === 'martial weapons' && $weapon_category === 'martial') {
-                        $available_weapons[] = $weapon_name;
-                    } elseif (strpos($proficiency, strtolower($weapon_name)) !== false) {
-                        $available_weapons[] = $weapon_name;
-                    }
-                }
-            }
-            
-            if (!empty($available_weapons)) {
-                $selected_weapon = $available_weapons[array_rand($available_weapons)];
-                logMessage('INFO', "Выбрано оружие из библиотеки: {$selected_weapon}");
-                return $selected_weapon;
+            // Проверяем, владеет ли класс этим типом оружия
+            if (in_array($weapon_type, $weapon_proficiencies) || 
+                in_array($weapon_name, $weapon_proficiencies) ||
+                in_array('martial', $weapon_proficiencies) ||
+                in_array('simple', $weapon_proficiencies)) {
+                $available_weapons[] = $weapon_name;
             }
         }
         
-        // Если оружие не найдено в библиотеке, возвращаем ошибку
-        logMessage('WARNING', "Оружие для класса '{$class_data['name']}' не найдено в библиотеке механик");
-        return "Оружие не найдено";
+        if (empty($available_weapons)) {
+            logMessage('WARNING', "Нет доступного оружия для класса '{$class_name}'");
+            return "Оружие не найдено";
+        }
+        
+        // Выбираем случайное оружие
+        $selected_weapon = $available_weapons[array_rand($available_weapons)];
+        logMessage('INFO', "Выбрано оружие для класса '{$class_name}': {$selected_weapon}");
+        
+        return $selected_weapon;
     }
     
     /**
@@ -844,27 +857,54 @@ class CharacterGeneratorV4 {
     private function getStartingArmor($class) {
         // Получаем данные класса из библиотеки механик
         $mechanics_file = __DIR__ . '/../../data/pdf/dnd_npc_mechanics_context_v2.json';
-        if (file_exists($mechanics_file)) {
-            $mechanics_data = json_decode(file_get_contents($mechanics_file), true);
-            $class_mechanics = $mechanics_data['classes'][$class] ?? [];
+        if (!file_exists($mechanics_file)) {
+            logMessage('ERROR', 'Файл библиотеки механик не найден');
+            return "Броня не найдена";
+        }
+        
+        $mechanics_data = json_decode(file_get_contents($mechanics_file), true);
+        $class_mechanics = $mechanics_data['classes'][$class] ?? [];
+        
+        if (empty($class_mechanics)) {
+            logMessage('WARNING', "Класс '{$class}' не найден в библиотеке механик");
+            return "Броня не найдена";
+        }
+        
+        // Получаем броню из библиотеки механик
+        $armor_list = $mechanics_data['armor'] ?? [];
+        if (empty($armor_list)) {
+            logMessage('WARNING', 'Список брони не найден в библиотеке механик');
+            return "Броня не найдена";
+        }
+        
+        // Получаем владения броней класса
+        $armor_proficiencies = $class_mechanics['proficiencies']['armor'] ?? [];
+        $available_armor = [];
+        
+        foreach ($armor_list as $armor) {
+            $armor_name = $armor['name'] ?? '';
+            $armor_type = $armor['type'] ?? '';
             
-            if (isset($class_mechanics['armor_proficiencies'])) {
-                $armor_proficiencies = $class_mechanics['armor_proficiencies'];
-                
-                // Выбираем подходящую броню на основе владений
-                if (in_array('heavy armor', $armor_proficiencies)) {
-                    return 'Кольчуга';
-                } elseif (in_array('medium armor', $armor_proficiencies)) {
-                    return 'Кожаный доспех';
-                } elseif (in_array('light armor', $armor_proficiencies)) {
-                    return 'Кожаный доспех';
-                }
+            // Проверяем, владеет ли класс этим типом брони
+            if (in_array($armor_type, $armor_proficiencies) || 
+                in_array($armor_name, $armor_proficiencies) ||
+                in_array('light armor', $armor_proficiencies) ||
+                in_array('medium armor', $armor_proficiencies) ||
+                in_array('heavy armor', $armor_proficiencies)) {
+                $available_armor[] = $armor_name;
             }
         }
         
-        // Если данные не найдены в библиотеке, возвращаем ошибку
-        logMessage('WARNING', "Броня для класса '{$class}' не найдена в библиотеке механик");
-        return "Броня не найдена";
+        if (empty($available_armor)) {
+            logMessage('WARNING', "Нет доступной брони для класса '{$class}'");
+            return "Броня не найдена";
+        }
+        
+        // Выбираем случайную броню
+        $selected_armor = $available_armor[array_rand($available_armor)];
+        logMessage('INFO', "Выбрана броня для класса '{$class}': {$selected_armor}");
+        
+        return $selected_armor;
     }
     
     /**
@@ -1047,108 +1087,104 @@ class CharacterGeneratorV4 {
     private function getSpellsByLevel($class, $level) {
         $spells = [];
         
-        // Заклинания 1 уровня
-        if ($level >= 1) {
-            $spells[1] = $this->getLevel1Spells($class);
+        // Получаем данные класса из библиотеки механик
+        $mechanics_file = __DIR__ . '/../../data/pdf/dnd_npc_mechanics_context_v2.json';
+        if (!file_exists($mechanics_file)) {
+            logMessage('ERROR', 'Файл библиотеки механик не найден');
+            return $spells;
         }
         
-        // Заклинания 2 уровня
-        if ($level >= 3) {
-            $spells[2] = $this->getLevel2Spells($class);
+        $mechanics_data = json_decode(file_get_contents($mechanics_file), true);
+        $class_mechanics = $mechanics_data['classes'][$class] ?? [];
+        
+        if (empty($class_mechanics)) {
+            logMessage('WARNING', "Класс '{$class}' не найден в библиотеке механик");
+            return $spells;
         }
         
-        // Заклинания 3 уровня
-            if ($level >= 5) {
-            $spells[3] = $this->getLevel3Spells($class);
+        // Проверяем, является ли класс заклинателем
+        $casting_category = $class_mechanics['casting_category'] ?? 'none';
+        if ($casting_category === 'none') {
+            logMessage('INFO', "Класс '{$class}' не является заклинателем");
+            return $spells;
         }
         
-        // Заклинания 4 уровня
-        if ($level >= 7) {
-            $spells[4] = $this->getLevel4Spells($class);
+        // Получаем таблицу слотов для категории заклинателя
+        $slot_table = $mechanics_data['slot_tables'][$casting_category] ?? [];
+        if (empty($slot_table)) {
+            logMessage('WARNING', "Таблица слотов для категории '{$casting_category}' не найдена");
+            return $spells;
         }
         
-        // Заклинания 5 уровня
-        if ($level >= 9) {
-            $spells[5] = $this->getLevel5Spells($class);
+        // Получаем слоты для текущего уровня
+        $level_slots = $slot_table[$level] ?? [];
+        if (empty($level_slots)) {
+            logMessage('WARNING', "Слоты для уровня {$level} не найдены");
+            return $spells;
         }
         
-        return $spells;
-    }
-    
-    /**
-     * Заклинания 1 уровня из D&D API
-     */
-    private function getLevel1Spells($class) {
-        // Получаем заклинания из D&D API
-        $spells = $this->dnd_api_service->getSpellsForClass($class, 1);
-        
-        if (isset($spells['error'])) {
-            logMessage('WARNING', "Не удалось получить заклинания 1 уровня для класса '{$class}': " . $spells['message']);
-            return [];
-        }
-        
-        return $spells;
-    }
-    
-    /**
-     * Заклинания 2 уровня из D&D API
-     */
-    private function getLevel2Spells($class) {
-        // Получаем заклинания из D&D API
-        $spells = $this->dnd_api_service->getSpellsForClass($class, 2);
-        
-        if (isset($spells['error'])) {
-            logMessage('WARNING', "Не удалось получить заклинания 2 уровня для класса '{$class}': " . $spells['message']);
-            return [];
+        // Генерируем заклинания для каждого доступного уровня
+        foreach ($level_slots as $spell_level => $slot_count) {
+            if ($slot_count > 0) {
+                $spells[$spell_level] = $this->getSpellsForLevel($class, $spell_level, $level);
+            }
         }
         
         return $spells;
     }
     
     /**
-     * Заклинания 3 уровня из D&D API
+     * Получение заклинаний для конкретного уровня из D&D API
      */
-    private function getLevel3Spells($class) {
+    private function getSpellsForLevel($class, $spell_level, $character_level) {
         // Получаем заклинания из D&D API
-        $spells = $this->dnd_api_service->getSpellsForClass($class, 3);
+        $spells = $this->dnd_api_service->getSpellsForClass($class, $spell_level);
         
         if (isset($spells['error'])) {
-            logMessage('WARNING', "Не удалось получить заклинания 3 уровня для класса '{$class}': " . $spells['message']);
+            logMessage('WARNING', "Не удалось получить заклинания {$spell_level} уровня для класса '{$class}': " . $spells['message']);
             return [];
+        }
+        
+        // Ограничиваем количество заклинаний в зависимости от уровня персонажа
+        $max_spells = $this->getMaxSpellsForLevel($class, $spell_level, $character_level);
+        if ($max_spells > 0 && count($spells) > $max_spells) {
+            $spells = array_slice($spells, 0, $max_spells);
         }
         
         return $spells;
     }
     
     /**
-     * Заклинания 4 уровня из D&D API
+     * Получение максимального количества заклинаний для уровня
      */
-    private function getLevel4Spells($class) {
-        // Получаем заклинания из D&D API
-        $spells = $this->dnd_api_service->getSpellsForClass($class, 4);
-        
-        if (isset($spells['error'])) {
-            logMessage('WARNING', "Не удалось получить заклинания 4 уровня для класса '{$class}': " . $spells['message']);
-            return [];
+    private function getMaxSpellsForLevel($class, $spell_level, $character_level) {
+        // Получаем данные класса из библиотеки механик
+        $mechanics_file = __DIR__ . '/../../data/pdf/dnd_npc_mechanics_context_v2.json';
+        if (!file_exists($mechanics_file)) {
+            return 0;
         }
         
-        return $spells;
+        $mechanics_data = json_decode(file_get_contents($mechanics_file), true);
+        $class_mechanics = $mechanics_data['classes'][$class] ?? [];
+        
+        // Проверяем известные заклинания
+        if (isset($class_mechanics['spellcasting']['known_spells'][$spell_level])) {
+            $known_spells = $class_mechanics['spellcasting']['known_spells'][$spell_level];
+            if (is_array($known_spells)) {
+                return count($known_spells);
+            }
+        }
+        
+        // Если нет конкретных данных, используем базовую логику
+        if ($spell_level === 0) { // Заговоры
+            return 3; // Базовое количество заговоров
+        } elseif ($spell_level === 1) {
+            return min(4, $character_level); // До 4 заклинаний 1 уровня
+        } else {
+            return min(2, $character_level - $spell_level + 1); // Ограничиваем количество
+        }
     }
     
-    /**
-     * Заклинания 5 уровня из D&D API
-     */
-    private function getLevel5Spells($class) {
-        // Получаем заклинания из D&D API
-        $spells = $this->dnd_api_service->getSpellsForClass($class, 5);
-        
-        if (isset($spells['error'])) {
-            logMessage('WARNING', "Не удалось получить заклинания 5 уровня для класса '{$class}': " . $spells['message']);
-            return [];
-        }
-        
-        return $spells;
-    }
     
     /**
      * Выбор известных заклинаний
