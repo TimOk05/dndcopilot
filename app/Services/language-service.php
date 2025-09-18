@@ -50,9 +50,25 @@ class LanguageService {
     }
     
     /**
-     * Получить название класса на русском
+     * Получить название класса на русском (из внешних источников)
      */
     public function getClassName($class, $language = 'ru') {
+        // Сначала пробуем получить из внешних источников через AI
+        try {
+            require_once __DIR__ . '/ai-service.php';
+            $aiService = new AiService();
+            
+            $prompt = "Переведи название класса D&D '{$class}' на русский язык. Верни только перевод:";
+            $translation = $aiService->generateText($prompt);
+            
+            if (!isset($translation['error'])) {
+                return $translation;
+            }
+        } catch (Exception $e) {
+            logMessage('WARNING', 'AI перевод класса недоступен: ' . $e->getMessage());
+        }
+        
+        // Fallback на статический словарь (временно, пока AI не работает)
         $classes = [
             'fighter' => 'Воин',
             'wizard' => 'Маг',
@@ -65,7 +81,8 @@ class LanguageService {
             'druid' => 'Друид',
             'monk' => 'Монах',
             'sorcerer' => 'Чародей',
-            'warlock' => 'Колдун'
+            'warlock' => 'Колдун',
+            'artificer' => 'Изобретатель'
         ];
         
         return $classes[$class] ?? $class;

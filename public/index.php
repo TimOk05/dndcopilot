@@ -447,16 +447,15 @@ function updateDiceComment(dice, count) {
     });
 }
 // --- Генерация персонажей и противников ---
-const characterRaces = ['Человек','Эльф','Гном','Полуорк','Полурослик','Тифлинг','Драконорожденный','Полуэльф','Дварф','Гоблин','Орк','Кобольд','Ящеролюд','Хоббит'];
-const characterClasses = ['Воин','Паладин','Колдун','Волшебник','Плут','Следопыт','Жрец','Бард','Варвар','Монах','Сорсерер','Друид'];
+// Статические данные удалены - теперь используются внешние API
 
 // --- Функция открытия генерации персонажей ---
 function openCharacterModal() {
     showModal(`
         <div class="character-generator">
             <div class="generator-header">
-                <h2>Генератор персонажей</h2>
-                <p class="generator-subtitle">Создайте полноценного персонажа с использованием D&D API и AI</p>
+                <h2 style="color: var(--character-generator-text, #e0e0e0); margin-bottom: 10px;">Генератор персонажей</h2>
+                <p class="generator-subtitle" style="color: var(--character-generator-text, #e0e0e0); opacity: 0.8; margin: 0;">Создайте полноценного персонажа с использованием D&D API и AI</p>
             </div>
             
             <!-- Форма генератора персонажей -->
@@ -468,47 +467,7 @@ function openCharacterModal() {
                             <label for="character-race">Раса персонажа</label>
                             <div class="select-wrapper">
                                 <select id="character-race" name="race" required>
-                                    <option value="">Выберите расу</option>
-                                    <option value="aarakocra">Ааракокра</option>
-                                    <option value="aasimar">Аасимар</option>
-                                    <option value="astral elf">Астральный эльф</option>
-                                    <option value="autognome">Автогном</option>
-                                    <option value="bugbear">Багбир</option>
-                                    <option value="dragonborn" data-subraces='["chromatic dragonborn", "metallic dragonborn", "gem dragonborn"]'>Драконорожденный</option>
-                                    <option value="custom lineage">Кастомная родословная</option>
-                                    <option value="dhampir">Дампир</option>
-                                    <option value="drow" data-subraces='["drow"]'>Дроу</option>
-                                    <option value="duergar">Дуэргар</option>
-                                    <option value="dwarf" data-subraces='["dwarf"]'>Дварф</option>
-                                    <option value="eladrin">Эладрин</option>
-                                    <option value="elf" data-subraces='["elf", "drow", "sea elf", "astral elf", "eladrin", "shadar-kai"]'>Эльф</option>
-                                    <option value="firbolg">Фирболг</option>
-                                    <option value="genasi" data-subraces='["genasi"]'>Генаси</option>
-                                    <option value="giff">Гифф</option>
-                                    <option value="githyanki">Гитиянки</option>
-                                    <option value="githzerai">Гитзерэи</option>
-                                    <option value="gnome" data-subraces='["gnome"]'>Гном</option>
-                                    <option value="goblin">Гоблин</option>
-                                    <option value="goliath">Голиаф</option>
-                                    <option value="hadozee">Хадози</option>
-                                    <option value="half-elf">Полуэльф</option>
-                                    <option value="half-orc">Полуорк</option>
-                                    <option value="halfling" data-subraces='["halfling"]'>Полурослик</option>
-                                    <option value="hexblood">Гексблад</option>
-                                    <option value="hobgoblin">Хобгоблин</option>
-                                    <option value="human">Человек</option>
-                                    <option value="kenku">Кенку</option>
-                                    <option value="kobold">Кобольд</option>
-                                    <option value="lizardfolk">Ящеролюд</option>
-                                    <option value="orc">Орк</option>
-                                    <option value="owlin">Оулин</option>
-                                    <option value="plasmoid">Плазмоид</option>
-                                    <option value="reborn">Возрожденный</option>
-                                    <option value="tabaxi">Табакси</option>
-                                    <option value="thri-kreen">Три-крин</option>
-                                    <option value="tiefling" data-subraces='["tiefling"]'>Тифлинг</option>
-                                    <option value="triton">Тритон</option>
-                                    <option value="yuan-ti pureblood">Юань-ти Чистокровный</option>
+                                    <option value="">Загрузка рас...</option>
                                 </select>
                                 <div class="subrace-tooltip" id="subraceTooltip"></div>
                             </div>
@@ -517,20 +476,7 @@ function openCharacterModal() {
                         <div class="form-group">
                             <label for="character-class">Класс персонажа</label>
                             <select id="character-class" name="class" required>
-                                <option value="">Выберите класс</option>
-                                <option value="artificer">Изобретатель</option>
-                                <option value="barbarian">Варвар</option>
-                                <option value="bard">Бард</option>
-                                <option value="cleric">Жрец</option>
-                                <option value="druid">Друид</option>
-                                <option value="fighter">Воин</option>
-                                <option value="monk">Монах</option>
-                                <option value="paladin">Паладин</option>
-                                <option value="ranger">Следопыт</option>
-                                <option value="rogue">Плут</option>
-                                <option value="sorcerer">Чародей</option>
-                                <option value="warlock">Колдун</option>
-                                <option value="wizard">Волшебник</option>
+                                <option value="">Загрузка классов...</option>
                             </select>
                         </div>
                     </div>
@@ -595,20 +541,7 @@ function openCharacterModal() {
                             <label for="character-background">Происхождение</label>
                             <select id="character-background" name="background">
                                 <option value="random">Случайное</option>
-                                <option value="acolyte">Служитель культа</option>
-                                <option value="charlatan">Мошенник</option>
-                                <option value="criminal">Преступник</option>
-                                <option value="entertainer">Артист</option>
-                                <option value="folk_hero">Народный герой</option>
-                                <option value="guild_artisan">Гильдейский ремесленник</option>
-                                <option value="hermit">Отшельник</option>
-                                <option value="noble">Дворянин</option>
-                                <option value="outlander">Чужеземец</option>
-                                <option value="sage">Мудрец</option>
-                                <option value="sailor">Моряк</option>
-                                <option value="soldier">Солдат</option>
-                                <option value="spy">Шпион</option>
-                                <option value="urchin">Бродяга</option>
+                                <option value="">Загрузка происхождений...</option>
                             </select>
                         </div>
                     </div>
@@ -633,6 +566,18 @@ function openCharacterModal() {
                         </select>
                     </div>
                     
+                    <!-- Режим генерации -->
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="generation-mode">Режим генерации</label>
+                            <select id="generation-mode" name="generation_mode">
+                                <option value="standard">Стандартная генерация (быстрая)</option>
+                                <option value="full">Полноценная генерация (из внешних источников)</option>
+                            </select>
+                            <small class="form-hint">Полноценная генерация получает ВСЕ данные из внешних API без fallback</small>
+                        </div>
+                    </div>
+                    
                     <!-- Кнопка генерации -->
                     <div class="form-actions">
                         <button type="submit" class="generate-btn">🎲 Создать персонажа</button>
@@ -644,7 +589,7 @@ function openCharacterModal() {
                 <div class="progress-bar">
                     <div class="progress-fill"></div>
                 </div>
-                <div class="progress-text">Создание персонажа...</div>
+                <div class="progress-text" id="progressText">Создание персонажа...</div>
             </div>
             
             <div id="characterResult" class="result-container"></div>
@@ -653,60 +598,8 @@ function openCharacterModal() {
     
     document.getElementById('modal-save').style.display = 'none';
     
-    // Управление подрасами
-    const subraceData = {
-        'elf': [
-            { value: 'high_elf', text: 'Высший эльф' },
-            { value: 'wood_elf', text: 'Лесной эльф' },
-            { value: 'dark_elf', text: 'Темный эльф (Дроу)' },
-            { value: 'eladrin', text: 'Эладрин' },
-            { value: 'sea_elf', text: 'Морской эльф' }
-        ],
-        'dwarf': [
-            { value: 'mountain_dwarf', text: 'Горный дворф' },
-            { value: 'hill_dwarf', text: 'Холмовой дворф' },
-            { value: 'duergar', text: 'Дуэргар' }
-        ],
-        'halfling': [
-            { value: 'lightfoot_halfling', text: 'Легконогий полурослик' },
-            { value: 'stout_halfling', text: 'Крепкий полурослик' },
-            { value: 'ghostwise_halfling', text: 'Призрачно-мудрый полурослик' }
-        ],
-        'gnome': [
-            { value: 'forest_gnome', text: 'Лесной гном' },
-            { value: 'rock_gnome', text: 'Скальный гном' },
-            { value: 'deep_gnome', text: 'Глубинный гном' }
-        ],
-        'dragonborn': [
-            { value: 'black_dragonborn', text: 'Черный драконорожденный' },
-            { value: 'blue_dragonborn', text: 'Синий драконорожденный' },
-            { value: 'brass_dragonborn', text: 'Латунный драконорожденный' },
-            { value: 'bronze_dragonborn', text: 'Бронзовый драконорожденный' },
-            { value: 'copper_dragonborn', text: 'Медный драконорожденный' },
-            { value: 'gold_dragonborn', text: 'Золотой драконорожденный' },
-            { value: 'green_dragonborn', text: 'Зеленый драконорожденный' },
-            { value: 'red_dragonborn', text: 'Красный драконорожденный' },
-            { value: 'silver_dragonborn', text: 'Серебряный драконорожденный' },
-            { value: 'white_dragonborn', text: 'Белый драконорожденный' }
-        ],
-        'tiefling': [
-            { value: 'standard_tiefling', text: 'Стандартный тифлинг' },
-            { value: 'variant_tiefling', text: 'Вариантный тифлинг' },
-            { value: 'feral_tiefling', text: 'Дикий тифлинг' }
-        ],
-        'genasi': [
-            { value: 'air_genasi', text: 'Воздушный генаси' },
-            { value: 'earth_genasi', text: 'Земной генаси' },
-            { value: 'fire_genasi', text: 'Огненный генаси' },
-            { value: 'water_genasi', text: 'Водный генаси' }
-        ],
-        'githyanki': [
-            { value: 'standard_githyanki', text: 'Стандартный гитиянки' }
-        ],
-        'githzerai': [
-            { value: 'standard_githzerai', text: 'Стандартный гитзерэи' }
-        ]
-    };
+    // Динамическая загрузка данных из внешних API
+    loadCharacterData();
     
     document.getElementById('character-race').addEventListener('change', function() {
         const selectedRace = this.value;
@@ -714,19 +607,12 @@ function openCharacterModal() {
         const subraceSelect = document.getElementById('character-subrace');
         
         // Очищаем список подрас
-        subraceSelect.innerHTML = '<option value="">Выберите подрасу</option>';
+        subraceSelect.innerHTML = '<option value="">Загрузка подрас...</option>';
         
-        // Показываем/скрываем группу подрас
-        if (subraceData[selectedRace]) {
+        // Загружаем подрасы из API
+        if (selectedRace) {
+            loadSubracesForRace(selectedRace);
             subraceGroup.style.display = 'block';
-            
-            // Добавляем подрасы
-            subraceData[selectedRace].forEach(subrace => {
-                const option = document.createElement('option');
-                option.value = subrace.value;
-                option.textContent = subrace.text;
-                subraceSelect.appendChild(option);
-            });
         } else {
             subraceGroup.style.display = 'none';
         }
@@ -751,12 +637,27 @@ function openCharacterModal() {
             alignment: formData.get('alignment'),
             gender: formData.get('gender'),
             background: formData.get('background'),
-            ability_method: formData.get('ability_method')
+            ability_method: formData.get('ability_method'),
+            generation_mode: formData.get('generation_mode')
         };
+        
+        // Добавляем флаг для полноценной генерации
+        const isFullGeneration = formData.get('generation_mode') === 'full';
+        if (isFullGeneration) {
+            formData.append('use_full_generation', 'true');
+        }
         
         // Скрываем форму и показываем прогресс
         generatorContainer.style.display = 'none';
         progressDiv.style.display = 'block';
+        
+        // Обновляем текст прогресса в зависимости от режима
+        const progressText = progressDiv.querySelector('#progressText');
+        if (isFullGeneration) {
+            progressText.textContent = 'Получение данных из внешних источников...';
+        } else {
+            progressText.textContent = 'Создание персонажа...';
+        }
         
         // Анимация прогресса
         const progressFill = progressDiv.querySelector('.progress-fill');
@@ -834,6 +735,120 @@ function openCharacterModal() {
             resultDiv.innerHTML = '<div class="error">Ошибка сети: ' + error.message + '</div>';
         });
     });
+}
+
+// --- Функции динамической загрузки данных ---
+function loadCharacterData() {
+    loadRaces();
+    loadClasses();
+    loadBackgrounds();
+}
+
+function loadRaces() {
+    const raceSelect = document.getElementById('character-race');
+    if (!raceSelect) return;
+    
+    // Загружаем расы из D&D API
+    fetch('/api/dnd-libraries.php?type=races')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.races) {
+                raceSelect.innerHTML = '<option value="">Выберите расу</option>';
+                data.races.forEach(race => {
+                    const option = document.createElement('option');
+                    option.value = race.index;
+                    option.textContent = race.name;
+                    if (race.subraces && race.subraces.length > 0) {
+                        option.setAttribute('data-subraces', JSON.stringify(race.subraces));
+                    }
+                    raceSelect.appendChild(option);
+                });
+            } else {
+                raceSelect.innerHTML = '<option value="">Ошибка загрузки рас</option>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading races:', error);
+            raceSelect.innerHTML = '<option value="">Ошибка загрузки рас</option>';
+        });
+}
+
+function loadClasses() {
+    const classSelect = document.getElementById('character-class');
+    if (!classSelect) return;
+    
+    // Загружаем классы из D&D API
+    fetch('/api/dnd-libraries.php?type=classes')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.classes) {
+                classSelect.innerHTML = '<option value="">Выберите класс</option>';
+                data.classes.forEach(cls => {
+                    const option = document.createElement('option');
+                    option.value = cls.index;
+                    option.textContent = cls.name;
+                    classSelect.appendChild(option);
+                });
+            } else {
+                classSelect.innerHTML = '<option value="">Ошибка загрузки классов</option>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading classes:', error);
+            classSelect.innerHTML = '<option value="">Ошибка загрузки классов</option>';
+        });
+}
+
+function loadBackgrounds() {
+    const backgroundSelect = document.getElementById('character-background');
+    if (!backgroundSelect) return;
+    
+    // Загружаем происхождения из D&D API
+    fetch('/api/dnd-libraries.php?type=backgrounds')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.backgrounds) {
+                backgroundSelect.innerHTML = '<option value="random">Случайное</option>';
+                data.backgrounds.forEach(background => {
+                    const option = document.createElement('option');
+                    option.value = background.index;
+                    option.textContent = background.name;
+                    backgroundSelect.appendChild(option);
+                });
+            } else {
+                backgroundSelect.innerHTML = '<option value="random">Случайное</option><option value="">Ошибка загрузки происхождений</option>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading backgrounds:', error);
+            backgroundSelect.innerHTML = '<option value="random">Случайное</option><option value="">Ошибка загрузки происхождений</option>';
+        });
+}
+
+function loadSubracesForRace(raceIndex) {
+    const subraceSelect = document.getElementById('character-subrace');
+    if (!subraceSelect) return;
+    
+    // Загружаем подрасы из D&D API
+    fetch(`/api/dnd-libraries.php?type=races&race=${raceIndex}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.subraces && data.subraces.length > 0) {
+                subraceSelect.innerHTML = '<option value="">Выберите подрасу</option>';
+                data.subraces.forEach(subrace => {
+                    const option = document.createElement('option');
+                    option.value = subrace.index;
+                    option.textContent = subrace.name;
+                    subraceSelect.appendChild(option);
+                });
+            } else {
+                subraceSelect.innerHTML = '<option value="">Нет подрас</option>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading subraces:', error);
+            subraceSelect.innerHTML = '<option value="">Ошибка загрузки подрас</option>';
+        });
 }
 
 // --- Функция открытия генерации противников ---
@@ -1215,44 +1230,9 @@ function generateTechnicalParams(race, npcClass, level) {
     
     const mechanics = window.dndMechanics;
     
-    // Преобразуем русские названия классов в английские ключи
-    const classMapping = {
-        'воин': 'fighter',
-        'маг': 'wizard',
-        'жрец': 'cleric',
-        'плут': 'rogue',
-        'варвар': 'barbarian',
-        'паладин': 'paladin',
-        'следопыт': 'ranger',
-        'бард': 'bard',
-        'друид': 'druid',
-        'монах': 'monk',
-        'колдун': 'warlock',
-        'чародей': 'sorcerer',
-        'изобретатель': 'artificer'
-    };
-    
-    const classKey = classMapping[npcClass.toLowerCase()] || npcClass.toLowerCase();
-    
-    // Преобразуем русские названия рас в английские ключи
-    const raceMapping = {
-        'человек': 'human',
-        'эльф': 'elf',
-        'гном': 'gnome',
-        'дворф': 'dwarf',
-        'полурослик': 'halfling',
-        'полуэльф': 'half_elf',
-        'полуорк': 'half_orc',
-        'тифлинг': 'tiefling',
-        'драконорожденный': 'dragonborn',
-        'гоблин': 'goblin',
-        'орк': 'orc',
-        'кобольд': 'kobold',
-        'ящеролюд': 'lizardfolk',
-        'хоббит': 'hobbit'
-    };
-    
-    const raceKey = raceMapping[race.toLowerCase()] || race.toLowerCase();
+    // Маппинги удалены - теперь используются прямые названия из API
+    const classKey = npcClass.toLowerCase();
+    const raceKey = race.toLowerCase();
     
     console.log('Processing with keys:', { classKey, raceKey });
     console.log('Available classes:', mechanics.classes ? Object.keys(mechanics.classes) : 'undefined');
@@ -1408,30 +1388,8 @@ function fetchNpcFromAI(race, npcClass, background, level, advancedSettings = {}
     console.log('JSON loaded successfully:', json);
           // 1. Имя по расе или случайное
         let name = '';
-        // Используем предустановленные имена для каждой расы
-        const raceNames = {
-            'человек': ['Александр', 'Елена', 'Михаил', 'Анна', 'Дмитрий', 'Мария', 'Сергей', 'Ольга', 'Андрей', 'Татьяна'],
-            'эльф': ['Лиран', 'Аэлиус', 'Талас', 'Сильвана', 'Элронд', 'Галадриэль', 'Леголас', 'Арвен', 'Трандуил', 'Келебриан'],
-            'гном': ['Торин', 'Гимли', 'Балин', 'Дорин', 'Нори', 'Бифур', 'Бофур', 'Бомбур', 'Двалин', 'Оин'],
-            'полуорк': ['Гром', 'Ургаш', 'Краг', 'Шака', 'Мог', 'Гар', 'Торг', 'Зуг', 'Руг', 'Буг'],
-            'полурослик': ['Бильбо', 'Фродо', 'Сэм', 'Пиппин', 'Мерри', 'Том', 'Дик', 'Гарри', 'Рори', 'Нори'],
-            'тифлинг': ['Зара', 'Малик', 'Аш', 'Люцифер', 'Бел', 'Кейн', 'Азазель', 'Маммон', 'Левиафан', 'Асмодей'],
-            'драконорожденный': ['Дракс', 'Рекс', 'Торн', 'Скай', 'Блейз', 'Фрост', 'Эмбер', 'Сторм', 'Фанг', 'Клод'],
-            'полуэльф': ['Элрон', 'Арагорн', 'Арвен', 'Элронд', 'Келебриан', 'Элронд', 'Галадриэль', 'Леголас', 'Трандуил', 'Сильвана'],
-            'дворф': ['Торин', 'Гимли', 'Балин', 'Дорин', 'Нори', 'Бифур', 'Бофур', 'Бомбур', 'Двалин', 'Оин'],
-            'гоблин': ['Сник', 'Гоб', 'Ниб', 'Зог', 'Рат', 'Скрит', 'Грим', 'Твич', 'Скваб', 'Гриз'],
-            'орк': ['Гром', 'Ургаш', 'Краг', 'Шака', 'Мог', 'Гар', 'Торг', 'Зуг', 'Руг', 'Буг'],
-            'кобольд': ['Сник', 'Гоб', 'Ниб', 'Зог', 'Рат', 'Скрит', 'Грим', 'Твич', 'Скваб', 'Гриз'],
-            'ящеролюд': ['Зар', 'Кеш', 'Тал', 'Рекс', 'Скай', 'Торн', 'Фанг', 'Клод', 'Блейз', 'Фрост'],
-            'хоббит': ['Бильбо', 'Фродо', 'Сэм', 'Пиппин', 'Мерри', 'Том', 'Дик', 'Гарри', 'Рори', 'Нори']
-        };
-        
-        // Выбираем имя по расе или случайное
-        let raceKey = race ? race.toLowerCase() : 'человек';
-        console.log('NPC Generation Debug:', { race, raceKey, availableRaces: Object.keys(raceNames) });
-        let namePool = raceNames[raceKey] || raceNames['человек'];
-        name = namePool[Math.floor(Math.random() * namePool.length)];
-        console.log('Selected name:', name, 'from pool:', namePool);
+        // Имена теперь генерируются через внешние API - статические данные удалены
+        name = 'Имя будет сгенерировано через AI';
         // 2. Черты, мотивация, профессия
         let trait = '';
         if (json.data && json.data.traits && Array.isArray(json.data.traits) && json.data.traits.length > 0) {
@@ -2905,13 +2863,63 @@ const equipmentStyles = `
             font-size: 0.9em;
         }
         
-        /* Новые стили для интерфейса генератора */
+        /* Новые стили для интерфейса генератора с поддержкой тем */
         .character-generator-container {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--character-generator-bg, rgba(255, 255, 255, 0.05));
             border-radius: 12px;
             padding: 20px;
             margin: 20px 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--character-generator-border, rgba(255, 255, 255, 0.1));
+            box-shadow: var(--character-generator-shadow, 0 4px 15px rgba(0, 0, 0, 0.1));
+        }
+        
+        /* Темы для генератора персонажей */
+        .theme-dark .character-generator-container {
+            --character-generator-bg: rgba(30, 30, 30, 0.8);
+            --character-generator-border: rgba(255, 255, 255, 0.15);
+            --character-generator-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --character-generator-text: #e0e0e0;
+            --character-generator-accent: #ff6b35;
+            --character-generator-accent-hover: #ff8c5a;
+            --character-generator-accent-shadow: rgba(255, 107, 53, 0.3);
+            --character-generator-accent-shadow-hover: rgba(255, 107, 53, 0.4);
+            --character-generator-option-bg: #2a2a2a;
+        }
+        
+        .theme-light .character-generator-container {
+            --character-generator-bg: rgba(255, 255, 255, 0.9);
+            --character-generator-border: rgba(0, 0, 0, 0.1);
+            --character-generator-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --character-generator-text: #333333;
+            --character-generator-accent: #2196F3;
+            --character-generator-accent-hover: #1976D2;
+            --character-generator-accent-shadow: rgba(33, 150, 243, 0.3);
+            --character-generator-accent-shadow-hover: rgba(33, 150, 243, 0.4);
+            --character-generator-option-bg: #f5f5f5;
+        }
+        
+        .theme-mystic .character-generator-container {
+            --character-generator-bg: rgba(75, 0, 130, 0.8);
+            --character-generator-border: rgba(138, 43, 226, 0.3);
+            --character-generator-shadow: 0 4px 15px rgba(75, 0, 130, 0.3);
+            --character-generator-text: #e6d7ff;
+            --character-generator-accent: #9c27b0;
+            --character-generator-accent-hover: #7b1fa2;
+            --character-generator-accent-shadow: rgba(156, 39, 176, 0.3);
+            --character-generator-accent-shadow-hover: rgba(156, 39, 176, 0.4);
+            --character-generator-option-bg: rgba(75, 0, 130, 0.9);
+        }
+        
+        .theme-orange .character-generator-container {
+            --character-generator-bg: rgba(255, 152, 0, 0.1);
+            --character-generator-border: rgba(255, 152, 0, 0.3);
+            --character-generator-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+            --character-generator-text: #fff3e0;
+            --character-generator-accent: #ff9800;
+            --character-generator-accent-hover: #f57c00;
+            --character-generator-accent-shadow: rgba(255, 152, 0, 0.3);
+            --character-generator-accent-shadow-hover: rgba(255, 152, 0, 0.4);
+            --character-generator-option-bg: rgba(255, 152, 0, 0.1);
         }
         
         .character-form-new {
@@ -2938,30 +2946,30 @@ const equipmentStyles = `
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #e0e0e0;
+            color: var(--character-generator-text, #e0e0e0);
             font-size: 14px;
         }
         
         .form-group select {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid var(--character-generator-border, rgba(255, 255, 255, 0.2));
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+            background: var(--character-generator-bg, rgba(255, 255, 255, 0.1));
+            color: var(--character-generator-text, #ffffff);
             font-size: 14px;
             transition: all 0.3s ease;
         }
         
         .form-group select:focus {
             outline: none;
-            border-color: #ff6b35;
-            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+            border-color: var(--character-generator-accent, #ff6b35);
+            box-shadow: 0 0 0 3px var(--character-generator-accent-shadow, rgba(255, 107, 53, 0.2));
         }
         
         .form-group select option {
-            background: #2a2a2a;
-            color: #ffffff;
+            background: var(--character-generator-option-bg, #2a2a2a);
+            color: var(--character-generator-text, #ffffff);
         }
         
         .select-wrapper {
@@ -3010,7 +3018,7 @@ const equipmentStyles = `
         }
         
         .generate-btn {
-            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            background: linear-gradient(135deg, var(--character-generator-accent, #ff6b35), var(--character-generator-accent-hover, #f7931e));
             color: white;
             border: none;
             padding: 16px 32px;
@@ -3019,12 +3027,12 @@ const equipmentStyles = `
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            box-shadow: 0 4px 15px var(--character-generator-accent-shadow, rgba(255, 107, 53, 0.3));
         }
         
         .generate-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+            box-shadow: 0 6px 20px var(--character-generator-accent-shadow-hover, rgba(255, 107, 53, 0.4));
         }
         
         .generate-btn:active {

@@ -114,6 +114,35 @@ class AiService {
     }
     
     /**
+     * Перевод текста на русский язык
+     */
+    public function translateText($text, $targetLanguage = 'ru') {
+        if ($targetLanguage === 'ru') {
+            $prompt = "Переведи следующий текст с английского на русский язык. Верни только перевод без дополнительных комментариев:\n\n" . $text;
+        } else {
+            $prompt = "Переведи следующий текст на {$targetLanguage}. Верни только перевод без дополнительных комментариев:\n\n" . $text;
+        }
+        
+        $cache_key = "translate_" . md5($text . $targetLanguage);
+        $cached = $this->getCachedData($cache_key);
+        if ($cached) {
+            return $cached;
+        }
+        
+        $response = $this->callAiApi($prompt);
+        
+        if ($response && !isset($response['error'])) {
+            $this->cacheData($cache_key, $response);
+            return $response;
+        }
+        
+        return [
+            'error' => 'translation_error',
+            'message' => 'Не удалось перевести текст'
+        ];
+    }
+    
+    /**
      * Генерация предыстории персонажа
      */
     public function generateCharacterBackground($character, $use_ai = true) {

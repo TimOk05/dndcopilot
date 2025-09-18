@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../app/Services/dnd-api-service.php';
 require_once __DIR__ . '/../../app/Services/ai-service.php';
 require_once __DIR__ . '/../../app/Services/language-service.php';
+require_once __DIR__ . '/../../app/Services/FullCharacterService.php';
 
 class CharacterGeneratorV4 {
     private $dnd_api_service;
@@ -1922,11 +1923,28 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         
         error_log("All required files exist");
         
-        $generator = new CharacterGeneratorV4();
-        error_log("CharacterGeneratorV4 created successfully");
+        // Проверяем, запрашивается ли полноценная генерация
+        $useFullGeneration = isset($_POST['use_full_generation']) && $_POST['use_full_generation'] === 'true';
         
-        $result = $generator->generateCharacter($_POST);
-        error_log("Character generation completed");
+        if ($useFullGeneration) {
+            // Используем новый полноценный генератор
+            if (!file_exists(__DIR__ . '/../../app/Services/FullCharacterService.php')) {
+                throw new Exception("FullCharacterService file not found");
+            }
+            
+            $fullGenerator = new FullCharacterService();
+            error_log("FullCharacterService created successfully");
+            
+            $result = $fullGenerator->generateFullCharacter($_POST);
+            error_log("Full character generation completed");
+        } else {
+            // Используем старый генератор (для совместимости)
+            $generator = new CharacterGeneratorV4();
+            error_log("CharacterGeneratorV4 created successfully");
+            
+            $result = $generator->generateCharacter($_POST);
+            error_log("Character generation completed");
+        }
         
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     } catch (Exception $e) {

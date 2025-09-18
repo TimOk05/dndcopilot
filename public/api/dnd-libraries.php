@@ -32,9 +32,36 @@ $dnd_service = new DndApiService();
 $ai_service = new AiService();
 
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
+$type = $_GET['type'] ?? $_POST['type'] ?? '';
 
 try {
     switch ($action) {
+        default:
+            // Обработка запросов типа type=races, type=classes, type=backgrounds
+            if (!empty($type)) {
+                switch ($type) {
+                    case 'races':
+                        $result = getRacesData($_GET['race'] ?? '');
+                        break;
+                    case 'classes':
+                        $result = getClassesData();
+                        break;
+                    case 'backgrounds':
+                        $result = getBackgroundsData();
+                        break;
+                    case 'spells':
+                        $result = getSpellsData($_GET['class'] ?? '', $_GET['level'] ?? '');
+                        break;
+                    case 'equipment':
+                        $result = getEquipmentData($_GET['category'] ?? '');
+                        break;
+                    default:
+                        throw new Exception('Неизвестный тип данных: ' . $type);
+                }
+            } else {
+                throw new Exception('Не указан тип данных');
+            }
+            break;
         case 'get_comprehensive_spell':
             $spell_name = $_GET['spell'] ?? $_POST['spell'] ?? '';
             
@@ -46,38 +73,12 @@ try {
             $spell_data = [];
             $sources_used = [];
             
-            // Пробуем D&D API сервис (пока нет метода getSpellData, используем внешние сервисы)
-            try {
-                // Временно пропускаем D&D API для заклинаний
-                logMessage('INFO', "D&D API для заклинаний пока не реализован, используем внешние сервисы");
-            } catch (Exception $e) {
-                logMessage('WARNING', "D&D API не доступен для заклинания {$spell_name}: " . $e->getMessage());
-            }
-            
-            // Пробуем внешние сервисы
-            try {
-                $external_spell = $external_service->getSpellInfo($spell_name);
-                if ($external_spell && $external_spell['success']) {
-                    $spell_data['external_api'] = $external_spell;
-                    $sources_used[] = 'external_api';
-                }
-            } catch (Exception $e) {
-                logMessage('WARNING', "Внешние API не доступны для заклинания {$spell_name}: " . $e->getMessage());
-            }
-            
-            // Если нет данных, генерируем через AI
-            if (empty($spell_data)) {
-                $ai_prompt = "Создай подробное описание заклинания D&D 5e '{$spell_name}'. Включи: уровень, школу магии, время накладывания, дистанцию, компоненты, длительность, описание эффекта, классы которые могут использовать это заклинание.";
-                $ai_response = $ai_service->generateText($ai_prompt);
-                
-                if (!isset($ai_response['error'])) {
-                    $spell_data['ai_generated'] = [
-                        'name' => $spell_name,
-                        'description' => $ai_response['text'] ?? $ai_response,
-                        'source' => 'ai_generation'
-                    ];
-                    $sources_used[] = 'ai_generation';
-                }
+            // Получаем данные заклинания только из D&D API
+            $spell_data = $dnd_service->getSpellData($spell_name);
+            if ($spell_data && !isset($spell_data['error'])) {
+                $sources_used[] = 'dnd_api';
+            } else {
+                throw new Exception("D&D API недоступен для получения заклинания: {$spell_name}");
             }
             
             $result = [
@@ -105,38 +106,12 @@ try {
             $monster_data = [];
             $sources_used = [];
             
-            // Пробуем D&D API сервис (пока нет метода getMonsterData, используем внешние сервисы)
-            try {
-                // Временно пропускаем D&D API для монстров
-                logMessage('INFO', "D&D API для монстров пока не реализован, используем внешние сервисы");
-            } catch (Exception $e) {
-                logMessage('WARNING', "D&D API не доступен для монстра {$monster_name}: " . $e->getMessage());
-            }
-            
-            // Пробуем внешние сервисы
-            try {
-                $external_monster = $external_service->getMonsterInfo($monster_name);
-                if ($external_monster && $external_monster['success']) {
-                    $monster_data['external_api'] = $external_monster;
-                    $sources_used[] = 'external_api';
-                }
-            } catch (Exception $e) {
-                logMessage('WARNING', "Внешние API не доступны для монстра {$monster_name}: " . $e->getMessage());
-            }
-            
-            // Если нет данных, генерируем через AI
-            if (empty($monster_data)) {
-                $ai_prompt = "Создай подробное описание монстра D&D 5e '{$monster_name}'. Включи: размер, тип, выравнивание, AC, HP, скорость, характеристики (STR, DEX, CON, INT, WIS, CHA), навыки, чувства, языки, CR, особенности и действия.";
-                $ai_response = $ai_service->generateText($ai_prompt);
-                
-                if (!isset($ai_response['error'])) {
-                    $monster_data['ai_generated'] = [
-                        'name' => $monster_name,
-                        'description' => $ai_response['text'] ?? $ai_response,
-                        'source' => 'ai_generation'
-                    ];
-                    $sources_used[] = 'ai_generation';
-                }
+            // Получаем данные монстра только из D&D API
+            $monster_data = $dnd_service->getMonsterData($monster_name);
+            if ($monster_data && !isset($monster_data['error'])) {
+                $sources_used[] = 'dnd_api';
+            } else {
+                throw new Exception("D&D API недоступен для получения монстра: {$monster_name}");
             }
             
             $result = [
@@ -161,7 +136,7 @@ try {
             $content_data = [];
             $sources_used = [];
             
-            // Генерируем через AI
+            // Генерируем контент только через AI
             $ai_prompt = "Создай {$content_type} для D&D 5e с темой '{$theme}' и сложностью '{$complexity}'. Сделай контент подробным, интересным и готовым к использованию в игре.";
             $ai_response = $ai_service->generateText($ai_prompt);
             
@@ -174,29 +149,8 @@ try {
                     'source' => 'ai_generation'
                 ];
                 $sources_used[] = 'ai_generation';
-            }
-            
-            // Дополняем через внешние сервисы
-            if ($content_type === 'quest') {
-                try {
-                    $quest_data = $external_service->generateQuest($content_type, $complexity, $theme);
-                    if ($quest_data && $quest_data['success']) {
-                        $content_data['external_api'] = $quest_data;
-                        $sources_used[] = 'external_api';
-                    }
-                } catch (Exception $e) {
-                    logMessage('WARNING', "Внешние API не доступны для генерации квеста: " . $e->getMessage());
-                }
-            } elseif ($content_type === 'lore') {
-                try {
-                    $lore_data = $external_service->generateLore($content_type, $theme, $complexity);
-                    if ($lore_data && $lore_data['success']) {
-                        $content_data['external_api'] = $lore_data;
-                        $sources_used[] = 'external_api';
-                    }
-                } catch (Exception $e) {
-                    logMessage('WARNING', "Внешние API не доступны для генерации лора: " . $e->getMessage());
-                }
+            } else {
+                throw new Exception('AI недоступен для генерации контента');
             }
             
             $result = [
@@ -277,16 +231,6 @@ try {
                 $tests['ai_generation'] = ['success' => false, 'error' => $e->getMessage()];
             }
             
-            // Тест внешних сервисов
-            try {
-                $external_test = $external_service->generateCharacterNames('human', 'any', 1);
-                $tests['external_api'] = [
-                    'success' => $external_test['success'] ?? false,
-                    'names_generated' => isset($external_test['names']) ? count($external_test['names']) : 0
-                ];
-            } catch (Exception $e) {
-                $tests['external_api'] = ['success' => false, 'error' => $e->getMessage()];
-            }
             
             $result = [
                 'success' => true,
@@ -296,9 +240,6 @@ try {
             ];
             
             break;
-            
-        default:
-            throw new Exception('Неизвестное действие: ' . $action);
     }
     
     echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -312,4 +253,139 @@ try {
         'action' => $action
     ], JSON_UNESCAPED_UNICODE);
 }
+
+/**
+ * Получение данных о расах
+ */
+function getRacesData($specific_race = '') {
+    global $dnd_service, $external_service, $ai_service;
+    
+    $races_data = [];
+    $sources_used = [];
+    
+    // Получаем расы только из D&D API
+    if (empty($specific_race)) {
+        $races_data = $dnd_service->getRacesList();
+        if ($races_data && !isset($races_data['error'])) {
+            $sources_used[] = 'dnd_api';
+        } else {
+            throw new Exception('D&D API недоступен для получения списка рас');
+        }
+    } else {
+        $races_data = $dnd_service->getRaceData($specific_race);
+        if ($races_data && !isset($races_data['error'])) {
+            $sources_used[] = 'dnd_api';
+        } else {
+            throw new Exception("D&D API недоступен для получения данных расы: {$specific_race}");
+        }
+    }
+    
+    return [
+        'success' => !empty($races_data),
+        'races' => $races_data,
+        'sources_used' => $sources_used,
+        'total_sources' => count($sources_used)
+    ];
+}
+
+/**
+ * Получение данных о классах
+ */
+function getClassesData() {
+    global $dnd_service, $external_service, $ai_service;
+    
+    $classes_data = [];
+    $sources_used = [];
+    
+    // Получаем классы только из D&D API
+    $classes_data = $dnd_service->getClassesList();
+    if ($classes_data && !isset($classes_data['error'])) {
+        $sources_used[] = 'dnd_api';
+    } else {
+        throw new Exception('D&D API недоступен для получения списка классов');
+    }
+    
+    return [
+        'success' => !empty($classes_data),
+        'classes' => $classes_data,
+        'sources_used' => $sources_used,
+        'total_sources' => count($sources_used)
+    ];
+}
+
+/**
+ * Получение данных о происхождениях
+ */
+function getBackgroundsData() {
+    global $dnd_service, $external_service, $ai_service;
+    
+    $backgrounds_data = [];
+    $sources_used = [];
+    
+    // Получаем происхождения только из D&D API
+    $backgrounds_data = $dnd_service->getBackgroundsList();
+    if ($backgrounds_data && !isset($backgrounds_data['error'])) {
+        $sources_used[] = 'dnd_api';
+    } else {
+        throw new Exception('D&D API недоступен для получения списка происхождений');
+    }
+    
+    return [
+        'success' => !empty($backgrounds_data),
+        'backgrounds' => $backgrounds_data,
+        'sources_used' => $sources_used,
+        'total_sources' => count($sources_used)
+    ];
+}
+
+/**
+ * Получение данных о заклинаниях
+ */
+function getSpellsData($class = '', $level = '') {
+    global $dnd_service, $external_service, $ai_service;
+    
+    $spells_data = [];
+    $sources_used = [];
+    
+    // Получаем заклинания только из D&D API
+    $spells_data = $dnd_service->getSpellsForClass($class, $level);
+    if ($spells_data && !isset($spells_data['error'])) {
+        $sources_used[] = 'dnd_api';
+    } else {
+        throw new Exception('D&D API недоступен для получения заклинаний');
+    }
+    
+    return [
+        'success' => !empty($spells_data),
+        'spells' => $spells_data,
+        'sources_used' => $sources_used,
+        'total_sources' => count($sources_used)
+    ];
+}
+
+/**
+ * Получение данных об оборудовании
+ */
+function getEquipmentData($category = '') {
+    global $dnd_service, $external_service, $ai_service;
+    
+    $equipment_data = [];
+    $sources_used = [];
+    
+    // Получаем оборудование только из D&D API
+    $equipment_data = $dnd_service->getEquipmentList($category);
+    if ($equipment_data && !isset($equipment_data['error'])) {
+        $sources_used[] = 'dnd_api';
+    } else {
+        throw new Exception('D&D API недоступен для получения оборудования');
+    }
+    
+    return [
+        'success' => !empty($equipment_data),
+        'equipment' => $equipment_data,
+        'sources_used' => $sources_used,
+        'total_sources' => count($sources_used)
+    ];
+}
+
 ?>

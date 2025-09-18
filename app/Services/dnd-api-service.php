@@ -1012,5 +1012,82 @@ class DndApiService {
             return 0;
         }
     }
+    
+    /**
+     * Получение списка всех рас
+     */
+    public function getRacesList() {
+        $cache_key = "races_list";
+        $cached = $this->getCachedData($cache_key);
+        if ($cached) {
+            return $cached;
+        }
+        
+        $data = $this->fetchFromDnd5eApi("/races");
+        if ($data && isset($data['results'])) {
+            $this->cacheData($cache_key, $data['results']);
+            return $data['results'];
+        }
+        
+        throw new Exception('Не удалось получить список рас из D&D API');
+    }
+    
+    /**
+     * Получение списка всех классов
+     */
+    public function getClassesList() {
+        $cache_key = "classes_list";
+        $cached = $this->getCachedData($cache_key);
+        if ($cached) {
+            return $cached;
+        }
+        
+        $data = $this->fetchFromDnd5eApi("/classes");
+        if ($data && isset($data['results'])) {
+            $this->cacheData($cache_key, $data['results']);
+            return $data['results'];
+        }
+        
+        throw new Exception('Не удалось получить список классов из D&D API');
+    }
+    
+    /**
+     * Получение списка всех происхождений
+     */
+    public function getBackgroundsList() {
+        $cache_key = "backgrounds_list";
+        $cached = $this->getCachedData($cache_key);
+        if ($cached) {
+            return $cached;
+        }
+        
+        $data = $this->fetchFromDnd5eApi("/backgrounds");
+        if ($data && isset($data['results'])) {
+            $this->cacheData($cache_key, $data['results']);
+            return $data['results'];
+        }
+        
+        throw new Exception('Не удалось получить список происхождений из D&D API');
+    }
+    
+    /**
+     * Получение списка оборудования
+     */
+    public function getEquipmentList($category = '') {
+        $cache_key = "equipment_list_" . $category;
+        $cached = $this->getCachedData($cache_key);
+        if ($cached) {
+            return $cached;
+        }
+        
+        $endpoint = $category ? "/equipment-categories/{$category}" : "/equipment";
+        $data = $this->fetchFromDnd5eApi($endpoint);
+        if ($data && isset($data['results'])) {
+            $this->cacheData($cache_key, $data['results']);
+            return $data['results'];
+        }
+        
+        throw new Exception('Не удалось получить список оборудования из D&D API');
+    }
 }
 ?>
