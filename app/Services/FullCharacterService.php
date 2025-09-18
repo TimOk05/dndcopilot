@@ -201,6 +201,36 @@ class FullCharacterService {
     }
     
     /**
+     * Генерация дополнительных происхождений через AI
+     */
+    private function generateAdditionalBackgroundsWithAI() {
+        try {
+            $prompt = "Создай список из 10 популярных происхождений для D&D 5e персонажей. Верни только JSON массив с объектами вида: {\"index\": \"название_на_английском\", \"name\": \"Название на русском\"}. Примеры: acolyte, criminal, folk-hero, noble, sage, soldier.";
+            
+            $response = $this->aiService->generateText($prompt);
+            
+            if (isset($response['error'])) {
+                logMessage('WARNING', 'AI не смог сгенерировать происхождения: ' . $response['error']);
+                return [];
+            }
+            
+            $text = $response['text'] ?? $response;
+            $backgrounds = json_decode($text, true);
+            
+            if (is_array($backgrounds)) {
+                logMessage('INFO', 'AI сгенерировал ' . count($backgrounds) . ' происхождений');
+                return $backgrounds;
+            } else {
+                logMessage('WARNING', 'AI вернул некорректный JSON для происхождений');
+                return [];
+            }
+        } catch (Exception $e) {
+            logMessage('WARNING', 'Ошибка генерации происхождений через AI: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
      * Получение данных происхождения из внешних источников
      */
     private function getBackgroundDataFromExternalSources($background) {
@@ -209,14 +239,30 @@ class FullCharacterService {
         try {
             $backgroundsList = $this->dndApiService->getBackgroundsList();
             if (isset($backgroundsList['error'])) {
-                return $backgroundsList;
+                logMessage('ERROR', 'Ошибка получения списка происхождений: ' . $backgroundsList['error']);
+                throw new Exception('Не удалось получить список происхождений из внешних API');
+            }
+            
+            if (empty($backgroundsList)) {
+                logMessage('ERROR', 'Список происхождений пуст');
+                throw new Exception('Список происхождений пуст');
+            }
+            
+            // Если API вернул только одно происхождение, используем AI для генерации дополнительных
+            if (count($backgroundsList) < 5) {
+                logMessage('WARNING', 'API вернул мало происхождений, используем AI для генерации');
+                $aiBackgrounds = $this->generateAdditionalBackgroundsWithAI();
+                if (!empty($aiBackgrounds)) {
+                    $backgroundsList = array_merge($backgroundsList, $aiBackgrounds);
+                }
             }
             
             // Выбираем случайное происхождение
             $background = $backgroundsList[array_rand($backgroundsList)]['index'];
+            logMessage('INFO', "Выбрано случайное происхождение: {$background}");
         } catch (Exception $e) {
-            logMessage('WARNING', 'Не удалось получить список происхождений: ' . $e->getMessage());
-            $background = 'acolyte'; // Fallback на базовое происхождение
+            logMessage('ERROR', 'Не удалось получить список происхождений: ' . $e->getMessage());
+            throw new Exception('Не удалось получить происхождение из внешних источников: ' . $e->getMessage());
         }
         }
         
