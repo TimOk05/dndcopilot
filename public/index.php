@@ -567,16 +567,6 @@ function openCharacterModal() {
                     </div>
                     
                     <!-- Режим генерации -->
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="generation-mode">Режим генерации</label>
-                            <select id="generation-mode" name="generation_mode">
-                                <option value="standard">Стандартная генерация (быстрая)</option>
-                                <option value="full">Полноценная генерация (из внешних источников)</option>
-                            </select>
-                            <small class="form-hint">Полноценная генерация получает ВСЕ данные из внешних API без fallback</small>
-                        </div>
-                    </div>
                     
                     <!-- Кнопка генерации -->
                     <div class="form-actions">
@@ -637,27 +627,19 @@ function openCharacterModal() {
             alignment: formData.get('alignment'),
             gender: formData.get('gender'),
             background: formData.get('background'),
-            ability_method: formData.get('ability_method'),
-            generation_mode: formData.get('generation_mode')
+            ability_method: formData.get('ability_method')
         };
         
-        // Добавляем флаг для полноценной генерации
-        const isFullGeneration = formData.get('generation_mode') === 'full';
-        if (isFullGeneration) {
-            formData.append('use_full_generation', 'true');
-        }
+        // Всегда используем полноценную генерацию из внешних источников
+        formData.append('use_full_generation', 'true');
         
         // Скрываем форму и показываем прогресс
         generatorContainer.style.display = 'none';
         progressDiv.style.display = 'block';
         
-        // Обновляем текст прогресса в зависимости от режима
+        // Обновляем текст прогресса
         const progressText = progressDiv.querySelector('#progressText');
-        if (isFullGeneration) {
-            progressText.textContent = 'Получение данных из внешних источников...';
-        } else {
-            progressText.textContent = 'Создание персонажа...';
-        }
+        progressText.textContent = 'Получение данных из внешних источников...';
         
         // Анимация прогресса
         const progressFill = progressDiv.querySelector('.progress-fill');
@@ -739,20 +721,31 @@ function openCharacterModal() {
 
 // --- Функции динамической загрузки данных ---
 function loadCharacterData() {
+    console.log('Начинаем загрузку данных персонажа...');
     loadRaces();
     loadClasses();
     loadBackgrounds();
 }
 
 function loadRaces() {
+    console.log('Загружаем расы...');
     const raceSelect = document.getElementById('character-race');
-    if (!raceSelect) return;
+    if (!raceSelect) {
+        console.error('Элемент character-race не найден');
+        return;
+    }
     
+    console.log('Отправляем запрос к API...');
     // Загружаем расы из D&D API
-    fetch('/api/dnd-libraries.php?type=races')
-        .then(response => response.json())
+    fetch('api/dnd-libraries.php?type=races')
+        .then(response => {
+            console.log('Получен ответ от API:', response.status);
+            return response.json();
+        })
         .then(data => {
+            console.log('Данные получены:', data);
             if (data.success && data.races) {
+                console.log('Успешно получены расы:', data.races.length);
                 raceSelect.innerHTML = '<option value="">Выберите расу</option>';
                 data.races.forEach(race => {
                     const option = document.createElement('option');
@@ -763,7 +756,9 @@ function loadRaces() {
                     }
                     raceSelect.appendChild(option);
                 });
+                console.log('Расы добавлены в select');
             } else {
+                console.error('Ошибка в данных API:', data);
                 raceSelect.innerHTML = '<option value="">Ошибка загрузки рас</option>';
             }
         })
@@ -778,7 +773,7 @@ function loadClasses() {
     if (!classSelect) return;
     
     // Загружаем классы из D&D API
-    fetch('/api/dnd-libraries.php?type=classes')
+    fetch('api/dnd-libraries.php?type=classes')
         .then(response => response.json())
         .then(data => {
             if (data.success && data.classes) {
@@ -804,7 +799,7 @@ function loadBackgrounds() {
     if (!backgroundSelect) return;
     
     // Загружаем происхождения из D&D API
-    fetch('/api/dnd-libraries.php?type=backgrounds')
+    fetch('api/dnd-libraries.php?type=backgrounds')
         .then(response => response.json())
         .then(data => {
             if (data.success && data.backgrounds) {
@@ -830,7 +825,7 @@ function loadSubracesForRace(raceIndex) {
     if (!subraceSelect) return;
     
     // Загружаем подрасы из D&D API
-    fetch(`/api/dnd-libraries.php?type=races&race=${raceIndex}`)
+    fetch(`api/dnd-libraries.php?type=races&race=${raceIndex}`)
         .then(response => response.json())
         .then(data => {
             if (data.success && data.subraces && data.subraces.length > 0) {
