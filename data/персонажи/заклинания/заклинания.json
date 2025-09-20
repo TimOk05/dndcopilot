@@ -1,0 +1,859 @@
+[
+  {
+    "id": "spell:acid_splash",
+    "name": "Брызги кислоты",
+    "english_name": "Acid Splash",
+    "level": 0,
+    "school": "conjuration",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 60, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "ritual": false,
+    "concentration": false,
+    "save": { "ability": "dex", "effect_on_success": "negates" },
+    "damage": {
+      "type": "acid",
+      "dice": "1d6",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d6" },
+          { "at": 11, "dice": "3d6" },
+          { "at": 17, "dice": "4d6" }
+        ]
+      }
+    },
+    "classes": { "base": ["fighter","rogue","sorcerer","wizard","artificer"] },
+    "description": "Вы кидаете кислотный шарик, выбирая одно существо в пределах дистанции или два существа в 5 футах друг от друга. Каждая цель совершает спасбросок Ловкости; при провале получает 1к6 урона кислотой.",
+    "tags": ["damage","save","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:mage_hand",
+    "name": "Волшебная рука",
+    "english_name": "Mage Hand",
+    "level": 0,
+    "school": "conjuration",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 30, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "minute", "concentration": false },
+    "ritual": false,
+    "concentration": false,
+    "classes": { "base": ["bard","fighter","rogue","sorcerer","warlock","wizard","artificer"] },
+    "description": "Призрачная рука появляется в точке в пределах 30 футов, существует до 1 минуты и может выполнять простые манипуляции (открывать незапертые двери, класть/доставать предметы, переливать жидкости). Не может атаковать, активировать магические предметы и переносить более 10 фунтов. Исчезает, если отдалится более чем на 30 футов или заклинание применено повторно.",
+    "tags": ["utility","manipulation","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:magic_stone",
+    "name": "Волшебный камень",
+    "english_name": "Magic Stone",
+    "level": 0,
+    "school": "transmutation",
+    "source": { "book": "XGtE" },
+    "casting_time": { "value": 1, "unit": "bonus_action" },
+    "range": { "value": 0, "unit": "touch" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "minute", "concentration": false },
+    "ritual": false,
+    "concentration": false,
+    "attack": { "type": "ranged_spell" },
+    "damage": {
+      "type": "bludgeoning",
+      "dice": "1d6",
+      "scaling": { "mode": "cantrip_level", "steps": [] }
+    },
+    "classes": { "base": ["warlock","druid","artificer"] },
+    "description": "Касаясь 1–3 камней, наделяете их магией. Вы или другой существо может атаковать камнем (бросок атаки использует ваш модификатор базовой характеристики наложения). При попадании: 1к6 дробящего + модификатор вашей базовой характеристики. Дальность броска рукой — 60 футов. Повторное наложение отменяет прежние зачарования.",
+    "tags": ["damage","attack","buff_item","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:sword_burst",
+    "name": "Вспышка Мечей",
+    "english_name": "Sword Burst",
+    "level": 0,
+    "school": "conjuration",
+    "source": { "book": "TCE" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 0, "unit": "self" },
+    "area": { "shape": "sphere", "size_ft": 5 },
+    "components": { "verbal": true, "somatic": false, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "ritual": false,
+    "concentration": false,
+    "save": { "ability": "dex", "effect_on_success": "negates" },
+    "damage": {
+      "type": "force",
+      "dice": "1d6",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d6" },
+          { "at": 11, "dice": "3d6" },
+          { "at": 17, "dice": "4d6" }
+        ]
+      }
+    },
+    "classes": { "base": ["sorcerer","warlock","wizard","artificer"] },
+    "description": "Призрачные клинки на мгновение вращаются вокруг вас. Все другие существа в пределах 5 футов совершают спасбросок Ловкости; при провале получают урон силой 1к6.",
+    "tags": ["area","damage","save","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:booming_blade",
+    "name": "Громовой Клинок",
+    "english_name": "Booming Blade",
+    "level": 0,
+    "school": "evocation",
+    "source": { "book": "TCE" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 0, "unit": "self" },
+    "area": { "shape": "sphere", "size_ft": 5 },
+    "components": { "verbal": true, "somatic": false, "material": { "has": true, "text": "рукопашное оружие стоимостью ≥ 1 см", "consumed": false } },
+    "duration": { "value": 1, "unit": "round", "concentration": false },
+    "ritual": false,
+    "concentration": false,
+    "attack": { "type": "melee_weapon" },
+    "damage": {
+      "type": "thunder",
+      "dice": "0d0",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "note": "+1d8 при попадании; 2d8 при добровольном перемещении" },
+          { "at": 11, "note": "+2d8 при попадании; 3d8 при добровольном перемещении" },
+          { "at": 17, "note": "+3d8 при попадании; 4d8 при добровольном перемещении" }
+        ]
+      }
+    },
+    "classes": { "base": ["sorcerer","warlock","wizard","artificer"] },
+    "description": "Как часть заклинания совершите рукопашную атаку оружием. При попадании цель окутывает громовая энергия до начала вашего следующего хода. Если цель переместится по собственной воле, она немедленно получает урон звуком (см. масштабирование).",
+    "tags": ["attack","weapon_combo","control","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:friends",
+    "name": "Дружба",
+    "english_name": "Friends",
+    "level": 0,
+    "school": "enchantment",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 0, "unit": "self" },
+    "components": { "verbal": false, "somatic": true, "material": { "has": true, "text": "немного грима, наносимого на лицо", "consumed": false } },
+    "duration": { "value": 1, "unit": "minute", "concentration": true },
+    "ritual": false,
+    "concentration": true,
+    "classes": { "base": ["bard","fighter","rogue","sorcerer","warlock","wizard"] },
+    "description": "До конца длительности вы совершаете с преимуществом проверки Харизмы, направленные на одно невраждебное существо. Когда заклинание заканчивается, оно понимает, что на него влияли магией, и становится враждебным к вам (последствия определяет Мастер).",
+    "tags": ["social","utility","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:shillelagh",
+    "name": "Дубинка",
+    "english_name": "Shillelagh",
+    "level": 0,
+    "school": "transmutation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "bonus_action" },
+    "range": { "value": 0, "unit": "touch" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": true, "text": "омела, лист клевера и дубинка/боевой посох", "consumed": false } },
+    "duration": { "value": 1, "unit": "minute", "concentration": false },
+    "ritual": false,
+    "concentration": false,
+    "attack": { "type": "melee_weapon" },
+    "classes": { "base": ["druid"] },
+    "description": "Дерево дубинки или боевого посоха наполняется силой природы: используйте базовую хар-ку заклинателя вместо Силы для бросков атаки и урона этим оружием; кость урона становится к8; если оружие не было магическим — становится магическим. Заклинание оканчивается, если наложено повторно или вы отпустили оружие.",
+    "tags": ["buff","weapon_combo","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:encode_thoughts",
+    "name": "Зашифровать мысли",
+    "english_name": "Encode Thoughts",
+    "level": 0,
+    "school": "transmutation",
+    "source": { "book": "GGtR" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 0, "unit": "self" },
+    "components": { "verbal": false, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 8, "unit": "hour", "concentration": false },
+    "ritual": false,
+    "concentration": false,
+    "classes": { "base": ["any"] },
+    "description": "Вы извлекаете воспоминание/идею в виде «мысленной ленты» — крошечного полутвёрдого предмета в 5 футах от вас. Повторное наложение на ленту позволяет мгновенно получить её содержимое; аналогичный эффект даёт «Обнаружение мыслей» на ленту.",
+    "tags": ["utility","knowledge","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:blade_ward",
+    "name": "Защита от оружия",
+    "english_name": "Blade Ward",
+    "level": 0,
+    "school": "abjuration",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 0, "unit": "self" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "round", "concentration": false },
+    "ritual": false,
+    "concentration": false,
+    "classes": { "base": ["bard","fighter","rogue","sorcerer","warlock","wizard"] },
+    "description": "До конца вашего следующего хода вы получаете сопротивление дробящему, колющему и рубящему урону от атак оружием.",
+    "tags": ["defense","self","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:toll_the_dead",
+    "name": "Звон по мёртвым",
+    "english_name": "Toll the Dead",
+    "level": 0,
+    "school": "necromancy",
+    "source": { "book": "XGtE" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 60, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "ritual": false,
+    "concentration": false,
+    "save": { "ability": "wis", "effect_on_success": "negates" },
+    "damage": {
+      "type": "necrotic",
+      "dice": "1d8",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d8" },
+          { "at": 11, "dice": "3d8" },
+          { "at": 17, "dice": "4d8" }
+        ],
+        "note": "Если цель не на полных хитах, используется к12 вместо к8."
+      }
+    },
+    "classes": { "base": ["cleric","warlock","wizard"] },
+    "description": "Звон колокола поражает выбранную цель в пределах дистанции. Спасбросок Мудрости negates; при провале цель получает некротический урон (к8, либо к12 если цель была не на полных хитах).",
+    "tags": ["damage","save","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:vicious_mockery",
+    "name": "Злая насмешка",
+    "english_name": "Vicious Mockery",
+    "level": 0,
+    "school": "enchantment",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 60, "unit": "ft" },
+    "components": { "verbal": true, "somatic": false, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "ritual": false,
+    "concentration": false,
+    "save": { "ability": "wis", "effect_on_success": "negates" },
+    "damage": {
+      "type": "psychic",
+      "dice": "1d4",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d4" },
+          { "at": 11, "dice": "3d4" },
+          { "at": 17, "dice": "4d4" }
+        ]
+      }
+    },
+    "effects": { "debuffs": ["Следующая атака цели до конца её следующего хода совершается с помехой."] },
+    "classes": { "base": ["bard"] },
+    "description": "Вы осыпаете цель оскорблениями, усиленными магией. Если цель слышит вас, она совершает спасбросок Мудрости; при провале получает психический урон и до конца следующего хода совершает следующий бросок атаки с помехой.",
+    "tags": ["damage","debuff","save","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:druidcraft",
+    "name": "Искусство друидов",
+    "english_name": "Druidcraft",
+    "level": 0,
+    "school": "transmutation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 30, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false, "special_note": "ряд эффектов длится 1 раунд или 1 час по описанию" },
+    "ritual": false,
+    "concentration": false,
+    "classes": { "base": ["druid"] },
+    "description": "Небольшие природные фокусы: приметы погоды на 24 часа вперёд (эффект 1 раунд), распускание/прорастание, малые ощутимые эффекты в кубе 5 футов (1 час), зажигание/тушение свечи, факела или небольшого костра.",
+    "tags": ["utility","nature","cantrip"],
+    "version": 1
+  },
+{
+    "id": "spell:green_flame_blade",
+    "name": "Клинок зелёного пламени",
+    "english_name": "Green-Flame Blade",
+    "level": 0,
+    "school": "evocation",
+    "source": { "book": "TCE" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 0, "unit": "self" },
+    "components": { "verbal": true, "somatic": false, "material": { "has": true, "text": "рукопашное оружие стоимостью ≥ 1 см" } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "attack": { "type": "melee_weapon" },
+    "damage": {
+      "type": "fire",
+      "dice": "0d0",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "note": "+1d8 огня по основной цели; 1d8+мод. хар-ки по соседу" },
+          { "at": 11, "note": "+2d8 огня по основной цели; 2d8+мод. хар-ки по соседу" },
+          { "at": 17, "note": "+3d8 огня по основной цели; 3d8+мод. хар-ки по соседу" }
+        ]
+      }
+    },
+    "classes": { "base": ["sorcerer","warlock","wizard","artificer"] },
+    "description": "После попадания оружием огонь перепрыгивает на второе существо в пределах 5 футов от первой цели. Оно получает огненный урон, равный вашему модификатору характеристики заклинателя, с ростом по уровням.",
+    "tags": ["attack","weapon_combo","damage","fire","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:lightning_lure",
+    "name": "Лассо молнии",
+    "english_name": "Lightning Lure",
+    "level": 0,
+    "school": "evocation",
+    "source": { "book": "TCE" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 15, "unit": "ft" },
+    "components": { "verbal": true, "somatic": false, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "save": { "ability": "str", "effect_on_success": "negates" },
+    "damage": {
+      "type": "lightning",
+      "dice": "1d8",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d8" },
+          { "at": 11, "dice": "3d8" },
+          { "at": 17, "dice": "4d8" }
+        ]
+      }
+    },
+    "effects": { "movement": { "pull_ft": 10 } },
+    "classes": { "base": ["sorcerer","warlock","wizard","artificer"] },
+    "description": "Вы бросаете молниеносный хлыст. Существо в 15 футах совершает спасбросок Силы; при провале его тянет к вам на 10 футов. Если оно оказалось в пределах 5 футов, оно получает урон электричеством.",
+    "tags": ["damage","save","control","lightning","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:chill_touch",
+    "name": "Леденящее прикосновение",
+    "english_name": "Chill Touch",
+    "level": 0,
+    "school": "necromancy",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 120, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "round", "concentration": false },
+    "attack": { "type": "ranged_spell" },
+    "damage": {
+      "type": "necrotic",
+      "dice": "1d8",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d8" },
+          { "at": 11, "dice": "3d8" },
+          { "at": 17, "dice": "4d8" }
+        ]
+      }
+    },
+    "effects": { "debuffs": ["цель не может восстанавливать хиты до начала вашего следующего хода"], "conditions_inflicted": ["disadvantage_vs_you_if_undead"] },
+    "classes": { "base": ["fighter","rogue","sorcerer","warlock","wizard"] },
+    "description": "Призрачная рука наносит некротический урон. Цель не может восстанавливать хиты до вашего следующего хода. Нежить атакует вас с помехой.",
+    "tags": ["damage","attack","debuff","necrotic","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:mold_earth",
+    "name": "Лепка земли",
+    "english_name": "Mold Earth",
+    "level": 0,
+    "school": "transmutation",
+    "source": { "book": "XGtE" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 30, "unit": "ft" },
+    "components": { "verbal": false, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false, "special_note": "некоторые эффекты длятся до 1 часа" },
+    "classes": { "base": ["sorcerer","wizard","druid"] },
+    "description": "Вы изменяете участок земли или камня (куб 5 футов): перемещаете рыхлую землю, создаёте узоры/цвета, делаете местность труднопроходимой или наоборот. Максимум 2 эффекта одновременно.",
+    "tags": ["utility","terrain","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:ray_of_frost",
+    "name": "Луч холода",
+    "english_name": "Ray of Frost",
+    "level": 0,
+    "school": "evocation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 60, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "attack": { "type": "ranged_spell" },
+    "damage": {
+      "type": "cold",
+      "dice": "1d8",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d8" },
+          { "at": 11, "dice": "3d8" },
+          { "at": 17, "dice": "4d8" }
+        ]
+      }
+    },
+    "effects": { "debuffs": ["скорость цели уменьшается на 10 футов до начала вашего следующего хода"] },
+    "classes": { "base": ["fighter","rogue","sorcerer","wizard","artificer"] },
+    "description": "Ледяной луч наносит урон холодом и замедляет цель.",
+    "tags": ["damage","attack","debuff","cold","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:minor_illusion",
+    "name": "Малая иллюзия",
+    "english_name": "Minor Illusion",
+    "level": 0,
+    "school": "illusion",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 30, "unit": "ft" },
+    "components": { "verbal": false, "somatic": true, "material": { "has": true, "text": "кусок овечьей шерсти" } },
+    "duration": { "value": 1, "unit": "minute", "concentration": false },
+    "classes": { "base": ["bard","fighter","monk","rogue","sorcerer","warlock","wizard"] },
+    "description": "Создаёте звук или образ предмета в кубе 5 футов. Образ нематериален и раскрывается при взаимодействии. Проверка Интеллекта (Анализ) против вашего Сл заклинаний позволяет распознать иллюзию.",
+    "tags": ["utility","illusion","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:true_strike",
+    "name": "Меткий удар",
+    "english_name": "True Strike",
+    "level": 0,
+    "school": "divination",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 30, "unit": "ft" },
+    "components": { "verbal": false, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "round", "concentration": true },
+    "concentration": true,
+    "classes": { "base": ["bard","fighter","rogue","sorcerer","warlock","wizard"] },
+    "description": "Вы указываете на цель в пределах дистанции. На своём следующем ходу совершаете первую атаку по ней с преимуществом.",
+    "tags": ["buff","divination","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:eldritch_blast",
+    "name": "Мистический заряд",
+    "english_name": "Eldritch Blast",
+    "level": 0,
+    "school": "evocation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 120, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "attack": { "type": "ranged_spell" },
+    "damage": {
+      "type": "force",
+      "dice": "1d10",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "note": "2 луча" },
+          { "at": 11, "note": "3 луча" },
+          { "at": 17, "note": "4 луча" }
+        ]
+      }
+    },
+    "classes": { "base": ["warlock"] },
+    "description": "Вы выпускаете луч потрескивающей энергии. При попадании наносит 1к10 силового урона. Количество лучей растёт по уровням: 2 (5 ур.), 3 (11 ур.), 4 (17 ур.). Каждый луч требует отдельного броска атаки.",
+    "tags": ["damage","attack","force","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:infestation",
+    "name": "Нашествие",
+    "english_name": "Infestation",
+    "level": 0,
+    "school": "conjuration",
+    "source": { "book": "XGtE" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 30, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": true, "text": "живая блоха", "consumed": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "save": { "ability": "con", "effect_on_success": "negates" },
+    "damage": {
+      "type": "poison",
+      "dice": "1d6",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d6" },
+          { "at": 11, "dice": "3d6" },
+          { "at": 17, "dice": "4d6" }
+        ]
+      }
+    },
+    "effects": { "movement": { "push_ft": 5, "note": "случайное направление по броску к4" } },
+    "classes": { "base": ["sorcerer","warlock","wizard","druid"] },
+    "description": "Вы насылаете рой паразитов на цель. Она совершает спасбросок Телосложения. При провале — урон ядом и сдвиг на 5 футов в случайном направлении (по к4).",
+    "tags": ["damage","save","control","poison","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:prestidigitation",
+    "name": "Фокусы",
+    "english_name": "Prestidigitation",
+    "level": 0,
+    "school": "transmutation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 10, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "hour", "concentration": false, "special_note": "некоторые эффекты мгновенные" },
+    "classes": { "base": ["bard","sorcerer","warlock","wizard","artificer"] },
+    "description": "Вы создаёте одно из мелких магических чудес: искры, запахи, цветовые пятна, подогрев/охлаждение пищи, очистка/загрязнение, символы, огоньки и т. п. Эффект ограничен, но может служить развлечением или удобством.",
+    "tags": ["utility","flavor","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:dancing_lights",
+    "name": "Пляшущие огоньки",
+    "english_name": "Dancing Lights",
+    "level": 0,
+    "school": "evocation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 120, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": true, "text": "кусочек фосфора или светлячок" } },
+    "duration": { "value": 1, "unit": "minute", "concentration": true },
+    "concentration": true,
+    "classes": { "base": ["bard","sorcerer","wizard","artificer"] },
+    "description": "Вы создаёте до 4 огоньков, каждый размером с факел, которые можно двигать и объединять. Они светят как свечи/факелы. Можно объединить в гуманоидную фигуру.",
+    "tags": ["utility","light","control","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:mending",
+    "name": "Починка",
+    "english_name": "Mending",
+    "level": 0,
+    "school": "transmutation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "minute" },
+    "range": { "value": 0, "unit": "touch" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": true, "text": "две маленькие магнитные пластины" } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "classes": { "base": ["bard","cleric","druid","sorcerer","wizard","artificer"] },
+    "description": "Вы чините небольшой разрыв или трещину (не более 1 фута) в объекте. Может починить магический предмет или конструкцию, но не восстанавливает магию.",
+    "tags": ["utility","repair","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:light",
+    "name": "Свет",
+    "english_name": "Light",
+    "level": 0,
+    "school": "evocation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 0, "unit": "touch" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": true, "text": "светлячок или кусочек фосфора" } },
+    "duration": { "value": 1, "unit": "hour", "concentration": false },
+    "classes": { "base": ["bard","cleric","sorcerer","wizard","artificer"] },
+    "description": "Объект освещается ярким светом в радиусе 20 футов и тусклым ещё 20 футов. Если наложить на предмет, который несут/носят — объект светится.",
+    "tags": ["utility","light","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:message",
+    "name": "Сообщение",
+    "english_name": "Message",
+    "level": 0,
+    "school": "transmutation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 120, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": true, "text": "короткий кусочек медной проволоки" } },
+    "duration": { "value": 1, "unit": "round", "concentration": false },
+    "classes": { "base": ["bard","sorcerer","wizard","artificer"] },
+    "description": "Вы указываете существо в пределах 120 футов и шепчете сообщение. Только оно слышит его и может ответить.",
+    "tags": ["utility","communication","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:shocking_grasp",
+    "name": "Электрошок",
+    "english_name": "Shocking Grasp",
+    "level": 0,
+    "school": "evocation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 0, "unit": "touch" },
+    "components": { "verbal": false, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "attack": { "type": "melee_spell" },
+    "damage": {
+      "type": "lightning",
+      "dice": "1d8",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d8" },
+          { "at": 11, "dice": "3d8" },
+          { "at": 17, "dice": "4d8" }
+        ]
+      }
+    },
+    "effects": { "debuffs": ["цель не может совершать реакции до начала своего следующего хода"] },
+    "classes": { "base": ["sorcerer","wizard","artificer"] },
+    "description": "Вы касаетесь цели и выпускаете электрический разряд. При попадании наносит урон и лишает цель реакции.",
+    "tags": ["damage","attack","debuff","lightning","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:poison_spray",
+    "name": "Ядовитые брызги",
+    "english_name": "Poison Spray",
+    "level": 0,
+    "school": "conjuration",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 10, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "save": { "ability": "con", "effect_on_success": "negates" },
+    "damage": {
+      "type": "poison",
+      "dice": "1d12",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d12" },
+          { "at": 11, "dice": "3d12" },
+          { "at": 17, "dice": "4d12" }
+        ]
+      }
+    },
+    "classes": { "base": ["sorcerer","warlock","wizard","druid","artificer"] },
+    "description": "Вы распыляете облако ядовитого газа на цель в пределах 10 футов. Спасбросок Телосложения; при провале — урон ядом.",
+    "tags": ["damage","save","poison","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:create_bonfire",
+    "name": "Сотворение костра",
+    "english_name": "Create Bonfire",
+    "level": 0,
+    "school": "conjuration",
+    "source": { "book": "XGtE" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 60, "unit": "ft" },
+    "area": { "shape": "cube", "size_ft": 5 },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "minute", "concentration": true },
+    "concentration": true,
+    "save": { "ability": "dex", "effect_on_success": "negates" },
+    "damage": {
+      "type": "fire",
+      "dice": "1d8",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d8" },
+          { "at": 11, "dice": "3d8" },
+          { "at": 17, "dice": "4d8" }
+        ]
+      }
+    },
+    "classes": { "base": ["druid","sorcerer","warlock","wizard","artificer"] },
+    "description": "Вы создаёте костёр в кубе 5 футов. Существо, впервые оказавшееся в области в ход, совершает спасбросок Ловкости; при провале получает урон огнём.",
+    "tags": ["damage","area","save","fire","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:thorn_whip",
+    "name": "Терновый кнут",
+    "english_name": "Thorn Whip",
+    "level": 0,
+    "school": "transmutation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 30, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "attack": { "type": "melee_spell" },
+    "damage": {
+      "type": "piercing",
+      "dice": "1d6",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d6" },
+          { "at": 11, "dice": "3d6" },
+          { "at": 17, "dice": "4d6" }
+        ]
+      }
+    },
+    "effects": { "movement": { "pull_ft": 10 } },
+    "classes": { "base": ["druid"] },
+    "description": "Вы создаёте плеть из колючих лоз, которая наносит урон и притягивает цель на 10 футов ближе к вам.",
+    "tags": ["damage","attack","control","nature","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:guidance",
+    "name": "Указание",
+    "english_name": "Guidance",
+    "level": 0,
+    "school": "divination",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 0, "unit": "touch" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "minute", "concentration": true },
+    "concentration": true,
+    "classes": { "base": ["cleric","druid","artificer"] },
+    "description": "Вы касаетесь существа. Пока длится заклинание, цель может добавить к одному броску проверки навыка к4. После этого эффект оканчивается.",
+    "tags": ["buff","support","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:spare_the_dying",
+    "name": "Уход за умирающим",
+    "english_name": "Spare the Dying",
+    "level": 0,
+    "school": "necromancy",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 0, "unit": "touch" },
+    "components": { "verbal": false, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "classes": { "base": ["cleric","artificer"] },
+    "description": "Вы стабилизируете умирающее существо. Оно перестаёт делать спасброски от смерти.",
+    "tags": ["healing","utility","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:sacred_flame",
+    "name": "Священное пламя",
+    "english_name": "Sacred Flame",
+    "level": 0,
+    "school": "evocation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 60, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "save": { "ability": "dex", "effect_on_success": "negates" },
+    "damage": {
+      "type": "radiant",
+      "dice": "1d8",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d8" },
+          { "at": 11, "dice": "3d8" },
+          { "at": 17, "dice": "4d8" }
+        ]
+      }
+    },
+    "classes": { "base": ["cleric"] },
+    "description": "Божественное пламя поражает цель в пределах дистанции. Спасбросок Ловкости; при провале получает урон сиянием.",
+    "tags": ["damage","save","radiant","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:thaumaturgy",
+    "name": "Чудотворство",
+    "english_name": "Thaumaturgy",
+    "level": 0,
+    "school": "transmutation",
+    "source": { "book": "PHB" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 30, "unit": "ft" },
+    "components": { "verbal": true, "somatic": false, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "minute", "concentration": false },
+    "classes": { "base": ["cleric"] },
+    "description": "Вы создаёте одно из чудес: усиление голоса, тряска земли, треск грома, открытие/закрытие дверей и т. п. Эффекты ограничены, но могут быть полезны в ролевой игре.",
+    "tags": ["utility","flavor","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:frostbite",
+    "name": "Обморожение",
+    "english_name": "Frostbite",
+    "level": 0,
+    "school": "evocation",
+    "source": { "book": "XGtE" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 60, "unit": "ft" },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "save": { "ability": "con", "effect_on_success": "negates" },
+    "damage": {
+      "type": "cold",
+      "dice": "1d6",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d6" },
+          { "at": 11, "dice": "3d6" },
+          { "at": 17, "dice": "4d6" }
+        ]
+      }
+    },
+    "effects": { "debuffs": ["следующая атака цели совершается с помехой"] },
+    "classes": { "base": ["druid","sorcerer"] },
+    "description": "Вы поражаете цель холодом. При провале спасброска Телосложения цель получает урон и следующий бросок атаки до конца её следующего хода совершается с помехой.",
+    "tags": ["damage","save","cold","debuff","cantrip"],
+    "version": 1
+  },
+  {
+    "id": "spell:thunderclap",
+    "name": "Раскат грома",
+    "english_name": "Thunderclap",
+    "level": 0,
+    "school": "evocation",
+    "source": { "book": "XGtE" },
+    "casting_time": { "value": 1, "unit": "action" },
+    "range": { "value": 0, "unit": "self" },
+    "area": { "shape": "sphere", "size_ft": 5 },
+    "components": { "verbal": true, "somatic": true, "material": { "has": false } },
+    "duration": { "value": 1, "unit": "instant", "concentration": false },
+    "save": { "ability": "con", "effect_on_success": "negates" },
+    "damage": {
+      "type": "thunder",
+      "dice": "1d6",
+      "scaling": {
+        "mode": "cantrip_level",
+        "steps": [
+          { "at": 5, "dice": "2d6" },
+          { "at": 11, "dice": "3d6" },
+          { "at": 17, "dice": "4d6" }
+        ]
+      }
+    },
+    "classes": { "base": ["bard","druid","sorcerer","warlock","wizard","artificer"] },
+    "description": "Громовой удар сотрясает пространство. Все существа в 5 футах совершают спасбросок Телосложения; при провале получают урон громом.",
+    "tags": ["damage","save","area","thunder","cantrip"],
+    "version": 1
+  },
