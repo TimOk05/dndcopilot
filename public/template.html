@@ -232,6 +232,35 @@
             --shadow-tertiary: rgba(107, 70, 193, 0.1);
             --bg-image: url('assets/backgrounds/mystic-theme.png');
         }
+        /* Ледяная тема */
+        
+        [data-theme="ice"] {
+            --bg-primary: #0b1c26;
+            --bg-secondary: #122b3a;
+            --bg-tertiary: #1e4e68;
+            --bg-quaternary: #2a6d8a;
+            --bg-quinary: #3a7a9a;
+            --bg-senary: #4a8aaa;
+            --text-primary: #cce7ff;
+            --text-secondary: #a3c9db;
+            --text-tertiary: #80deea;
+            --text-quaternary: #4fc3f7;
+            --text-quinary: #29b6f6;
+            --text-senary: #03a9f4;
+            --border-primary: #4fc3f7;
+            --border-secondary: #29b6f6;
+            --border-tertiary: #03a9f4;
+            --accent-primary: #80deea;
+            --accent-secondary: #4fc3f7;
+            --accent-success: #00bcd4;
+            --accent-info: #2196f3;
+            --accent-warning: #ff9800;
+            --accent-danger: #f44336;
+            --shadow-primary: rgba(128, 222, 234, 0.2);
+            --shadow-secondary: rgba(128, 222, 234, 0.3);
+            --shadow-tertiary: rgba(128, 222, 234, 0.1);
+            --bg-image: url('assets/backgrounds/ice-theme.png');
+        }
         /* Лавовые подтеки для темной темы */
         
         [data-theme="dark"] .parchment {
@@ -664,6 +693,60 @@
                 transform: translateX(-5px) translateY(10px);
             }
         }
+        /* Стили для пергамента в ледяной теме */
+        
+        [data-theme="ice"] .parchment {
+            background: var(--bg-primary) url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
+            border: 8px solid var(--border-primary);
+            box-shadow: 0 8px 32px var(--shadow-secondary), 0 0 0 12px rgba(128, 222, 234, 0.2), 0 0 30px rgba(128, 222, 234, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        [data-theme="ice"] .parchment::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse 200px 50px at 20% 10%, rgba(128, 222, 234, 0.12) 0%, transparent 50%), radial-gradient(ellipse 150px 40px at 80% 20%, rgba(79, 195, 247, 0.1) 0%, transparent 50%), radial-gradient(ellipse 180px 60px at 40% 80%, rgba(41, 182, 246, 0.15) 0%, transparent 50%), radial-gradient(ellipse 120px 30px at 90% 70%, rgba(128, 222, 234, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        [data-theme="ice"] .parchment::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(128, 222, 234, 0.06) 50%, transparent 70%), linear-gradient(-45deg, transparent 40%, rgba(79, 195, 247, 0.04) 60%, transparent 80%);
+            animation: iceFlow 12s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        @keyframes iceFlow {
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: translateX(-10px) translateY(-5px);
+            }
+            25% {
+                opacity: 0.5;
+                transform: translateX(5px) translateY(-10px);
+            }
+            50% {
+                opacity: 0.4;
+                transform: translateX(10px) translateY(5px);
+            }
+            75% {
+                opacity: 0.6;
+                transform: translateX(-5px) translateY(10px);
+            }
+        }
         
         h1 {
             margin-top: 80px;
@@ -711,6 +794,83 @@
         [data-theme="mystic"] h1 {
             color: #e0e0ff;
             text-shadow: 0 2px 0 rgba(139, 92, 246, 0.2), 0 0 8px rgba(139, 92, 246, 0.3), 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        /* Стили для ледяной темы */
+        
+        [data-theme="ice"] .fast-btn,
+        [data-theme="ice"] button[type=submit],
+        [data-theme="ice"] .modal .modal-save,
+        [data-theme="ice"] .modal-regenerate,
+        [data-theme="ice"] .logout-btn {
+            color: #e0f7fa !important;
+            font-weight: 600 !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+            background: linear-gradient(135deg, #1e4e68, #2a6d8a) !important;
+            border: 2px solid #4fc3f7 !important;
+            border-radius: 10px !important;
+            box-shadow: 0 3px 10px rgba(128, 222, 234, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+            position: relative !important;
+            overflow: hidden !important;
+        }
+        
+        [data-theme="ice"] .fast-btn::before,
+        [data-theme="ice"] button[type=submit]::before,
+        [data-theme="ice"] .modal .modal-save::before,
+        [data-theme="ice"] .modal-regenerate::before,
+        [data-theme="ice"] .logout-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(128, 222, 234, 0.2), transparent);
+            transition: left 0.6s ease;
+            z-index: 1;
+        }
+        
+        [data-theme="ice"] .fast-btn:hover::before,
+        [data-theme="ice"] button[type=submit]:hover::before,
+        [data-theme="ice"] .modal .modal-save:hover::before,
+        [data-theme="ice"] .modal-regenerate:hover::before,
+        [data-theme="ice"] .logout-btn:hover::before {
+            left: 100%;
+        }
+        
+        [data-theme="ice"] .fast-btn:hover,
+        [data-theme="ice"] button[type=submit]:hover,
+        [data-theme="ice"] .modal .modal-save:hover,
+        [data-theme="ice"] .modal-regenerate:hover,
+        [data-theme="ice"] .logout-btn:hover {
+            color: #e0f7fa !important;
+            background: linear-gradient(135deg, #2a6d8a, #3a7a9a) !important;
+            box-shadow: 0 5px 15px rgba(128, 222, 234, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            transform: translateY(-2px) scale(1.01) !important;
+            border-color: #80deea !important;
+        }
+        
+        [data-theme="ice"] .fast-btn {
+            font-family: 'IM Fell English SC', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', serif !important;
+            text-rendering: optimizeLegibility !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+        }
+        
+        [data-theme="ice"] .stats-link {
+            background: var(--accent-info) !important;
+            color: var(--bg-secondary) !important;
+            border-color: var(--accent-info) !important;
+        }
+        
+        [data-theme="ice"] .admin-link {
+            background: var(--accent-warning) !important;
+            color: var(--bg-secondary) !important;
+            border-color: var(--accent-warning) !important;
+        }
+        
+        [data-theme="ice"] h1 {
+            color: #cce7ff;
+            text-shadow: 0 2px 0 rgba(128, 222, 234, 0.2), 0 0 8px rgba(128, 222, 234, 0.3), 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
         
         .fast-bar {
@@ -919,6 +1079,13 @@
             border: 1.5px solid var(--border-primary);
             color: var(--text-primary);
             box-shadow: 0 1px 4px var(--shadow-tertiary), 0 0 15px rgba(107, 70, 193, 0.2);
+        }
+        
+        [data-theme="ice"] .chat-box {
+            background: var(--bg-secondary) url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
+            border: 1.5px solid var(--border-primary);
+            color: var(--text-primary);
+            box-shadow: 0 1px 4px var(--shadow-tertiary), 0 0 15px rgba(128, 222, 234, 0.2);
         }
         
         .msg {
@@ -5735,6 +5902,10 @@
                             <span class="theme-icon">🔮</span>
                             <span class="theme-name">Мистическая</span>
                         </div>
+                        <div class="theme-option" data-theme="ice">
+                            <span class="theme-icon">❄️</span>
+                            <span class="theme-name">Ледяная</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -5946,6 +6117,8 @@
                     themeIcon.textContent = '🌅';
                 } else if (theme === 'mystic') {
                     themeIcon.textContent = '🔮';
+                } else if (theme === 'ice') {
+                    themeIcon.textContent = '❄️';
                 } else {
                     themeIcon.textContent = '☀️';
                 }
