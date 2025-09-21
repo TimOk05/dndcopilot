@@ -256,6 +256,7 @@ $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="open
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей"><span class="svg-icon icon-hero" data-icon="hero"></span> Персонаж</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников"><span class="svg-icon icon-enemy" data-icon="enemy"></span> Противники</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий"><span class="svg-icon icon-potion" data-icon="potion"></span> Зелья</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openSpellModal()" data-tooltip="Создать заклинания" aria-label="Открыть генератор заклинаний"><span class="svg-icon icon-crystal-ball-magic-svgrepo-com" data-icon="crystal-ball-magic-svgrepo-com"></span> Заклинания</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openInitiativeModal()" data-tooltip="Управление инициативой" aria-label="Открыть управление инициативой"><span class="svg-icon icon-initiative" data-icon="initiative"></span> Инициатива</button>';
 $fastBtns .= '</div>';
 
@@ -1717,7 +1718,213 @@ function openPotionModalSimple() {
     });
 }
 
+// --- Функция открытия генератора заклинаний ---
+function openSpellModal() {
+    showModal(`
+        <div class="spell-generator">
+            <div class="generator-header">
+                <h2>Генератор заклинаний</h2>
+                <p class="generator-subtitle">Создайте заклинания D&D 5e по уровню и классу</p>
+            </div>
+            
+            <form id="spellForm" class="spell-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="spell-level">Уровень заклинания</label>
+                        <select id="spell-level" name="level" required>
+                            <option value="0">Заговоры (0 уровень)</option>
+                            <option value="1">1 уровень</option>
+                            <option value="2">2 уровень</option>
+                            <option value="3">3 уровень</option>
+                            <option value="4">4 уровень</option>
+                            <option value="5">5 уровень</option>
+                            <option value="6">6 уровень</option>
+                            <option value="7">7 уровень</option>
+                            <option value="8">8 уровень</option>
+                            <option value="9">9 уровень</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="spell-class">Класс (опционально)</label>
+                        <select id="spell-class" name="class">
+                            <option value="">Любой класс</option>
+                            <option value="bard">Бард</option>
+                            <option value="cleric">Жрец</option>
+                            <option value="druid">Друид</option>
+                            <option value="paladin">Паладин</option>
+                            <option value="ranger">Следопыт</option>
+                            <option value="sorcerer">Чародей</option>
+                            <option value="warlock">Колдун</option>
+                            <option value="wizard">Волшебник</option>
+                            <option value="artificer">Изобретатель</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="spell-count">Количество заклинаний</label>
+                        <input type="number" id="spell-count" name="count" min="1" max="5" value="1" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="generate-btn">
+                    <span class="btn-icon"><span class="svg-icon icon-crystal-ball-magic-svgrepo-com" data-icon="crystal-ball-magic-svgrepo-com"></span></span>
+                    <span class="btn-text">Создать заклинания</span>
+                </button>
+            </form>
+            
+            <div id="spellResult" class="result-container"></div>
+        </div>
+    `);
+    
+    document.getElementById('modal-save').style.display = 'none';
+    
+    // Добавляем обработчик формы
+    document.getElementById('spellForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const resultDiv = document.getElementById('spellResult');
+        
+        submitBtn.innerHTML = '<span class="btn-icon"><span class="svg-icon icon-loading" data-icon="loading"></span></span><span class="btn-text">Создание...</span>';
+        submitBtn.disabled = true;
+        resultDiv.innerHTML = '<div class="loading">Создание заклинаний...</div>';
+        
+        // Подготавливаем данные для API
+        const requestData = {
+            level: parseInt(formData.get('level')),
+            class: formData.get('class') || null,
+            count: parseInt(formData.get('count'))
+        };
+        
+        fetch('api/generate-spells.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Spell API Response:', data);
+            if (data.success && data.spells) {
+                let resultHtml = formatSpellsFromApi(data.spells);
+                
+                // Автоматически сохраняем все заклинания в заметки
+                data.spells.forEach(spell => {
+                    saveSpellAsNote(spell);
+                });
+                
+                resultDiv.innerHTML = resultHtml;
+                
+                // Автоматическая прокрутка к результату
+                setTimeout(() => {
+                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } else {
+                const errorMessage = data.message || 'Неизвестная ошибка при создании заклинаний';
+                resultDiv.innerHTML = '<div class="error">' + errorMessage + '</div>';
+            }
+        })
+        .catch(error => {
+            console.error('Spell generation error:', error);
+            const errorMessage = error.message || 'Ошибка сети при создании заклинаний';
+            resultDiv.innerHTML = '<div class="error">' + errorMessage + '</div>';
+        })
+        .finally(() => {
+            submitBtn.innerHTML = '<span class="btn-icon"><span class="svg-icon icon-crystal-ball-magic-svgrepo-com" data-icon="crystal-ball-magic-svgrepo-com"></span></span><span class="btn-text">Создать заклинания</span>';
+            submitBtn.disabled = false;
+        });
+    });
+}
 
+// Функция форматирования заклинаний из API
+function formatSpellsFromApi(spells) {
+    let html = '<div class="spells-grid">';
+    
+    spells.forEach((spell, index) => {
+        const levelText = spell.level === 0 ? 'Заговор' : `${spell.level} уровень`;
+        const schoolText = spell.school_ru || spell.school || 'Неизвестная школа';
+        const classesText = spell.classes ? spell.classes.join(', ') : 'Неизвестные классы';
+        
+        html += `
+            <div class="spell-card">
+                <div class="spell-header">
+                    <h3 class="spell-name">${spell.name}</h3>
+                    <div class="spell-level">${levelText}</div>
+                </div>
+                <div class="spell-details">
+                    <div class="spell-info">
+                        <span class="spell-school">${schoolText}</span>
+                        <span class="spell-classes">${classesText}</span>
+                    </div>
+                    <div class="spell-description">
+                        <p><strong>Описание:</strong> ${spell.description || 'Описание недоступно'}</p>
+                        ${spell.casting_time ? `<p><strong>Время накладывания:</strong> ${spell.casting_time}</p>` : ''}
+                        ${spell.range ? `<p><strong>Дистанция:</strong> ${spell.range}</p>` : ''}
+                        ${spell.duration ? `<p><strong>Длительность:</strong> ${spell.duration.text || spell.duration}</p>` : ''}
+                        ${spell.components ? `<p><strong>Компоненты:</strong> ${formatSpellComponents(spell.components)}</p>` : ''}
+                        ${spell.higher_level ? `<p><strong>На высоких уровнях:</strong> ${spell.higher_level}</p>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    return html;
+}
+
+// Функция форматирования компонентов заклинания
+function formatSpellComponents(components) {
+    let parts = [];
+    if (components.verbal) parts.push('В');
+    if (components.somatic) parts.push('С');
+    if (components.material) parts.push('М');
+    return parts.join(', ') + (components.material_desc ? ` (${components.material_desc})` : '');
+}
+
+// Функция сохранения заклинания в заметки
+function saveSpellAsNote(spell) {
+    const levelText = spell.level === 0 ? 'Заговор' : `${spell.level} уровень`;
+    const schoolText = spell.school_ru || spell.school || 'Неизвестная школа';
+    const classesText = spell.classes ? spell.classes.join(', ') : 'Неизвестные классы';
+    
+    const noteContent = `
+        <div class="spell-note">
+            <div class="spell-note-header">
+                <h3>${spell.name}</h3>
+                <span class="spell-level-badge">${levelText}</span>
+            </div>
+            <div class="spell-note-details">
+                <p><strong>Школа:</strong> ${schoolText}</p>
+                <p><strong>Классы:</strong> ${classesText}</p>
+                <p><strong>Описание:</strong> ${spell.description || 'Описание недоступно'}</p>
+                ${spell.casting_time ? `<p><strong>Время накладывания:</strong> ${spell.casting_time}</p>` : ''}
+                ${spell.range ? `<p><strong>Дистанция:</strong> ${spell.range}</p>` : ''}
+                ${spell.duration ? `<p><strong>Длительность:</strong> ${spell.duration.text || spell.duration}</p>` : ''}
+                ${spell.components ? `<p><strong>Компоненты:</strong> ${formatSpellComponents(spell.components)}</p>` : ''}
+                ${spell.higher_level ? `<p><strong>На высоких уровнях:</strong> ${spell.higher_level}</p>` : ''}
+            </div>
+        </div>
+    `;
+    
+    // Добавляем в заметки
+    if (typeof addNote === 'function') {
+        addNote(noteContent);
+    } else {
+        // Fallback - добавляем через сессию
+        if (typeof $_SESSION !== 'undefined' && $_SESSION.notes) {
+            $_SESSION.notes.push(noteContent);
+        }
+    }
+}
 
 // Функция форматирования зелий из API
 function formatPotionsFromApi(potions) {
@@ -1899,7 +2106,6 @@ function openInitiativeModal() {
         document.getElementById('modal-save').style.display = '';
         document.getElementById('modal-save').onclick = function() { saveInitiativeNote(); closeModal(); };
         updateInitiativeDisplay();
-    }
 }
 
 function addInitiativeEntry(type) {
@@ -2897,6 +3103,157 @@ const equipmentStyles = `
             --character-generator-accent-shadow: rgba(255, 152, 0, 0.3);
             --character-generator-accent-shadow-hover: rgba(255, 152, 0, 0.4);
             --character-generator-option-bg: rgba(255, 152, 0, 0.1);
+        }
+        
+        /* Стили для генератора заклинаний */
+        .spell-generator {
+            background: var(--spell-generator-bg, rgba(255, 255, 255, 0.05));
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--spell-generator-border, rgba(255, 255, 255, 0.1));
+            box-shadow: var(--spell-generator-shadow, 0 4px 15px rgba(0, 0, 0, 0.1));
+        }
+        
+        .spell-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .spells-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .spell-card {
+            background: var(--spell-card-bg, rgba(255, 255, 255, 0.1));
+            border: 1px solid var(--spell-card-border, rgba(255, 255, 255, 0.2));
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .spell-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--spell-card-shadow, rgba(0, 0, 0, 0.2));
+        }
+        
+        .spell-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--spell-card-border, rgba(255, 255, 255, 0.2));
+        }
+        
+        .spell-name {
+            margin: 0;
+            color: var(--spell-name-color, #ffffff);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .spell-level {
+            background: var(--spell-level-bg, #ff6b35);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .spell-info {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .spell-school, .spell-classes {
+            background: var(--spell-info-bg, rgba(255, 255, 255, 0.1));
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--spell-info-color, #e0e0e0);
+        }
+        
+        .spell-description {
+            color: var(--spell-description-color, #e0e0e0);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .spell-description p {
+            margin: 8px 0;
+        }
+        
+        .spell-description strong {
+            color: var(--spell-strong-color, #ffffff);
+        }
+        
+        /* Темы для генератора заклинаний */
+        .theme-dark .spell-generator {
+            --spell-generator-bg: rgba(30, 30, 30, 0.8);
+            --spell-generator-border: rgba(255, 255, 255, 0.15);
+            --spell-generator-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --spell-card-bg: rgba(40, 40, 40, 0.8);
+            --spell-card-border: rgba(255, 255, 255, 0.2);
+            --spell-card-shadow: rgba(0, 0, 0, 0.4);
+            --spell-name-color: #e0e0e0;
+            --spell-level-bg: #ff6b35;
+            --spell-info-bg: rgba(255, 255, 255, 0.1);
+            --spell-info-color: #e0e0e0;
+            --spell-description-color: #e0e0e0;
+            --spell-strong-color: #ffffff;
+        }
+        
+        .theme-light .spell-generator {
+            --spell-generator-bg: rgba(255, 255, 255, 0.9);
+            --spell-generator-border: rgba(0, 0, 0, 0.1);
+            --spell-generator-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --spell-card-bg: rgba(248, 248, 248, 0.9);
+            --spell-card-border: rgba(0, 0, 0, 0.1);
+            --spell-card-shadow: rgba(0, 0, 0, 0.1);
+            --spell-name-color: #333333;
+            --spell-level-bg: #2196F3;
+            --spell-info-bg: rgba(0, 0, 0, 0.05);
+            --spell-info-color: #666666;
+            --spell-description-color: #333333;
+            --spell-strong-color: #000000;
+        }
+        
+        .theme-mystic .spell-generator {
+            --spell-generator-bg: rgba(75, 0, 130, 0.8);
+            --spell-generator-border: rgba(138, 43, 226, 0.3);
+            --spell-generator-shadow: 0 4px 15px rgba(75, 0, 130, 0.3);
+            --spell-card-bg: rgba(75, 0, 130, 0.9);
+            --spell-card-border: rgba(138, 43, 226, 0.4);
+            --spell-card-shadow: rgba(75, 0, 130, 0.4);
+            --spell-name-color: #e6d7ff;
+            --spell-level-bg: #9c27b0;
+            --spell-info-bg: rgba(138, 43, 226, 0.2);
+            --spell-info-color: #e6d7ff;
+            --spell-description-color: #e6d7ff;
+            --spell-strong-color: #ffffff;
+        }
+        
+        .theme-orange .spell-generator {
+            --spell-generator-bg: rgba(255, 152, 0, 0.1);
+            --spell-generator-border: rgba(255, 152, 0, 0.3);
+            --spell-generator-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+            --spell-card-bg: rgba(255, 152, 0, 0.1);
+            --spell-card-border: rgba(255, 152, 0, 0.3);
+            --spell-card-shadow: rgba(255, 152, 0, 0.2);
+            --spell-name-color: #fff3e0;
+            --spell-level-bg: #ff9800;
+            --spell-info-bg: rgba(255, 152, 0, 0.2);
+            --spell-info-color: #fff3e0;
+            --spell-description-color: #fff3e0;
+            --spell-strong-color: #ffffff;
         }
         
         .character-form-new {
