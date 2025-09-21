@@ -1659,12 +1659,6 @@ function openPotionModalSimple() {
             console.log('Potion API Response:', data);
             if (data.success && data.potions) {
                 let resultHtml = formatPotionsFromApi(data.potions);
-                
-                // Автоматически сохраняем все зелья в заметки
-                data.potions.forEach(potion => {
-                    savePotionAsNote(potion);
-                });
-                
                 resultDiv.innerHTML = resultHtml;
                 
                 // Автоматическая прокрутка к результату
@@ -1957,6 +1951,11 @@ function formatPotionsFromApi(potions) {
                         <span class="potion-type">${typeIcon} ${displayType}</span>
                         ${costText ? `<span class="potion-cost">💰 ${costText}</span>` : ''}
                     </div>
+                    <div class="potion-actions">
+                        <button class="btn btn-sm btn-primary" onclick="savePotionAsNote(${JSON.stringify(potion).replace(/"/g, '&quot;')})">
+                            💾 Сохранить в заметки
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
@@ -2006,7 +2005,7 @@ function savePotionAsNote(potion) {
     `;
     
     // Сохраняем в заметки через AJAX
-    fetch('', {
+    fetch(window.location.href, {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: 'fast_action=save_note&content=' + encodeURIComponent(potionNote)
@@ -3349,14 +3348,25 @@ const equipmentStyles = `
             color: var(--potion-info-color, #e0e0e0);
         }
         
-        .potion-cost {
-            background: var(--potion-cost-bg, rgba(255, 215, 0, 0.2));
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: var(--potion-cost-color, #ffd700);
-            font-weight: 600;
-        }
+.potion-cost {
+    background: var(--potion-cost-bg, rgba(255, 215, 0, 0.2));
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--potion-cost-color, #ffd700);
+    font-weight: 600;
+}
+
+.potion-actions {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color, #ddd);
+}
+
+.potion-actions .btn {
+    font-size: 12px;
+    padding: 6px 12px;
+}
         
         /* Темы для генератора зелий */
         .theme-dark .potion-generator {
