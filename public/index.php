@@ -2025,7 +2025,7 @@ function savePotionAsNote(id, name, rarity, type, effect, duration, costJson) {
     // Сохраняем в заметки через AJAX
     console.log('Sending potion note to server:', potionNote);
     
-    fetch('', {
+    fetch(window.location.pathname, {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: 'fast_action=save_note&content=' + encodeURIComponent(potionNote)
