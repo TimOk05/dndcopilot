@@ -4204,7 +4204,7 @@ class SoundManager {
         this.backgroundMusic = null;
         this.isMusicEnabled = true;
         this.isSoundEnabled = true;
-        this.currentTheme = 'light';
+        this.currentTheme = 'medium';
         this.init();
     }
     
@@ -4232,12 +4232,12 @@ class SoundManager {
                 this.currentTheme = dataTheme === 'medium' ? 'orange' : dataTheme;
             } else {
                 // Fallback - проверяем localStorage
-                const savedTheme = localStorage.getItem('theme') || 'light';
+                const savedTheme = localStorage.getItem('theme') || 'medium';
                 this.currentTheme = savedTheme === 'medium' ? 'orange' : savedTheme;
             }
         } else {
             // Fallback - проверяем localStorage
-            const savedTheme = localStorage.getItem('theme') || 'light';
+            const savedTheme = localStorage.getItem('theme') || 'medium';
             this.currentTheme = savedTheme === 'medium' ? 'orange' : savedTheme;
         }
         console.log('Detected theme:', this.currentTheme);
@@ -4249,13 +4249,14 @@ class SoundManager {
             
             // Звук клика
             this.sounds.click = new Audio('sound/click.mp3');
-            this.sounds.click.volume = 0.3;
+            this.sounds.click.volume = 0.6;
             console.log('Click sound loaded');
             
             // Фоновая музыка для разных тем
             this.sounds.bgDark = new Audio('sound/bg music dark.mp3');
             this.sounds.bgMystic = new Audio('sound/bg music mystic.mp3');
             this.sounds.bgOrange = new Audio('sound/bg music orange.mp3');
+            this.sounds.bgIce = new Audio('sound/bg music ice.mp3');
             console.log('Background music files loaded');
             
             // Настраиваем фоновую музыку
@@ -4276,6 +4277,9 @@ class SoundManager {
             });
             this.sounds.bgOrange.addEventListener('canplaythrough', () => {
                 console.log('Orange theme music ready to play');
+            });
+            this.sounds.bgIce.addEventListener('canplaythrough', () => {
+                console.log('Ice theme music ready to play');
             });
             
             console.log('All sounds loaded successfully');
@@ -4321,8 +4325,11 @@ class SoundManager {
             case 'orange':
                 musicFile = this.sounds.bgOrange;
                 break;
+            case 'ice':
+                musicFile = this.sounds.bgIce;
+                break;
             default:
-                return; // Светлая тема без музыки
+                return; // Тема без музыки
         }
         
         if (musicFile) {
