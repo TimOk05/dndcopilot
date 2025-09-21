@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест файлов</title>
+</head>
+
+<body>
+    <h1>Тест доступности файлов</h1>
+    <button onclick="testFiles()">Проверить файлы</button>
+    <div id="results"></div>
+
+    <script>
+        async function testFiles() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<h2>Проверка файлов...</h2>';
+
+            const files = [
+                '../sound/click.mp3',
+                '../sound/bg music dark.mp3',
+                '../sound/bg music mystic.mp3',
+                '../sound/bg music orange.mp3',
+                'icons/crystal-ball-magic-svgrepo-com.svg'
+            ];
+
+            for (const file of files) {
+                try {
+                    const response = await fetch(file, {
+                        method: 'HEAD'
+                    });
+                    if (response.ok) {
+                        results.innerHTML += `<p style="color: green;">✅ ${file} - OK (${response.status})</p>`;
+                    } else {
+                        results.innerHTML += `<p style="color: red;">❌ ${file} - Error ${response.status}</p>`;
+                    }
+                } catch (error) {
+                    results.innerHTML += `<p style="color: red;">❌ ${file} - ${error.message}</p>`;
+                }
+            }
+
+            // Тест воспроизведения звука
+            results.innerHTML += '<h2>Тест воспроизведения звука...</h2>';
+            try {
+                const audio = new Audio('../sound/click.mp3');
+                audio.volume = 0.1;
+                audio.play()
+                    .then(() => {
+                        results.innerHTML += '<p style="color: green;">✅ Звук клика воспроизведен</p>';
+                    })
+                    .catch(e => {
+                        results.innerHTML += `<p style="color: red;">❌ Ошибка воспроизведения: ${e.message}</p>`;
+                    });
+            } catch (error) {
+                results.innerHTML += `<p style="color: red;">❌ Ошибка создания Audio: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+
+</html>

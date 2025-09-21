@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Простой тест звуков</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            font-family: monospace;
+            height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Простой тест звуков</h1>
+
+    <button onclick="testClick()">Тест клика</button>
+    <button onclick="testDarkMusic()">Темная музыка</button>
+    <button onclick="testMysticMusic()">Мистическая музыка</button>
+    <button onclick="testOrangeMusic()">Оранжевая музыка</button>
+    <button onclick="stopAll()">Остановить все</button>
+
+    <div class="log" id="log"></div>
+
+    <script>
+        const log = document.getElementById('log');
+        let sounds = {};
+
+        function logMessage(msg) {
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML += `[${time}] ${msg}<br>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Инициализация звуков
+        function initSounds() {
+            logMessage('Инициализация звуков...');
+
+            try {
+                sounds.click = new Audio('../sound/click.mp3');
+                sounds.click.volume = 0.3;
+                sounds.click.addEventListener('canplaythrough', () => logMessage('✅ Click ready'));
+                sounds.click.addEventListener('error', (e) => logMessage(`❌ Click error: ${e.message}`));
+
+                sounds.dark = new Audio('../sound/bg music dark.mp3');
+                sounds.dark.loop = true;
+                sounds.dark.volume = 0.2;
+                sounds.dark.addEventListener('canplaythrough', () => logMessage('✅ Dark music ready'));
+                sounds.dark.addEventListener('error', (e) => logMessage(`❌ Dark music error: ${e.message}`));
+
+                sounds.mystic = new Audio('../sound/bg music mystic.mp3');
+                sounds.mystic.loop = true;
+                sounds.mystic.volume = 0.2;
+                sounds.mystic.addEventListener('canplaythrough', () => logMessage('✅ Mystic music ready'));
+                sounds.mystic.addEventListener('error', (e) => logMessage(`❌ Mystic music error: ${e.message}`));
+
+                sounds.orange = new Audio('../sound/bg music orange.mp3');
+                sounds.orange.loop = true;
+                sounds.orange.volume = 0.2;
+                sounds.orange.addEventListener('canplaythrough', () => logMessage('✅ Orange music ready'));
+                sounds.orange.addEventListener('error', (e) => logMessage(`❌ Orange music error: ${e.message}`));
+
+                logMessage('Звуки инициализированы');
+            } catch (error) {
+                logMessage(`❌ Ошибка инициализации: ${error.message}`);
+            }
+        }
+
+        function testClick() {
+            if (sounds.click) {
+                logMessage('Тестируем клик...');
+                sounds.click.currentTime = 0;
+                sounds.click.play()
+                    .then(() => logMessage('✅ Клик воспроизведен'))
+                    .catch(e => logMessage(`❌ Ошибка клика: ${e.message}`));
+            } else {
+                logMessage('❌ Звук клика не загружен');
+            }
+        }
+
+        function testDarkMusic() {
+            stopAll();
+            if (sounds.dark) {
+                logMessage('Запускаем темную музыку...');
+                sounds.dark.play()
+                    .then(() => logMessage('✅ Темная музыка запущена'))
+                    .catch(e => logMessage(`❌ Ошибка темной музыки: ${e.message}`));
+            } else {
+                logMessage('❌ Темная музыка не загружена');
+            }
+        }
+
+        function testMysticMusic() {
+            stopAll();
+            if (sounds.mystic) {
+                logMessage('Запускаем мистическую музыку...');
+                sounds.mystic.play()
+                    .then(() => logMessage('✅ Мистическая музыка запущена'))
+                    .catch(e => logMessage(`❌ Ошибка мистической музыки: ${e.message}`));
+            } else {
+                logMessage('❌ Мистическая музыка не загружена');
+            }
+        }
+
+        function testOrangeMusic() {
+            stopAll();
+            if (sounds.orange) {
+                logMessage('Запускаем оранжевую музыку...');
+                sounds.orange.play()
+                    .then(() => logMessage('✅ Оранжевая музыка запущена'))
+                    .catch(e => logMessage(`❌ Ошибка оранжевой музыки: ${e.message}`));
+            } else {
+                logMessage('❌ Оранжевая музыка не загружена');
+            }
+        }
+
+        function stopAll() {
+            Object.values(sounds).forEach(sound => {
+                if (sound) {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }
+            });
+            logMessage('Все звуки остановлены');
+        }
+
+        // Автоматическая инициализация
+        window.addEventListener('load', initSounds);
+    </script>
+</body>
+
+</html>

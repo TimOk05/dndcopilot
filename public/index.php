@@ -4220,11 +4220,8 @@ class SoundManager {
         // Загружаем звуки
         this.loadSounds();
         
-        // Запускаем фоновую музыку с задержкой
-        setTimeout(() => {
-            console.log('Starting background music after delay...');
-            this.startBackgroundMusic();
-        }, 3000);
+        // Не запускаем музыку автоматически - только по взаимодействию пользователя
+        console.log('SoundManager initialized, waiting for user interaction');
     }
     
     detectTheme() {
@@ -4245,14 +4242,14 @@ class SoundManager {
             console.log('Loading sounds...');
             
             // Звук клика
-            this.sounds.click = new Audio('sound/click.mp3');
+            this.sounds.click = new Audio('../sound/click.mp3');
             this.sounds.click.volume = 0.3;
             console.log('Click sound loaded');
             
             // Фоновая музыка для разных тем
-            this.sounds.bgDark = new Audio('sound/bg music dark.mp3');
-            this.sounds.bgMystic = new Audio('sound/bg music mystic.mp3');
-            this.sounds.bgOrange = new Audio('sound/bg music orange.mp3');
+            this.sounds.bgDark = new Audio('../sound/bg music dark.mp3');
+            this.sounds.bgMystic = new Audio('../sound/bg music mystic.mp3');
+            this.sounds.bgOrange = new Audio('../sound/bg music orange.mp3');
             console.log('Background music files loaded');
             
             // Настраиваем фоновую музыку

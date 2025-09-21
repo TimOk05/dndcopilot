@@ -2,7 +2,7 @@
 class IconManager {
     constructor() {
         this.iconCache = new Map();
-        this.iconPath = '/icons/';
+        this.iconPath = 'icons/';
         this.loadEmbeddedIcons();
     }
 
