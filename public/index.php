@@ -4252,11 +4252,12 @@ class SoundManager {
             this.sounds.click.volume = 0.6;
             console.log('Click sound loaded');
             
-            // Фоновая музыка для разных тем
-            this.sounds.bgDark = new Audio('sound/bg music dark.mp3');
-            this.sounds.bgMystic = new Audio('sound/bg music mystic.mp3');
-            this.sounds.bgOrange = new Audio('sound/bg music orange.mp3');
-            this.sounds.bgIce = new Audio('sound/bg music ice.mp3');
+            // Фоновая музыка для разных тем (с версионированием для обхода кэша)
+            const timestamp = Date.now();
+            this.sounds.bgDark = new Audio(`sound/bg music dark.mp3?v=${timestamp}`);
+            this.sounds.bgMystic = new Audio(`sound/bg music mystic.mp3?v=${timestamp}`);
+            this.sounds.bgOrange = new Audio(`sound/bg music orange.mp3?v=${timestamp}`);
+            this.sounds.bgIce = new Audio(`sound/bg music ice.mp3?v=${timestamp}`);
             console.log('Background music files loaded');
             
             // Настраиваем фоновую музыку
@@ -4359,10 +4360,40 @@ class SoundManager {
     changeTheme(newTheme) {
         this.currentTheme = newTheme;
         this.stopBackgroundMusic();
+        
+        // Принудительно перезагружаем аудиофайлы для обхода кэша
+        this.reloadAudioFiles();
+        
         // Небольшая задержка перед запуском новой музыки
         setTimeout(() => {
             this.startBackgroundMusic();
         }, 500);
+    }
+    
+    reloadAudioFiles() {
+        try {
+            const timestamp = Date.now();
+            console.log('Reloading audio files to bypass cache...');
+            
+            // Перезагружаем только фоновую музыку
+            this.sounds.bgDark = new Audio(`sound/bg music dark.mp3?v=${timestamp}`);
+            this.sounds.bgMystic = new Audio(`sound/bg music mystic.mp3?v=${timestamp}`);
+            this.sounds.bgOrange = new Audio(`sound/bg music orange.mp3?v=${timestamp}`);
+            this.sounds.bgIce = new Audio(`sound/bg music ice.mp3?v=${timestamp}`);
+            
+            // Настраиваем фоновую музыку
+            Object.values(this.sounds).forEach(sound => {
+                if (sound !== this.sounds.click) {
+                    sound.loop = true;
+                    sound.volume = 0.2;
+                    sound.preload = 'auto';
+                }
+            });
+            
+            console.log('Audio files reloaded successfully');
+        } catch (error) {
+            console.log('Error reloading audio files:', error);
+        }
     }
     
     toggleMusic() {
