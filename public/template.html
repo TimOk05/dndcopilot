@@ -5332,6 +5332,12 @@
                     <button id="theme-toggle" class="theme-btn" title="Переключить тему">
                         <span class="theme-icon">🌙</span>
                     </button>
+                    <button id="sound-toggle" class="theme-btn" title="Звуки" style="margin-left: 8px;">
+                        <span class="theme-icon">🔊</span>
+                    </button>
+                    <button id="music-toggle" class="theme-btn" title="Музыка" style="margin-left: 8px;">
+                        <span class="theme-icon">🎵</span>
+                    </button>
                     <div class="theme-menu" id="theme-menu">
                         <div class="theme-option" data-theme="light">
                             <span class="theme-icon">☀️</span>
@@ -5556,7 +5562,47 @@
             // Инициализируем активную опцию
             updateActiveOption(savedTheme);
 
-            // Кнопки управления звуком временно отключены
+            // Кнопки управления звуком
+            const soundToggle = document.getElementById('sound-toggle');
+            const musicToggle = document.getElementById('music-toggle');
+
+            if (soundToggle) {
+                soundToggle.addEventListener('click', function() {
+                    if (window.soundManager) {
+                        window.soundManager.toggleSound();
+                        updateSoundIcon();
+                    }
+                });
+            }
+
+            if (musicToggle) {
+                musicToggle.addEventListener('click', function() {
+                    if (window.soundManager) {
+                        window.soundManager.toggleMusic();
+                        updateMusicIcon();
+                    }
+                });
+            }
+
+            function updateSoundIcon() {
+                if (window.soundManager && soundToggle) {
+                    const icon = soundToggle.querySelector('.theme-icon');
+                    icon.textContent = window.soundManager.isSoundEnabled ? '🔊' : '🔇';
+                }
+            }
+
+            function updateMusicIcon() {
+                if (window.soundManager && musicToggle) {
+                    const icon = musicToggle.querySelector('.theme-icon');
+                    icon.textContent = window.soundManager.isMusicEnabled ? '🎵' : '🎶';
+                }
+            }
+
+            // Обновляем иконки при загрузке
+            setTimeout(() => {
+                updateSoundIcon();
+                updateMusicIcon();
+            }, 100);
 
             // Приветственное сообщение отключено
             // const urlParams = new URLSearchParams(window.location.search);

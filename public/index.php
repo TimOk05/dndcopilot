@@ -4197,35 +4197,157 @@ function expandNote(idx) {
 // Передаём все заметки в JS
 window.allNotes = <?php echo json_encode($_SESSION['notes'], JSON_UNESCAPED_UNICODE); ?>;
 
-// === ЗВУКОВАЯ СИСТЕМА (ВРЕМЕННО ОТКЛЮЧЕНА) ===
+// === ЗВУКОВАЯ СИСТЕМА ===
 class SoundManager {
     constructor() {
         this.sounds = {};
         this.backgroundMusic = null;
-        this.isMusicEnabled = false;
-        this.isSoundEnabled = false;
+        this.isMusicEnabled = true;
+        this.isSoundEnabled = true;
         this.currentTheme = 'light';
+        this.init();
+    }
+    
+    init() {
+        // Загружаем звуки
+        this.loadSounds();
+        
+        // Загружаем настройки из localStorage
+        this.loadSettings();
+        
+        // Устанавливаем текущую тему
+        this.currentTheme = document.body.className.includes('theme-dark') ? 'dark' : 
+                          document.body.className.includes('theme-mystic') ? 'mystic' :
+                          document.body.className.includes('theme-orange') ? 'orange' : 'light';
+        
+        // Запускаем фоновую музыку
+        this.startBackgroundMusic();
+    }
+    
+    loadSounds() {
+        try {
+            // Звук клика
+            this.sounds.click = new Audio('../sound/click.mp3');
+            this.sounds.click.volume = 0.3;
+            
+            // Фоновая музыка для разных тем
+            this.sounds.bgDark = new Audio('../sound/bg music dark.mp3');
+            this.sounds.bgMystic = new Audio('../sound/bg music mystic.mp3');
+            this.sounds.bgOrange = new Audio('../sound/bg music orange.mp3');
+            
+            // Настраиваем фоновую музыку
+            Object.values(this.sounds).forEach(sound => {
+                if (sound !== this.sounds.click) {
+                    sound.loop = true;
+                    sound.volume = 0.2;
+                }
+            });
+        } catch (error) {
+            console.log('Error loading sounds:', error);
+            this.isSoundEnabled = false;
+            this.isMusicEnabled = false;
+        }
+    }
+    
+    loadSettings() {
+        this.isMusicEnabled = localStorage.getItem('musicEnabled') !== 'false';
+        this.isSoundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+    }
+    
+    saveSettings() {
+        localStorage.setItem('musicEnabled', this.isMusicEnabled);
+        localStorage.setItem('soundEnabled', this.isSoundEnabled);
     }
     
     playClick() {
-        // Временно отключено
+        if (this.isSoundEnabled && this.sounds.click) {
+            try {
+                this.sounds.click.currentTime = 0;
+                this.sounds.click.play().catch(e => console.log('Click sound failed:', e));
+            } catch (error) {
+                console.log('Error playing click sound:', error);
+            }
+        }
+    }
+    
+    startBackgroundMusic() {
+        if (!this.isMusicEnabled) return;
+        
+        let musicFile = null;
+        switch (this.currentTheme) {
+            case 'dark':
+                musicFile = this.sounds.bgDark;
+                break;
+            case 'mystic':
+                musicFile = this.sounds.bgMystic;
+                break;
+            case 'orange':
+                musicFile = this.sounds.bgOrange;
+                break;
+            default:
+                return; // Светлая тема без музыки
+        }
+        
+        if (musicFile) {
+            this.backgroundMusic = musicFile;
+            this.backgroundMusic.play().catch(e => console.log('Background music failed:', e));
+        }
+    }
+    
+    stopBackgroundMusic() {
+        if (this.backgroundMusic) {
+            this.backgroundMusic.pause();
+            this.backgroundMusic.currentTime = 0;
+        }
     }
     
     changeTheme(newTheme) {
-        // Временно отключено
+        this.currentTheme = newTheme;
+        this.stopBackgroundMusic();
+        this.startBackgroundMusic();
     }
     
     toggleMusic() {
-        // Временно отключено
+        this.isMusicEnabled = !this.isMusicEnabled;
+        this.saveSettings();
+        
+        if (this.isMusicEnabled) {
+            this.startBackgroundMusic();
+        } else {
+            this.stopBackgroundMusic();
+        }
     }
     
     toggleSound() {
-        // Временно отключено
+        this.isSoundEnabled = !this.isSoundEnabled;
+        this.saveSettings();
     }
 }
 
 // Создаем глобальный экземпляр звукового менеджера
 window.soundManager = new SoundManager();
+
+// Функция для добавления звука клика к кнопкам
+function addClickSound() {
+    // Добавляем звук ко всем кнопкам
+    document.addEventListener('click', function(e) {
+        if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+            window.soundManager.playClick();
+        }
+    });
+    
+    // Добавляем звук к ссылкам, которые ведут себя как кнопки
+    document.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' && e.target.classList.contains('btn')) {
+            window.soundManager.playClick();
+        }
+    });
+}
+
+// Инициализируем звуки после загрузки DOM
+document.addEventListener('DOMContentLoaded', function() {
+    addClickSound();
+});
 
 // Функция для обновления отображения заметок без перезагрузки страницы
 function updateNotesDisplay() {
