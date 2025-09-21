@@ -1,3 +1,3 @@
 git add .
-git commit -m "fix API"
+git commit -m "spell generator"
 git push
