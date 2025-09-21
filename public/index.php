@@ -4231,10 +4231,9 @@ class SoundManager {
             if (dataTheme) {
                 this.currentTheme = dataTheme === 'medium' ? 'orange' : dataTheme;
             } else {
-                // Fallback - проверяем className
-                this.currentTheme = document.body.className.includes('theme-dark') ? 'dark' : 
-                                  document.body.className.includes('theme-mystic') ? 'mystic' :
-                                  document.body.className.includes('theme-orange') ? 'orange' : 'light';
+                // Fallback - проверяем localStorage
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                this.currentTheme = savedTheme === 'medium' ? 'orange' : savedTheme;
             }
         } else {
             // Fallback - проверяем localStorage
@@ -4413,9 +4412,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обновляем тему после инициализации
     window.soundManager.detectTheme();
     
-    // Принудительно запускаем музыку для оранжевой темы при инициализации
+    // Дополнительная проверка для оранжевой темы при загрузке
     if (window.soundManager.currentTheme === 'orange') {
-        console.log('Orange theme detected on init, starting music...');
         setTimeout(() => {
             window.soundManager.startBackgroundMusic();
         }, 500);

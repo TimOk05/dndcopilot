@@ -5696,12 +5696,6 @@
                         <span class="sound-text">Запустить музыку</span>
                     </button>
                 </div>
-                <div class="sound-control">
-                    <button id="debug-theme" class="force-play-btn">
-                        <span class="sound-icon">🐛</span>
-                        <span class="sound-text">Отладка темы</span>
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -5921,15 +5915,15 @@
                     if (window.soundManager) {
                         // Преобразуем 'medium' в 'orange' для SoundManager
                         const soundTheme = selectedTheme === 'medium' ? 'orange' : selectedTheme;
-                        console.log('Changing theme to:', soundTheme);
                         window.soundManager.currentTheme = soundTheme;
                         window.soundManager.changeTheme(soundTheme);
 
-                        // Принудительно запускаем музыку для оранжевой темы
+                        // Дополнительная проверка для оранжевой темы
                         if (soundTheme === 'orange') {
-                            console.log('Forcing orange theme music on theme change...');
                             setTimeout(() => {
-                                window.soundManager.startBackgroundMusic();
+                                if (window.soundManager.currentTheme === 'orange') {
+                                    window.soundManager.startBackgroundMusic();
+                                }
                             }, 100);
                         }
                     }
@@ -5969,7 +5963,6 @@
             const musicVolume = document.getElementById('music-volume');
             const volumeValue = document.querySelector('.volume-value');
             const forcePlayMusic = document.getElementById('force-play-music');
-            const debugTheme = document.getElementById('debug-theme');
 
             // Открытие/закрытие бокового меню
             if (sideMenuToggle) {
@@ -6051,34 +6044,6 @@
                         window.soundManager.playClick();
                         console.log('Force starting music...');
                     }
-                });
-            }
-
-            // Отладка темы
-            if (debugTheme) {
-                debugTheme.addEventListener('click', function() {
-                    console.log('=== THEME DEBUG ===');
-                    console.log('Data theme:', document.documentElement.getAttribute('data-theme'));
-                    console.log('Body class:', document.body.className);
-                    console.log('LocalStorage theme:', localStorage.getItem('theme'));
-
-                    if (window.soundManager) {
-                        console.log('SoundManager theme:', window.soundManager.currentTheme);
-                        console.log('Music enabled:', window.soundManager.isMusicEnabled);
-                        console.log('Background music:', window.soundManager.backgroundMusic);
-                        console.log('Orange music file:', window.soundManager.sounds ? .bgOrange);
-
-                        // Принудительно обновляем тему
-                        window.soundManager.detectTheme();
-                        console.log('Theme after detection:', window.soundManager.currentTheme);
-
-                        // Принудительно запускаем музыку для оранжевой темы
-                        if (window.soundManager.currentTheme === 'orange') {
-                            console.log('Forcing orange theme music...');
-                            window.soundManager.startBackgroundMusic();
-                        }
-                    }
-                    console.log('==================');
                 });
             }
 
