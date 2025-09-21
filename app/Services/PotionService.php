@@ -137,20 +137,8 @@ class PotionService {
      * Получает список доступных типов
      */
     public function getAvailableTypes() {
-        $data = $this->loadPotionsData();
-        $potions = $data['items'] ?? [];
-        $types = [];
-        
-        foreach ($potions as $potion) {
-            // Объединяем зелья и масла в один тип
-            if ($potion['type'] === 'oil') {
-                $types[] = 'potion';
-            } else {
-                $types[] = $potion['type'];
-            }
-        }
-        
-        return array_unique($types);
+        // Теперь у нас только один тип - зелья (включая масла)
+        return ['potion'];
     }
     
     /**
@@ -202,13 +190,8 @@ class PotionService {
      * Получает локализованные названия типов
      */
     public function getTypeLocalized($type) {
-        $typeMap = [
-            'potion' => 'Зелье',
-            'oil' => 'Зелье', // Масла теперь отображаются как зелья
-            'ointment' => 'Мазь'
-        ];
-        
-        return $typeMap[$type] ?? $type;
+        // Теперь все типы отображаются как зелья
+        return 'Зелье';
     }
 }
 ?>

@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Валидация входных данных
         $rarity = $input['rarity'] ?? null;
-        $type = $input['type'] ?? null;
         $count = isset($input['count']) ? (int)$input['count'] : 1;
         
         // Валидация
@@ -46,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Создаем экземпляр сервиса
         $potionService = new PotionService();
         
-        // Генерируем зелья
-        $potions = $potionService->generatePotions($rarity, $type, $count);
+        // Генерируем зелья (все зелья и масла)
+        $potions = $potionService->generatePotions($rarity, 'potion', $count);
         
         // Добавляем локализованные названия
         foreach ($potions as &$potion) {
@@ -58,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Логируем успешную генерацию
         logMessage('INFO', 'Potions generated successfully', [
             'rarity' => $rarity,
-            'type' => $type,
             'count' => $count,
             'generated_count' => count($potions)
         ]);
@@ -69,7 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'potions' => $potions,
             'meta' => [
                 'rarity' => $rarity,
-                'type' => $type,
                 'requested_count' => $count,
                 'generated_count' => count($potions)
             ]

@@ -1604,20 +1604,10 @@ function openPotionModalSimple() {
                         <label for="potion-rarity">Редкость</label>
                         <select id="potion-rarity" name="rarity">
                             <option value="">Любая редкость</option>
-                            <option value="common">Обычное</option>
                             <option value="uncommon">Необычное</option>
                             <option value="rare">Редкое</option>
                             <option value="very_rare">Очень редкое</option>
                             <option value="legendary">Легендарное</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="potion-type">Тип зелья</label>
-                        <select id="potion-type" name="type">
-                            <option value="">Любой тип</option>
-                            <option value="potion">🧪 Зелье</option>
-                            <option value="ointment">🧴 Мазь</option>
                         </select>
                     </div>
                 </div>
@@ -1649,7 +1639,6 @@ function openPotionModalSimple() {
         // Подготавливаем данные для API
         const requestData = {
             rarity: formData.get('rarity') || null,
-            type: formData.get('type') || null,
             count: parseInt(formData.get('count'))
         };
         
@@ -1946,6 +1935,15 @@ function formatPotionsFromApi(potions) {
             case 'ointment': typeIcon = '🧴'; break;
         }
         
+        // Форматируем стоимость
+        let costText = '';
+        if (potion.cost) {
+            const costValue = potion.cost.value;
+            const costCurrency = potion.cost.currency || 'gp';
+            const costApprox = potion.cost.approx ? '~' : '';
+            costText = `${costApprox}${costValue} ${costCurrency}`;
+        }
+
         html += `
             <div class="potion-card" style="border-left: 4px solid ${rarityColor}">
                 <div class="potion-header">
@@ -1958,6 +1956,7 @@ function formatPotionsFromApi(potions) {
                     ${displayDuration !== 'Мгновенный' ? `<p class="potion-duration"><strong>Длительность:</strong> ${displayDuration}</p>` : ''}
                     <div class="potion-details">
                         <span class="potion-type">${typeIcon} ${displayType}</span>
+                        ${costText ? `<span class="potion-cost">💰 ${costText}</span>` : ''}
                     </div>
                 </div>
             </div>
@@ -1976,6 +1975,15 @@ function savePotionAsNote(potion) {
     const displayEffect = potion.effect || 'Эффект не описан';
     const displayDuration = potion.duration || 'Мгновенный';
     
+    // Форматируем стоимость
+    let costText = '';
+    if (potion.cost) {
+        const costValue = potion.cost.value;
+        const costCurrency = potion.cost.currency || 'gp';
+        const costApprox = potion.cost.approx ? '~' : '';
+        costText = `${costApprox}${costValue} ${costCurrency}`;
+    }
+    
     // Определяем иконку по типу
     let typeIcon = '🧪';
     switch (potion.type) {
@@ -1990,6 +1998,7 @@ function savePotionAsNote(potion) {
             <div style="display: flex; gap: var(--space-2); margin-top: var(--space-2); flex-wrap: wrap;">
                 <span style="background: var(--accent-primary); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">${displayRarity}</span>
                 <span style="background: var(--bg-quaternary); color: var(--text-primary); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">${displayType}</span>
+                ${costText ? `<span style="background: var(--bg-quaternary); color: var(--text-primary); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">💰 ${costText}</span>` : ''}
             </div>
         </div>
         <div style="margin-bottom: var(--space-3);">
@@ -3247,6 +3256,177 @@ const equipmentStyles = `
             --spell-info-color: #fff3e0;
             --spell-description-color: #fff3e0;
             --spell-strong-color: #ffffff;
+        }
+        
+        /* Стили для генератора зелий */
+        .potion-generator {
+            background: var(--potion-generator-bg, rgba(255, 255, 255, 0.05));
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--potion-generator-border, rgba(255, 255, 255, 0.1));
+            box-shadow: var(--potion-generator-shadow, 0 4px 15px rgba(0, 0, 0, 0.1));
+        }
+        
+        .potion-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .potions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .potion-card {
+            background: var(--potion-card-bg, rgba(255, 255, 255, 0.1));
+            border: 1px solid var(--potion-card-border, rgba(255, 255, 255, 0.2));
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .potion-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--potion-card-shadow, rgba(0, 0, 0, 0.2));
+        }
+        
+        .potion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--potion-card-border, rgba(255, 255, 255, 0.2));
+        }
+        
+        .potion-name {
+            margin: 0;
+            color: var(--potion-name-color, #ffffff);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .potion-rarity {
+            background: var(--potion-rarity-bg, #ff6b35);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .potion-body {
+            color: var(--potion-body-color, #e0e0e0);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .potion-effect {
+            font-size: 16px !important;
+            font-weight: 500;
+            margin: 12px 0 !important;
+            color: var(--potion-effect-color, #ffffff) !important;
+        }
+        
+        .potion-duration {
+            margin: 8px 0;
+        }
+        
+        .potion-details {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .potion-type {
+            background: var(--potion-info-bg, rgba(255, 255, 255, 0.1));
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--potion-info-color, #e0e0e0);
+        }
+        
+        .potion-cost {
+            background: var(--potion-cost-bg, rgba(255, 215, 0, 0.2));
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--potion-cost-color, #ffd700);
+            font-weight: 600;
+        }
+        
+        /* Темы для генератора зелий */
+        .theme-dark .potion-generator {
+            --potion-generator-bg: rgba(30, 30, 30, 0.8);
+            --potion-generator-border: rgba(255, 255, 255, 0.15);
+            --potion-generator-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --potion-card-bg: rgba(40, 40, 40, 0.8);
+            --potion-card-border: rgba(255, 255, 255, 0.2);
+            --potion-card-shadow: rgba(0, 0, 0, 0.4);
+            --potion-name-color: #e0e0e0;
+            --potion-rarity-bg: #ff6b35;
+            --potion-info-bg: rgba(255, 255, 255, 0.1);
+            --potion-info-color: #e0e0e0;
+            --potion-body-color: #e0e0e0;
+            --potion-effect-color: #ffffff;
+            --potion-cost-bg: rgba(255, 215, 0, 0.2);
+            --potion-cost-color: #ffd700;
+        }
+        
+        .theme-light .potion-generator {
+            --potion-generator-bg: rgba(255, 255, 255, 0.9);
+            --potion-generator-border: rgba(0, 0, 0, 0.1);
+            --potion-generator-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --potion-card-bg: rgba(248, 248, 248, 0.9);
+            --potion-card-border: rgba(0, 0, 0, 0.1);
+            --potion-card-shadow: rgba(0, 0, 0, 0.1);
+            --potion-name-color: #333333;
+            --potion-rarity-bg: #2196F3;
+            --potion-info-bg: rgba(0, 0, 0, 0.05);
+            --potion-info-color: #666666;
+            --potion-body-color: #333333;
+            --potion-effect-color: #000000;
+            --potion-cost-bg: rgba(255, 215, 0, 0.3);
+            --potion-cost-color: #b8860b;
+        }
+        
+        .theme-mystic .potion-generator {
+            --potion-generator-bg: rgba(75, 0, 130, 0.8);
+            --potion-generator-border: rgba(138, 43, 226, 0.3);
+            --potion-generator-shadow: 0 4px 15px rgba(75, 0, 130, 0.3);
+            --potion-card-bg: rgba(75, 0, 130, 0.9);
+            --potion-card-border: rgba(138, 43, 226, 0.4);
+            --potion-card-shadow: rgba(75, 0, 130, 0.4);
+            --potion-name-color: #e6d7ff;
+            --potion-rarity-bg: #9c27b0;
+            --potion-info-bg: rgba(138, 43, 226, 0.2);
+            --potion-info-color: #e6d7ff;
+            --potion-body-color: #e6d7ff;
+            --potion-effect-color: #ffffff;
+            --potion-cost-bg: rgba(255, 215, 0, 0.3);
+            --potion-cost-color: #ffd700;
+        }
+        
+        .theme-orange .potion-generator {
+            --potion-generator-bg: rgba(255, 152, 0, 0.1);
+            --potion-generator-border: rgba(255, 152, 0, 0.3);
+            --potion-generator-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
+            --potion-card-bg: rgba(255, 152, 0, 0.1);
+            --potion-card-border: rgba(255, 152, 0, 0.3);
+            --potion-card-shadow: rgba(255, 152, 0, 0.2);
+            --potion-name-color: #fff3e0;
+            --potion-rarity-bg: #ff9800;
+            --potion-info-bg: rgba(255, 152, 0, 0.2);
+            --potion-info-color: #fff3e0;
+            --potion-body-color: #fff3e0;
+            --potion-effect-color: #ffffff;
+            --potion-cost-bg: rgba(255, 215, 0, 0.3);
+            --potion-cost-color: #ffd700;
         }
         
         .character-form-new {
