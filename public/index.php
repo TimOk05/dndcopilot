@@ -4216,14 +4216,25 @@ class SoundManager {
         this.loadSettings();
         
         // Устанавливаем текущую тему
-        this.currentTheme = document.body.className.includes('theme-dark') ? 'dark' : 
-                          document.body.className.includes('theme-mystic') ? 'mystic' :
-                          document.body.className.includes('theme-orange') ? 'orange' : 'light';
+        this.detectTheme();
         
         // Запускаем фоновую музыку с задержкой
         setTimeout(() => {
             this.startBackgroundMusic();
-        }, 1000);
+        }, 2000);
+    }
+    
+    detectTheme() {
+        if (document.body) {
+            this.currentTheme = document.body.className.includes('theme-dark') ? 'dark' : 
+                              document.body.className.includes('theme-mystic') ? 'mystic' :
+                              document.body.className.includes('theme-orange') ? 'orange' : 'light';
+        } else {
+            // Fallback - проверяем localStorage
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            this.currentTheme = savedTheme;
+        }
+        console.log('Detected theme:', this.currentTheme);
     }
     
     loadSounds() {
@@ -4358,32 +4369,48 @@ class SoundManager {
     }
 }
 
-// Создаем глобальный экземпляр звукового менеджера
-window.soundManager = new SoundManager();
-
 // Функция для добавления звука клика к кнопкам
 function addClickSound() {
     // Добавляем звук ко всем кнопкам
     document.addEventListener('click', function(e) {
         if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
-            window.soundManager.playClick();
+            console.log('Button clicked, playing sound...');
+            if (window.soundManager) {
+                window.soundManager.playClick();
+            } else {
+                console.log('SoundManager not available');
+            }
         }
     });
     
     // Добавляем звук к ссылкам, которые ведут себя как кнопки
     document.addEventListener('click', function(e) {
         if (e.target.tagName === 'A' && e.target.classList.contains('btn')) {
-            window.soundManager.playClick();
+            console.log('Link button clicked, playing sound...');
+            if (window.soundManager) {
+                window.soundManager.playClick();
+            } else {
+                console.log('SoundManager not available');
+            }
         }
     });
 }
 
 // Инициализируем звуки после загрузки DOM
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing SoundManager...');
+    
+    // Создаем глобальный экземпляр звукового менеджера
+    window.soundManager = new SoundManager();
+    
+    // Обновляем тему после инициализации
+    window.soundManager.detectTheme();
+    
     addClickSound();
     
     // Принудительно запускаем музыку при первом взаимодействии пользователя
     function enableMusicOnInteraction() {
+        console.log('User interaction detected, enabling music...');
         if (window.soundManager && window.soundManager.isMusicEnabled) {
             window.soundManager.startBackgroundMusic();
         }
