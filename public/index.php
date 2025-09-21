@@ -4228,22 +4228,40 @@ class SoundManager {
     
     loadSounds() {
         try {
+            console.log('Loading sounds...');
+            
             // Звук клика
             this.sounds.click = new Audio('sound/click.mp3');
             this.sounds.click.volume = 0.3;
+            console.log('Click sound loaded');
             
             // Фоновая музыка для разных тем
             this.sounds.bgDark = new Audio('sound/bg music dark.mp3');
             this.sounds.bgMystic = new Audio('sound/bg music mystic.mp3');
             this.sounds.bgOrange = new Audio('sound/bg music orange.mp3');
+            console.log('Background music files loaded');
             
             // Настраиваем фоновую музыку
             Object.values(this.sounds).forEach(sound => {
                 if (sound !== this.sounds.click) {
                     sound.loop = true;
                     sound.volume = 0.2;
+                    sound.preload = 'auto';
                 }
             });
+            
+            // Добавляем обработчики событий для отладки
+            this.sounds.bgDark.addEventListener('canplaythrough', () => {
+                console.log('Dark theme music ready to play');
+            });
+            this.sounds.bgMystic.addEventListener('canplaythrough', () => {
+                console.log('Mystic theme music ready to play');
+            });
+            this.sounds.bgOrange.addEventListener('canplaythrough', () => {
+                console.log('Orange theme music ready to play');
+            });
+            
+            console.log('All sounds loaded successfully');
         } catch (error) {
             console.log('Error loading sounds:', error);
             this.isSoundEnabled = false;
@@ -4292,7 +4310,18 @@ class SoundManager {
         
         if (musicFile) {
             this.backgroundMusic = musicFile;
-            this.backgroundMusic.play().catch(e => console.log('Background music failed:', e));
+            console.log('Starting background music for theme:', this.currentTheme);
+            this.backgroundMusic.play().then(() => {
+                console.log('Background music started successfully');
+            }).catch(e => {
+                console.log('Background music failed:', e);
+                // Попробуем еще раз через 2 секунды
+                setTimeout(() => {
+                    this.backgroundMusic.play().catch(e2 => console.log('Retry failed:', e2));
+                }, 2000);
+            });
+        } else {
+            console.log('No music file found for theme:', this.currentTheme);
         }
     }
     
@@ -4306,7 +4335,10 @@ class SoundManager {
     changeTheme(newTheme) {
         this.currentTheme = newTheme;
         this.stopBackgroundMusic();
-        this.startBackgroundMusic();
+        // Небольшая задержка перед запуском новой музыки
+        setTimeout(() => {
+            this.startBackgroundMusic();
+        }, 500);
     }
     
     toggleMusic() {
@@ -4349,6 +4381,22 @@ function addClickSound() {
 // Инициализируем звуки после загрузки DOM
 document.addEventListener('DOMContentLoaded', function() {
     addClickSound();
+    
+    // Принудительно запускаем музыку при первом взаимодействии пользователя
+    function enableMusicOnInteraction() {
+        if (window.soundManager && window.soundManager.isMusicEnabled) {
+            window.soundManager.startBackgroundMusic();
+        }
+        // Удаляем обработчики после первого взаимодействия
+        document.removeEventListener('click', enableMusicOnInteraction);
+        document.removeEventListener('keydown', enableMusicOnInteraction);
+        document.removeEventListener('touchstart', enableMusicOnInteraction);
+    }
+    
+    // Добавляем обработчики для принудительного запуска музыки
+    document.addEventListener('click', enableMusicOnInteraction);
+    document.addEventListener('keydown', enableMusicOnInteraction);
+    document.addEventListener('touchstart', enableMusicOnInteraction);
 });
 
 // Функция для обновления отображения заметок без перезагрузки страницы

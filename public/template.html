@@ -5460,6 +5460,27 @@
             display: block;
             margin-top: 5px;
         }
+        
+        .force-play-btn {
+            width: 100%;
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+            border-radius: 8px;
+            padding: 12px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .force-play-btn:hover {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: rgba(76, 175, 80, 0.7);
+            transform: translateY(-1px);
+        }
         /* Кнопка открытия бокового меню */
         
         .side-menu-toggle {
@@ -5536,6 +5557,12 @@
                         <input type="range" id="music-volume" min="0" max="100" value="20" class="volume-slider">
                         <span class="volume-value">20%</span>
                     </label>
+                </div>
+                <div class="sound-control">
+                    <button id="force-play-music" class="force-play-btn">
+                        <span class="sound-icon">▶️</span>
+                        <span class="sound-text">Запустить музыку</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -5791,6 +5818,7 @@
             const musicCheckbox = document.getElementById('music-checkbox');
             const musicVolume = document.getElementById('music-volume');
             const volumeValue = document.querySelector('.volume-value');
+            const forcePlayMusic = document.getElementById('force-play-music');
 
             // Открытие/закрытие бокового меню
             if (sideMenuToggle) {
@@ -5861,6 +5889,18 @@
                     soundCheckbox.checked = window.soundManager.isSoundEnabled;
                     musicCheckbox.checked = window.soundManager.isMusicEnabled;
                 }
+            }
+
+            // Принудительный запуск музыки
+            if (forcePlayMusic) {
+                forcePlayMusic.addEventListener('click', function() {
+                    if (window.soundManager) {
+                        window.soundManager.isMusicEnabled = true;
+                        window.soundManager.startBackgroundMusic();
+                        window.soundManager.playClick();
+                        console.log('Force starting music...');
+                    }
+                });
             }
 
             // Инициализируем при загрузке

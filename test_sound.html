@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест звуков</title>
+</head>
+
+<body>
+    <h1>Тест звуков</h1>
+    <button onclick="testClick()">Тест клика</button>
+    <button onclick="testDarkMusic()">Тест темной музыки</button>
+    <button onclick="testMysticMusic()">Тест мистической музыки</button>
+    <button onclick="testOrangeMusic()">Тест оранжевой музыки</button>
+    <button onclick="stopAll()">Остановить все</button>
+
+    <div id="log"></div>
+
+    <script>
+        const log = document.getElementById('log');
+
+        function logMessage(msg) {
+            log.innerHTML += '<div>' + new Date().toLocaleTimeString() + ': ' + msg + '</div>';
+        }
+
+        let sounds = {};
+
+        function initSounds() {
+            try {
+                sounds.click = new Audio('sound/click.mp3');
+                sounds.click.volume = 0.3;
+                sounds.click.addEventListener('canplaythrough', () => logMessage('Click sound ready'));
+                sounds.click.addEventListener('error', (e) => logMessage('Click sound error: ' + e.message));
+
+                sounds.bgDark = new Audio('sound/bg music dark.mp3');
+                sounds.bgDark.loop = true;
+                sounds.bgDark.volume = 0.2;
+                sounds.bgDark.addEventListener('canplaythrough', () => logMessage('Dark music ready'));
+                sounds.bgDark.addEventListener('error', (e) => logMessage('Dark music error: ' + e.message));
+
+                sounds.bgMystic = new Audio('sound/bg music mystic.mp3');
+                sounds.bgMystic.loop = true;
+                sounds.bgMystic.volume = 0.2;
+                sounds.bgMystic.addEventListener('canplaythrough', () => logMessage('Mystic music ready'));
+                sounds.bgMystic.addEventListener('error', (e) => logMessage('Mystic music error: ' + e.message));
+
+                sounds.bgOrange = new Audio('sound/bg music orange.mp3');
+                sounds.bgOrange.loop = true;
+                sounds.bgOrange.volume = 0.2;
+                sounds.bgOrange.addEventListener('canplaythrough', () => logMessage('Orange music ready'));
+                sounds.bgOrange.addEventListener('error', (e) => logMessage('Orange music error: ' + e.message));
+
+                logMessage('Sounds initialized');
+            } catch (error) {
+                logMessage('Error initializing sounds: ' + error.message);
+            }
+        }
+
+        function testClick() {
+            if (sounds.click) {
+                sounds.click.currentTime = 0;
+                sounds.click.play().then(() => logMessage('Click played')).catch(e => logMessage('Click play failed: ' + e.message));
+            }
+        }
+
+        function testDarkMusic() {
+            stopAll();
+            if (sounds.bgDark) {
+                sounds.bgDark.play().then(() => logMessage('Dark music started')).catch(e => logMessage('Dark music failed: ' + e.message));
+            }
+        }
+
+        function testMysticMusic() {
+            stopAll();
+            if (sounds.bgMystic) {
+                sounds.bgMystic.play().then(() => logMessage('Mystic music started')).catch(e => logMessage('Mystic music failed: ' + e.message));
+            }
+        }
+
+        function testOrangeMusic() {
+            stopAll();
+            if (sounds.bgOrange) {
+                sounds.bgOrange.play().then(() => logMessage('Orange music started')).catch(e => logMessage('Orange music failed: ' + e.message));
+            }
+        }
+
+        function stopAll() {
+            Object.values(sounds).forEach(sound => {
+                if (sound) {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }
+            });
+            logMessage('All sounds stopped');
+        }
+
+        // Инициализируем при загрузке
+        window.addEventListener('load', initSounds);
+    </script>
+</body>
+
+</html>
