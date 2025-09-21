@@ -5316,6 +5316,27 @@
             transition: left 0.3s ease;
             overflow-y: auto;
         }
+        /* Стили для разных тем */
+        
+        [data-theme="light"] .side-menu {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+        }
+        
+        [data-theme="dark"] .side-menu {
+            background: rgba(20, 20, 20, 0.95);
+            color: #fff;
+        }
+        
+        [data-theme="mystic"] .side-menu {
+            background: rgba(75, 0, 130, 0.95);
+            color: #fff;
+        }
+        
+        [data-theme="medium"] .side-menu {
+            background: rgba(210, 105, 30, 0.95);
+            color: #fff;
+        }
         
         .side-menu.open {
             left: 0;
@@ -5336,15 +5357,32 @@
         }
         
         .side-menu-header h3 {
-            color: #fff;
+            color: inherit;
             margin: 0;
             font-size: 18px;
+        }
+        /* Стили заголовка для разных тем */
+        
+        [data-theme="light"] .side-menu-header h3 {
+            color: #333;
+        }
+        
+        [data-theme="dark"] .side-menu-header h3 {
+            color: #fff;
+        }
+        
+        [data-theme="mystic"] .side-menu-header h3 {
+            color: #e6e6fa;
+        }
+        
+        [data-theme="medium"] .side-menu-header h3 {
+            color: #fff;
         }
         
         .close-side-menu {
             background: none;
             border: none;
-            color: #fff;
+            color: inherit;
             font-size: 24px;
             cursor: pointer;
             padding: 0;
@@ -5360,6 +5398,27 @@
         .close-side-menu:hover {
             background-color: rgba(255, 255, 255, 0.1);
         }
+        /* Стили кнопки закрытия для разных тем */
+        
+        [data-theme="light"] .close-side-menu {
+            color: #333;
+        }
+        
+        [data-theme="light"] .close-side-menu:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        [data-theme="dark"] .close-side-menu {
+            color: #fff;
+        }
+        
+        [data-theme="mystic"] .close-side-menu {
+            color: #e6e6fa;
+        }
+        
+        [data-theme="medium"] .close-side-menu {
+            color: #fff;
+        }
         
         .side-menu-body {
             display: flex;
@@ -5373,14 +5432,52 @@
             padding: 15px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        /* Стили элементов управления для разных тем */
+        
+        [data-theme="light"] .sound-control {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        [data-theme="dark"] .sound-control {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        [data-theme="mystic"] .sound-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        [data-theme="medium"] .sound-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
         
         .sound-label {
             display: flex;
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            color: #fff;
+            color: inherit;
             font-size: 14px;
+        }
+        /* Стили текста для разных тем */
+        
+        [data-theme="light"] .sound-label {
+            color: #333;
+        }
+        
+        [data-theme="dark"] .sound-label {
+            color: #fff;
+        }
+        
+        [data-theme="mystic"] .sound-label {
+            color: #e6e6fa;
+        }
+        
+        [data-theme="medium"] .sound-label {
+            color: #fff;
         }
         
         .sound-icon {
@@ -5467,7 +5564,7 @@
             border: 1px solid rgba(76, 175, 80, 0.5);
             border-radius: 8px;
             padding: 12px;
-            color: #fff;
+            color: inherit;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -5480,6 +5577,41 @@
             background: rgba(76, 175, 80, 0.3);
             border-color: rgba(76, 175, 80, 0.7);
             transform: translateY(-1px);
+        }
+        /* Стили кнопок для разных тем */
+        
+        [data-theme="light"] .force-play-btn {
+            color: #333;
+            background: rgba(76, 175, 80, 0.1);
+            border-color: rgba(76, 175, 80, 0.3);
+        }
+        
+        [data-theme="light"] .force-play-btn:hover {
+            background: rgba(76, 175, 80, 0.2);
+        }
+        
+        [data-theme="dark"] .force-play-btn {
+            color: #fff;
+        }
+        
+        [data-theme="mystic"] .force-play-btn {
+            color: #e6e6fa;
+            background: rgba(138, 43, 226, 0.2);
+            border-color: rgba(138, 43, 226, 0.5);
+        }
+        
+        [data-theme="mystic"] .force-play-btn:hover {
+            background: rgba(138, 43, 226, 0.3);
+        }
+        
+        [data-theme="medium"] .force-play-btn {
+            color: #fff;
+            background: rgba(255, 140, 0, 0.2);
+            border-color: rgba(255, 140, 0, 0.5);
+        }
+        
+        [data-theme="medium"] .force-play-btn:hover {
+            background: rgba(255, 140, 0, 0.3);
         }
         /* Кнопка открытия бокового меню */
         
@@ -5565,15 +5697,9 @@
                     </button>
                 </div>
                 <div class="sound-control">
-                    <button id="test-click" class="force-play-btn">
-                        <span class="sound-icon">🔊</span>
-                        <span class="sound-text">Тест звука клика</span>
-                    </button>
-                </div>
-                <div class="sound-control">
-                    <button id="debug-info" class="force-play-btn">
+                    <button id="debug-theme" class="force-play-btn">
                         <span class="sound-icon">🐛</span>
-                        <span class="sound-text">Отладочная информация</span>
+                        <span class="sound-text">Отладка темы</span>
                     </button>
                 </div>
             </div>
@@ -5793,8 +5919,19 @@
 
                     // Переключаем фоновую музыку
                     if (window.soundManager) {
-                        window.soundManager.currentTheme = selectedTheme;
-                        window.soundManager.changeTheme(selectedTheme);
+                        // Преобразуем 'medium' в 'orange' для SoundManager
+                        const soundTheme = selectedTheme === 'medium' ? 'orange' : selectedTheme;
+                        console.log('Changing theme to:', soundTheme);
+                        window.soundManager.currentTheme = soundTheme;
+                        window.soundManager.changeTheme(soundTheme);
+
+                        // Принудительно запускаем музыку для оранжевой темы
+                        if (soundTheme === 'orange') {
+                            console.log('Forcing orange theme music on theme change...');
+                            setTimeout(() => {
+                                window.soundManager.startBackgroundMusic();
+                            }, 100);
+                        }
                     }
                 });
             });
@@ -5832,8 +5969,7 @@
             const musicVolume = document.getElementById('music-volume');
             const volumeValue = document.querySelector('.volume-value');
             const forcePlayMusic = document.getElementById('force-play-music');
-            const testClick = document.getElementById('test-click');
-            const debugInfo = document.getElementById('debug-info');
+            const debugTheme = document.getElementById('debug-theme');
 
             // Открытие/закрытие бокового меню
             if (sideMenuToggle) {
@@ -5918,35 +6054,36 @@
                 });
             }
 
-            // Тест звука клика
-            if (testClick) {
-                testClick.addEventListener('click', function() {
-                    console.log('Testing click sound...');
-                    if (window.soundManager) {
-                        window.soundManager.playClick();
-                    } else {
-                        console.log('SoundManager not available');
-                    }
-                });
-            }
-
-            // Отладочная информация
-            if (debugInfo) {
-                debugInfo.addEventListener('click', function() {
-                    console.log('=== DEBUG INFO ===');
-                    console.log('SoundManager exists:', !!window.soundManager);
-                    if (window.soundManager) {
-                        console.log('Current theme:', window.soundManager.currentTheme);
-                        console.log('Music enabled:', window.soundManager.isMusicEnabled);
-                        console.log('Sound enabled:', window.soundManager.isSoundEnabled);
-                        console.log('Sounds loaded:', Object.keys(window.soundManager.sounds));
-                        console.log('Background music:', window.soundManager.backgroundMusic);
-                    }
+            // Отладка темы
+            if (debugTheme) {
+                debugTheme.addEventListener('click', function() {
+                    console.log('=== THEME DEBUG ===');
+                    console.log('Data theme:', document.documentElement.getAttribute('data-theme'));
                     console.log('Body class:', document.body.className);
                     console.log('LocalStorage theme:', localStorage.getItem('theme'));
+
+                    if (window.soundManager) {
+                        console.log('SoundManager theme:', window.soundManager.currentTheme);
+                        console.log('Music enabled:', window.soundManager.isMusicEnabled);
+                        console.log('Background music:', window.soundManager.backgroundMusic);
+                        console.log('Orange music file:', window.soundManager.sounds ? .bgOrange);
+
+                        // Принудительно обновляем тему
+                        window.soundManager.detectTheme();
+                        console.log('Theme after detection:', window.soundManager.currentTheme);
+
+                        // Принудительно запускаем музыку для оранжевой темы
+                        if (window.soundManager.currentTheme === 'orange') {
+                            console.log('Forcing orange theme music...');
+                            window.soundManager.startBackgroundMusic();
+                        }
+                    }
                     console.log('==================');
                 });
             }
+
+
+
 
             // Инициализируем при загрузке
             setTimeout(initializeSoundControls, 100);
