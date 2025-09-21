@@ -4220,20 +4220,22 @@ class SoundManager {
                           document.body.className.includes('theme-mystic') ? 'mystic' :
                           document.body.className.includes('theme-orange') ? 'orange' : 'light';
         
-        // Запускаем фоновую музыку
-        this.startBackgroundMusic();
+        // Запускаем фоновую музыку с задержкой
+        setTimeout(() => {
+            this.startBackgroundMusic();
+        }, 1000);
     }
     
     loadSounds() {
         try {
             // Звук клика
-            this.sounds.click = new Audio('../sound/click.mp3');
+            this.sounds.click = new Audio('sound/click.mp3');
             this.sounds.click.volume = 0.3;
             
             // Фоновая музыка для разных тем
-            this.sounds.bgDark = new Audio('../sound/bg music dark.mp3');
-            this.sounds.bgMystic = new Audio('../sound/bg music mystic.mp3');
-            this.sounds.bgOrange = new Audio('../sound/bg music orange.mp3');
+            this.sounds.bgDark = new Audio('sound/bg music dark.mp3');
+            this.sounds.bgMystic = new Audio('sound/bg music mystic.mp3');
+            this.sounds.bgOrange = new Audio('sound/bg music orange.mp3');
             
             // Настраиваем фоновую музыку
             Object.values(this.sounds).forEach(sound => {
