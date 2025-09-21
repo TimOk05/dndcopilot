@@ -69,6 +69,11 @@ if (isset($_POST['fast_action'])) {
         $content = $_POST['content'] ?? '';
         $title = $_POST['title'] ?? '';
         
+        // Инициализируем массив заметок, если его нет
+        if (!isset($_SESSION['notes'])) {
+            $_SESSION['notes'] = [];
+        }
+        
         if ($content) {
             // Если есть заголовок, добавляем его в начало заметки
             if ($title) {
@@ -1967,6 +1972,8 @@ function formatPotionsFromApi(potions) {
 
 // Функция сохранения зелья в заметки
 function savePotionAsNote(id, name, rarity, type, effect, duration, costJson) {
+    console.log('savePotionAsNote called with:', {id, name, rarity, type, effect, duration, costJson});
+    
     const displayName = name || 'Неизвестное зелье';
     const displayRarity = rarity || 'Неизвестная редкость';
     const displayType = type || 'Неизвестный тип';
@@ -2012,25 +2019,32 @@ function savePotionAsNote(id, name, rarity, type, effect, duration, costJson) {
     `;
     
     // Сохраняем в заметки через AJAX
+    console.log('Sending potion note to server:', potionNote);
+    
     fetch(window.location.href, {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: 'fast_action=save_note&content=' + encodeURIComponent(potionNote)
     })
-    .then(response => response.text())
+    .then(response => {
+        console.log('Server response status:', response.status);
+        return response.text();
+    })
     .then(result => {
+        console.log('Server response:', result);
         if (result === 'OK') {
             // Показываем уведомление об успешном сохранении
             showNotification('Зелье сохранено в заметки!', 'success');
             // Обновляем отображение заметок
             updateNotesDisplay();
         } else {
-            showNotification('Ошибка при сохранении зелья', 'error');
+            console.error('Server returned error:', result);
+            showNotification('Ошибка при сохранении зелья: ' + result, 'error');
         }
     })
     .catch(error => {
         console.error('Error saving potion:', error);
-        showNotification('Ошибка при сохранении зелья', 'error');
+        showNotification('Ошибка при сохранении зелья: ' + error.message, 'error');
     });
 }
 
