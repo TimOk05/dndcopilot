@@ -68,36 +68,7 @@
             /* Legacy variables for compatibility */
             --block-gap: 10px;
             --block-padding: 8px 12px;
-            /* Светлая тема */
-            --bg-primary: #e8d8b0;
-            --bg-secondary: #f0e6c0;
-            --bg-tertiary: #e0d0a0;
-            --bg-quaternary: #d8c890;
-            --bg-quinary: #e8d0a0;
-            --bg-senary: #e0c880;
-            --text-primary: #2d1b00;
-            --text-secondary: #3d2a0a;
-            --text-tertiary: #7c4a02;
-            --text-quaternary: #4e260e;
-            --text-quinary: #1b4e2d;
-            --text-senary: #7a6c4a;
-            --border-primary: #a67c52;
-            --border-secondary: #7c4a02;
-            --border-tertiary: #e6d3a8;
-            --accent-primary: #a67c52;
-            --accent-secondary: #7c4a02;
-            --accent-success: #2bb07b;
-            --accent-info: #4a90e2;
-            --accent-warning: #ffd700;
-            --accent-danger: #b71c1c;
-            --shadow-primary: #0002;
-            --shadow-secondary: #0006;
-            --shadow-tertiary: #0001;
-            --bg-image: url('assets/backgrounds/light-theme.png');
-        }
-        /* Средняя тема (коричневая) */
-        
-        [data-theme="medium"] {
+            /* Средняя тема (коричневая) - теперь по умолчанию */
             --bg-primary: #2d1810;
             --bg-secondary: #3d2418;
             --bg-tertiary: #4d2a20;
@@ -111,19 +82,20 @@
             --text-quinary: #bca47e;
             --text-senary: #ae9468;
             --border-primary: #d2691e;
-            --border-secondary: #b8860b;
-            --border-tertiary: #a0522d;
+            --border-secondary: #ff8c00;
+            --border-tertiary: #ffa500;
             --accent-primary: #d2691e;
             --accent-secondary: #ff8c00;
-            --accent-success: #32cd32;
-            --accent-info: #4169e1;
+            --accent-success: #2bb07b;
+            --accent-info: #4a90e2;
             --accent-warning: #ffd700;
-            --accent-danger: #dc143c;
+            --accent-danger: #b71c1c;
             --shadow-primary: rgba(210, 105, 30, 0.2);
             --shadow-secondary: rgba(210, 105, 30, 0.3);
             --shadow-tertiary: rgba(210, 105, 30, 0.1);
             --bg-image: url('assets/backgrounds/orange-theme.png');
         }
+        /* Средняя тема (коричневая) */
         /* Стили кнопок для средней темы */
         
         [data-theme="medium"] .fast-btn,
@@ -259,7 +231,7 @@
             --shadow-primary: rgba(128, 222, 234, 0.2);
             --shadow-secondary: rgba(128, 222, 234, 0.3);
             --shadow-tertiary: rgba(128, 222, 234, 0.1);
-            --bg-image: url('assets/backgrounds/ice-theme.png');
+            --bg-image: url('assets/backgrounds/cold-theme.png');
         }
         /* Лавовые подтеки для темной темы */
         
@@ -5886,10 +5858,6 @@
                         <span class="theme-icon">🌙</span>
                     </button>
                     <div class="theme-menu" id="theme-menu">
-                        <div class="theme-option" data-theme="light">
-                            <span class="theme-icon">☀️</span>
-                            <span class="theme-name">Светлая</span>
-                        </div>
                         <div class="theme-option" data-theme="medium">
                             <span class="theme-icon">🌅</span>
                             <span class="theme-name">Средняя</span>
@@ -6067,7 +6035,7 @@
             }
 
             // Загружаем сохраненную тему
-            const savedTheme = localStorage.getItem('theme') || 'light';
+            const savedTheme = localStorage.getItem('theme') || 'medium';
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
 
@@ -6120,7 +6088,7 @@
                 } else if (theme === 'ice') {
                     themeIcon.textContent = '❄️';
                 } else {
-                    themeIcon.textContent = '☀️';
+                    themeIcon.textContent = '🌅'; // По умолчанию средняя тема
                 }
             }
 
