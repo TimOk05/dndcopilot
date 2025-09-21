@@ -14,6 +14,33 @@ require_once __DIR__ . '/../../app/Services/PotionService.php';
 
 // Обработка POST запросов
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Проверяем, это запрос на сохранение заметки?
+    if (isset($_POST['fast_action']) && $_POST['fast_action'] === 'save_note') {
+        // Обрабатываем сохранение заметки
+        session_start();
+        
+        $content = $_POST['content'] ?? '';
+        $title = $_POST['title'] ?? '';
+        
+        // Инициализируем массив заметок, если его нет
+        if (!isset($_SESSION['notes'])) {
+            $_SESSION['notes'] = [];
+        }
+        
+        if ($content) {
+            // Если есть заголовок, добавляем его в начало заметки
+            if ($title) {
+                $content = "<h3>$title</h3>" . $content;
+            }
+            
+            $_SESSION['notes'][] = $content;
+            echo 'OK';
+        } else {
+            echo 'Ошибка: пустое содержимое';
+        }
+        exit;
+    }
+    
     try {
         // Получаем данные из запроса
         $input = json_decode(file_get_contents('php://input'), true);

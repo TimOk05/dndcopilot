@@ -42,6 +42,8 @@ if (isset($_POST['remove_note'])) {
 if (isset($_POST['fast_action'])) {
     $action = $_POST['fast_action'];
     error_log('fast_action called with action: ' . $action);
+    error_log('Request URI: ' . $_SERVER['REQUEST_URI']);
+    error_log('Script name: ' . $_SERVER['SCRIPT_NAME']);
     // --- Кости ---
     if ($action === 'dice_result') {
         $dice = $_POST['dice'] ?? '1d20';
@@ -69,6 +71,8 @@ if (isset($_POST['fast_action'])) {
     if ($action === 'save_note') {
         // Логируем запрос для отладки
         error_log('save_note called with content: ' . substr($_POST['content'] ?? '', 0, 100));
+        error_log('save_note REQUEST_URI: ' . $_SERVER['REQUEST_URI']);
+        error_log('save_note SCRIPT_NAME: ' . $_SERVER['SCRIPT_NAME']);
         
         $content = $_POST['content'] ?? '';
         $title = $_POST['title'] ?? '';
@@ -2026,10 +2030,10 @@ function savePotionAsNote(id, name, rarity, type, effect, duration, costJson) {
     console.log('Sending potion note to server:', potionNote);
     console.log('Current URL:', window.location.href);
     console.log('Current pathname:', window.location.pathname);
-    const saveUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/index.php');
+    const saveUrl = 'api/generate-potions.php';
     console.log('Fetching from:', saveUrl);
     
-    fetch(window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/index.php'), {
+    fetch(saveUrl, {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: 'fast_action=save_note&content=' + encodeURIComponent(potionNote)
