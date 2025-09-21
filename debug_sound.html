@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отладка звуков</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        #log {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            font-family: monospace;
+            height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔊 Отладка звуковой системы</h1>
+
+    <div class="test-section">
+        <h2>1. Проверка файлов</h2>
+        <button onclick="checkFiles()">Проверить файлы звуков</button>
+        <div id="file-status"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Тест загрузки звуков</h2>
+        <button onclick="loadSounds()">Загрузить звуки</button>
+        <button onclick="testClick()">Тест клика</button>
+        <button onclick="testMusic()">Тест музыки</button>
+        <div id="sound-status"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Тест SoundManager</h2>
+        <button onclick="createSoundManager()">Создать SoundManager</button>
+        <button onclick="testSoundManager()">Тест SoundManager</button>
+        <div id="manager-status"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Тест темы</h2>
+        <button onclick="testTheme()">Проверить тему</button>
+        <button onclick="changeTheme('dark')">Темная тема</button>
+        <button onclick="changeTheme('mystic')">Мистическая тема</button>
+        <button onclick="changeTheme('orange')">Оранжевая тема</button>
+        <div id="theme-status"></div>
+    </div>
+
+    <div id="log"></div>
+
+    <script>
+        let sounds = {};
+        let soundManager = null;
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#f00' : type === 'success' ? '#0f0' : '#0ff';
+            logDiv.innerHTML += `<div style="color: ${color}">[${time}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function setStatus(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function checkFiles() {
+            log('Проверяем файлы звуков...');
+            const files = [
+                'sound/click.mp3',
+                'sound/bg music dark.mp3',
+                'sound/bg music mystic.mp3',
+                'sound/bg music orange.mp3'
+            ];
+
+            let allOk = true;
+            files.forEach(file => {
+                fetch(file, {
+                        method: 'HEAD'
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            log(`✅ ${file} - OK`, 'success');
+                        } else {
+                            log(`❌ ${file} - Error ${response.status}`, 'error');
+                            allOk = false;
+                        }
+                    })
+                    .catch(error => {
+                        log(`❌ ${file} - ${error.message}`, 'error');
+                        allOk = false;
+                    });
+            });
+
+            setTimeout(() => {
+                setStatus('file-status', allOk ? 'Все файлы найдены' : 'Некоторые файлы не найдены', allOk ? 'success' : 'error');
+            }, 1000);
+        }
+
+        function loadSounds() {
+            log('Загружаем звуки...');
+            try {
+                sounds.click = new Audio('sound/click.mp3');
+                sounds.click.volume = 0.3;
+                sounds.click.addEventListener('canplaythrough', () => {
+                    log('✅ Click sound ready', 'success');
+                });
+                sounds.click.addEventListener('error', (e) => {
+                    log(`❌ Click sound error: ${e.message}`, 'error');
+                });
+
+                sounds.bgDark = new Audio('sound/bg music dark.mp3');
+                sounds.bgDark.loop = true;
+                sounds.bgDark.volume = 0.2;
+                sounds.bgDark.addEventListener('canplaythrough', () => {
+                    log('✅ Dark music ready', 'success');
+                });
+                sounds.bgDark.addEventListener('error', (e) => {
+                    log(`❌ Dark music error: ${e.message}`, 'error');
+                });
+
+                setStatus('sound-status', 'Звуки загружены', 'success');
+            } catch (error) {
+                log(`❌ Error loading sounds: ${error.message}`, 'error');
+                setStatus('sound-status', 'Ошибка загрузки звуков', 'error');
+            }
+        }
+
+        function testClick() {
+            if (sounds.click) {
+                log('Тестируем звук клика...');
+                sounds.click.currentTime = 0;
+                sounds.click.play()
+                    .then(() => log('✅ Click sound played', 'success'))
+                    .catch(e => log(`❌ Click play failed: ${e.message}`, 'error'));
+            } else {
+                log('❌ Click sound not loaded', 'error');
+            }
+        }
+
+        function testMusic() {
+            if (sounds.bgDark) {
+                log('Тестируем музыку...');
+                sounds.bgDark.play()
+                    .then(() => log('✅ Music started', 'success'))
+                    .catch(e => log(`❌ Music failed: ${e.message}`, 'error'));
+            } else {
+                log('❌ Music not loaded', 'error');
+            }
+        }
+
+        function createSoundManager() {
+            log('Создаем SoundManager...');
+            try {
+                // Копируем класс SoundManager из основного файла
+                class SoundManager {
+                    constructor() {
+                        this.sounds = {};
+                        this.backgroundMusic = null;
+                        this.isMusicEnabled = true;
+                        this.isSoundEnabled = true;
+                        this.currentTheme = 'light';
+                        this.init();
+                    }
+
+                    init() {
+                        this.loadSounds();
+                        this.loadSettings();
+                        this.detectTheme();
+                        setTimeout(() => {
+                            this.startBackgroundMusic();
+                        }, 1000);
+                    }
+
+                    detectTheme() {
+                        if (document.body) {
+                            this.currentTheme = document.body.className.includes('theme-dark') ? 'dark' :
+                                document.body.className.includes('theme-mystic') ? 'mystic' :
+                                document.body.className.includes('theme-orange') ? 'orange' : 'light';
+                        } else {
+                            const savedTheme = localStorage.getItem('theme') || 'light';
+                            this.currentTheme = savedTheme;
+                        }
+                        log(`Detected theme: ${this.currentTheme}`);
+                    }
+
+                    loadSounds() {
+                        try {
+                            log('Loading sounds in SoundManager...');
+                            this.sounds.click = new Audio('sound/click.mp3');
+                            this.sounds.click.volume = 0.3;
+
+                            this.sounds.bgDark = new Audio('sound/bg music dark.mp3');
+                            this.sounds.bgMystic = new Audio('sound/bg music mystic.mp3');
+                            this.sounds.bgOrange = new Audio('sound/bg music orange.mp3');
+
+                            Object.values(this.sounds).forEach(sound => {
+                                if (sound !== this.sounds.click) {
+                                    sound.loop = true;
+                                    sound.volume = 0.2;
+                                    sound.preload = 'auto';
+                                }
+                            });
+
+                            log('SoundManager sounds loaded');
+                        } catch (error) {
+                            log(`SoundManager load error: ${error.message}`, 'error');
+                        }
+                    }
+
+                    loadSettings() {
+                        this.isMusicEnabled = localStorage.getItem('musicEnabled') !== 'false';
+                        this.isSoundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+                    }
+
+                    playClick() {
+                        if (this.isSoundEnabled && this.sounds.click) {
+                            try {
+                                this.sounds.click.currentTime = 0;
+                                this.sounds.click.play().catch(e => log(`Click play failed: ${e.message}`, 'error'));
+                            } catch (error) {
+                                log(`Click error: ${error.message}`, 'error');
+                            }
+                        }
+                    }
+
+                    startBackgroundMusic() {
+                        if (!this.isMusicEnabled) return;
+
+                        let musicFile = null;
+                        switch (this.currentTheme) {
+                            case 'dark':
+                                musicFile = this.sounds.bgDark;
+                                break;
+                            case 'mystic':
+                                musicFile = this.sounds.bgMystic;
+                                break;
+                            case 'orange':
+                                musicFile = this.sounds.bgOrange;
+                                break;
+                            default:
+                                return;
+                        }
+
+                        if (musicFile) {
+                            this.backgroundMusic = musicFile;
+                            log(`Starting music for theme: ${this.currentTheme}`);
+                            this.backgroundMusic.play()
+                                .then(() => log('Music started successfully', 'success'))
+                                .catch(e => log(`Music failed: ${e.message}`, 'error'));
+                        }
+                    }
+                }
+
+                soundManager = new SoundManager();
+                setStatus('manager-status', 'SoundManager создан', 'success');
+            } catch (error) {
+                log(`❌ Error creating SoundManager: ${error.message}`, 'error');
+                setStatus('manager-status', 'Ошибка создания SoundManager', 'error');
+            }
+        }
+
+        function testSoundManager() {
+            if (soundManager) {
+                log('Тестируем SoundManager...');
+                soundManager.playClick();
+                soundManager.startBackgroundMusic();
+            } else {
+                log('❌ SoundManager not created', 'error');
+            }
+        }
+
+        function testTheme() {
+            const bodyClass = document.body.className;
+            const savedTheme = localStorage.getItem('theme');
+            log(`Body class: ${bodyClass}`);
+            log(`Saved theme: ${savedTheme}`);
+            setStatus('theme-status', `Текущая тема: ${savedTheme || 'light'}`, 'info');
+        }
+
+        function changeTheme(theme) {
+            document.body.className = `theme-${theme}`;
+            localStorage.setItem('theme', theme);
+            log(`Theme changed to: ${theme}`);
+            if (soundManager) {
+                soundManager.currentTheme = theme;
+                soundManager.startBackgroundMusic();
+            }
+        }
+
+        // Автоматически проверяем файлы при загрузке
+        window.addEventListener('load', () => {
+            log('Страница загружена, начинаем диагностику...');
+            checkFiles();
+        });
+    </script>
+</body>
+
+</html>

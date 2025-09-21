@@ -4209,8 +4209,7 @@ class SoundManager {
     }
     
     init() {
-        // Загружаем звуки
-        this.loadSounds();
+        console.log('SoundManager init started');
         
         // Загружаем настройки из localStorage
         this.loadSettings();
@@ -4218,10 +4217,14 @@ class SoundManager {
         // Устанавливаем текущую тему
         this.detectTheme();
         
+        // Загружаем звуки
+        this.loadSounds();
+        
         // Запускаем фоновую музыку с задержкой
         setTimeout(() => {
+            console.log('Starting background music after delay...');
             this.startBackgroundMusic();
-        }, 2000);
+        }, 3000);
     }
     
     detectTheme() {

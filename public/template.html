@@ -5564,6 +5564,18 @@
                         <span class="sound-text">Запустить музыку</span>
                     </button>
                 </div>
+                <div class="sound-control">
+                    <button id="test-click" class="force-play-btn">
+                        <span class="sound-icon">🔊</span>
+                        <span class="sound-text">Тест звука клика</span>
+                    </button>
+                </div>
+                <div class="sound-control">
+                    <button id="debug-info" class="force-play-btn">
+                        <span class="sound-icon">🐛</span>
+                        <span class="sound-text">Отладочная информация</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -5820,6 +5832,8 @@
             const musicVolume = document.getElementById('music-volume');
             const volumeValue = document.querySelector('.volume-value');
             const forcePlayMusic = document.getElementById('force-play-music');
+            const testClick = document.getElementById('test-click');
+            const debugInfo = document.getElementById('debug-info');
 
             // Открытие/закрытие бокового меню
             if (sideMenuToggle) {
@@ -5901,6 +5915,36 @@
                         window.soundManager.playClick();
                         console.log('Force starting music...');
                     }
+                });
+            }
+
+            // Тест звука клика
+            if (testClick) {
+                testClick.addEventListener('click', function() {
+                    console.log('Testing click sound...');
+                    if (window.soundManager) {
+                        window.soundManager.playClick();
+                    } else {
+                        console.log('SoundManager not available');
+                    }
+                });
+            }
+
+            // Отладочная информация
+            if (debugInfo) {
+                debugInfo.addEventListener('click', function() {
+                    console.log('=== DEBUG INFO ===');
+                    console.log('SoundManager exists:', !!window.soundManager);
+                    if (window.soundManager) {
+                        console.log('Current theme:', window.soundManager.currentTheme);
+                        console.log('Music enabled:', window.soundManager.isMusicEnabled);
+                        console.log('Sound enabled:', window.soundManager.isSoundEnabled);
+                        console.log('Sounds loaded:', Object.keys(window.soundManager.sounds));
+                        console.log('Background music:', window.soundManager.backgroundMusic);
+                    }
+                    console.log('Body class:', document.body.className);
+                    console.log('LocalStorage theme:', localStorage.getItem('theme'));
+                    console.log('==================');
                 });
             }
 
