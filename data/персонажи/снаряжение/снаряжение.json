@@ -1,0 +1,427 @@
+{
+  "metadata": {
+    "locale": "ru",
+    "currency_legend": {
+      "зм": "gp",
+      "см": "sp",
+      "мм": "cp"
+    },
+    "weight_unit": "lb",
+    "damage_types_map": {
+      "дробящий": "bludgeoning",
+      "рубящий": "slashing",
+      "колющий": "piercing"
+    },
+    "notes": [
+      "Свойства: light, heavy, two_handed, reach, finesse, thrown:<normal>/<long>, ammunition:<normal>/<long>, loading, versatile:<dice>, special.",
+      "Диапазоны дистанций скопированы из списка (дис. X/Y).",
+      "Боеприпасы представлены отдельными позициями ammo_* и количеством в bundle."
+    ]
+  },
+  "weapons": [
+    {
+      "id": "wp_quarterstaff",
+      "name": "Боевой посох",
+      "category": "simple",
+      "type": "melee",
+      "cost": {
+        "value": 2,
+        "currency": "sp"
+      },
+      "weight_lb": 4,
+      "damage": {
+        "dice": "1d6",
+        "type": "bludgeoning"
+      },
+      "properties": [
+        "versatile:1d8"
+      ]
+    },
+    {
+      "id": "wp_mace",
+      "name": "Булава",
+      "category": "simple",
+      "type": "melee",
+      "cost": {
+        "value": 5,
+        "currency": "gp"
+      },
+      "weight_lb": 4,
+      "damage": {
+        "dice": "1d6",
+        "type": "bludgeoning"
+      },
+      "properties": []
+    },
+    {
+      "id": "wp_club",
+      "name": "Дубинка",
+      "category": "simple",
+      "type": "melee",
+      "cost": {
+        "value": 1,
+        "currency": "sp"
+      },
+      "weight_lb": 2,
+      "damage": {
+        "dice": "1d4",
+        "type": "bludgeoning"
+      },
+      "properties": [
+        "light"
+      ]
+    },
+    {
+      "id": "wp_dagger",
+      "name": "Кинжал",
+      "category": "simple",
+      "type": "melee",
+      "cost": {
+        "value": 2,
+        "currency": "gp"
+      },
+      "weight_lb": 1,
+      "damage": {
+        "dice": "1d4",
+        "type": "piercing"
+      },
+      "properties": [
+        "light",
+        "thrown:20/60",
+        "finesse"
+      ]
+    },
+    {
+      "id": "wp_spear",
+      "name": "Копьё",
+      "category": "simple",
+      "type": "melee",
+      "cost": {
+        "value": 1,
+        "currency": "gp"
+      },
+      "weight_lb": 3,
+      "damage": {
+        "dice": "1d6",
+        "type": "piercing"
+      },
+      "properties": [
+        "thrown:20/60",
+        "versatile:1d8"
+      ]
+    },
+    {
+      "id": "wp_light_hammer",
+      "name": "Лёгкий молот",
+      "category": "simple",
+      "type": "melee",
+      "cost": {
+        "value": 2,
+        "currency": "gp"
+      },
+      "weight_lb": 2,
+      "damage": {
+        "dice": "1d4",
+        "type": "bludgeoning"
+      },
+      "properties": [
+        "light",
+        "thrown:20/60"
+      ]
+    },
+    {
+      "id": "wp_javelin",
+      "name": "Метательное копьё",
+      "category": "simple",
+      "type": "melee",
+      "cost": {
+        "value": 5,
+        "currency": "sp"
+      },
+      "weight_lb": 2,
+      "damage": {
+        "dice": "1d6",
+        "type": "piercing"
+      },
+      "properties": [
+        "thrown:30/120"
+      ]
+    },
+    {
+      "id": "wp_greatclub",
+      "name": "Палица",
+      "category": "simple",
+      "type": "melee",
+      "cost": {
+        "value": 2,
+        "currency": "sp"
+      },
+      "weight_lb": 10,
+      "damage": {
+        "dice": "1d8",
+        "type": "bludgeoning"
+      },
+      "properties": [
+        "two_handed"
+      ]
+    },
+    {
+      "id": "wp_handaxe",
+      "name": "Ручной топор",
+      "category": "simple",
+      "type": "melee",
+      "cost": {
+        "value": 5,
+        "currency": "gp"
+      },
+      "weight_lb": 2,
+      "damage": {
+        "dice": "1d6",
+        "type": "slashing"
+      },
+      "properties": [
+        "light",
+        "thrown:20/60"
+      ]
+    },
+    {
+      "id": "wp_sickle",
+      "name": "Серп",
+      "category": "simple",
+      "type": "melee",
+      "cost": {
+        "value": 1,
+        "currency": "gp"
+      },
+      "weight_lb": 2,
+      "damage": {
+        "dice": "1d4",
+        "type": "slashing"
+      },
+      "properties": [
+        "light"
+      ]
+    }
+  ],
+  "armors": [
+    {
+      "id": "arm_leather",
+      "name": "Кожаный",
+      "type": "light",
+      "armor_class": {
+        "base": 11,
+        "dex_bonus_allowed": null
+      },
+      "stealth_disadvantage": false,
+      "weight_lb": 10,
+      "cost": {
+        "value": 10,
+        "currency": "gp"
+      }
+    },
+    {
+      "id": "arm_chain_mail",
+      "name": "Кольчуга",
+      "type": "heavy",
+      "armor_class": {
+        "base": 16,
+        "dex_bonus_allowed": 0
+      },
+      "requirements": {
+        "strength": 13
+      },
+      "stealth_disadvantage": true,
+      "weight_lb": 55,
+      "cost": {
+        "value": 75,
+        "currency": "gp"
+      }
+    },
+    {
+      "id": "arm_plate",
+      "name": "Латы",
+      "type": "heavy",
+      "armor_class": {
+        "base": 18,
+        "dex_bonus_allowed": 0
+      },
+      "requirements": {
+        "strength": 15
+      },
+      "stealth_disadvantage": true,
+      "weight_lb": 65,
+      "cost": {
+        "value": 1500,
+        "currency": "gp"
+      }
+    },
+    {
+      "id": "shield_basic",
+      "name": "Щит",
+      "type": "shield",
+      "armor_class": {
+        "base": 2,
+        "dex_bonus_allowed": null
+      },
+      "stealth_disadvantage": false,
+      "weight_lb": 6,
+      "cost": {
+        "value": 10,
+        "currency": "gp"
+      }
+    }
+  ],
+  "ammo": [
+    {
+      "id": "ammo_arrows",
+      "name": "Стрелы",
+      "stackable": true,
+      "unit": "arrow",
+      "cost_per_20": {
+        "value": 1,
+        "currency": "gp"
+      }
+    },
+    {
+      "id": "ammo_bolts",
+      "name": "Болты",
+      "stackable": true,
+      "unit": "bolt",
+      "cost_per_20": {
+        "value": 1,
+        "currency": "gp"
+      }
+    }
+  ],
+  "packs": [
+    {
+      "id": "pack_knight",
+      "name": "Набор рыцаря",
+      "contents": []
+    },
+    {
+      "id": "pack_explorer",
+      "name": "Набор путешественника",
+      "contents": []
+    }
+  ],
+  "starting_equipment_mapping": {
+    "fighter": {
+      "choices": [
+        {
+          "choose": 1,
+          "options": [
+            {
+              "type": "bundle",
+              "items": [
+                {
+                  "ref": "arm_chain_mail",
+                  "qty": 1
+                }
+              ]
+            },
+            {
+              "type": "bundle",
+              "items": [
+                {
+                  "ref": "arm_leather",
+                  "qty": 1
+                },
+                {
+                  "ref": "wp_longbow",
+                  "qty": 1
+                },
+                {
+                  "ref": "ammo_arrows",
+                  "qty": 20
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "choose": 1,
+          "options": [
+            {
+              "type": "bundle",
+              "items": [
+                {
+                  "ref": "wp_longsword",
+                  "qty": 1
+                },
+                {
+                  "ref": "shield_basic",
+                  "qty": 1
+                }
+              ]
+            },
+            {
+              "type": "rule",
+              "rule": {
+                "pool": "weapons",
+                "filters": {
+                  "category_in": [
+                    "martial"
+                  ]
+                },
+                "qty": 2,
+                "distinct": true
+              }
+            }
+          ]
+        },
+        {
+          "choose": 1,
+          "options": [
+            {
+              "type": "bundle",
+              "items": [
+                {
+                  "ref": "wp_crossbow_light",
+                  "qty": 1
+                },
+                {
+                  "ref": "ammo_bolts",
+                  "qty": 20
+                }
+              ]
+            },
+            {
+              "type": "bundle",
+              "items": [
+                {
+                  "ref": "wp_handaxe",
+                  "qty": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "choose": 1,
+          "options": [
+            {
+              "type": "bundle",
+              "items": [
+                {
+                  "ref": "pack_knight",
+                  "qty": 1
+                }
+              ]
+            },
+            {
+              "type": "bundle",
+              "items": [
+                {
+                  "ref": "pack_explorer",
+                  "qty": 1
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "fixed": []
+    }
+  }
+}

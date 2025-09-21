@@ -1607,7 +1607,7 @@ function openPotionModalSimple() {
                             <option value="common">Обычное</option>
                             <option value="uncommon">Необычное</option>
                             <option value="rare">Редкое</option>
-                            <option value="very rare">Очень редкое</option>
+                            <option value="very_rare">Очень редкое</option>
                             <option value="legendary">Легендарное</option>
                         </select>
                     </div>
@@ -1616,13 +1616,8 @@ function openPotionModalSimple() {
                         <label for="potion-type">Тип зелья</label>
                         <select id="potion-type" name="type">
                             <option value="">Любой тип</option>
-                            <option value="Восстановление">🩹 Восстановление</option>
-                            <option value="Усиление">💪 Усиление</option>
-                            <option value="Защита">🛡️ Защита</option>
-                            <option value="Иллюзия">👁️ Иллюзия</option>
-                            <option value="Трансмутация">🔄 Трансмутация</option>
-                            <option value="Некромантия">💀 Некромантия</option>
-                            <option value="Прорицание">🔮 Прорицание</option>
+                            <option value="potion">🧪 Зелье</option>
+                            <option value="ointment">🧴 Мазь</option>
                         </select>
                     </div>
                 </div>
@@ -1651,19 +1646,20 @@ function openPotionModalSimple() {
         submitBtn.disabled = true;
         resultDiv.innerHTML = '<div class="loading">Создание зелий...</div>';
         
-        // Используем упрощенный API с поддержкой языков
-        const params = new URLSearchParams();
-        params.append('action', 'random');
-        params.append('count', formData.get('count'));
-        params.append('language', currentLanguage); // Добавляем текущий язык
-        if (formData.get('rarity')) {
-            params.append('rarity', formData.get('rarity'));
-        }
-        if (formData.get('type')) {
-            params.append('type', formData.get('type'));
-        }
+        // Подготавливаем данные для API
+        const requestData = {
+            rarity: formData.get('rarity') || null,
+            type: formData.get('type') || null,
+            count: parseInt(formData.get('count'))
+        };
         
-        fetch('api/generate-potions.php?' + params.toString())
+        fetch('api/generate-potions.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData)
+        })
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -1672,18 +1668,12 @@ function openPotionModalSimple() {
         })
         .then(data => {
             console.log('Potion API Response:', data);
-            if (data.success && data.data) {
-                let resultHtml = formatPotionsFromApi(data.data);
+            if (data.success && data.potions) {
+                let resultHtml = formatPotionsFromApi(data.potions);
                 
                 // Автоматически сохраняем все зелья в заметки
-                data.data.forEach(potion => {
-                    const displayName = potion.name || 'Неизвестное зелье';
-                    const displayDescription = potion.description || 'Описание недоступно';
-                    const displayRarity = potion.rarity_localized || potion.rarity || 'Неизвестная редкость';
-                    const displayType = potion.type_localized || potion.type || 'Неизвестный тип';
-                    const effectsHtml = potion.effects ? potion.effects.map(effect => effect).join(', ') : '';
-                    
-                    savePotionAsNote(displayName, displayDescription, displayRarity, displayType, potion.value, potion.weight, effectsHtml);
+                data.potions.forEach(potion => {
+                    savePotionAsNote(potion);
                 });
                 
                 resultDiv.innerHTML = resultHtml;
@@ -1693,8 +1683,8 @@ function openPotionModalSimple() {
                     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 100);
             } else {
-                let errorMsg = data.error || 'Неизвестная ошибка';
-                resultDiv.innerHTML = '<div class="error">Ошибка: ' + errorMsg + '</div>';
+                const errorMessage = data.message || 'Неизвестная ошибка при создании зелий';
+                resultDiv.innerHTML = '<div class="error">' + errorMessage + '</div>';
             }
         })
         .catch(error => {
@@ -1931,49 +1921,44 @@ function formatPotionsFromApi(potions) {
     let html = '<div class="potions-grid">';
     
     potions.forEach((potion, index) => {
-        // Обрабатываем эффекты (новый формат) или свойства (старый формат)
-        let effectsHtml = '';
-        if (potion.effects && potion.effects.length > 0) {
-            effectsHtml = potion.effects.map(effect => 
-                `<span class="potion-effect">${effect}</span>`
-            ).join('');
-        } else if (potion.properties && potion.properties.length > 0) {
-            effectsHtml = potion.properties.map(prop => 
-                `<span class="potion-property">${prop}</span>`
-            ).join('');
-        }
-        
-        // Используем переведенные данные если доступны
+        // Получаем данные зелья
         const displayName = potion.name || 'Неизвестное зелье';
         const displayRarity = potion.rarity_localized || potion.rarity || 'Неизвестная редкость';
         const displayType = potion.type_localized || potion.type || 'Неизвестный тип';
-        const displayDescription = potion.description || 'Описание недоступно';
+        const displayEffect = potion.effect || 'Эффект не описан';
+        const displayDuration = potion.duration || 'Мгновенный';
         
-        let descriptionHtml = `<p class="potion-description">${displayDescription}</p>`;
+        // Определяем цвет по редкости
+        let rarityColor = '#666666';
+        switch (potion.rarity) {
+            case 'common': rarityColor = '#4CAF50'; break;
+            case 'uncommon': rarityColor = '#2196F3'; break;
+            case 'rare': rarityColor = '#9C27B0'; break;
+            case 'very_rare': rarityColor = '#FF9800'; break;
+            case 'legendary': rarityColor = '#F44336'; break;
+        }
+        
+        // Определяем иконку по типу
+        let typeIcon = '🧪';
+        switch (potion.type) {
+            case 'potion': typeIcon = '🧪'; break;
+            case 'oil': typeIcon = '🧪'; break; // Масла теперь отображаются как зелья
+            case 'ointment': typeIcon = '🧴'; break;
+        }
         
         html += `
-            <div class="potion-card" style="border-left: 4px solid ${potion.color}">
+            <div class="potion-card" style="border-left: 4px solid ${rarityColor}">
                 <div class="potion-header">
-                    <span class="potion-icon">${potion.icon}</span>
+                    <span class="potion-icon">${typeIcon}</span>
                     <h3 class="potion-name">${displayName}</h3>
-                    <span class="potion-rarity" style="color: ${potion.color}">${displayRarity}</span>
+                    <span class="potion-rarity" style="color: ${rarityColor}">${displayRarity}</span>
                 </div>
                 <div class="potion-body">
-                    ${descriptionHtml}
+                    <p class="potion-effect"><strong>Эффект:</strong> ${displayEffect}</p>
+                    ${displayDuration !== 'Мгновенный' ? `<p class="potion-duration"><strong>Длительность:</strong> ${displayDuration}</p>` : ''}
                     <div class="potion-details">
-                        <span class="potion-type">${potion.icon} ${displayType}</span>
-                        <span class="potion-value">💰 ${potion.value}</span>
-                        <span class="potion-weight">⚖️ ${potion.weight}</span>
+                        <span class="potion-type">${typeIcon} ${displayType}</span>
                     </div>
-                    <div class="potion-properties">
-                        ${effectsHtml}
-                    </div>
-                    <div class="potion-actions" style="margin-top: var(--space-4); text-align: center;">
-                        <button class="fast-btn" onclick="savePotionAsNote('${displayName}', \`${displayDescription}\`, '${displayRarity}', '${displayType}', '${potion.value}', '${potion.weight}', '${effectsHtml ? effectsHtml.replace(/<[^>]*>/g, '') : ''}')" style="background: var(--accent-success);">
-                            💾 Сохранить в заметки
-                        </button>
-                    </div>
-                    ${potion.translation_error ? `<div class="translation-warning" style="color: orange; font-size: 0.8em; margin-top: 5px; text-align: center;">⚠️ ${potion.translation_error}</div>` : ''}
                 </div>
             </div>
         `;
@@ -1984,25 +1969,33 @@ function formatPotionsFromApi(potions) {
 }
 
 // Функция сохранения зелья в заметки
-function savePotionAsNote(name, description, rarity, type, value, weight, properties) {
+function savePotionAsNote(potion) {
+    const displayName = potion.name || 'Неизвестное зелье';
+    const displayRarity = potion.rarity_localized || potion.rarity || 'Неизвестная редкость';
+    const displayType = potion.type_localized || potion.type || 'Неизвестный тип';
+    const displayEffect = potion.effect || 'Эффект не описан';
+    const displayDuration = potion.duration || 'Мгновенный';
+    
+    // Определяем иконку по типу
+    let typeIcon = '🧪';
+    switch (potion.type) {
+        case 'potion': typeIcon = '🧪'; break;
+        case 'oil': typeIcon = '🧪'; break; // Масла теперь отображаются как зелья
+        case 'ointment': typeIcon = '🧴'; break;
+    }
+    
     const potionNote = `
         <div class="potion-note-header" style="background: var(--bg-tertiary); padding: var(--space-3); border-radius: var(--radius-md); margin-bottom: var(--space-3); border-left: 4px solid var(--accent-primary);">
-            <h3 style="margin: 0; color: var(--text-primary);">🧪 ${name}</h3>
+            <h3 style="margin: 0; color: var(--text-primary);">${typeIcon} ${displayName}</h3>
             <div style="display: flex; gap: var(--space-2); margin-top: var(--space-2); flex-wrap: wrap;">
-                <span style="background: var(--accent-primary); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">${rarity}</span>
-                <span style="background: var(--bg-quaternary); color: var(--text-primary); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">${type}</span>
+                <span style="background: var(--accent-primary); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">${displayRarity}</span>
+                <span style="background: var(--bg-quaternary); color: var(--text-primary); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">${displayType}</span>
             </div>
         </div>
         <div style="margin-bottom: var(--space-3);">
-            <strong>Описание:</strong> ${description}
+            <strong>Эффект:</strong> ${displayEffect}
         </div>
-        <div style="margin-bottom: var(--space-3);">
-            <strong>Стоимость:</strong> ${value}<br>
-            <strong>Вес:</strong> ${weight}
-        </div>
-        <div>
-            <strong>Свойства:</strong> ${properties}
-        </div>
+        ${displayDuration !== 'Мгновенный' ? `<div style="margin-bottom: var(--space-3);"><strong>Длительность:</strong> ${displayDuration}</div>` : ''}
     `;
     
     // Сохраняем в заметки через AJAX
@@ -5035,3 +5028,4 @@ function saveAllEnemiesToNotes(enemies) {
     console.log('Icon loading completed');
 })();
 </script>
+

@@ -9,7 +9,7 @@ class SpellService {
     private $spellsFile;
     
     public function __construct() {
-        $this->spellsFile = __DIR__ . '/../../data/персонажи/заклинания/заклинания.json';
+        $this->spellsFile = __DIR__ . '/../../data/заклинания/заклинания.json';
     }
     
     /**
