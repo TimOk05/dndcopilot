@@ -1952,7 +1952,7 @@ function formatPotionsFromApi(potions) {
                         ${costText ? `<span class="potion-cost">💰 ${costText}</span>` : ''}
                     </div>
                     <div class="potion-actions">
-                        <button class="btn btn-sm btn-primary" onclick="savePotionAsNote(${JSON.stringify(potion).replace(/"/g, '&quot;')})">
+                        <button class="btn btn-sm btn-primary" onclick="savePotionAsNote('${potion.id}', '${potion.name.replace(/'/g, "\\'")}', '${potion.rarity}', '${potion.type}', '${potion.effect.replace(/'/g, "\\'")}', '${potion.duration || 'Мгновенный'}', '${JSON.stringify(potion.cost || {}).replace(/"/g, '&quot;')}')">
                             💾 Сохранить в заметки
                         </button>
                     </div>
@@ -1966,24 +1966,31 @@ function formatPotionsFromApi(potions) {
 }
 
 // Функция сохранения зелья в заметки
-function savePotionAsNote(potion) {
-    const displayName = potion.name || 'Неизвестное зелье';
-    const displayRarity = potion.rarity_localized || potion.rarity || 'Неизвестная редкость';
-    const displayType = potion.type_localized || potion.type || 'Неизвестный тип';
-    const displayEffect = potion.effect || 'Эффект не описан';
-    const displayDuration = potion.duration || 'Мгновенный';
+function savePotionAsNote(id, name, rarity, type, effect, duration, costJson) {
+    const displayName = name || 'Неизвестное зелье';
+    const displayRarity = rarity || 'Неизвестная редкость';
+    const displayType = type || 'Неизвестный тип';
+    const displayEffect = effect || 'Эффект не описан';
+    const displayDuration = duration || 'Мгновенный';
     
     // Форматируем стоимость
     let costText = '';
-    if (potion.cost) {
-        const costValue = potion.cost.value;
-        const costApprox = potion.cost.approx ? '~' : '';
-        costText = `${costApprox}${costValue} зм`;
+    if (costJson && costJson !== '{}') {
+        try {
+            const cost = JSON.parse(costJson.replace(/&quot;/g, '"'));
+            if (cost.value) {
+                const costValue = cost.value;
+                const costApprox = cost.approx ? '~' : '';
+                costText = `${costApprox}${costValue} зм`;
+            }
+        } catch (e) {
+            console.error('Error parsing cost:', e);
+        }
     }
     
     // Определяем иконку по типу
     let typeIcon = '🧪';
-    switch (potion.type) {
+    switch (type) {
         case 'potion': typeIcon = '🧪'; break;
         case 'oil': typeIcon = '🧪'; break; // Масла теперь отображаются как зелья
         case 'ointment': typeIcon = '🧴'; break;
