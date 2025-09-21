@@ -41,6 +41,7 @@ if (isset($_POST['remove_note'])) {
 // --- Быстрые генерации через AJAX ---
 if (isset($_POST['fast_action'])) {
     $action = $_POST['fast_action'];
+    error_log('fast_action called with action: ' . $action);
     // --- Кости ---
     if ($action === 'dice_result') {
         $dice = $_POST['dice'] ?? '1d20';
@@ -66,6 +67,9 @@ if (isset($_POST['fast_action'])) {
     }
     // --- Сохранение заметки инициативы ---
     if ($action === 'save_note') {
+        // Логируем запрос для отладки
+        error_log('save_note called with content: ' . substr($_POST['content'] ?? '', 0, 100));
+        
         $content = $_POST['content'] ?? '';
         $title = $_POST['title'] ?? '';
         
@@ -2021,7 +2025,7 @@ function savePotionAsNote(id, name, rarity, type, effect, duration, costJson) {
     // Сохраняем в заметки через AJAX
     console.log('Sending potion note to server:', potionNote);
     
-    fetch(window.location.href, {
+    fetch('', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: 'fast_action=save_note&content=' + encodeURIComponent(potionNote)
