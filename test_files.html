@@ -18,10 +18,10 @@
             results.innerHTML = '<h2>Проверка файлов...</h2>';
 
             const files = [
-                '../sound/click.mp3',
-                '../sound/bg music dark.mp3',
-                '../sound/bg music mystic.mp3',
-                '../sound/bg music orange.mp3',
+                'sound/click.mp3',
+                'sound/bg music dark.mp3',
+                'sound/bg music mystic.mp3',
+                'sound/bg music orange.mp3',
                 'icons/crystal-ball-magic-svgrepo-com.svg'
             ];
 
@@ -43,7 +43,7 @@
             // Тест воспроизведения звука
             results.innerHTML += '<h2>Тест воспроизведения звука...</h2>';
             try {
-                const audio = new Audio('../sound/click.mp3');
+                const audio = new Audio('sound/click.mp3');
                 audio.volume = 0.1;
                 audio.play()
                     .then(() => {

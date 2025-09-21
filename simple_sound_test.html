@@ -63,24 +63,24 @@
             logMessage('Инициализация звуков...');
 
             try {
-                sounds.click = new Audio('../sound/click.mp3');
+                sounds.click = new Audio('sound/click.mp3');
                 sounds.click.volume = 0.3;
                 sounds.click.addEventListener('canplaythrough', () => logMessage('✅ Click ready'));
                 sounds.click.addEventListener('error', (e) => logMessage(`❌ Click error: ${e.message}`));
 
-                sounds.dark = new Audio('../sound/bg music dark.mp3');
+                sounds.dark = new Audio('sound/bg music dark.mp3');
                 sounds.dark.loop = true;
                 sounds.dark.volume = 0.2;
                 sounds.dark.addEventListener('canplaythrough', () => logMessage('✅ Dark music ready'));
                 sounds.dark.addEventListener('error', (e) => logMessage(`❌ Dark music error: ${e.message}`));
 
-                sounds.mystic = new Audio('../sound/bg music mystic.mp3');
+                sounds.mystic = new Audio('sound/bg music mystic.mp3');
                 sounds.mystic.loop = true;
                 sounds.mystic.volume = 0.2;
                 sounds.mystic.addEventListener('canplaythrough', () => logMessage('✅ Mystic music ready'));
                 sounds.mystic.addEventListener('error', (e) => logMessage(`❌ Mystic music error: ${e.message}`));
 
-                sounds.orange = new Audio('../sound/bg music orange.mp3');
+                sounds.orange = new Audio('sound/bg music orange.mp3');
                 sounds.orange.loop = true;
                 sounds.orange.volume = 0.2;
                 sounds.orange.addEventListener('canplaythrough', () => logMessage('✅ Orange music ready'));
