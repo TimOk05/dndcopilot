@@ -1939,9 +1939,8 @@ function formatPotionsFromApi(potions) {
         let costText = '';
         if (potion.cost) {
             const costValue = potion.cost.value;
-            const costCurrency = potion.cost.currency || 'gp';
             const costApprox = potion.cost.approx ? '~' : '';
-            costText = `${costApprox}${costValue} ${costCurrency}`;
+            costText = `${costApprox}${costValue} зм`;
         }
 
         html += `
@@ -1979,9 +1978,8 @@ function savePotionAsNote(potion) {
     let costText = '';
     if (potion.cost) {
         const costValue = potion.cost.value;
-        const costCurrency = potion.cost.currency || 'gp';
         const costApprox = potion.cost.approx ? '~' : '';
-        costText = `${costApprox}${costValue} ${costCurrency}`;
+        costText = `${costApprox}${costValue} зм`;
     }
     
     // Определяем иконку по типу

@@ -1,866 +1,2220 @@
 {
-  "metadata": {
-    "locale": "ru",
-    "notes": [
-      "Термины локализованы: спасбросок, преимущество/помеха, Класс Доспеха (КД), временные хиты и т.д.",
-      "Удалены все позиции без ясного описания эффекта.",
-      "Добавлены дополнительные зелья (homebrew) с понятными эффектами."
-    ]
-  },
-  "items": [
-    {
-      "id": "potion_healing",
-      "name": "Зелье лечения",
-      "type": "potion",
-      "rarity": "common",
-      "effect": "Восстанавливает 2к4+2 хитов.",
-      "duration": null,
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 50,
-        "currency": "gp",
-        "approx": true
-      }
+    "metadata": {
+        "locale": "ru",
+        "notes": [
+            "Термины локализованы: спасбросок, преимущество/помеха, Класс Доспеха (КД), временные хиты и т.д.",
+            "Удалены все позиции без ясного описания эффекта.",
+            "Добавлены дополнительные зелья (homebrew) с понятными эффектами."
+        ]
     },
-    {
-      "id": "potion_greater_healing",
-      "name": "Зелье большого лечения",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Восстанавливает 4к4+4 хитов.",
-      "duration": null,
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 200,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_superior_healing",
-      "name": "Зелье отличного лечения",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Восстанавливает 8к4+8 хитов.",
-      "duration": null,
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 450,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_supreme_healing",
-      "name": "Зелье совершенного лечения",
-      "type": "potion",
-      "rarity": "very_rare",
-      "effect": "Восстанавливает 10к4+20 хитов.",
-      "duration": null,
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 1350,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_climbing",
-      "name": "Зелье лазания",
-      "type": "potion",
-      "rarity": "common",
-      "effect": "Даёт скорость лазания, преимущество на проверки Атлетики при лазании.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 75,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_growth",
-      "name": "Зелье роста",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Ваш размер и масса увеличиваются: атаки ближнего боя и переносимый вес растут, оружие наносит больше урона. Длится 1 час.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_fire_breath",
-      "name": "Зелье огненного дыхания",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Три раза можно выдохнуть огонь, 4к6 урон (Сл 13 Лов).",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_water_breathing",
-      "name": "Зелье водного дыхания",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Дыхание под водой.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_poison",
-      "name": "Зелье-яд",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Маскируется под лечебное, наносит 3к6 ядом и ещё 3к6/раунд 1 минуту при провале (Сл 13).",
-      "duration": "1 минута",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_resistance",
-      "name": "Зелье сопротивления",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Сопротивление выбранному типу урона.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "subtype": {
-        "damage_type": "choose"
-      },
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "ointment_keoghtom",
-      "name": "Мазь Кеогтома",
-      "type": "ointment",
-      "rarity": "uncommon",
-      "effect": "Лечит 2к8+2, снимает яд и болезнь (на применение).",
-      "duration": null,
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "oil_slipperiness",
-      "name": "Масло скользкости",
-      "type": "oil",
-      "rarity": "uncommon",
-      "effect": "Намазанное существо игнорирует затруднённую местность и эффекты, удерживающие или сковывающие движение; легко высвобождается из хватки. Длительность 8 часов.",
-      "duration": "8 часов",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_clairvoyance",
-      "name": "Зелье ясновидения",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Создаёт невидимый магический сенсор в известном месте в пределах 1 мили. Через него можно видеть или слышать происходящее. Длительность 10 минут.",
-      "duration": "10 минут",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_diminution",
-      "name": "Зелье уменьшения",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Ваш размер уменьшается: вы легче, труднее попадаемы, но наносите меньше урона крупным оружием. Длится 1 час.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_gaseous_form",
-      "name": "Зелье газообразной формы",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Ваше тело превращается в туманную дымку. Вы просачиваетесь через щели, получаете сопротивление немагическим атакам, но не можете совершать атаки и большинство действий. Длительность 1 час.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_heroism",
-      "name": "Зелье героизма",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Вы наполняетесь отвагой: получаете временные хиты и иммунитет к испугу на 1 час.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_invulnerability",
-      "name": "Зелье неуязвимости",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Вы получаете сопротивление всем видам урона (кроме психического) на 1 минуту.",
-      "duration": "1 минута",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_mind_reading",
-      "name": "Зелье чтения мыслей",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Вы улавливаете поверхностные мысли ближайших существ и можете попытаться прочесть более глубокие мысли отдельной цели при её провале спасброска Мудрости. Длительность 1 минута.",
-      "duration": "1 минута",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_frost_giant_strength",
-      "name": "Зелье силы ледяного великана",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Сила становится 23.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_stone_giant_strength",
-      "name": "Зелье силы каменного великана",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Сила становится 23.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_elixir_of_health",
-      "name": "Эликсир здоровья",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Снимает болезни и состояния: слепота, глухота, паралич, отравление.",
-      "duration": null,
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "oil_etherealness",
-      "name": "Масло эфирности",
-      "type": "oil",
-      "rarity": "rare",
-      "effect": "Намазанное существо/предмет переходит в эфирное состояние: может проходить сквозь объекты и перемещаться рядом с материальным миром. Длительность 1 час.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_flying",
-      "name": "Зелье полёта",
-      "type": "potion",
-      "rarity": "very_rare",
-      "effect": "Вы получаете скорость полёта 60 фт и можете перемещаться по воздуху, пока действует зелье (1 час).",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 10000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_invisibility",
-      "name": "Зелье невидимости",
-      "type": "potion",
-      "rarity": "very_rare",
-      "effect": "Вы становитесь невидимы вместе с носимым/несомым. Эффект длится до 1 часа или до вашей атаки или чтения заклинания.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 10000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_speed",
-      "name": "Зелье скорости",
-      "type": "potion",
-      "rarity": "very_rare",
-      "effect": "Ваша скорость удваивается, КД повышается на 2, вы получаете дополнительное действие в каждом своём ходу (ограниченные варианты). Длительность 1 минута.",
-      "duration": "1 минута",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 10000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_vitality",
-      "name": "Зелье жизненной силы",
-      "type": "potion",
-      "rarity": "very_rare",
-      "effect": "Снимает все уровни истощения, прекращает действие отравления и позволяет восстанавливать максимум хитов при тратах Костей хитов в течение 24 часов.",
-      "duration": "24 часа",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 10000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_fire_giant_strength",
-      "name": "Зелье силы огнистого великана",
-      "type": "potion",
-      "rarity": "very_rare",
-      "effect": "Сила становится 25.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 10000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_cloud_giant_strength",
-      "name": "Зелье силы облачного великана",
-      "type": "potion",
-      "rarity": "very_rare",
-      "effect": "Сила становится 27.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 10000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "oil_sharpness",
-      "name": "Масло остроты",
-      "type": "oil",
-      "rarity": "very_rare",
-      "effect": "Оружие получает магический бонус к атакам/урону и считается магическим.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 10000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_storm_giant_strength",
-      "name": "Зелье силы буревого великана",
-      "type": "potion",
-      "rarity": "legendary",
-      "effect": "Сила становится 29.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "cost": {
-        "value": 50000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_watchful_rest",
-      "name": "Зелье бдительного отдыха",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Вы и до двух союзников рядом не страдаете от недостатка сна и спите спокойно. Длительность 8 часов.",
-      "duration": "8 часов",
-      "source": "WDMM",
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_advantage",
-      "name": "Зелье преимущества",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Один раз в течение часа можете получить преимущество на бросок атаки, спасбросок или проверку.",
-      "duration": "1 час",
-      "source": "WBW",
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_aqueous_form",
-      "name": "Зелье водной формы",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Ваше тело становится водянистым. Вы можете сжиматься, протискиваясь через узкие щели, и свободно перемещаться в воде; труднее схватить и удержать. Длительность 1 час.",
-      "duration": "1 час",
-      "source": "MOT",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_maximum_power",
-      "name": "Зелье максимальной силы",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Первое нанесённое вами заклинанием (уровня 4 или ниже) урон в течение следующей минуты считается максимальным, без бросков урона.",
-      "duration": "1 минута",
-      "source": "EGW",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_possibility",
-      "name": "Зелье возможностей",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Вы получаете 2 заряда удачи. Каждый можно потратить, чтобы перебросить куб любого своего броска и выбрать лучший результат в течение 8 часов.",
-      "duration": "8 часов",
-      "source": "EGW",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "bottled_breath",
-      "name": "Запечатанное дыхание",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Разбейте флакон, чтобы выпустить сильный порыв ветра, сбивающий лёгкие предметы и гасящий пламя; либо вдохните содержимое, чтобы на короткое время не задыхаться и протиснуться через тесный проход. Одноразовый эффект.",
-      "duration": "разовое",
-      "source": "Rime/PoA",
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_mind_control_beast",
-      "name": "Зелье контроля разума (зверь)",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Вы подчиняете волю одного зверя. Цель совершает спасбросок Мудрости (Сл 15); при провале выполняет ваши команды, повторяя спасбросок при получении урона. Длительность 1 час.",
-      "duration": "1 час",
-      "source": "TYP",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_mind_control_humanoid",
-      "name": "Зелье контроля разума (гуманоид)",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Вы подчиняете волю одного гуманоида. Цель совершает спасбросок Мудрости (Сл 15); при провале выполняет ваши команды, повторяя спасбросок при получении урона. Длительность 1 час.",
-      "duration": "1 час",
-      "source": "TYP",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_mind_control_monster",
-      "name": "Зелье контроля разума (монстр)",
-      "type": "potion",
-      "rarity": "very_rare",
-      "effect": "Вы подчиняете волю одного монстра. Цель совершает спасбросок Мудрости (Сл 15); при провале выполняет ваши команды, повторяя спасбросок при получении урона. Длительность 1 час.",
-      "duration": "1 час",
-      "source": "TYP",
-      "cost": {
-        "value": 10000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_giant_size",
-      "name": "Зелье гигантского размера",
-      "type": "potion",
-      "rarity": "legendary",
-      "effect": "Становитесь Огромным; Сила 25; макс. хитов ×2; досягаемость +5 фт.",
-      "duration": "24 часа",
-      "source": "SKT",
-      "cost": {
-        "value": 50000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_resistance_acid",
-      "name": "Зелье сопротивления (кислота)",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Сопротивление урону: кислота.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "subtype": {
-        "damage_type": "acid"
-      },
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_resistance_cold",
-      "name": "Зелье сопротивления (холод)",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Сопротивление урону: холод.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "subtype": {
-        "damage_type": "cold"
-      },
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_resistance_fire",
-      "name": "Зелье сопротивления (огонь)",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Сопротивление урону: огонь.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "subtype": {
-        "damage_type": "fire"
-      },
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_resistance_force",
-      "name": "Зелье сопротивления (силовой)",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Сопротивление урону: силовой.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "subtype": {
-        "damage_type": "force"
-      },
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_resistance_lightning",
-      "name": "Зелье сопротивления (молния)",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Сопротивление урону: молния.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "subtype": {
-        "damage_type": "lightning"
-      },
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_resistance_necrotic",
-      "name": "Зелье сопротивления (некротический)",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Сопротивление урону: некротический.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "subtype": {
-        "damage_type": "necrotic"
-      },
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_resistance_poison",
-      "name": "Зелье сопротивления (яд)",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Сопротивление урону: яд.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "subtype": {
-        "damage_type": "poison"
-      },
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_resistance_psychic",
-      "name": "Зелье сопротивления (психический)",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Сопротивление урону: психический.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "subtype": {
-        "damage_type": "psychic"
-      },
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_resistance_radiant",
-      "name": "Зелье сопротивления (излучение)",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Сопротивление урону: излучение.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "subtype": {
-        "damage_type": "radiant"
-      },
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_resistance_thunder",
-      "name": "Зелье сопротивления (гром)",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Сопротивление урону: гром.",
-      "duration": "1 час",
-      "source": "SRD/DMG",
-      "subtype": {
-        "damage_type": "thunder"
-      },
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_darkvision",
-      "name": "Зелье ночного зрения",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Ваши глаза привыкают к темноте: вы получаете ночное зрение на дистанцию 60 фт. В полной темноте видите как в сумерках, цвета искажаются.",
-      "duration": "8 часов",
-      "source": "homebrew",
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_spider_walk",
-      "name": "Зелье паучьего хождения",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Вы можете перемещаться по вертикальным поверхностям и по потолку, не используя руки, ваша скорость перемещения при этом не снижается.",
-      "duration": "1 час",
-      "source": "homebrew",
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_stoneskin",
-      "name": "Зелье каменной кожи",
-      "type": "potion",
-      "rarity": "very_rare",
-      "effect": "Ваша кожа твердеет как камень: вы получаете сопротивление дробящему, колющему и рубящему немагическому урону.",
-      "duration": "1 час",
-      "source": "homebrew",
-      "cost": {
-        "value": 10000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_barkskin",
-      "name": "Зелье коры дерева",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Кожа становится шероховатой и крепкой, минимальный Класс Доспеха становится 16 (если он был ниже).",
-      "duration": "1 час",
-      "source": "homebrew",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_cats_grace",
-      "name": "Эликсир кошачьей ловкости",
-      "type": "potion",
-      "rarity": "rare",
-      "effect": "Вы получаете преимущество на проверки Ловкости и спасброски Ловкости; падения с высоты до 20 фт не причиняют урона.",
-      "duration": "1 час",
-      "source": "homebrew",
-      "cost": {
-        "value": 2000,
-        "currency": "gp",
-        "approx": true
-      }
-    },
-    {
-      "id": "potion_swim",
-      "name": "Зелье быстрой плавучести",
-      "type": "potion",
-      "rarity": "uncommon",
-      "effect": "Вы получаете скорость плавания, равную вашей наземной скорости, и совершаете проверки Атлетики (плавание) с преимуществом.",
-      "duration": "1 час",
-      "source": "homebrew",
-      "cost": {
-        "value": 250,
-        "currency": "gp",
-        "approx": true
-      }
-    }
-  ],
-  "families": [
-    {
-      "family_id": "healing_potions",
-      "name": "Зелья лечения (варианты по редкости)",
-      "base_tag": "healing",
-      "variants": [
-        {
-          "id": "potion_healing",
-          "name": "Зелье лечения",
-          "rarity": "common",
-          "effect": "2к4+2 хитов",
-          "cost_gp": 50
+    "items": [{
+            "id": "potion_healing",
+            "name": "Зелье лечения",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Восстанавливает 2к4+2 хитов.",
+            "duration": null,
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 50,
+                "currency": "gp",
+                "approx": true
+            }
         },
         {
-          "id": "potion_greater_healing",
-          "name": "Зелье большого лечения",
-          "rarity": "uncommon",
-          "effect": "4к4+4 хитов",
-          "cost_gp": 200
+            "id": "potion_greater_healing",
+            "name": "Зелье большого лечения",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Восстанавливает 4к4+4 хитов.",
+            "duration": null,
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 200,
+                "currency": "gp",
+                "approx": true
+            }
         },
         {
-          "id": "potion_superior_healing",
-          "name": "Зелье отличного лечения",
-          "rarity": "rare",
-          "effect": "8к4+8 хитов",
-          "cost_gp": 450
+            "id": "potion_superior_healing",
+            "name": "Зелье отличного лечения",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Восстанавливает 8к4+8 хитов.",
+            "duration": null,
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 450,
+                "currency": "gp",
+                "approx": true
+            }
         },
         {
-          "id": "potion_supreme_healing",
-          "name": "Зелье совершенного лечения",
-          "rarity": "very_rare",
-          "effect": "10к4+20 хитов",
-          "cost_gp": 1350
+            "id": "potion_supreme_healing",
+            "name": "Зелье совершенного лечения",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Восстанавливает 10к4+20 хитов.",
+            "duration": null,
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 1350,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_climbing",
+            "name": "Зелье лазания",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Даёт скорость лазания, преимущество на проверки Атлетики при лазании.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 75,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_growth",
+            "name": "Зелье роста",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Ваш размер и масса увеличиваются: атаки ближнего боя и переносимый вес растут, оружие наносит больше урона. Длится 1 час.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_fire_breath",
+            "name": "Зелье огненного дыхания",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Три раза можно выдохнуть огонь, 4к6 урон (Сл 13 Лов).",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_water_breathing",
+            "name": "Зелье водного дыхания",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Дыхание под водой.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_poison",
+            "name": "Зелье-яд",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Маскируется под лечебное, наносит 3к6 ядом и ещё 3к6/раунд 1 минуту при провале (Сл 13).",
+            "duration": "1 минута",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_resistance",
+            "name": "Зелье сопротивления",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Сопротивление выбранному типу урона.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "subtype": {
+                "damage_type": "choose"
+            },
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "ointment_keoghtom",
+            "name": "Мазь Кеогтома",
+            "type": "ointment",
+            "rarity": "uncommon",
+            "effect": "Лечит 2к8+2, снимает яд и болезнь (на применение).",
+            "duration": null,
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "oil_slipperiness",
+            "name": "Масло скользкости",
+            "type": "oil",
+            "rarity": "uncommon",
+            "effect": "Намазанное существо игнорирует затруднённую местность и эффекты, удерживающие или сковывающие движение; легко высвобождается из хватки. Длительность 8 часов.",
+            "duration": "8 часов",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_clairvoyance",
+            "name": "Зелье ясновидения",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Создаёт невидимый магический сенсор в известном месте в пределах 1 мили. Через него можно видеть или слышать происходящее. Длительность 10 минут.",
+            "duration": "10 минут",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_diminution",
+            "name": "Зелье уменьшения",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Ваш размер уменьшается: вы легче, труднее попадаемы, но наносите меньше урона крупным оружием. Длится 1 час.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_gaseous_form",
+            "name": "Зелье газообразной формы",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Ваше тело превращается в туманную дымку. Вы просачиваетесь через щели, получаете сопротивление немагическим атакам, но не можете совершать атаки и большинство действий. Длительность 1 час.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_heroism",
+            "name": "Зелье героизма",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы наполняетесь отвагой: получаете временные хиты и иммунитет к испугу на 1 час.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_invulnerability",
+            "name": "Зелье неуязвимости",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы получаете сопротивление всем видам урона (кроме психического) на 1 минуту.",
+            "duration": "1 минута",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_mind_reading",
+            "name": "Зелье чтения мыслей",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы улавливаете поверхностные мысли ближайших существ и можете попытаться прочесть более глубокие мысли отдельной цели при её провале спасброска Мудрости. Длительность 1 минута.",
+            "duration": "1 минута",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_frost_giant_strength",
+            "name": "Зелье силы ледяного великана",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Сила становится 23.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_stone_giant_strength",
+            "name": "Зелье силы каменного великана",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Сила становится 23.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_elixir_of_health",
+            "name": "Эликсир здоровья",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Снимает болезни и состояния: слепота, глухота, паралич, отравление.",
+            "duration": null,
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "oil_etherealness",
+            "name": "Масло эфирности",
+            "type": "oil",
+            "rarity": "rare",
+            "effect": "Намазанное существо/предмет переходит в эфирное состояние: может проходить сквозь объекты и перемещаться рядом с материальным миром. Длительность 1 час.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_flying",
+            "name": "Зелье полёта",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы получаете скорость полёта 60 фт и можете перемещаться по воздуху, пока действует зелье (1 час).",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 10000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_invisibility",
+            "name": "Зелье невидимости",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы становитесь невидимы вместе с носимым/несомым. Эффект длится до 1 часа или до вашей атаки или чтения заклинания.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 10000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_speed",
+            "name": "Зелье скорости",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Ваша скорость удваивается, КД повышается на 2, вы получаете дополнительное действие в каждом своём ходу (ограниченные варианты). Длительность 1 минута.",
+            "duration": "1 минута",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 10000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_vitality",
+            "name": "Зелье жизненной силы",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Снимает все уровни истощения, прекращает действие отравления и позволяет восстанавливать максимум хитов при тратах Костей хитов в течение 24 часов.",
+            "duration": "24 часа",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 10000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_fire_giant_strength",
+            "name": "Зелье силы огнистого великана",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Сила становится 25.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 10000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_cloud_giant_strength",
+            "name": "Зелье силы облачного великана",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Сила становится 27.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 10000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "oil_sharpness",
+            "name": "Масло остроты",
+            "type": "oil",
+            "rarity": "very_rare",
+            "effect": "Оружие получает магический бонус к атакам/урону и считается магическим.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 10000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_storm_giant_strength",
+            "name": "Зелье силы буревого великана",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Сила становится 29.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "cost": {
+                "value": 50000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_watchful_rest",
+            "name": "Зелье бдительного отдыха",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы и до двух союзников рядом не страдаете от недостатка сна и спите спокойно. Длительность 8 часов.",
+            "duration": "8 часов",
+            "source": "WDMM",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_advantage",
+            "name": "Зелье преимущества",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Один раз в течение часа можете получить преимущество на бросок атаки, спасбросок или проверку.",
+            "duration": "1 час",
+            "source": "WBW",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_aqueous_form",
+            "name": "Зелье водной формы",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Ваше тело становится водянистым. Вы можете сжиматься, протискиваясь через узкие щели, и свободно перемещаться в воде; труднее схватить и удержать. Длительность 1 час.",
+            "duration": "1 час",
+            "source": "MOT",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_maximum_power",
+            "name": "Зелье максимальной силы",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Первое нанесённое вами заклинанием (уровня 4 или ниже) урон в течение следующей минуты считается максимальным, без бросков урона.",
+            "duration": "1 минута",
+            "source": "EGW",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_possibility",
+            "name": "Зелье возможностей",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы получаете 2 заряда удачи. Каждый можно потратить, чтобы перебросить куб любого своего броска и выбрать лучший результат в течение 8 часов.",
+            "duration": "8 часов",
+            "source": "EGW",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "bottled_breath",
+            "name": "Запечатанное дыхание",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Разбейте флакон, чтобы выпустить сильный порыв ветра, сбивающий лёгкие предметы и гасящий пламя; либо вдохните содержимое, чтобы на короткое время не задыхаться и протиснуться через тесный проход. Одноразовый эффект.",
+            "duration": "разовое",
+            "source": "Rime/PoA",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_mind_control_beast",
+            "name": "Зелье контроля разума (зверь)",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы подчиняете волю одного зверя. Цель совершает спасбросок Мудрости (Сл 15); при провале выполняет ваши команды, повторяя спасбросок при получении урона. Длительность 1 час.",
+            "duration": "1 час",
+            "source": "TYP",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_mind_control_humanoid",
+            "name": "Зелье контроля разума (гуманоид)",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы подчиняете волю одного гуманоида. Цель совершает спасбросок Мудрости (Сл 15); при провале выполняет ваши команды, повторяя спасбросок при получении урона. Длительность 1 час.",
+            "duration": "1 час",
+            "source": "TYP",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_mind_control_monster",
+            "name": "Зелье контроля разума (монстр)",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы подчиняете волю одного монстра. Цель совершает спасбросок Мудрости (Сл 15); при провале выполняет ваши команды, повторяя спасбросок при получении урона. Длительность 1 час.",
+            "duration": "1 час",
+            "source": "TYP",
+            "cost": {
+                "value": 10000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_giant_size",
+            "name": "Зелье гигантского размера",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Становитесь Огромным; Сила 25; макс. хитов ×2; досягаемость +5 фт.",
+            "duration": "24 часа",
+            "source": "SKT",
+            "cost": {
+                "value": 50000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_resistance_acid",
+            "name": "Зелье сопротивления (кислота)",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Сопротивление урону: кислота.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "subtype": {
+                "damage_type": "acid"
+            },
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_resistance_cold",
+            "name": "Зелье сопротивления (холод)",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Сопротивление урону: холод.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "subtype": {
+                "damage_type": "cold"
+            },
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_resistance_fire",
+            "name": "Зелье сопротивления (огонь)",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Сопротивление урону: огонь.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "subtype": {
+                "damage_type": "fire"
+            },
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_resistance_force",
+            "name": "Зелье сопротивления (силовой)",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Сопротивление урону: силовой.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "subtype": {
+                "damage_type": "force"
+            },
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_resistance_lightning",
+            "name": "Зелье сопротивления (молния)",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Сопротивление урону: молния.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "subtype": {
+                "damage_type": "lightning"
+            },
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_resistance_necrotic",
+            "name": "Зелье сопротивления (некротический)",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Сопротивление урону: некротический.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "subtype": {
+                "damage_type": "necrotic"
+            },
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_resistance_poison",
+            "name": "Зелье сопротивления (яд)",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Сопротивление урону: яд.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "subtype": {
+                "damage_type": "poison"
+            },
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_resistance_psychic",
+            "name": "Зелье сопротивления (психический)",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Сопротивление урону: психический.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "subtype": {
+                "damage_type": "psychic"
+            },
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_resistance_radiant",
+            "name": "Зелье сопротивления (излучение)",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Сопротивление урону: излучение.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "subtype": {
+                "damage_type": "radiant"
+            },
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_resistance_thunder",
+            "name": "Зелье сопротивления (гром)",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Сопротивление урону: гром.",
+            "duration": "1 час",
+            "source": "SRD/DMG",
+            "subtype": {
+                "damage_type": "thunder"
+            },
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_darkvision",
+            "name": "Зелье ночного зрения",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Ваши глаза привыкают к темноте: вы получаете ночное зрение на дистанцию 60 фт. В полной темноте видите как в сумерках, цвета искажаются.",
+            "duration": "8 часов",
+            "source": "homebrew",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_spider_walk",
+            "name": "Зелье паучьего хождения",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы можете перемещаться по вертикальным поверхностям и по потолку, не используя руки, ваша скорость перемещения при этом не снижается.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_stoneskin",
+            "name": "Зелье каменной кожи",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Ваша кожа твердеет как камень: вы получаете сопротивление дробящему, колющему и рубящему немагическому урону.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 10000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_barkskin",
+            "name": "Зелье коры дерева",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Кожа становится шероховатой и крепкой, минимальный Класс Доспеха становится 16 (если он был ниже).",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_cats_grace",
+            "name": "Эликсир кошачьей ловкости",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы получаете преимущество на проверки Ловкости и спасброски Ловкости; падения с высоты до 20 фт не причиняют урона.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_swim",
+            "name": "Зелье быстрой плавучести",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете скорость плавания, равную вашей наземной скорости, и совершаете проверки Атлетики (плавание) с преимуществом.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_alertness",
+            "name": "Зелье бдительности",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете +5 к инициативе и не можете быть застигнуты врасплох. Кроме того, другие существа не получают преимущества на атаки против вас из-за того, что вы их не видите.",
+            "duration": "8 часов",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_endurance",
+            "name": "Зелье выносливости",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы не чувствуете усталости, жажды или голода. Вы получаете сопротивление к урону от истощения.",
+            "duration": "24 часа",
+            "source": "homebrew",
+            "cost": {
+                "value": 400,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_underwater_breathing",
+            "name": "Зелье подводного дыхания",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы можете дышать под водой и получаете скорость плавания 30 футов.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 100,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_levitation",
+            "name": "Зелье левитации",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы можете левитировать на высоте до 20 футов над землей. Вы можете двигаться вверх или вниз, но не горизонтально, если не за что-то держитесь.",
+            "duration": "10 минут",
+            "source": "homebrew",
+            "cost": {
+                "value": 500,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_water_walking",
+            "name": "Зелье хождения по воде",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы можете ходить по поверхности воды и других жидкостей, как по твердой земле.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 200,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_animal_speaking",
+            "name": "Зелье разговора с животными",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы можете понимать и говорить с животными. Вы получаете способность общаться с зверями на простом уровне.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 150,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_glibness",
+            "name": "Зелье красноречия",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы получаете +5 к проверкам Харизмы и можете говорить на любом языке. Кроме того, магические эффекты не могут определить, что вы лжете.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 800,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_heroism_greater",
+            "name": "Зелье великого героизма",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы получаете временные хиты, равные вашему модификатору Харизмы + ваш уровень (минимум 1). Вы не можете испытывать страх.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 1000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_enhance_ability",
+            "name": "Зелье усиления способностей",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Выберите одну характеристику. Вы получаете преимущество на проверки этой характеристики. Кроме того, вы получаете временные хиты, равные вашему модификатору выбранной характеристики + ваш уровень.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_telepathy",
+            "name": "Зелье телепатии",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы можете передавать телепатические сообщения на расстояние до 60 футов. Существо, которое получает сообщение, может ответить телепатически, если находится в пределах дистанции.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 600,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_tongues",
+            "name": "Зелье языков",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы можете понимать и говорить на любом языке. Кроме того, вы можете читать любую письменность, если она написана на языке, который вы видели хотя бы раз.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 500,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_see_invisibility",
+            "name": "Зелье видения невидимого",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы можете видеть невидимых существ и предметы в пределах 60 футов от вас. Кроме того, вы можете видеть в эфирном плане в пределах 60 футов.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 800,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_enhance_weapon",
+            "name": "Зелье усиления оружия",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Оружие, которое вы держите, получает +1 к атакам и урону. Кроме того, оно считается магическим для преодоления сопротивления и иммунитета к немагическому урону.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 400,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_enhance_armor",
+            "name": "Зелье усиления доспехов",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Доспехи, которые вы носите, получают +1 к Классу Доспеха. Кроме того, вы получаете сопротивление к урону от атак ближнего боя.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 400,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_healing_greater_plus",
+            "name": "Зелье превосходного лечения",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Восстанавливает 12к4+24 хитов и снимает все болезни, отравления и слепоту.",
+            "duration": null,
+            "source": "homebrew",
+            "cost": {
+                "value": 1500,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_mana_restoration",
+            "name": "Зелье восстановления маны",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Восстанавливает одно заклинание 3-го уровня или ниже. Если у вас нет заклинаний этого уровня, эффект теряется.",
+            "duration": null,
+            "source": "homebrew",
+            "cost": {
+                "value": 1000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_etherealness",
+            "name": "Зелье эфирности",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы переходите в эфирный план на 8 часов. В этом состоянии вы можете перемещаться сквозь материальные объекты и видеть в материальном плане на расстоянии 60 футов.",
+            "duration": "8 часов",
+            "source": "homebrew",
+            "cost": {
+                "value": 5000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_wish",
+            "name": "Зелье желания",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы можете загадать одно желание. Эффект зависит от силы желания и может быть ограничен Мастером. После использования зелье теряет свою силу.",
+            "duration": "Мгновенная",
+            "source": "homebrew",
+            "cost": {
+                "value": 25000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_healing_minor",
+            "name": "Зелье малого лечения",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Восстанавливает 1к4+1 хитов.",
+            "duration": null,
+            "source": "homebrew",
+            "cost": {
+                "value": 25,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_healing_major",
+            "name": "Зелье значительного лечения",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Восстанавливает 16к4+32 хитов и снимает все болезни, отравления, слепоту, глухоту и паралич.",
+            "duration": null,
+            "source": "homebrew",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_healing_ultimate",
+            "name": "Зелье абсолютного лечения",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Восстанавливает все хиты до максимума, снимает все болезни, отравления, слепоту, глухоту, паралич, истощение и проклятия.",
+            "duration": null,
+            "source": "homebrew",
+            "cost": {
+                "value": 10000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_antidote",
+            "name": "Зелье противоядия",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Снимает все отравления и дает иммунитет к ядам на 1 час.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 150,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_cure_disease",
+            "name": "Зелье лечения болезней",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Снимает все болезни и дает иммунитет к болезням на 24 часа.",
+            "duration": "24 часа",
+            "source": "homebrew",
+            "cost": {
+                "value": 200,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_remove_curse",
+            "name": "Зелье снятия проклятий",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Снимает все проклятия и дает временную защиту от новых проклятий на 1 час.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 500,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_restoration",
+            "name": "Зелье восстановления",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Восстанавливает одну характеристику, сниженную магическим способом, и снимает слепоту, глухоту, паралич и отравление.",
+            "duration": null,
+            "source": "homebrew",
+            "cost": {
+                "value": 800,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_greater_restoration",
+            "name": "Зелье великого восстановления",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Восстанавливает все характеристики до максимума, снимает все болезни, отравления, слепоту, глухоту, паралич, истощение и проклятия.",
+            "duration": null,
+            "source": "homebrew",
+            "cost": {
+                "value": 1500,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_true_sight",
+            "name": "Зелье истинного зрения",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы можете видеть в обычной и магической темноте на расстоянии 120 футов, видеть невидимых существ и предметы, видеть в эфирном плане, видеть истинную форму трансформированных существ и предметов.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_legendary_resistance",
+            "name": "Зелье легендарного сопротивления",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Три раза в день вы можете автоматически преуспеть в спасброске, который провалили. Эффект длится 24 часа.",
+            "duration": "24 часа",
+            "source": "homebrew",
+            "cost": {
+                "value": 8000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_immortality",
+            "name": "Зелье бессмертия",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы перестаете стареть и получаете иммунитет к болезням. Если вы умираете, вы воскрешаете через 1к4 дней с полными хитами. Эффект постоянный.",
+            "duration": "Постоянный",
+            "source": "homebrew",
+            "cost": {
+                "value": 50000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_planar_travel",
+            "name": "Зелье межпланного путешествия",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы можете телепортироваться на любой план существования, который вы когда-либо посещали. Вы можете взять с собой до 8 существ.",
+            "duration": "Мгновенная",
+            "source": "homebrew",
+            "cost": {
+                "value": 15000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_time_stop",
+            "name": "Зелье остановки времени",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Время останавливается для всех существ, кроме вас, на 1к4+1 ходов. Вы можете действовать нормально, но не можете наносить урон другим существам.",
+            "duration": "1к4+1 ходов",
+            "source": "homebrew",
+            "cost": {
+                "value": 20000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_mind_blank",
+            "name": "Зелье защиты разума",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы получаете иммунитет к психическому урону, эффектам, которые читают эмоции или мысли, и заклинаниям прорицания. Кроме того, вы не можете быть обнаружены магическими средствами прорицания.",
+            "duration": "24 часа",
+            "source": "homebrew",
+            "cost": {
+                "value": 3000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_eternal_youth",
+            "name": "Зелье вечной молодости",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы перестаете стареть и выглядите на 25 лет. Ваша внешность больше не изменится. Эффект постоянный.",
+            "duration": "Постоянный",
+            "source": "homebrew",
+            "cost": {
+                "value": 30000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_legendary_healing",
+            "name": "Зелье легендарного лечения",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Восстанавливает все хиты до максимума, снимает все болезни, отравления, слепоту, глухоту, паралич, истощение, проклятия и восстанавливает все характеристики до максимума.",
+            "duration": null,
+            "source": "homebrew",
+            "cost": {
+                "value": 12000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_ultimate_power",
+            "name": "Зелье абсолютной силы",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Все ваши характеристики становятся 30, вы получаете +10 ко всем атакам, урону и спасброскам. Кроме того, вы получаете сопротивление ко всем типам урона.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 100000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_divine_blessing",
+            "name": "Зелье божественного благословения",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы получаете божественную защиту: сопротивление ко всем типам урона, иммунитет к очарованию, испугу и параличу, и возможность воскреснуть один раз, если умрете.",
+            "duration": "7 дней",
+            "source": "homebrew",
+            "cost": {
+                "value": 75000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_dragon_form",
+            "name": "Зелье формы дракона",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы превращаетесь во взрослого дракона (выберите тип) на 1 час. Вы сохраняете свою личность, воспоминания и способности, но получаете статистики дракона.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 50000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_elemental_form",
+            "name": "Зелье элементальной формы",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы превращаетесь в элементаля (огонь, вода, земля или воздух) на 1 час. Вы получаете иммунитет к соответствующему типу урона и новые способности.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 4000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_shadow_form",
+            "name": "Зелье теневой формы",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы становитесь тенью на 1 час. Вы можете проходить сквозь стены, получаете сопротивление к физическому урону и можете атаковать, нанося урон хитов.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 1200,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_giant_form",
+            "name": "Зелье формы великана",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы становитесь Огромным, получаете +4 к Силе и +2 к Телосложению, а также удваиваете урон от оружия ближнего боя.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 3000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_animal_form",
+            "name": "Зелье звериной формы",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы превращаетесь в зверя с рейтингом опасности 1/4 или ниже (например, волк, медведь, орёл) на 1 час. Вы сохраняете свою личность и способности, но получаете статистики зверя.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_plant_form",
+            "name": "Зелье растительной формы",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы становитесь растением на 1 час. Вы получаете иммунитет к очарованию, испугу и параличу, а также можете укореняться для восстановления хитов.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 800,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_construct_form",
+            "name": "Зелье формы конструкта",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы становитесь конструктом на 1 час. Вы получаете иммунитет к яду, болезням, очарованию, испугу, параличу и сну, а также сопротивление к физическому урону.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 2500,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_undead_form",
+            "name": "Зелье нежити",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы становитесь нежитью на 1 час. Вы получаете иммунитет к яду, болезням, очарованию, испугу, параличу и сну, а также можете поглощать жизненную силу врагов.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 3500,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_celestial_form",
+            "name": "Зелье небесной формы",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы становитесь небесным существом на 1 час. Вы получаете сопротивление к урону от оружия, не являющегося магическим, и можете исцелять союзников прикосновением.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 15000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_fiend_form",
+            "name": "Зелье демонической формы",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы становитесь демоном на 1 час. Вы получаете сопротивление к холоду, огню и молнии, а также можете призывать адских псов.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 20000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_aberration_form",
+            "name": "Зелье формы аберрации",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы становитесь аберрацией на 1 час. Вы получаете телепатию, сопротивление к очарованию и испугу, а также можете читать мысли существ.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 18000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_elemental_immunity",
+            "name": "Зелье элементального иммунитета",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Выберите один тип урона (огонь, холод, молния, кислота). Вы получаете иммунитет к этому типу урона на 1 час.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 1000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_magic_immunity",
+            "name": "Зелье магического иммунитета",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы получаете иммунитет к заклинаниям 6-го уровня и ниже на 1 час. Заклинания 7-го уровня и выше имеют преимущество против вас.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 25000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_weapon_immunity",
+            "name": "Зелье иммунитета к оружию",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы получаете сопротивление к урону от оружия, не являющегося магическим, на 1 час. Магическое оружие наносит полный урон.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 5000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_energy_absorption",
+            "name": "Зелье поглощения энергии",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Когда вы получаете урон от заклинания, вы поглощаете часть энергии и восстанавливаете хиты, равные половине полученного урона.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 1500,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_spell_reflection",
+            "name": "Зелье отражения заклинаний",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Когда на вас накладывают заклинание, вы можете отразить его обратно на заклинателя. Эффект срабатывает один раз.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 8000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_metamagic",
+            "name": "Зелье метамагии",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Ваши заклинания получают случайный метамагический эффект: увеличенная дальность, увеличенная область, увеличенная длительность или увеличенная сила.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_spell_enhancement",
+            "name": "Зелье усиления заклинаний",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Все ваши заклинания считаются на один уровень выше. Заклинания 9-го уровня остаются 9-го уровня, но получают дополнительные эффекты.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 6000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_phoenix_rebirth",
+            "name": "Зелье возрождения феникса",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Если вы умираете в течение 24 часов после употребления, вы воскрешаете с полными хитами в виде феникса на 1 час. После этого возвращаетесь в обычную форму.",
+            "duration": "24 часа",
+            "source": "homebrew",
+            "cost": {
+                "value": 40000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_eternal_flame",
+            "name": "Зелье вечного пламени",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы получаете иммунитет к огню и можете дышать пламенем, нанося 3к6 урона огнем в конусе 15 футов. Кроме того, ваши атаки ближнего боя наносят дополнительно 1к6 урона огнем.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 3500,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_ice_heart",
+            "name": "Зелье ледяного сердца",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы получаете иммунитет к холоду и можете заморозить противников прикосновением (Сл 15, 2к6 урона холодом и замедление). Кроме того, вы можете ходить по воде, замораживая её.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 3500,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_storm_lord",
+            "name": "Зелье повелителя бури",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы получаете иммунитет к молнии и грому, можете летать со скоростью 60 футов, и вызываете молнии, наносящие 4к6 урона молнией в радиусе 20 футов.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 30000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_earth_master",
+            "name": "Зелье повелителя земли",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы получаете иммунитет к кислоте, можете проходить сквозь землю и камень, и вызывать землетрясения, наносящие 3к6 урона дроблением в радиусе 30 футов.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 4000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_shadow_master",
+            "name": "Зелье повелителя теней",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы получаете иммунитет к некротическому урону, можете телепортироваться между тенями на расстояние до 60 футов, и создавать теневых слуг, которые сражаются за вас.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 25000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_light_bringer",
+            "name": "Зелье носителя света",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы получаете иммунитет к излучению, излучаете яркий свет в радиусе 60 футов, и можете создавать световые копья, наносящие 4к6 урона излучением на расстояние 120 футов.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 20000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_force_wielder",
+            "name": "Зелье повелителя силы",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы получаете иммунитет к силовому урону, можете двигать предметы силой мысли (до 1000 фунтов), и создавать силовые барьеры, которые поглощают урон.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 5000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_psychic_master",
+            "name": "Зелье повелителя разума",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы получаете иммунитет к психическому урону, можете читать мысли всех существ в радиусе 60 футов, и контролировать разум одного существа (Сл 20).",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 35000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_poison_immunity",
+            "name": "Зелье иммунитета к ядам",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете иммунитет к ядам и болезням на 24 часа. Кроме того, ваши атаки могут отравлять противников (Сл 13, 1к4 урона ядом каждый ход).",
+            "duration": "24 часа",
+            "source": "homebrew",
+            "cost": {
+                "value": 200,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_charm_immunity",
+            "name": "Зелье иммунитета к очарованию",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы получаете иммунитет к очарованию и испугу на 8 часов. Кроме того, вы можете очаровывать других существ взглядом (Сл 15).",
+            "duration": "8 часов",
+            "source": "homebrew",
+            "cost": {
+                "value": 800,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_paralysis_immunity",
+            "name": "Зелье иммунитета к параличу",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы получаете иммунитет к параличу и сну на 8 часов. Кроме того, вы можете парализовать противников прикосновением (Сл 15).",
+            "duration": "8 часов",
+            "source": "homebrew",
+            "cost": {
+                "value": 800,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_blindness_immunity",
+            "name": "Зелье иммунитета к слепоте",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете иммунитет к слепоте и можете видеть в магической темноте на расстоянии 120 футов на 8 часов.",
+            "duration": "8 часов",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_deafness_immunity",
+            "name": "Зелье иммунитета к глухоте",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете иммунитет к глухоте и можете слышать звуки на расстоянии до 1 мили на 8 часов.",
+            "duration": "8 часов",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_exhaustion_immunity",
+            "name": "Зелье иммунитета к истощению",
+            "type": "potion",
+            "rarity": "rare",
+            "effect": "Вы получаете иммунитет к истощению на 7 дней. Вы не чувствуете усталости, голода или жажды.",
+            "duration": "7 дней",
+            "source": "homebrew",
+            "cost": {
+                "value": 1000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_curse_immunity",
+            "name": "Зелье иммунитета к проклятиям",
+            "type": "potion",
+            "rarity": "very_rare",
+            "effect": "Вы получаете иммунитет к проклятиям на 24 часа. Кроме того, вы можете снимать проклятия с других существ прикосновением.",
+            "duration": "24 часа",
+            "source": "homebrew",
+            "cost": {
+                "value": 2000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_grappling_master",
+            "name": "Зелье мастера захватов",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Атлетики для захватов и освобождения от захватов. Кроме того, ваши захваты наносят 1к4 урона дроблением каждый ход.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_acrobat_master",
+            "name": "Зелье мастера акробатики",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Ловкости и можете совершать двойные прыжки. Кроме того, вы получаете сопротивление к урону от падений.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 250,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_stealth_master",
+            "name": "Зелье мастера скрытности",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Скрытности и можете становиться невидимым на 1 минуту один раз в час. Кроме того, вы не оставляете следов.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_perception_master",
+            "name": "Зелье мастера восприятия",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Восприятия и можете видеть невидимых существ в радиусе 30 футов. Кроме того, вы не можете быть застигнуты врасплох.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_intimidation_master",
+            "name": "Зелье мастера запугивания",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Запугивания и можете заставить противников совершить спасбросок Мудрости (Сл 15) или испугаться на 1 минуту.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_persuasion_master",
+            "name": "Зелье мастера убеждения",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Убеждения и можете заставить противников совершить спасбросок Мудрости (Сл 15) или быть очарованными на 1 минуту.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_deception_master",
+            "name": "Зелье мастера обмана",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Обмана и можете создавать иллюзии, которые выглядят реальными. Кроме того, магические эффекты не могут определить, что вы лжете.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_insight_master",
+            "name": "Зелье мастера проницательности",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Проницательности и можете читать эмоции существ в радиусе 30 футов. Кроме того, вы можете определить, говорит ли кто-то правду.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_medicine_master",
+            "name": "Зелье мастера медицины",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Медицины и можете лечить 1к8+2 хитов одним действием. Кроме того, вы можете диагностировать болезни и яды.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_nature_master",
+            "name": "Зелье мастера природы",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Природы и можете общаться с растениями и животными. Кроме того, вы можете призывать зверей для помощи.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_religion_master",
+            "name": "Зелье мастера религии",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Религии и можете обнаруживать нежить и небожителей в радиусе 60 футов. Кроме того, вы можете изгонять нежить.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_arcana_master",
+            "name": "Зелье мастера магии",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Магии и можете обнаруживать магические эффекты в радиусе 60 футов. Кроме того, вы можете развеивать заклинания 3-го уровня и ниже.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_history_master",
+            "name": "Зелье мастера истории",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Истории и можете узнавать информацию о любом предмете или месте, просто посмотрев на него. Кроме того, вы можете предсказывать будущее.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_investigation_master",
+            "name": "Зелье мастера расследования",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Расследования и можете находить скрытые предметы и ловушки в радиусе 30 футов. Кроме того, вы можете анализировать улики.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_animal_handling_master",
+            "name": "Зелье мастера обращения с животными",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Обращения с животными и можете приручать диких зверей. Кроме того, вы можете призывать стаю зверей для помощи.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_survival_master",
+            "name": "Зелье мастера выживания",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Выживания и можете находить еду и воду в любой местности. Кроме того, вы можете предсказывать погоду.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_performance_master",
+            "name": "Зелье мастера выступлений",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Выступлений и можете очаровывать аудиторию. Кроме того, вы можете создавать иллюзии для развлечения.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_sleight_of_hand_master",
+            "name": "Зелье мастера ловкости рук",
+            "type": "potion",
+            "rarity": "uncommon",
+            "effect": "Вы получаете преимущество на проверки Ловкости рук и можете красть предметы незаметно. Кроме того, вы можете открывать замки без отмычек.",
+            "duration": "1 час",
+            "source": "homebrew",
+            "cost": {
+                "value": 300,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_eternal_youth_elixir",
+            "name": "Эликсир вечной молодости",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы перестаете стареть и получаете иммунитет к болезням. Ваша внешность остается неизменной навсегда.",
+            "duration": "Постоянный",
+            "source": "homebrew",
+            "cost": {
+                "value": 100000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_eternal_life",
+            "name": "Зелье вечной жизни",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы получаете иммунитет к старению и болезням. Вы не можете умереть от старости и получаете сопротивление ко всем типам урона.",
+            "duration": "Постоянный",
+            "source": "homebrew",
+            "cost": {
+                "value": 500000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_eternal_death",
+            "name": "Зелье вечной смерти",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Вы становитесь личем. Вы получаете иммунитет к яду, болезням, очарованию, испугу, параличу и сну, а также можете воскрешать мертвых.",
+            "duration": "Постоянный",
+            "source": "homebrew",
+            "cost": {
+                "value": 1000000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_eternal_wisdom",
+            "name": "Зелье вечной мудрости",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Ваш Интеллект становится 30, и вы получаете знание всех языков и заклинаний. Вы можете предсказывать будущее.",
+            "duration": "Постоянный",
+            "source": "homebrew",
+            "cost": {
+                "value": 200000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_eternal_strength",
+            "name": "Зелье вечной силы",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Ваша Сила становится 30, и вы получаете способность поднимать неограниченный вес. Вы можете разрушать горы одним ударом.",
+            "duration": "Постоянный",
+            "source": "homebrew",
+            "cost": {
+                "value": 200000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_eternal_dexterity",
+            "name": "Зелье вечной ловкости",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Ваша Ловкость становится 30, и вы получаете способность двигаться со скоростью света. Вы можете уклоняться от любых атак.",
+            "duration": "Постоянный",
+            "source": "homebrew",
+            "cost": {
+                "value": 200000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_eternal_constitution",
+            "name": "Зелье вечной выносливости",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Ваше Телосложение становится 30, и вы получаете неограниченные хиты. Вы не можете умереть от урона.",
+            "duration": "Постоянный",
+            "source": "homebrew",
+            "cost": {
+                "value": 200000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_eternal_charisma",
+            "name": "Зелье вечной харизмы",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Ваша Харизма становится 30, и вы можете очаровывать любых существ. Вы можете заставить любого выполнить любое желание.",
+            "duration": "Постоянный",
+            "source": "homebrew",
+            "cost": {
+                "value": 200000,
+                "currency": "gp",
+                "approx": true
+            }
+        },
+        {
+            "id": "potion_eternal_wisdom_boost",
+            "name": "Зелье вечной мудрости (усиленное)",
+            "type": "potion",
+            "rarity": "legendary",
+            "effect": "Ваша Мудрость становится 30, и вы получаете способность видеть будущее и прошлое. Вы можете читать мысли всех существ в мире.",
+            "duration": "Постоянный",
+            "source": "homebrew",
+            "cost": {
+                "value": 200000,
+                "currency": "gp",
+                "approx": true
+            }
         }
-      ]
-    }
-  ]
+    ],
+    "families": [{
+        "family_id": "healing_potions",
+        "name": "Зелья лечения (варианты по редкости)",
+        "base_tag": "healing",
+        "variants": [{
+                "id": "potion_healing",
+                "name": "Зелье лечения",
+                "rarity": "uncommon",
+                "effect": "2к4+2 хитов",
+                "cost_gp": 50
+            },
+            {
+                "id": "potion_greater_healing",
+                "name": "Зелье большого лечения",
+                "rarity": "uncommon",
+                "effect": "4к4+4 хитов",
+                "cost_gp": 200
+            },
+            {
+                "id": "potion_superior_healing",
+                "name": "Зелье отличного лечения",
+                "rarity": "rare",
+                "effect": "8к4+8 хитов",
+                "cost_gp": 450
+            },
+            {
+                "id": "potion_supreme_healing",
+                "name": "Зелье совершенного лечения",
+                "rarity": "very_rare",
+                "effect": "10к4+20 хитов",
+                "cost_gp": 1350
+            }
+        ]
+    }]
 }
