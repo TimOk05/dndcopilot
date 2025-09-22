@@ -9,10 +9,20 @@ define('DB_PASS', '');
 
 // API ключи
 function getApiKey($service) {
+    // Сначала читаем из переменных окружения, затем из констант, затем из локальной карты
+    if ($service === 'deepseek') {
+        $env = getenv('DEEPSEEK_API_KEY');
+        if ($env && trim($env) !== '') {
+            return trim($env);
+        }
+        if (defined('DEEPSEEK_API_KEY') && DEEPSEEK_API_KEY) {
+            return DEEPSEEK_API_KEY;
+        }
+    }
+
     $apiKeys = [
-        'deepseek' => '', // 🔑 API ключ DeepSeek для AI генерации
+        'deepseek' => 'sk-1e898ddba737411e948af435d767e893', // 🔑 API ключ DeepSeek для AI генерации (fallback)
     ];
-    
     return $apiKeys[$service] ?? '';
 }
 

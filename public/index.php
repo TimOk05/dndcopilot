@@ -650,7 +650,17 @@ function openCharacterModal() {
             // Проверяем, что ответ можно распарсить как JSON
             if (!response.ok) {
                 try { console.error('[CharacterGen] HTTP error', response.status, response.statusText); } catch (e) {}
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                return response.text().then(errText => {
+                    let msg = response.statusText || 'Ошибка';
+                    try {
+                        const parsed = JSON.parse(errText);
+                        msg = parsed.error || parsed.message || msg;
+                        console.error('[CharacterGen] Error body:', parsed);
+                    } catch (_) {
+                        if (errText) console.error('[CharacterGen] Raw error body:', errText);
+                    }
+                    throw new Error(`HTTP ${response.status}: ${msg}`);
+                });
             }
             console.timeEnd('[CharacterGen] fetch api/generate-characters.php');
             return response.text().then(text => {
