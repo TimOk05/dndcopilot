@@ -1,0 +1,3107 @@
+{
+  "schema_version": 1,
+  "generated_at": "2025-09-22T08:29:09Z",
+  "races": {
+    "aarakocra": {
+      "id": "race_aarakocra",
+      "name": "Ааракокра",
+      "name_en": "Aarakocra",
+      "edition": "5e-EEPC",
+      "source": {
+        "book": "Elemental Evil Player's Companion",
+        "short": "EEPC"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 3,
+        "avg": 20,
+        "max": 30
+      },
+      "alignment": "Обычно добрые; редко выбирают строго Закон или Хаос",
+      "size": "Medium",
+      "height_ft": 5,
+      "weight_lb": "80–100",
+      "speed": {
+        "walk": 25,
+        "fly": 50
+      },
+      "ability_bonuses": [
+        {
+          "ability": "DEX",
+          "bonus": 2
+        },
+        {
+          "ability": "WIS",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Ауран",
+        "Ааракокра"
+      ],
+      "vision": {
+        "darkvision": 0,
+        "notes": ""
+      },
+      "traits": [
+        {
+          "id": "aarakocra_flight",
+          "name": "Полёт",
+          "description": "Вы можете летать со скоростью 50 фт., если не носите средний или тяжёлый доспех."
+        },
+        {
+          "id": "aarakocra_claws",
+          "name": "Когти",
+          "description": "Ваша безоружная атака когтями наносит 1к4 рубящего урона."
+        }
+      ],
+      "optional_rules": {
+        "requires_dm_permission": true,
+        "notes": "Игра за ааракокру требует специального разрешения от Мастера."
+      },
+      "tags": [
+        "ee",
+        "humanoid",
+        "aarakocra",
+        "flight"
+      ],
+      "version": 1
+    },
+    "aasimar": {
+      "id": "race_aasimar",
+      "name": "Аасимар",
+      "name_en": "Aasimar",
+      "edition": "5e-EEPC",
+      "source": {
+        "book": "Elemental Evil Player's Companion",
+        "short": "EEPC"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 18,
+        "avg": 100,
+        "max": 160
+      },
+      "alignment": "Обычно добрые; изгои могут быть нейтральными или злыми",
+      "size": "Medium",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "CHA",
+          "bonus": 2
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Небесный"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "В темноте различаются только оттенки серого"
+      },
+      "traits": [
+        {
+          "id": "aasimar_resistance",
+          "name": "Небесное сопротивление",
+          "description": "Сопротивление некротическому урону и урону излучением."
+        },
+        {
+          "id": "aasimar_healing_hands",
+          "name": "Исцеляющие руки",
+          "description": "Как действие можете восстановить хиты существу, равные вашему уровню. Раз в длительный отдых."
+        },
+        {
+          "id": "aasimar_light_bearer",
+          "name": "Несущий свет",
+          "description": "Вы знаете заговор «Свет». Базовой характеристикой является Харизма."
+        }
+      ],
+      "subraces": [
+        {
+          "id": "aasimar_protector",
+          "name": "Аасимар-защитник",
+          "ability_bonuses": [
+            {
+              "ability": "WIS",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "radiant_soul",
+              "name": "Сияющая душа",
+              "description": "С 3 уровня: действие — проявление крыльев света, полёт 30 фт., раз в ход доп. урон излучением = уровень. 1 минута. Раз в длительный отдых."
+            }
+          ]
+        },
+        {
+          "id": "aasimar_avenger",
+          "name": "Аасимар-каратель",
+          "ability_bonuses": [
+            {
+              "ability": "CON",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "radiant_consumption",
+              "name": "Испускание сияния",
+              "description": "С 3 уровня: действие — излучение света, урон излучением себе и врагам рядом, раз в ход доп. урон излучением = уровень. 1 минута. Раз в длительный отдых."
+            }
+          ]
+        },
+        {
+          "id": "aasimar_fallen",
+          "name": "Павший аасимар",
+          "ability_bonuses": [
+            {
+              "ability": "STR",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "necrotic_shroud",
+              "name": "Саван смерти",
+              "description": "С 3 уровня: действие — крылья тьмы, Испуг существ рядом (Сл = 8 + бонус мастерства + Харизма), раз в ход доп. некротический урон = уровень. 1 минута. Раз в длительный отдых."
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "ee",
+        "humanoid",
+        "aasimar"
+      ],
+      "version": 1
+    },
+    "gnome": {
+      "id": "race_gnome",
+      "name": "Гном",
+      "name_en": "Gnome",
+      "edition": "5e-PHB/MTF/ERLW",
+      "source": {
+        "book": "Player's Handbook, Mordenkainen's Tome of Foes, Eberron: Rising from the Last War",
+        "short": "PHB/MTF/ERLW"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 40,
+        "avg": 375,
+        "max": 500
+      },
+      "alignment": "Чаще добрые; склонные к порядку становятся учёными, склонные к хаосу — шутниками и путешественниками.",
+      "size": "Small",
+      "height_ft": "3-4",
+      "weight_lb": "40-45",
+      "speed": {
+        "walk": 25
+      },
+      "ability_bonuses": [
+        {
+          "ability": "INT",
+          "bonus": 2
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Гномий"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "Оттенки серого в темноте"
+      },
+      "traits": [
+        {
+          "id": "gnome_cunning",
+          "name": "Гномья хитрость",
+          "description": "Преимущество на спасброски Интеллекта, Мудрости и Харизмы против магии."
+        }
+      ],
+      "subraces": [
+        {
+          "id": "gnome_forest",
+          "name": "Лесной гном",
+          "ability_bonuses": [
+            {
+              "ability": "DEX",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "natural_illusionist",
+              "name": "Природная иллюзия",
+              "description": "Вы знаете заклинание «Малая иллюзия». Базовой характеристикой является Интеллект."
+            },
+            {
+              "id": "speak_with_small_beasts",
+              "name": "Общение с маленькими зверями",
+              "description": "Вы можете передавать простые понятия маленьким зверям с помощью звуков и жестов."
+            }
+          ]
+        },
+        {
+          "id": "gnome_rock",
+          "name": "Скальный гном",
+          "ability_bonuses": [
+            {
+              "ability": "CON",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "artificers_lore",
+              "name": "Ремесленные знания",
+              "description": "История о магических/алхимических/тех. объектах: удвоенный бонус мастерства."
+            },
+            {
+              "id": "tinker",
+              "name": "Жестянщик",
+              "description": "Вы владеете инструментами жестянщика и можете создавать крошечные механизмы (до 3 одновременно)."
+            }
+          ]
+        },
+        {
+          "id": "gnome_deep",
+          "name": "Глубинный гном (Свирфнеблин)",
+          "ability_bonuses": [
+            {
+              "ability": "DEX",
+              "bonus": 1
+            }
+          ],
+          "lifespan_years": {
+            "min": 25,
+            "avg": 225,
+            "max": 250
+          },
+          "vision": {
+            "darkvision": 120,
+            "notes": ""
+          },
+          "alignment": "Чаще нейтральные, выживающие в Подземье.",
+          "traits": [
+            {
+              "id": "stone_camouflage",
+              "name": "Каменный камуфляж",
+              "description": "Преимущество на проверки Скрытности в каменистой местности и под землёй."
+            },
+            {
+              "id": "extra_language",
+              "name": "Дополнительный язык",
+              "description": "Вы знаете Подземный язык."
+            }
+          ]
+        },
+        {
+          "id": "gnome_eberron",
+          "name": "Гном Эберрона (Метка Письма)",
+          "ability_bonuses": [
+            {
+              "ability": "CHA",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "scribes_insight",
+              "name": "Талант писаря",
+              "description": "При проверке Истории или навыков с инструментом каллиграфа бросьте к4 и добавьте к результату."
+            },
+            {
+              "id": "scribes_awareness",
+              "name": "Проницательность писца",
+              "description": "Вы знаете заговор «Сообщение». 1/день — «Понимание языков». С 3 уровня — «Волшебные уста». Базовая характеристика — Интеллект."
+            },
+            {
+              "id": "scribe_spells",
+              "name": "Заклинания метки",
+              "description": "Заклинания Метки Письма добавляются в список заклинаний вашего класса заклинателя."
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "phb",
+        "mtf",
+        "erlw",
+        "gnome"
+      ],
+      "version": 1,
+      "subrace_selection": {
+        "enabled": true,
+        "required": true,
+        "default_subrace_id": null,
+        "label": "Подрасса"
+      }
+    },
+    "goblin": {
+      "id": "race_goblin",
+      "name": "Гоблин",
+      "name_en": "Goblin",
+      "edition": "5e-VGtM/ERLW",
+      "source": {
+        "book": "Volo's Guide to Monsters / Eberron: Rising from the Last War",
+        "short": "VGtM/ERLW"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 8,
+        "avg": 40,
+        "max": 60
+      },
+      "alignment": "В Эберроне обычно нейтральные, заботятся о себе.",
+      "size": "Small",
+      "height_ft": 4,
+      "weight_lb": 60,
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "DEX",
+          "bonus": 2
+        },
+        {
+          "ability": "CON",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Гоблинский"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "Оттенки серого в темноте"
+      },
+      "traits": [
+        {
+          "id": "fury_of_the_small",
+          "name": "Ярость мелкого",
+          "description": "Когда вы наносите урон существу большего размера, добавьте к урону значение вашего уровня. 1/короткий или длинный отдых."
+        },
+        {
+          "id": "nimble_escape",
+          "name": "Проворное бегство",
+          "description": "Вы можете использовать действия Отход или Скрыться бонусным действием в каждом из ваших ходов."
+        }
+      ],
+      "tags": [
+        "vgtm",
+        "erlw",
+        "goblin",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "hobgoblin": {
+      "id": "race_hobgoblin",
+      "name": "Хобгоблин",
+      "name_en": "Hobgoblin",
+      "edition": "5e-VGtM/ERLW",
+      "source": {
+        "book": "Volo's Guide to Monsters / Eberron: Rising from the Last War",
+        "short": "VGtM/ERLW"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 18,
+        "avg": 70,
+        "max": 100
+      },
+      "alignment": "Обычно законные; общество основано на кодексе чести и дисциплине.",
+      "size": "Medium",
+      "height_ft": "6-6.5",
+      "weight_lb": "200-275",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "CON",
+          "bonus": 2
+        },
+        {
+          "ability": "INT",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Гоблинский"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "Оттенки серого в темноте"
+      },
+      "traits": [
+        {
+          "id": "martial_training",
+          "name": "Боевая подготовка",
+          "description": "Вы владеете двумя видами воинского оружия на ваш выбор и лёгкой бронёй."
+        },
+        {
+          "id": "saving_face",
+          "name": "Спасение репутации",
+          "description": "Когда вы промахиваетесь или проваливаете проверку/спасбросок, добавьте бонус = числу союзников в пределах 30 футов (макс. +5). 1/короткий или длинный отдых."
+        }
+      ],
+      "tags": [
+        "vgtm",
+        "erlw",
+        "hobgoblin",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "goliath": {
+      "id": "race_goliath",
+      "name": "Голиаф",
+      "name_en": "Goliath",
+      "edition": "5e-VGtM",
+      "source": {
+        "book": "Volo's Guide to Monsters",
+        "short": "VGtM"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 20,
+        "avg": 60,
+        "max": 100
+      },
+      "alignment": "Склонны к законному нейтралитету, ценят самодостаточность и справедливость.",
+      "size": "Medium",
+      "height_ft": "7-8",
+      "weight_lb": "280-340",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "STR",
+          "bonus": 2
+        },
+        {
+          "ability": "CON",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Гигантский"
+      ],
+      "traits": [
+        {
+          "id": "natural_athlete",
+          "name": "Прирожденный атлет",
+          "description": "Вы владеете навыком Атлетика."
+        },
+        {
+          "id": "stone_endurance",
+          "name": "Выносливость камня",
+          "description": "Реакцией при получении урона бросьте к12 + модификатор Телосложения, уменьшите урон. 1/короткий или длинный отдых."
+        },
+        {
+          "id": "powerful_build",
+          "name": "Мощное телосложение",
+          "description": "Считаетесь на один размер больше при определении грузоподъёмности и веса."
+        },
+        {
+          "id": "mountain_born",
+          "name": "Рожденный в горах",
+          "description": "Сопротивление урону холодом; приспособлены к большой высоте и холодному климату."
+        }
+      ],
+      "tags": [
+        "vgtm",
+        "goliath",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "dwarf": {
+      "id": "race_dwarf",
+      "name": "Дварф",
+      "name_en": "Dwarf",
+      "edition": "5e-PHB",
+      "source": {
+        "book": "Player's Handbook",
+        "short": "PHB"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 50,
+        "avg": 350,
+        "max": 400
+      },
+      "alignment": "Чаще законопослушные и добрые; ценят традиции, справедливость и кланы.",
+      "size": "Medium",
+      "height_ft": "4-5",
+      "weight_lb": "150",
+      "speed": {
+        "walk": 25,
+        "notes": "Ношение тяжёлых доспехов не снижает скорость"
+      },
+      "ability_bonuses": [
+        {
+          "ability": "CON",
+          "bonus": 2
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Дварфский"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "Оттенки серого в темноте"
+      },
+      "traits": [
+        {
+          "id": "dwarven_resilience",
+          "name": "Дварфская устойчивость",
+          "description": "Преимущество на спасброски от яда; сопротивление урону ядом."
+        },
+        {
+          "id": "dwarven_combat_training",
+          "name": "Дварфская боевая тренировка",
+          "description": "Владение боевым топором, ручным топором, лёгким и боевым молотами."
+        },
+        {
+          "id": "tool_proficiency",
+          "name": "Владение инструментами",
+          "description": "Вы владеете инструментами кузнеца, пивовара или каменщика (на выбор)."
+        },
+        {
+          "id": "stonecunning",
+          "name": "Знание камня",
+          "description": "История, связанная с каменными сооружениями: удвоенный бонус мастерства."
+        }
+      ],
+      "subraces": [
+        {
+          "id": "dwarf_hill",
+          "name": "Холмовой дварф",
+          "ability_bonuses": [
+            {
+              "ability": "WIS",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "dwarven_toughness",
+              "name": "Дварфская выдержка",
+              "description": "Максимум хитов +1 и ещё +1 за каждый уровень."
+            }
+          ]
+        },
+        {
+          "id": "dwarf_mountain",
+          "name": "Горный дварф",
+          "ability_bonuses": [
+            {
+              "ability": "STR",
+              "bonus": 2
+            }
+          ],
+          "traits": [
+            {
+              "id": "dwarven_armor_training",
+              "name": "Владение доспехами дварфов",
+              "description": "Вы владеете лёгкими и средними доспехами."
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "phb",
+        "dwarf",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "dragonborn": {
+      "id": "race_dragonborn",
+      "name": "Драконорожденный",
+      "name_en": "Dragonborn",
+      "edition": "5e-PHB/EGW",
+      "source": {
+        "book": "Player's Handbook, Explorer's Guide to Wildemount",
+        "short": "PHB/EGW"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 3,
+        "avg": 40,
+        "max": 80
+      },
+      "alignment": "Склонны к крайностям — добро (Багамут) или зло (Тиамат).",
+      "size": "Medium",
+      "height_ft": "6-6.5",
+      "weight_lb": "250-300",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "STR",
+          "bonus": 2
+        },
+        {
+          "ability": "CHA",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Драконий"
+      ],
+      "traits": [
+        {
+          "id": "draconic_ancestry",
+          "name": "Наследие драконов",
+          "description": "Выберите тип дракона: определяет оружие дыхания и сопротивление урону."
+        },
+        {
+          "id": "breath_weapon",
+          "name": "Оружие дыхания",
+          "description": "Действие: выдыхаете разрушительную энергию. Урон 2к6 (растёт с уровнями), спасбросок Сл = 8 + мод. Телосложения + бонус мастерства. Короткий/длинный отдых."
+        },
+        {
+          "id": "damage_resistance",
+          "name": "Сопротивление урону",
+          "description": "Сопротивление типу урона, связанному с вашим наследием дракона."
+        }
+      ],
+      "subraces": [
+        {
+          "id": "dragonborn_draconblood",
+          "name": "Драконокровный (Дикогорья)",
+          "ability_bonuses": [
+            {
+              "ability": "INT",
+              "bonus": 2
+            },
+            {
+              "ability": "CHA",
+              "bonus": 1
+            }
+          ],
+          "vision": {
+            "darkvision": 60
+          },
+          "traits": [
+            {
+              "id": "forceful_presence",
+              "name": "Довлеющее присутствие",
+              "description": "Проверка Харизмы (Запугивание или Убеждение) с преимуществом. 1/короткий или длинный отдых."
+            }
+          ]
+        },
+        {
+          "id": "dragonborn_ravenite",
+          "name": "Равенит (Дикогорья)",
+          "ability_bonuses": [
+            {
+              "ability": "STR",
+              "bonus": 2
+            },
+            {
+              "ability": "CON",
+              "bonus": 1
+            }
+          ],
+          "vision": {
+            "darkvision": 60
+          },
+          "traits": [
+            {
+              "id": "vengeful_assault",
+              "name": "Мстительное нападение",
+              "description": "Когда получаете урон от существа в пределах досягаемости, реакцией атакуете его оружием. 1/короткий или длинный отдых."
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "phb",
+        "egw",
+        "dragonborn",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "kenku": {
+      "id": "race_kenku",
+      "name": "Кенку",
+      "name_en": "Kenku",
+      "edition": "5e-VGtM",
+      "source": {
+        "book": "Volo's Guide to Monsters",
+        "short": "VGtM"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 12,
+        "avg": 30,
+        "max": 60
+      },
+      "alignment": "Чаще хаотично-нейтральные; заботятся в первую очередь о себе.",
+      "size": "Medium",
+      "height_ft": 5,
+      "weight_lb": "90-120",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "DEX",
+          "bonus": 2
+        },
+        {
+          "ability": "WIS",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Ауран"
+      ],
+      "vision": {
+        "darkvision": 0,
+        "notes": ""
+      },
+      "traits": [
+        {
+          "id": "kenku_forgery",
+          "name": "Мастер подделок",
+          "description": "Вы можете копировать почерк и ремесло других существ. Преимущество на проверки создания подделок."
+        },
+        {
+          "id": "kenku_training",
+          "name": "Подготовка кенку",
+          "description": "Владение двумя навыками из списка: Акробатика, Обман, Скрытность, Ловкость рук."
+        },
+        {
+          "id": "kenku_mimicry",
+          "name": "Имитирование",
+          "description": "Вы можете подражать звукам и голосам. Существа могут распознать имитацию проверкой Проницательности против вашей проверки Обмана."
+        }
+      ],
+      "tags": [
+        "vgtm",
+        "kenku",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "centaur": {
+      "id": "race_centaur",
+      "name": "Кентавр",
+      "name_en": "Centaur",
+      "edition": "5e-MOT/GGR",
+      "source": {
+        "book": "Mythic Odysseys of Theros, Guildmasters' Guide to Ravnica",
+        "short": "MOT/GGR"
+      },
+      "creature_type": "fey",
+      "lifespan_years": {
+        "min": 15,
+        "avg": 50,
+        "max": 100
+      },
+      "alignment": "Склонны к нейтралитету; Селезния — нейтрально-добрые, Груулы — хаотично-нейтральные.",
+      "size": "Medium",
+      "height_ft": "6-7 (в холке около 4)",
+      "weight_lb": null,
+      "speed": {
+        "walk": 40
+      },
+      "ability_bonuses": [
+        {
+          "ability": "STR",
+          "bonus": 2
+        },
+        {
+          "ability": "WIS",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Сильван"
+      ],
+      "traits": [
+        {
+          "id": "charge",
+          "name": "Разбег",
+          "description": "Если вы двигаетесь не менее 30 футов к цели и поражаете её атакой ближнего боя, вы можете бонусным действием атаковать копытами."
+        },
+        {
+          "id": "hooves",
+          "name": "Копыта",
+          "description": "Ваши копыта — естественное оружие (1к4 дробящий урон + Сила)."
+        },
+        {
+          "id": "equine_build",
+          "name": "Лошадиное телосложение",
+          "description": "Считаетесь на размер больше для грузоподъёмности. Подъём с использованием рук/ног требует +4 фута за фут перемещения."
+        },
+        {
+          "id": "survivor",
+          "name": "Уцелевший",
+          "description": "Владение одним из навыков: Уход за животными, Медицина, Природа или Выживание."
+        }
+      ],
+      "tags": [
+        "mot",
+        "ggr",
+        "centaur",
+        "fey"
+      ],
+      "version": 1
+    },
+    "warforged": {
+      "id": "race_warforged",
+      "name": "Кованый",
+      "name_en": "Warforged",
+      "edition": "5e-ERLW",
+      "source": {
+        "book": "Eberron: Rising from the Last War",
+        "short": "ERLW"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 2,
+        "avg": 30,
+        "max": null
+      },
+      "alignment": "Чаще законопослушные и нейтральные; переняли мораль тех, кому служили.",
+      "size": "Medium",
+      "height_ft": "5-6.5",
+      "weight_lb": null,
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "CON",
+          "bonus": 2
+        },
+        {
+          "ability_choice": true,
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Дополнительный на выбор"
+      ],
+      "traits": [
+        {
+          "id": "warforged_resilience",
+          "name": "Стойкость кованых",
+          "description": "Преимущество на спасброски против яда; сопротивление яду; иммунитет к болезням; не нужно есть, пить, дышать или спать."
+        },
+        {
+          "id": "sentrys_rest",
+          "name": "Отдых стража",
+          "description": "Во время длительного отдыха вы остаётесь неподвижны 6 часов, но остаетесь в сознании."
+        },
+        {
+          "id": "integrated_protection",
+          "name": "Встроенная защита",
+          "description": "+1 к КД; доспехи можно встраивать в тело за 1 час. Нельзя извлечь против воли."
+        },
+        {
+          "id": "specialized_design",
+          "name": "Специальная сборка",
+          "description": "Владение одним навыком и одним инструментом на выбор."
+        }
+      ],
+      "tags": [
+        "erlw",
+        "warforged",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "loxodon": {
+      "id": "race_loxodon",
+      "name": "Локсодон",
+      "name_en": "Loxodon",
+      "edition": "5e-GGR",
+      "source": {
+        "book": "Guildmasters' Guide to Ravnica",
+        "short": "GGR"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 60,
+        "avg": 200,
+        "max": 450
+      },
+      "alignment": "Чаще законопослушные и добрые; ценят мир, порядок и сообщество.",
+      "size": "Medium",
+      "height_ft": "7-8",
+      "weight_lb": "300-400",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "CON",
+          "bonus": 2
+        },
+        {
+          "ability": "WIS",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Локсодонский"
+      ],
+      "traits": [
+        {
+          "id": "powerful_build_loxodon",
+          "name": "Крупное тело",
+          "description": "Считаетесь на один размер больше при определении грузоподъёмности и веса."
+        },
+        {
+          "id": "loxodon_serenity",
+          "name": "Храбрость локсодонов",
+          "description": "Преимущество на спасброски против очарования и испуга."
+        },
+        {
+          "id": "natural_armor",
+          "name": "Естественная броня",
+          "description": "Без доспехов ваш КД = 12 + модификатор Ловкости. Можно использовать щит."
+        },
+        {
+          "id": "stone_masonry",
+          "name": "Навык каменщика",
+          "description": "Владение инструментами каменщика."
+        },
+        {
+          "id": "trunk",
+          "name": "Хобот",
+          "description": "Может хватать предметы, дышать, наносить безоружный удар. Достигаемость 5 футов. Не может держать оружие/щит или выполнять тонкие действия."
+        },
+        {
+          "id": "keen_smell",
+          "name": "Обострённый нюх",
+          "description": "Преимущество на проверки Внимательности, Выживания и Анализа, основанных на запахе."
+        }
+      ],
+      "tags": [
+        "ggr",
+        "loxodon",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "lizardfolk": {
+      "id": "race_lizardfolk",
+      "name": "Людоящер",
+      "name_en": "Lizardfolk",
+      "edition": "5e-VGtM",
+      "source": {
+        "book": "Volo's Guide to Monsters",
+        "short": "VGtM"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 14,
+        "avg": 30,
+        "max": 60
+      },
+      "alignment": "Чаще нейтральные; руководствуются выживанием и полезностью.",
+      "size": "Medium",
+      "height_ft": null,
+      "weight_lb": null,
+      "speed": {
+        "walk": 30,
+        "swim": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "CON",
+          "bonus": 2
+        },
+        {
+          "ability": "WIS",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Драконий"
+      ],
+      "vision": {
+        "darkvision": 0,
+        "notes": ""
+      },
+      "traits": [
+        {
+          "id": "bite",
+          "name": "Укус",
+          "description": "Естественное оружие — 1к6 колющий урон + модификатор Силы."
+        },
+        {
+          "id": "craftsman",
+          "name": "Умелый ремесленник",
+          "description": "Во время короткого отдыха можете создать предметы из костей/шкур убитых существ (щит, дубинка, дротики и др.)."
+        },
+        {
+          "id": "hold_breath",
+          "name": "Задерживание дыхания",
+          "description": "Можете задерживать дыхание до 15 минут."
+        },
+        {
+          "id": "hunters_lore",
+          "name": "Знания охотника",
+          "description": "Владение двумя навыками из списка: Уход за животными, Природа, Восприятие, Скрытность, Выживание."
+        },
+        {
+          "id": "natural_armor_lizardfolk",
+          "name": "Природная броня",
+          "description": "Без доспехов ваш КД = 13 + модификатор Ловкости. Можно использовать щит."
+        },
+        {
+          "id": "hungry_jaws",
+          "name": "Голодная пасть",
+          "description": "Бонусным действием можете атаковать укусом. При попадании получаете временные хиты = модификатор Телосложения. 1/короткий или длинный отдых."
+        }
+      ],
+      "tags": [
+        "vgtm",
+        "lizardfolk",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "minotaur": {
+      "id": "race_minotaur",
+      "name": "Минотавр",
+      "name_en": "Minotaur",
+      "edition": "5e-MOT/GGR",
+      "source": {
+        "book": "Mythic Odysseys of Theros, Guildmasters' Guide to Ravnica",
+        "short": "MOT/GGR"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 15,
+        "avg": 50,
+        "max": 100
+      },
+      "alignment": "Борос — склонны к законному; Ракдос/Груулы — склонны к хаотичному.",
+      "size": "Medium",
+      "height_ft": "6+",
+      "weight_lb": null,
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "STR",
+          "bonus": 2
+        },
+        {
+          "ability": "CON",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Минотаврийский"
+      ],
+      "traits": [
+        {
+          "id": "horns",
+          "name": "Рога",
+          "description": "Естественное оружие — 1к6 колющий урон + модификатор Силы."
+        },
+        {
+          "id": "goring_rush",
+          "name": "Бодание",
+          "description": "После действия Рывок и перемещения ≥20 футов, бонусным действием можно атаковать рогами."
+        },
+        {
+          "id": "hammering_horns",
+          "name": "Удар рогами",
+          "description": "После успешной атаки рогами бонусным действием можно толкнуть цель (Сл = 8 + бонус мастерства + Сила)."
+        },
+        {
+          "id": "imposing_presence",
+          "name": "Впечатляющий вид",
+          "description": "Владение одним навыком: Запугивание или Убеждение."
+        }
+      ],
+      "tags": [
+        "mot",
+        "ggr",
+        "minotaur",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "orc": {
+      "id": "race_orc",
+      "name": "Орк",
+      "name_en": "Orc",
+      "edition": "5e-ERLW/EGW/VGtM",
+      "source": {
+        "book": "Eberron: Rising from the Last War, Explorer's Guide to Wildemount, Volo's Guide to Monsters",
+        "short": "ERLW/EGW/VGtM"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 12,
+        "avg": 30,
+        "max": 50
+      },
+      "alignment": "Чаще хаотичные; страстный народ с глубокой верой.",
+      "size": "Medium",
+      "height_ft": "6+",
+      "weight_lb": "230-280",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "STR",
+          "bonus": 2
+        },
+        {
+          "ability": "CON",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Орочий"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "Оттенки серого в темноте"
+      },
+      "traits": [
+        {
+          "id": "aggressive",
+          "name": "Агрессивный",
+          "description": "Бонусным действием можно переместиться на полную скорость к врагу, которого видите или слышите."
+        },
+        {
+          "id": "primal_instinct",
+          "name": "Чутьё дикаря",
+          "description": "Владение двумя навыками на выбор: Уход за животными, Проницательность, Запугивание, Медицина, Природа, Восприятие, Выживание."
+        },
+        {
+          "id": "powerful_build_orc",
+          "name": "Мощное телосложение",
+          "description": "Считаетесь на один размер больше для грузоподъёмности и переносимого веса."
+        }
+      ],
+      "tags": [
+        "erlw",
+        "egw",
+        "vgtm",
+        "orc",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "half_orc": {
+      "id": "race_half_orc",
+      "name": "Полуорк",
+      "name_en": "Half-Orc",
+      "edition": "5e-PHB/ERLW",
+      "source": {
+        "book": "Player's Handbook, Eberron: Rising from the Last War",
+        "short": "PHB/ERLW"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 14,
+        "avg": 50,
+        "max": 75
+      },
+      "alignment": "Склонны к хаосу, часто не добрые; зависит от воспитания.",
+      "size": "Medium",
+      "height_ft": "5-6",
+      "weight_lb": "180-250",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "STR",
+          "bonus": 2
+        },
+        {
+          "ability": "CON",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Орочий"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "Оттенки серого в темноте"
+      },
+      "traits": [
+        {
+          "id": "menacing",
+          "name": "Угрожающий вид",
+          "description": "Владение навыком Запугивание."
+        },
+        {
+          "id": "relentless_endurance",
+          "name": "Непоколебимая стойкость",
+          "description": "При снижении хитов до 0 остаётесь на 1 хит. 1/длительный отдых."
+        },
+        {
+          "id": "savage_attacks",
+          "name": "Свирепые атаки",
+          "description": "При критическом попадании рукопашным оружием добавьте ещё одну кость урона."
+        }
+      ],
+      "subraces": [
+        {
+          "id": "half_orc_eberron",
+          "name": "Полуорк Эберрона (Метка Поиска)",
+          "ability_bonuses": [
+            {
+              "ability": "WIS",
+              "bonus": 2
+            },
+            {
+              "ability": "CON",
+              "bonus": 1
+            }
+          ],
+          "languages": [
+            "Общий",
+            "Гоблинский"
+          ],
+          "traits": [
+            {
+              "id": "hunters_intuition",
+              "name": "Интуиция охотника",
+              "description": "При проверке Внимания или Выживания бросьте к4 и добавьте результат."
+            },
+            {
+              "id": "seer_magic",
+              "name": "Магия искателя",
+              "description": "Вы можете использовать заклинания: 'Метка охотника' (1 ур.), с 3 ур. — 'Поиск предмета'. Базовая характеристика — Мудрость."
+            }
+          ],
+          "spell_list": [
+            {
+              "level": 1,
+              "spells": [
+                "Огонь фей",
+                "Скороход"
+              ]
+            },
+            {
+              "level": 2,
+              "spells": [
+                "Поиск животных или растений",
+                "Поиск предмета"
+              ]
+            },
+            {
+              "level": 3,
+              "spells": [
+                "Подсматривание",
+                "Разговор с растениями"
+              ]
+            },
+            {
+              "level": 4,
+              "spells": [
+                "Предсказание",
+                "Поиск существа"
+              ]
+            },
+            {
+              "level": 5,
+              "spells": [
+                "Общение с природой"
+              ]
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "phb",
+        "erlw",
+        "half-orc",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "halfling": {
+      "id": "race_halfling",
+      "name": "Полурослик",
+      "name_en": "Halfling",
+      "edition": "5e-PHB/SCAG/ERLW/EGW",
+      "source": {
+        "book": "Player's Handbook, Sword Coast Adventurer's Guide, Eberron: Rising from the Last War, Explorer's Guide to Wildemount",
+        "short": "PHB/SCAG/ERLW/EGW"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 20,
+        "avg": 150,
+        "max": 200
+      },
+      "alignment": "Чаще законно-добрые; добросердечны, любят порядок и традиции.",
+      "size": "Small",
+      "height_ft": 3,
+      "weight_lb": "40-45",
+      "speed": {
+        "walk": 25
+      },
+      "ability_bonuses": [
+        {
+          "ability": "DEX",
+          "bonus": 2
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Полуросликов"
+      ],
+      "vision": {
+        "darkvision": 0,
+        "notes": ""
+      },
+      "traits": [
+        {
+          "id": "lucky",
+          "name": "Везучий",
+          "description": "При выпадении 1 на броске атаки, проверке характеристики или спасброске вы перебрасываете кость."
+        },
+        {
+          "id": "brave",
+          "name": "Храбрый",
+          "description": "Преимущество на спасброски против испуга."
+        },
+        {
+          "id": "halfling_nimbleness",
+          "name": "Проворство полуросликов",
+          "description": "Можете проходить сквозь пространство существ большего размера."
+        }
+      ],
+      "subraces": [
+        {
+          "id": "halfling_stout",
+          "name": "Коренастый полурослик",
+          "ability_bonuses": [
+            {
+              "ability": "CON",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "stout_resilience",
+              "name": "Устойчивость коренастых",
+              "description": "Преимущество на спасброски против яда; сопротивление яду."
+            }
+          ]
+        },
+        {
+          "id": "halfling_lightfoot",
+          "name": "Легконогий полурослик",
+          "ability_bonuses": [
+            {
+              "ability": "CHA",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "naturally_stealthy",
+              "name": "Естественная скрытность",
+              "description": "Можно скрываться, даже если заслонены только существом большего размера."
+            }
+          ]
+        },
+        {
+          "id": "halfling_ghostwise",
+          "name": "Призрачный полурослик",
+          "ability_bonuses": [
+            {
+              "ability": "WIS",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "silent_speech",
+              "name": "Бесшумная речь",
+              "description": "Телепатическая связь с одним существом в пределах 30 футов, если у вас есть общий язык."
+            }
+          ]
+        },
+        {
+          "id": "halfling_lotusden",
+          "name": "Лотосденский полурослик",
+          "ability_bonuses": [
+            {
+              "ability": "WIS",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "child_of_the_wood",
+              "name": "Дитя леса",
+              "description": "Заклинания: «Искусство друидов», 3 ур. — «Опутывание», 5 ур. — «Шипы». Использование раз в длительный отдых."
+            },
+            {
+              "id": "timberwalk",
+              "name": "Блуждание по лесу",
+              "description": "Проверки на выслеживание вас имеют помеху. Можете игнорировать труднопроходимую местность из растений."
+            }
+          ]
+        },
+        {
+          "id": "halfling_healing_mark",
+          "name": "Полурослик Эберрона (Метка Исцеления)",
+          "ability_bonuses": [
+            {
+              "ability": "WIS",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "healers_intuition",
+              "name": "Врачебная интуиция",
+              "description": "Проверки Мудрости (Медицина) или с набором травника — к4 к результату."
+            },
+            {
+              "id": "healing_touch",
+              "name": "Исцеляющее прикосновение",
+              "description": "Заклинания: 'Лечение ран', с 3 ур. — 'Малое восстановление'. Использование раз в длительный отдых."
+            }
+          ],
+          "spell_list": [
+            {
+              "level": 1,
+              "spells": [
+                "Лечение ран",
+                "Лечащее слово"
+              ]
+            },
+            {
+              "level": 2,
+              "spells": [
+                "Малое восстановление",
+                "Молебен лечения"
+              ]
+            },
+            {
+              "level": 3,
+              "spells": [
+                "Аура живучести",
+                "Множественное лечащее слово"
+              ]
+            },
+            {
+              "level": 4,
+              "spells": [
+                "Аура жизни",
+                "Аура очищения"
+              ]
+            },
+            {
+              "level": 5,
+              "spells": [
+                "Высшее восстановление"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "halfling_hospitality_mark",
+          "name": "Полурослик Эберрона (Метка Гостеприимства)",
+          "ability_bonuses": [
+            {
+              "ability": "CHA",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "ever_hospitable",
+              "name": "Всегда гостеприимен",
+              "description": "Проверки Харизмы (Убеждение) или умения с инструментами пивовара/повара — к4 к результату."
+            },
+            {
+              "id": "innkeepers_magic",
+              "name": "Магия трактирщика",
+              "description": "Заклинания: 'Фокусы', 'Очищение пищи и питья', 'Невидимый слуга'. Использование раз в длительный отдых."
+            }
+          ],
+          "spell_list": [
+            {
+              "level": 1,
+              "spells": [
+                "Усыпление",
+                "Чудо-ягоды"
+              ]
+            },
+            {
+              "level": 2,
+              "spells": [
+                "Подмога",
+                "Умиротворение"
+              ]
+            },
+            {
+              "level": 3,
+              "spells": [
+                "Леомундова хижина",
+                "Сотворение пищи и воды"
+              ]
+            },
+            {
+              "level": 4,
+              "spells": [
+                "Аура очищения",
+                "Кабинет Морденкайнена"
+              ]
+            },
+            {
+              "level": 5,
+              "spells": [
+                "Святилище"
+              ]
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "phb",
+        "scag",
+        "erlw",
+        "egw",
+        "halfling",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "half_elf": {
+      "id": "race_half_elf",
+      "name": "Полуэльф",
+      "name_en": "Half-Elf",
+      "edition": "5e-PHB/SCAG/ERLW",
+      "source": {
+        "book": "Player's Handbook, Sword Coast Adventurer's Guide, Eberron: Rising from the Last War",
+        "short": "PHB/SCAG/ERLW"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 20,
+        "avg": 120,
+        "max": 180
+      },
+      "alignment": "Склонны к хаосу, ценят свободу и самовыражение.",
+      "size": "Medium",
+      "height_ft": "5-6",
+      "weight_lb": "100-180",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "CHA",
+          "bonus": 2
+        },
+        {
+          "ability_choice": true,
+          "bonus": 1,
+          "count": 2
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Эльфийский",
+        "Ещё один на выбор"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "Оттенки серого в темноте"
+      },
+      "traits": [
+        {
+          "id": "fey_ancestry_halfelf",
+          "name": "Наследие фей",
+          "description": "Преимущество на спасброски против очарования, иммунитет к магическому сну."
+        },
+        {
+          "id": "skill_versatility",
+          "name": "Универсальность навыков",
+          "description": "Владение двумя навыками на выбор."
+        }
+      ],
+      "subraces": [
+        {
+          "id": "half_elf_scag",
+          "name": "Полуэльф Фаэруна",
+          "traits": [
+            {
+              "id": "scag_variants",
+              "name": "Варианты наследия",
+              "description": "Можно заменить Универсальность навыков на эльфийские черты (Острые чувства, Владение оружием, Заговор, Магия дроу, Скорость плавания)."
+            }
+          ]
+        },
+        {
+          "id": "half_elf_detection_mark",
+          "name": "Полуэльф Эберрона (Метка Обнаружения)",
+          "ability_bonuses": [
+            {
+              "ability": "WIS",
+              "bonus": 2
+            },
+            {
+              "ability_choice": true,
+              "bonus": 1,
+              "count": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "deductive_intuition",
+              "name": "Дедуктивная интуиция",
+              "description": "Проверки Интеллекта (Анализ) или Мудрости (Проницательность) — к4 к результату."
+            },
+            {
+              "id": "detection_magic",
+              "name": "Магическое обнаружение",
+              "description": "Заклинания: 'Обнаружение магии', 'Обнаружение болезней и яда', с 3 ур. — 'Видение невидимого'. Использование раз в длительный отдых."
+            }
+          ],
+          "spell_list": [
+            {
+              "level": 1,
+              "spells": [
+                "Обнаружение болезней и яда",
+                "Обнаружение добра и зла"
+              ]
+            },
+            {
+              "level": 2,
+              "spells": [
+                "Обнаружение мыслей",
+                "Поиск ловушек"
+              ]
+            },
+            {
+              "level": 3,
+              "spells": [
+                "Подсматривание",
+                "Необнаружимость"
+              ]
+            },
+            {
+              "level": 4,
+              "spells": [
+                "Магический глаз",
+                "Предсказание"
+              ]
+            },
+            {
+              "level": 5,
+              "spells": [
+                "Знание легенд"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "half_elf_storm_mark",
+          "name": "Полуэльф Эберрона (Метка Бури)",
+          "ability_bonuses": [
+            {
+              "ability": "CHA",
+              "bonus": 2
+            },
+            {
+              "ability": "DEX",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "storm_intuition",
+              "name": "Интуиция ветродела",
+              "description": "Проверка Ловкости (Акробатика) или с инструментами навигатора — к4 к результату."
+            },
+            {
+              "id": "storm_blessing",
+              "name": "Благословение бури",
+              "description": "Сопротивление урону электричеством."
+            },
+            {
+              "id": "storm_magic",
+              "name": "Магия бури",
+              "description": "Заклинания: 'Шквал', с 3 ур. — 'Порыв ветра'. Использование раз в длительный отдых."
+            }
+          ],
+          "spell_list": [
+            {
+              "level": 1,
+              "spells": [
+                "Падение перышком",
+                "Туманное облако"
+              ]
+            },
+            {
+              "level": 2,
+              "spells": [
+                "Порыв ветра",
+                "Левитация"
+              ]
+            },
+            {
+              "level": 3,
+              "spells": [
+                "Метель",
+                "Стена ветров"
+              ]
+            },
+            {
+              "level": 4,
+              "spells": [
+                "Призыв малых элементалей",
+                "Власть над водами"
+              ]
+            },
+            {
+              "level": 5,
+              "spells": [
+                "Призыв элементаля"
+              ]
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "phb",
+        "scag",
+        "erlw",
+        "half-elf",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "satyr": {
+      "id": "race_satyr",
+      "name": "Сатир",
+      "name_en": "Satyr",
+      "edition": "5e-MOT",
+      "source": {
+        "book": "Mythic Odysseys of Theros",
+        "short": "MOT"
+      },
+      "creature_type": "fey",
+      "lifespan_years": {
+        "min": 18,
+        "avg": 70,
+        "max": 100
+      },
+      "alignment": "Склонны к хаосу; любят свободу и веселье.",
+      "size": "Medium",
+      "height_ft": "5-6",
+      "weight_lb": null,
+      "speed": {
+        "walk": 35
+      },
+      "ability_bonuses": [
+        {
+          "ability": "CHA",
+          "bonus": 2
+        },
+        {
+          "ability": "DEX",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Сильван"
+      ],
+      "traits": [
+        {
+          "id": "ram",
+          "name": "Баран",
+          "description": "Атака рогами наносит 1к4 дробящего урона + Сила."
+        },
+        {
+          "id": "magic_resistance",
+          "name": "Сопротивление магии",
+          "description": "Преимущество на спасброски против заклинаний и магических эффектов."
+        },
+        {
+          "id": "mirthful_leaps",
+          "name": "Зрелищные прыжки",
+          "description": "При прыжке добавляйте к8 футов к дистанции (требуется передвижение)."
+        },
+        {
+          "id": "reveler",
+          "name": "Гуляка",
+          "description": "Владение навыками Выступление и Убеждение, а также одним музыкальным инструментом."
+        }
+      ],
+      "tags": [
+        "mot",
+        "satyr",
+        "fey"
+      ],
+      "version": 1
+    },
+    "tabaxi": {
+      "id": "race_tabaxi",
+      "name": "Табакси",
+      "name_en": "Tabaxi",
+      "edition": "5e-VGtM",
+      "source": {
+        "book": "Volo's Guide to Monsters",
+        "short": "VGtM"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 18,
+        "avg": 70,
+        "max": 100
+      },
+      "alignment": "Чаще хаотичные, ведомы любопытством, редко злые.",
+      "size": "Medium",
+      "height_ft": "6+",
+      "weight_lb": null,
+      "speed": {
+        "walk": 30,
+        "climb": 20
+      },
+      "ability_bonuses": [
+        {
+          "ability": "DEX",
+          "bonus": 2
+        },
+        {
+          "ability": "CHA",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Ещё один на выбор"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "Оттенки серого в темноте"
+      },
+      "traits": [
+        {
+          "id": "feline_agility",
+          "name": "Кошачье проворство",
+          "description": "Раз в бой можно удвоить скорость до конца хода. Восстанавливается, если в ход вы не двигались."
+        },
+        {
+          "id": "cat_claws",
+          "name": "Кошачьи когти",
+          "description": "Скорость лазанья 20 фт. Когти — естественное оружие (1к4 рубящий урон)."
+        },
+        {
+          "id": "cat_skills",
+          "name": "Кошачьи способности",
+          "description": "Владение навыками Восприятие и Скрытность."
+        }
+      ],
+      "tags": [
+        "vgtm",
+        "tabaxi",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "tiefling": {
+      "id": "race_tiefling",
+      "name": "Тифлинг",
+      "name_en": "Tiefling",
+      "edition": "5e-PHB/MTF",
+      "source": {
+        "book": "Player's Handbook, Mordenkainen's Tome of Foes",
+        "short": "PHB/MTF"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 18,
+        "avg": 80,
+        "max": 120
+      },
+      "alignment": "Склонны к хаосу; часто недоверчивы, но не обязательно злые.",
+      "size": "Medium",
+      "height_ft": "5-6",
+      "weight_lb": "100-180",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "CHA",
+          "bonus": 2
+        },
+        {
+          "ability": "INT",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Инфернальный"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "Оттенки серого в темноте"
+      },
+      "traits": [
+        {
+          "id": "hellish_resistance",
+          "name": "Адское сопротивление",
+          "description": "Сопротивление урону огнём."
+        },
+        {
+          "id": "infernal_legacy",
+          "name": "Дьявольское наследие",
+          "description": "Заклинания: 'Чудотворство', 3 ур. — 'Адское возмездие', 5 ур. — 'Тьма'. Используются раз в длительный отдых. Базовая характеристика — Харизма."
+        }
+      ],
+      "subraces": [
+        {
+          "id": "tiefling_asmodeus",
+          "name": "Тифлинг Асмодея",
+          "ability_bonuses": [
+            {
+              "ability": "CHA",
+              "bonus": 2
+            },
+            {
+              "ability": "INT",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "asmodeus_legacy",
+              "name": "Наследие Асмодея",
+              "description": "Использует черты из Книги игрока (PHB)."
+            }
+          ]
+        },
+        {
+          "id": "tiefling_beelzebub",
+          "name": "Тифлинг Вельзевула",
+          "ability_bonuses": [
+            {
+              "ability": "CHA",
+              "bonus": 2
+            },
+            {
+              "ability": "INT",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "legacy_malodomini",
+              "name": "Наследие Маладомини",
+              "description": "Заклинания: 'Чудотворство', 3 ур. — 'Луч болезни', 5 ур. — 'Корона безумия'. Используются раз в длительный отдых. Базовая характеристика — Харизма."
+            }
+          ]
+        },
+        {
+          "id": "tiefling_glasya",
+          "name": "Тифлинг Гласии",
+          "ability_bonuses": [
+            {
+              "ability": "CHA",
+              "bonus": 2
+            },
+            {
+              "ability": "DEX",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "legacy_malbolge",
+              "name": "Наследие Малболга",
+              "description": "Заклинания: 'Малая иллюзия', 3 ур. — 'Маскировка', 5 ур. — 'Невидимость'. Используются раз в длительный отдых. Базовая характеристика — Харизма."
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "phb",
+        "mtf",
+        "tiefling",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "tortle": {
+      "id": "race_tortle",
+      "name": "Тортл",
+      "name_en": "Tortle",
+      "edition": "5e-TTP",
+      "source": {
+        "book": "The Tortle Package",
+        "short": "TTP"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 15,
+        "avg": 50,
+        "max": 60
+      },
+      "alignment": "Чаще законопослушные и добрые, живут размеренной жизнью.",
+      "size": "Medium",
+      "height_ft": "5-6",
+      "weight_lb": "450",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "STR",
+          "bonus": 2
+        },
+        {
+          "ability": "WIS",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Акван"
+      ],
+      "traits": [
+        {
+          "id": "claws_tortle",
+          "name": "Когти",
+          "description": "Ваши когти — естественное оружие (1к4 рубящий урон)."
+        },
+        {
+          "id": "hold_breath_tortle",
+          "name": "Задерживание дыхания",
+          "description": "Вы можете задерживать дыхание до 1 часа."
+        },
+        {
+          "id": "natural_armor_tortle",
+          "name": "Природный доспех",
+          "description": "Ваш панцирь даёт базовый КД 17. Вы не можете носить доспехи, но можете использовать щит."
+        },
+        {
+          "id": "shell_defense",
+          "name": "Панцирная защита",
+          "description": "Действие: спрятаться в панцирь. +4 КД, преимущество на спасброски Силы и Телосложения. Скорость = 0, помеха на спасброски Ловкости, нельзя использовать реакции. Единственное действие — выйти из панциря бонусным действием."
+        },
+        {
+          "id": "survival_instinct",
+          "name": "Инстинкт выживания",
+          "description": "Владение навыком Выживание."
+        }
+      ],
+      "tags": [
+        "ttp",
+        "tortle",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "firbolg": {
+      "id": "race_firbolg",
+      "name": "Фирболг",
+      "name_en": "Firbolg",
+      "edition": "5e-VGtM",
+      "source": {
+        "book": "Volo's Guide to Monsters",
+        "short": "VGtM"
+      },
+      "creature_type": "fey",
+      "lifespan_years": {
+        "min": 30,
+        "avg": 250,
+        "max": 500
+      },
+      "alignment": "Обычно нейтрально-добрые; злые фирболги — редкость.",
+      "size": "Medium",
+      "height_ft": "7-8",
+      "weight_lb": "240-300",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "WIS",
+          "bonus": 2
+        },
+        {
+          "ability": "STR",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Эльфийский",
+        "Гигантский"
+      ],
+      "traits": [
+        {
+          "id": "firbolg_magic",
+          "name": "Магия фирболгов",
+          "description": "Вы можете накладывать 'Обнаружение магии' и 'Маскировку'. Восстанавливается после отдыха. Базовая характеристика — Мудрость."
+        },
+        {
+          "id": "hidden_step",
+          "name": "Незримая поступь",
+          "description": "Бонусным действием становитесь невидимым до начала следующего хода или до атаки/заклинания. 1/короткий или длинный отдых."
+        },
+        {
+          "id": "powerful_build_firbolg",
+          "name": "Мощное телосложение",
+          "description": "Считаетесь на один размер больше при определении грузоподъёмности и переносимого веса."
+        },
+        {
+          "id": "speech_of_beast_and_leaf",
+          "name": "Язык зверей и листвы",
+          "description": "Животные и растения понимают вашу речь; преимущество на проверки Харизмы для их убеждения."
+        }
+      ],
+      "tags": [
+        "vgtm",
+        "firbolg",
+        "fey"
+      ],
+      "version": 1
+    },
+    "human": {
+      "id": "race_human",
+      "name": "Человек",
+      "name_en": "Human",
+      "edition": "5e-PHB/ERLW",
+      "source": {
+        "book": "Player's Handbook, Eberron: Rising from the Last War",
+        "short": "PHB/ERLW"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 18,
+        "avg": 60,
+        "max": 100
+      },
+      "alignment": "Разнообразные, не склонны к какому-то одному мировоззрению.",
+      "size": "Medium",
+      "height_ft": "5-6",
+      "weight_lb": "125-250",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "ALL",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Ещё один на выбор"
+      ],
+      "vision": {
+        "darkvision": 0,
+        "notes": ""
+      },
+      "traits": [],
+      "variants": [
+        {
+          "id": "human_variant",
+          "name": "Вариант человека",
+          "ability_choice": {
+            "points": 2,
+            "pick": 2,
+            "max_per_ability": 1
+          },
+          "skill_proficiency_choice_count": 1,
+          "feat": true
+        },
+        {
+          "id": "human_mark_finding",
+          "name": "Человек Эберрона (Метка Поиска)",
+          "ability_bonuses": [
+            {
+              "ability": "WIS",
+              "bonus": 2
+            },
+            {
+              "ability": "CON",
+              "bonus": 1
+            }
+          ],
+          "vision": {
+            "darkvision": 60
+          },
+          "traits": [
+            {
+              "id": "hunters_intuition",
+              "name": "Интуиция охотника",
+              "description": "Проверки Внимания или Выживания — к4 к результату."
+            },
+            {
+              "id": "seekers_magic",
+              "name": "Магия искателя",
+              "description": "Заклинания: 'Метка охотника', с 3 ур. — 'Поиск предмета'. Базовая характеристика — Мудрость."
+            }
+          ],
+          "spell_list": [
+            {
+              "level": 1,
+              "spells": [
+                "Огонь фей",
+                "Скороход"
+              ]
+            },
+            {
+              "level": 2,
+              "spells": [
+                "Поиск животных или растений",
+                "Поиск предмета"
+              ]
+            },
+            {
+              "level": 3,
+              "spells": [
+                "Подсматривание",
+                "Разговор с растениями"
+              ]
+            },
+            {
+              "level": 4,
+              "spells": [
+                "Предсказание",
+                "Поиск существа"
+              ]
+            },
+            {
+              "level": 5,
+              "spells": [
+                "Общение с природой"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "human_mark_handling",
+          "name": "Человек Эберрона (Метка Ухода)",
+          "ability_bonuses": [
+            {
+              "ability": "WIS",
+              "bonus": 2
+            },
+            {
+              "ability_choice": true,
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "wild_intuition",
+              "name": "Дикая интуиция",
+              "description": "Проверки Ухода за животными или Природы — к4 к результату."
+            },
+            {
+              "id": "primal_connection",
+              "name": "Первобытная связь",
+              "description": "Заклинания: 'Дружба с животными', 'Разговор с животными'. Базовая характеристика — Мудрость."
+            }
+          ],
+          "spell_list": [
+            {
+              "level": 1,
+              "spells": [
+                "Дружба с животными",
+                "Разговор с животными"
+              ]
+            },
+            {
+              "level": 2,
+              "spells": [
+                "Животные чувства",
+                "Умиротворение"
+              ]
+            },
+            {
+              "level": 3,
+              "spells": [
+                "Маяк надежды",
+                "Призыв животных"
+              ]
+            },
+            {
+              "level": 4,
+              "spells": [
+                "Аура жизни",
+                "Подчинение зверя"
+              ]
+            },
+            {
+              "level": 5,
+              "spells": [
+                "Пробуждение разума"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "human_mark_making",
+          "name": "Человек Эберрона (Метка Созидания)",
+          "ability_bonuses": [
+            {
+              "ability": "INT",
+              "bonus": 2
+            },
+            {
+              "ability_choice": true,
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "artisans_intuition",
+              "name": "Интуиция ремесленника",
+              "description": "Проверки Магии или работы инструментами ремесленника — к4 к результату."
+            },
+            {
+              "id": "makers_magic",
+              "name": "Кузнечная магия",
+              "description": "Заклинания: 'Починка', 'Магическое оружие' (1 час без концентрации). Базовая характеристика — Интеллект."
+            }
+          ],
+          "spell_list": [
+            {
+              "level": 1,
+              "spells": [
+                "Опознание",
+                "Тензеров парящий диск"
+              ]
+            },
+            {
+              "level": 2,
+              "spells": [
+                "Магическое оружие",
+                "Вечный огонь"
+              ]
+            },
+            {
+              "level": 3,
+              "spells": [
+                "Призыв заграждения",
+                "Стихийное оружие"
+              ]
+            },
+            {
+              "level": 4,
+              "spells": [
+                "Изготовление",
+                "Изменение формы камня"
+              ]
+            },
+            {
+              "level": 5,
+              "spells": [
+                "Сотворение"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "human_mark_passage",
+          "name": "Человек Эберрона (Метка Прохода)",
+          "ability_bonuses": [
+            {
+              "ability": "DEX",
+              "bonus": 2
+            },
+            {
+              "ability_choice": true,
+              "bonus": 1
+            }
+          ],
+          "speed": {
+            "walk": 35
+          },
+          "traits": [
+            {
+              "id": "couriers_speed",
+              "name": "Курьерская скорость",
+              "description": "Базовая скорость ходьбы увеличивается до 35 футов."
+            },
+            {
+              "id": "intuitive_motion",
+              "name": "Интуитивное движение",
+              "description": "Проверки Акробатики или управления наземным транспортом — к4 к результату."
+            },
+            {
+              "id": "magical_passage",
+              "name": "Магический проход",
+              "description": "Заклинание 'Туманный шаг' 1/длительный отдых. Базовая характеристика — Ловкость."
+            }
+          ],
+          "spell_list": [
+            {
+              "level": 1,
+              "spells": [
+                "Поспешное отступление",
+                "Прыжок"
+              ]
+            },
+            {
+              "level": 2,
+              "spells": [
+                "Туманный шаг",
+                "Бесследное передвижение"
+              ]
+            },
+            {
+              "level": 3,
+              "spells": [
+                "Мерцание",
+                "Призрачный скакун"
+              ]
+            },
+            {
+              "level": 4,
+              "spells": [
+                "Переносящая дверь",
+                "Свобода перемещения"
+              ]
+            },
+            {
+              "level": 5,
+              "spells": [
+                "Круг телепортации"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "human_mark_sentinel",
+          "name": "Человек Эберрона (Метка Стража)",
+          "ability_bonuses": [
+            {
+              "ability": "CON",
+              "bonus": 2
+            },
+            {
+              "ability": "WIS",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "sentinels_intuition",
+              "name": "Интуиция стража",
+              "description": "Проверки Проницательности или Внимания — к4 к результату."
+            },
+            {
+              "id": "sentinels_shield",
+              "name": "Щит стража",
+              "description": "Заклинание 'Щит' 1/длительный отдых. Базовая характеристика — Мудрость."
+            },
+            {
+              "id": "vigilant_guardian",
+              "name": "Бдительный страж",
+              "description": "Реакцией меняетесь местами с союзником в пределах 5 футов, принимая атаку на себя. 1/длительный отдых."
+            }
+          ],
+          "spell_list": [
+            {
+              "level": 1,
+              "spells": [
+                "Вызов на дуэль",
+                "Щит веры"
+              ]
+            },
+            {
+              "level": 2,
+              "spells": [
+                "Охраняющая связь",
+                "Область истины"
+              ]
+            },
+            {
+              "level": 3,
+              "spells": [
+                "Контрзаклинание",
+                "Защита от энергии"
+              ]
+            },
+            {
+              "level": 4,
+              "spells": [
+                "Защита от смерти",
+                "Страж веры"
+              ]
+            },
+            {
+              "level": 5,
+              "spells": [
+                "Длань Бигби"
+              ]
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "phb",
+        "erlw",
+        "human",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "shifter": {
+      "id": "race_shifter",
+      "name": "Шифтер",
+      "name_en": "Shifter",
+      "edition": "5e-ERLW",
+      "source": {
+        "book": "Eberron: Rising from the Last War",
+        "short": "ERLW"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 10,
+        "avg": 30,
+        "max": 70
+      },
+      "alignment": "Чаще нейтральные; склонны к хаосу и выживанию.",
+      "size": "Medium",
+      "height_ft": "5-7",
+      "weight_lb": null,
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability_choice": true,
+          "bonus": 2
+        },
+        {
+          "ability_choice": true,
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "Оттенки серого в темноте"
+      },
+      "traits": [
+        {
+          "id": "keen_senses",
+          "name": "Острые чувства",
+          "description": "Владение навыком Внимательность."
+        },
+        {
+          "id": "shifting",
+          "name": "Смена формы",
+          "description": "Бонусным действием усиливаете животную сущность на 1 минуту. Получаете временные хиты = уровень + мод. Телосложения и бонусы подрасы. Используется 1/короткий или длинный отдых."
+        }
+      ],
+      "subraces": [
+        {
+          "id": "shifter_beasthide",
+          "name": "Зверошкура",
+          "ability_bonuses": [
+            {
+              "ability": "CON",
+              "bonus": 2
+            },
+            {
+              "ability": "STR",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "athletics",
+              "name": "Атлетика",
+              "description": "Владение навыком Атлетика."
+            },
+            {
+              "id": "beasthide_shift",
+              "name": "Особенности смены формы",
+              "description": "При смене формы получаете +1 КД и дополнительно 1к6 временных хитов."
+            }
+          ]
+        },
+        {
+          "id": "shifter_longtooth",
+          "name": "Длиннозуб",
+          "ability_bonuses": [
+            {
+              "ability": "STR",
+              "bonus": 2
+            },
+            {
+              "ability": "DEX",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "intimidation",
+              "name": "Запугивание",
+              "description": "Владение навыком Запугивание."
+            },
+            {
+              "id": "longtooth_shift",
+              "name": "Особенности смены формы",
+              "description": "В форме можно бонусным действием атаковать клыками (1к6 колющий урон + Сила)."
+            }
+          ]
+        },
+        {
+          "id": "shifter_swiftstride",
+          "name": "Быстроног",
+          "ability_bonuses": [
+            {
+              "ability": "DEX",
+              "bonus": 2
+            },
+            {
+              "ability": "CHA",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "acrobatics",
+              "name": "Акробатика",
+              "description": "Владение навыком Акробатика. Базовая скорость +5 футов."
+            },
+            {
+              "id": "swiftstride_shift",
+              "name": "Особенности смены формы",
+              "description": "В форме скорость +10 футов. Реакцией можно переместиться на 10 футов, когда враг завершает ход рядом."
+            }
+          ]
+        },
+        {
+          "id": "shifter_wildhunt",
+          "name": "Дикий охотник",
+          "ability_bonuses": [
+            {
+              "ability": "WIS",
+              "bonus": 2
+            },
+            {
+              "ability": "DEX",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "survival",
+              "name": "Выживание",
+              "description": "Владение навыком Выживание."
+            },
+            {
+              "id": "marked_target",
+              "name": "Помеченная цель",
+              "description": "Бонусным действием помечаете цель. До конца отдыха удвоение бонуса мастерства на её выслеживание и всегда знаете её местоположение в пределах 60 фт. Используется 1/короткий или длинный отдых."
+            },
+            {
+              "id": "wildhunt_shift",
+              "name": "Особенности смены формы",
+              "description": "В форме получаете преимущество на проверки Мудрости. Враги в пределах 30 фт. не получают преимущество на атаки против вас."
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "erlw",
+        "shifter",
+        "humanoid"
+      ],
+      "version": 1
+    },
+    "elf": {
+      "id": "race_elf",
+      "name": "Эльф",
+      "name_en": "Elf",
+      "edition": "5e-PHB/MTF/EGW/ERLW",
+      "source": {
+        "book": "Player's Handbook, Mordenkainen's Tome of Foes, Explorer's Guide to Wildemount, Eberron: Rising from the Last War",
+        "short": "PHB/MTF/EGW/ERLW"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 100,
+        "avg": 750,
+        "max": 750
+      },
+      "alignment": "Склонны к хаосу; ценят свободу, самовыражение и природу.",
+      "size": "Medium",
+      "height_ft": "5-6.5",
+      "weight_lb": "100-145",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "DEX",
+          "bonus": 2
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Эльфийский"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "Оттенки серого в темноте"
+      },
+      "traits": [
+        {
+          "id": "fey_ancestry",
+          "name": "Наследие фей",
+          "description": "Преимущество на спасброски против очарования, иммунитет к магическому сну."
+        },
+        {
+          "id": "trance",
+          "name": "Транс",
+          "description": "Эльфы не спят, а медитируют 4 часа, что эквивалентно 8 часам сна."
+        }
+      ],
+      "subraces": [
+        {
+          "id": "elf_high",
+          "name": "Высший эльф",
+          "ability_bonuses": [
+            {
+              "ability": "INT",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "keen_senses",
+              "name": "Острые чувства",
+              "description": "Владение навыком Внимательность."
+            },
+            {
+              "id": "elf_weapon_training",
+              "name": "Эльфийская военная подготовка",
+              "description": "Владение длинным мечом, коротким мечом, длинным луком и коротким луком."
+            },
+            {
+              "id": "cantrip",
+              "name": "Заговор",
+              "description": "Вы знаете один заговор из списка волшебника. Базовая характеристика — Интеллект."
+            },
+            {
+              "id": "extra_language",
+              "name": "Дополнительный язык",
+              "description": "Вы знаете один дополнительный язык на выбор."
+            }
+          ]
+        },
+        {
+          "id": "elf_wood",
+          "name": "Лесной эльф",
+          "ability_bonuses": [
+            {
+              "ability": "WIS",
+              "bonus": 1
+            }
+          ],
+          "speed": {
+            "walk": 35
+          },
+          "traits": [
+            {
+              "id": "mask_of_the_wild",
+              "name": "Маска дикости",
+              "description": "Можно скрываться, даже если заслонены только природой (листва, туман, дождь)."
+            }
+          ]
+        },
+        {
+          "id": "elf_drow",
+          "name": "Тёмный эльф (Дроу)",
+          "ability_bonuses": [
+            {
+              "ability": "CHA",
+              "bonus": 1
+            }
+          ],
+          "vision": {
+            "darkvision": 120,
+            "notes": "Чувствительны к солнечному свету"
+          },
+          "traits": [
+            {
+              "id": "drow_magic",
+              "name": "Магия дроу",
+              "description": "Заклинания: 'Фея огней', 3 ур. — 'Тьма'. Используются раз в длительный отдых. Базовая характеристика — Харизма."
+            },
+            {
+              "id": "drow_weapon_training",
+              "name": "Оружие дроу",
+              "description": "Владение рапирой, коротким мечом и ручным арбалетом."
+            }
+          ]
+        },
+        {
+          "id": "elf_sea",
+          "name": "Морской эльф",
+          "ability_bonuses": [
+            {
+              "ability": "CON",
+              "bonus": 1
+            }
+          ],
+          "speed": {
+            "walk": 30,
+            "swim": 30
+          },
+          "languages": [
+            "Общий",
+            "Эльфийский",
+            "Акван"
+          ],
+          "traits": [
+            {
+              "id": "child_of_the_sea",
+              "name": "Дитя моря",
+              "description": "Скорость плавания 30 футов, можете дышать под водой."
+            },
+            {
+              "id": "friend_of_the_sea",
+              "name": "Друг моря",
+              "description": "Вы можете общаться простыми идеями с водными животными."
+            }
+          ]
+        },
+        {
+          "id": "elf_shadar_kai",
+          "name": "Шадар-кай",
+          "ability_bonuses": [
+            {
+              "ability": "CON",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "necrotic_resistance",
+              "name": "Сопротивление некротике",
+              "description": "Сопротивление урону некротической энергией."
+            },
+            {
+              "id": "blessing_of_the_raven_queen",
+              "name": "Благословение Вороницы",
+              "description": "С 3 уровня: бонусным действием телепортируетесь на 30 футов, получаете сопротивление урону до начала следующего хода. Используется 1/длительный отдых."
+            }
+          ]
+        },
+        {
+          "id": "elf_eladrin",
+          "name": "Эладрин",
+          "ability_bonuses": [
+            {
+              "ability": "CHA",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "fey_step",
+              "name": "Шаг фей",
+              "description": "С 3 уровня: бонусным действием телепорт на 30 футов. Используется 1/длительный отдых. Эффект зависит от сезона."
+            }
+          ]
+        },
+        {
+          "id": "elf_pale",
+          "name": "Бледный эльф",
+          "ability_bonuses": [
+            {
+              "ability": "WIS",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "incisive_sense",
+              "name": "Проницательный слух",
+              "description": "Владение навыком Анализ."
+            },
+            {
+              "id": "blessing_of_the_moonweaver",
+              "name": "Благословение Лунной Ткачихи",
+              "description": "Заклинания: 'Лёгкие шаги', 3 ур. — 'Свет'. Используются раз в длительный отдых."
+            }
+          ]
+        },
+        {
+          "id": "elf_shadow_mark",
+          "name": "Эльф Эберрона (Метка Тени)",
+          "ability_bonuses": [
+            {
+              "ability": "DEX",
+              "bonus": 1
+            },
+            {
+              "ability": "CHA",
+              "bonus": 1
+            }
+          ],
+          "traits": [
+            {
+              "id": "shadow_magic",
+              "name": "Магия тени",
+              "description": "Заклинания: 'Тьма', 'Маскировка'. Базовая характеристика — Харизма."
+            }
+          ],
+          "spell_list": [
+            {
+              "level": 1,
+              "spells": [
+                "Маскировка",
+                "Тьма"
+              ]
+            },
+            {
+              "level": 2,
+              "spells": [
+                "Невидимость",
+                "Малое восстановление"
+              ]
+            },
+            {
+              "level": 3,
+              "spells": [
+                "Массовое внушение",
+                "Ужас"
+              ]
+            }
+          ]
+        }
+      ],
+      "tags": [
+        "phb",
+        "mtf",
+        "egw",
+        "erlw",
+        "elf",
+        "humanoid"
+      ],
+      "version": 1,
+      "subrace_selection": {
+        "enabled": true,
+        "required": true,
+        "default_subrace_id": null,
+        "label": "Подрасса"
+      }
+    },
+    "yuan_ti": {
+      "id": "race_yuan_ti",
+      "name": "Юань-ти (чистокровный)",
+      "name_en": "Yuan-ti Pureblood",
+      "edition": "5e-VGtM",
+      "source": {
+        "book": "Volo's Guide to Monsters",
+        "short": "VGtM"
+      },
+      "creature_type": "humanoid",
+      "lifespan_years": {
+        "min": 18,
+        "avg": 80,
+        "max": 120
+      },
+      "alignment": "Обычно нейтрально-злые, лишены эмоций и используют других.",
+      "size": "Medium",
+      "height_ft": "5-6",
+      "weight_lb": "120-180",
+      "speed": {
+        "walk": 30
+      },
+      "ability_bonuses": [
+        {
+          "ability": "CHA",
+          "bonus": 2
+        },
+        {
+          "ability": "INT",
+          "bonus": 1
+        }
+      ],
+      "languages": [
+        "Общий",
+        "Драконий",
+        "Язык Бездны"
+      ],
+      "vision": {
+        "darkvision": 60,
+        "notes": "Оттенки серого в темноте"
+      },
+      "traits": [
+        {
+          "id": "innate_spellcasting_yuanti",
+          "name": "Врожденная магия",
+          "description": "Вы знаете заговор 'Ядовитые брызги'. Можете накладывать 'Дружбу с животными' (только на змей) неограниченно. С 3 уровня: 'Внушение' 1/отдых. Базовая характеристика — Харизма."
+        },
+        {
+          "id": "magic_resistance_yuanti",
+          "name": "Сопротивление магии",
+          "description": "Преимущество на спасброски против заклинаний и магических эффектов."
+        },
+        {
+          "id": "poison_immunity_yuanti",
+          "name": "Иммунитет к яду",
+          "description": "Вы невосприимчивы к урону ядом и состоянию 'отравлен'."
+        }
+      ],
+      "tags": [
+        "vgtm",
+        "yuan-ti",
+        "humanoid"
+      ],
+      "version": 1
+    }
+  }
+}

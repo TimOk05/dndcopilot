@@ -4315,6 +4315,14 @@ class SoundManager {
     startBackgroundMusic() {
         if (!this.isMusicEnabled) return;
         
+        // Сначала останавливаем все фоновые аудиофайлы для предотвращения наложения
+        Object.values(this.sounds).forEach(sound => {
+            if (sound !== this.sounds.click) {
+                sound.pause();
+                sound.currentTime = 0;
+            }
+        });
+        
         let musicFile = null;
         switch (this.currentTheme) {
             case 'dark':
@@ -4351,10 +4359,21 @@ class SoundManager {
     }
     
     stopBackgroundMusic() {
+        // Останавливаем текущую фоновую музыку
         if (this.backgroundMusic) {
             this.backgroundMusic.pause();
             this.backgroundMusic.currentTime = 0;
         }
+        
+        // Останавливаем ВСЕ фоновые аудиофайлы для предотвращения наложения
+        Object.values(this.sounds).forEach(sound => {
+            if (sound !== this.sounds.click) {
+                sound.pause();
+                sound.currentTime = 0;
+            }
+        });
+        
+        console.log('All background music stopped');
     }
     
     changeTheme(newTheme) {
@@ -4374,6 +4393,14 @@ class SoundManager {
         try {
             const timestamp = Date.now();
             console.log('Reloading audio files to bypass cache...');
+            
+            // Сначала останавливаем все старые аудиофайлы
+            Object.values(this.sounds).forEach(sound => {
+                if (sound !== this.sounds.click) {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }
+            });
             
             // Перезагружаем только фоновую музыку
             this.sounds.bgDark = new Audio(`sound/bg music dark.mp3?v=${timestamp}`);
