@@ -16,24 +16,25 @@ class BackgroundGenerator {
     /**
      * Генерирует предысторию и описание персонажа с помощью AI
      */
-    public function generateBackground($characterData) {
+    public function generateBackground($characterData, $type = 'background') {
         try {
             // Подготавливаем данные персонажа для AI
             $characterInfo = $this->prepareCharacterInfo($characterData);
             
             // Создаем промпт для AI
-            $prompt = $this->createPrompt($characterInfo);
+            $prompt = $this->createPrompt($characterInfo, $type);
             
-            // Отправляем запрос к AI (здесь нужно будет интегрировать с вашим AI сервисом)
-            $background = $this->callAI($prompt);
+            // Отправляем запрос к AI
+            $content = $this->callAI($prompt, $type);
             
             return [
-                'background' => $background,
+                'content' => $content,
+                'type' => $type,
                 'generated_at' => date('Y-m-d H:i:s')
             ];
             
         } catch (Exception $e) {
-            throw new Exception("Ошибка генерации предыстории: " . $e->getMessage());
+            throw new Exception("Ошибка генерации: " . $e->getMessage());
         }
     }
     
@@ -59,8 +60,16 @@ class BackgroundGenerator {
     /**
      * Создает промпт для AI
      */
-    private function createPrompt($characterInfo) {
-        $prompt = "Создай подробную предысторию и описание для персонажа D&D 5e со следующими характеристиками:\n\n";
+    private function createPrompt($characterInfo, $type = 'background') {
+        $prompt = "Создай ";
+        
+        if ($type === 'description') {
+            $prompt .= "краткое описание внешности и характера для персонажа D&D 5e";
+        } else {
+            $prompt .= "подробную предысторию для персонажа D&D 5e";
+        }
+        
+        $prompt .= " со следующими характеристиками:\n\n";
         
         $prompt .= "РАСА: " . $characterInfo['race'];
         if ($characterInfo['subrace']) {
@@ -98,26 +107,100 @@ class BackgroundGenerator {
             $prompt .= "\nЯЗЫКИ: " . implode(', ', $characterInfo['languages']) . "\n";
         }
         
-        $prompt .= "\nПожалуйста, создай:\n";
-        $prompt .= "1. Краткое описание внешности персонажа (2-3 предложения)\n";
-        $prompt .= "2. Подробную предысторию, объясняющую как персонаж стал " . strtolower($characterInfo['class']) . "ом (3-4 абзаца)\n";
-        $prompt .= "3. Мотивацию и цели персонажа (1-2 абзаца)\n";
-        $prompt .= "4. Особенности характера и личности (1-2 абзаца)\n";
-        $prompt .= "5. Отношения с другими (семья, друзья, враги) (1-2 абзаца)\n\n";
-        
-        $prompt .= "Предыстория должна быть логичной, интересной и соответствовать характеристикам персонажа. ";
-        $prompt .= "Используй фэнтезийную атмосферу D&D. Пиши на русском языке.";
+        if ($type === 'description') {
+            $prompt .= "\nСоздай краткое описание (2-3 абзаца):\n";
+            $prompt .= "1. Внешность персонажа (рост, телосложение, цвет волос/глаз, отличительные черты)\n";
+            $prompt .= "2. Особенности характера и поведения\n";
+            $prompt .= "3. Манера речи и привычки\n\n";
+            $prompt .= "Описание должно соответствовать расе, классу и характеристикам персонажа. Используй фэнтезийную атмосферу D&D. Пиши на русском языке.";
+        } else {
+            $prompt .= "\nСоздай подробную предысторию:\n";
+            $prompt .= "1. Детство и происхождение (1-2 абзаца)\n";
+            $prompt .= "2. Как персонаж стал " . strtolower($characterInfo['class']) . "ом (2-3 абзаца)\n";
+            $prompt .= "3. Важные события в жизни (1-2 абзаца)\n";
+            $prompt .= "4. Мотивация и цели (1-2 абзаца)\n";
+            $prompt .= "5. Отношения с другими (семья, друзья, враги) (1-2 абзаца)\n\n";
+            $prompt .= "Предыстория должна быть логичной, интересной и соответствовать характеристикам персонажа. Используй фэнтезийную атмосферу D&D. Пиши на русском языке.";
+        }
         
         return $prompt;
     }
     
     /**
      * Вызывает AI для генерации предыстории
-     * TODO: Интегрировать с реальным AI сервисом
      */
-    private function callAI($prompt) {
-        // Временная заглушка - возвращаем пример предыстории
-        // В реальной реализации здесь будет вызов к AI API (OpenAI, Claude, etc.)
+    private function callAI($prompt, $type = 'background') {
+        $apiKey = getApiKey('deepseek');
+        
+        if (empty($apiKey)) {
+            // Если нет API ключа, возвращаем заглушку
+            return $this->getFallbackContent($type);
+        }
+        
+        try {
+            $data = [
+                'model' => 'deepseek-chat',
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => 'Ты - опытный мастер D&D, который создает интересные и детальные предыстории для персонажей. Пиши на русском языке, используй фэнтезийную атмосферу D&D.'
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $prompt
+                    ]
+                ],
+                'max_tokens' => 1500,
+                'temperature' => 0.8,
+                'stream' => false
+            ];
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, DEEPSEEK_API_URL);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $apiKey
+            ]);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, API_TIMEOUT);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error = curl_error($ch);
+            curl_close($ch);
+            
+            if ($error) {
+                throw new Exception("Ошибка cURL: " . $error);
+            }
+            
+            if ($httpCode !== 200) {
+                throw new Exception("HTTP ошибка: " . $httpCode);
+            }
+            
+            $result = json_decode($response, true);
+            
+            if (isset($result['choices'][0]['message']['content'])) {
+                return trim($result['choices'][0]['message']['content']);
+            } else {
+                throw new Exception("Неверный формат ответа от AI");
+            }
+            
+        } catch (Exception $e) {
+            logMessage('ERROR', 'AI generation failed', ['error' => $e->getMessage()]);
+            return $this->getFallbackContent($type);
+        }
+    }
+    
+    /**
+     * Возвращает заглушку если AI недоступен
+     */
+    private function getFallbackContent($type) {
+        if ($type === 'description') {
+            return "Описание персонажа будет сгенерировано AI. В данный момент AI сервис недоступен, но вы можете добавить описание вручную.";
+        }
         
         $sampleBackgrounds = [
             "Внешность: Высокий и стройный эльф с серебристыми волосами и пронзительными голубыми глазами. Его движения грациозны и точны, а на лице часто играет загадочная улыбка.\n\n" .
@@ -133,7 +216,6 @@ class BackgroundGenerator {
             "Отношения: Чтит память погибших членов клана. Имеет друзей среди других жрецов и кузнецов. Некоторые считают его слишком идеалистичным."
         ];
         
-        // Возвращаем случайную предысторию
         return $sampleBackgrounds[array_rand($sampleBackgrounds)];
     }
 }
@@ -147,8 +229,10 @@ try {
             throw new Exception('Неверные данные запроса');
         }
         
+        $type = $input['type'] ?? 'background';
+        
         $generator = new BackgroundGenerator();
-        $response = $generator->generateBackground($input['character']);
+        $response = $generator->generateBackground($input['character'], $type);
         
         echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         
