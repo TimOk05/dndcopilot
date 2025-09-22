@@ -97,6 +97,12 @@ try {
         send_json(['success' => true, 'classes' => $classes]);
     }
 
+    if ($type === 'backgrounds') {
+        // Локальная библиотека происхождений пока не подключена
+        // Возвращаем пустой список, чтобы фронтенд корректно отработал
+        send_json(['success' => true, 'backgrounds' => []]);
+    }
+
     send_json(['success' => false, 'message' => 'Неверный тип']);
 } catch (Throwable $e) {
     send_json(['success' => false, 'message' => 'Ошибка: ' . $e->getMessage()]);

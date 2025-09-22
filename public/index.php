@@ -740,8 +740,8 @@ function loadRaces() {
     }
     
     console.log('Отправляем запрос к API...');
-    // Загружаем расы из D&D API
-    fetch('api/dnd-libraries.php?type=races')
+    // Загружаем расы из локальной библиотеки
+    fetch('api/local-libraries.php?type=races')
         .then(response => {
             console.log('Получен ответ от API:', response.status);
             return response.json();
@@ -784,8 +784,8 @@ function loadClasses() {
 
     
     console.log('Отправляем запрос к API для классов...');
-    // Загружаем классы из D&D API
-    fetch('api/dnd-libraries.php?type=classes')
+    // Загружаем классы из локальной библиотеки
+    fetch('api/local-libraries.php?type=classes')
         .then(response => {
             console.log('Получен ответ от API для классов:', response.status);
             return response.json();
@@ -822,8 +822,8 @@ function loadBackgrounds() {
     }
     
     console.log('Отправляем запрос к API для происхождений...');
-    // Загружаем происхождения из D&D API
-    fetch('api/dnd-libraries.php?type=backgrounds')
+    // Загружаем происхождения из локальной библиотеки
+    fetch('api/local-libraries.php?type=backgrounds')
         .then(response => response.json())
         .then(data => {
             if (data.success && data.backgrounds) {
@@ -849,8 +849,8 @@ function loadSubracesForRace(raceIndex) {
     if (!subraceSelect) return;
     try { console.log('[CharacterGen] Loading subraces for race:', raceIndex); } catch (e) {}
     
-    // Загружаем подрасы из D&D API
-    fetch(`api/dnd-libraries.php?type=races&race=${raceIndex}`)
+    // Загружаем подрасы из локальной библиотеки
+    fetch(`api/local-libraries.php?type=races&race=${raceIndex}`)
         .then(response => response.json())
         .then(data => {
             if (data.success && data.subraces && data.subraces.length > 0) {
@@ -5520,7 +5520,7 @@ function saveAllEnemiesToNotes(enemies) {
         params.append('action', 'get_comprehensive_spell');
         params.append('spell', spellName);
         
-        fetch('api/dnd-libraries.php?' + params.toString())
+        fetch('api/local-libraries.php?' + params.toString())
         .then(response => response.json())
         .then(data => {
             if (data.success && data.data) {
@@ -5583,7 +5583,7 @@ function saveAllEnemiesToNotes(enemies) {
         params.append('action', 'get_comprehensive_monster');
         params.append('monster', monsterName);
         
-        fetch('api/dnd-libraries.php?' + params.toString())
+        fetch('api/local-libraries.php?' + params.toString())
         .then(response => response.json())
         .then(data => {
             if (data.success && data.data) {
