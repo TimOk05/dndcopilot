@@ -576,6 +576,7 @@ function openCharacterModal() {
     document.getElementById('modal-save').style.display = 'none';
     
     // Динамическая загрузка данных из внешних API
+    try { console.log('[CharacterGen] Modal opened, initiating data load'); } catch (e) {}
     loadCharacterData();
     
     document.getElementById('character-race').addEventListener('change', function() {
@@ -598,6 +599,7 @@ function openCharacterModal() {
     // Добавляем обработчик формы
     document.getElementById('characterForm').addEventListener('submit', function(e) {
         e.preventDefault();
+        try { console.log('[CharacterGen] Submit clicked'); } catch (e) {}
         
         const formData = new FormData(this);
         const submitBtn = this.querySelector('button[type="submit"]');
@@ -616,6 +618,7 @@ function openCharacterModal() {
             background: formData.get('background'),
             ability_method: formData.get('ability_method')
         };
+        try { console.log('[CharacterGen] Collected form params:', JSON.parse(JSON.stringify(formParams))); } catch (e) {}
         
         // Всегда используем полноценную генерацию из внешних источников
         formData.append('use_full_generation', 'true');
@@ -627,6 +630,7 @@ function openCharacterModal() {
         // Обновляем текст прогресса
         const progressText = progressDiv.querySelector('#progressText');
         progressText.textContent = 'Получение данных из внешних источников...';
+        try { console.log('[CharacterGen] Progress: start fetching...'); } catch (e) {}
         
         // Анимация прогресса
         const progressFill = progressDiv.querySelector('.progress-fill');
@@ -637,6 +641,7 @@ function openCharacterModal() {
             progressFill.style.width = progress + '%';
         }, 200);
         
+        console.time('[CharacterGen] fetch api/generate-characters.php');
         fetch('api/generate-characters.php', {
             method: 'POST',
             body: formData
@@ -644,9 +649,12 @@ function openCharacterModal() {
         .then(response => {
             // Проверяем, что ответ можно распарсить как JSON
             if (!response.ok) {
+                try { console.error('[CharacterGen] HTTP error', response.status, response.statusText); } catch (e) {}
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
+            console.timeEnd('[CharacterGen] fetch api/generate-characters.php');
             return response.text().then(text => {
+                try { console.log('[CharacterGen] Raw response length:', text?.length || 0); } catch (e) {}
                 try {
                     return JSON.parse(text);
                 } catch (e) {
@@ -665,6 +673,7 @@ function openCharacterModal() {
                 this.style.display = 'block';
                 
                 if (data.success) {
+                    try { console.log('[CharacterGen] Success flag true'); } catch (e) {}
                     const character = data.character || data.npc; // Поддержка старого и нового формата
                     resultDiv.innerHTML = formatCharacterFromApi(character);
                     
@@ -679,6 +688,7 @@ function openCharacterModal() {
                                     </button>
                                 </div>
                             `;
+                            try { console.log('[CharacterGen] Rendered character and save button'); } catch (e) {}
                             
                             // Автоматически сохраняем персонажа в заметки
                             saveCharacterToNotes(character);
@@ -692,7 +702,8 @@ function openCharacterModal() {
                         resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }, 100);
                 } else {
-                    resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || 'Неизвестная ошибка') + '</div>';
+                    try { console.warn('[CharacterGen] API returned success=false', data); } catch (e) {}
+                    resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || data.message || 'Неизвестная ошибка') + '</div>';
                 }
             }, 500);
         })
@@ -702,6 +713,7 @@ function openCharacterModal() {
             this.style.display = 'block';
             console.error('Generation error:', error);
             resultDiv.innerHTML = '<div class="error">Ошибка сети: ' + error.message + '</div>';
+            try { console.error('[CharacterGen] Catch block error details:', error?.stack || error); } catch (e) {}
         });
     });
 }
@@ -767,6 +779,9 @@ function loadClasses() {
         console.error('Элемент character-class не найден');
         return;
     }
+     
+    
+
     
     console.log('Отправляем запрос к API для классов...');
     // Загружаем классы из D&D API
@@ -832,6 +847,7 @@ function loadBackgrounds() {
 function loadSubracesForRace(raceIndex) {
     const subraceSelect = document.getElementById('character-subrace');
     if (!subraceSelect) return;
+    try { console.log('[CharacterGen] Loading subraces for race:', raceIndex); } catch (e) {}
     
     // Загружаем подрасы из D&D API
     fetch(`api/dnd-libraries.php?type=races&race=${raceIndex}`)
@@ -845,15 +861,25 @@ function loadSubracesForRace(raceIndex) {
                     option.textContent = subrace.name;
                     subraceSelect.appendChild(option);
                 });
+                try { console.log('[CharacterGen] Subraces loaded:', data.subraces.length); } catch (e) {}
             } else {
                 subraceSelect.innerHTML = '<option value="">Нет подрас</option>';
+                try { console.log('[CharacterGen] No subraces found for race:', raceIndex); } catch (e) {}
             }
         })
         .catch(error => {
             console.error('Error loading subraces:', error);
             subraceSelect.innerHTML = '<option value="">Ошибка загрузки подрас</option>';
+            try { console.error('[CharacterGen] Subraces load failed:', error?.stack || error); } catch (e) {}
         });
 }
+
+// Глобальные обработчики для отладки непойманных ошибок в промисах
+try {
+    window.addEventListener('unhandledrejection', function(event) {
+        console.error('[CharacterGen] Unhandled promise rejection:', event.reason);
+    });
+} catch (e) {}
 
 // --- Функция открытия генерации противников ---
 function openEnemyModal() {
