@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Character Generator v8.0 - Modal Integration Complete -->
+<!-- Character Generator v8.1 - Modal Structure Fixed -->
 <html lang="ru">
 
 <head>
@@ -5021,40 +5021,31 @@
         /* Улучшенный интерфейс чата */
         /* Генератор персонажей */
         
-        .character-generator-modal {
-            max-width: 1000px;
-            width: 95%;
-            max-height: 95vh;
-            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-        
-        .character-generator-container {
-            padding: 40px;
-            text-align: center;
+        .character-generator {
+            max-width: 100%;
+            margin: 0 auto;
         }
         
         .generator-header {
-            margin-bottom: 40px;
+            text-align: center;
+            margin-bottom: var(--space-6);
         }
         
-        .generator-header h1 {
-            font-size: 2.5em;
+        .generator-header h2 {
+            font-size: var(--text-2xl);
             color: var(--accent-primary);
-            margin: 0 0 10px 0;
+            margin: 0 0 var(--space-2) 0;
             font-family: 'UnifrakturCook', cursive;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         .generator-header p {
-            font-size: 1.2em;
+            font-size: var(--text-base);
             color: var(--text-secondary);
             margin: 0;
         }
         
-        .generator-main {
-            margin-bottom: 40px;
+        .generator-form {
+            margin-bottom: var(--space-6);
         }
         
         .generator-card {
@@ -6492,21 +6483,21 @@
 
     <!-- Генератор персонажей -->
     <div class="modal-bg" id="character-modal-bg" style="display: none;">
-        <div class="modal character-generator-modal" id="character-modal">
+        <div class="modal" id="character-modal">
             <button class="modal-close" id="character-modal-close">×</button>
 
-            <div class="character-generator-container">
+            <div class="character-generator">
                 <div class="generator-header">
-                    <h1>🎭 Генератор персонажей D&D 5e</h1>
+                    <h2>🎭 Генератор персонажей D&D 5e</h2>
                     <p>Создайте уникального персонажа одним кликом</p>
                 </div>
 
-                <div class="generator-main">
+                <div class="generator-form">
                     <div class="generator-card">
                         <div class="card-icon">🎲</div>
                         <h3>Полная случайность</h3>
                         <p>Генератор выберет всё за вас: расу, класс, характеристики, снаряжение и заклинания</p>
-                        <button class="main-generate-btn" id="generateCharacterBtn">
+                        <button class="generate-btn" id="generateCharacterBtn">
                             <span class="btn-icon">⚔️</span>
                             <span class="btn-text">Создать персонажа</span>
                         </button>
@@ -6515,7 +6506,7 @@
 
                 <div id="characterResult" class="character-result" style="display: none;">
                     <div class="result-header">
-                        <h2>🎭 Ваш персонаж готов!</h2>
+                        <h3>🎭 Ваш персонаж готов!</h3>
                         <button class="regenerate-btn" onclick="generateCharacter()">🔄 Создать другого</button>
                     </div>
                     <div id="characterContent" class="character-content"></div>
