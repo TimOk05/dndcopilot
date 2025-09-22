@@ -271,7 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message']) && !isset(
 // --- Генерация быстрых кнопок ---
 $fastBtns = '<div class="button-grid">';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей"><span class="svg-icon icon-dice" data-icon="dice"></span> Кости</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей"><span class="svg-icon icon-hero" data-icon="hero"></span> Персонаж</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterGeneratorModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей"><span class="svg-icon icon-hero" data-icon="hero"></span> Персонаж</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников"><span class="svg-icon icon-enemy" data-icon="enemy"></span> Противники</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий"><span class="svg-icon icon-potion" data-icon="potion"></span> Зелья</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openSpellModal()" data-tooltip="Создать заклинания" aria-label="Открыть генератор заклинаний"><span class="svg-icon icon-spell" data-icon="spell"></span> Заклинания</button>';
@@ -361,7 +361,7 @@ $template = str_replace('{{chat_messages}}', $chatMsgs, $template);
 $template = str_replace('{{notes_block}}', $notesBlock, $template);
 
 // Добавляем версионирование для принудительного обновления кэша
-$template = str_replace('v=7.0', 'v=' . time() . '_' . rand(1000, 9999), $template);
+$template = str_replace('v=8.0', 'v=' . time() . '_' . rand(1000, 9999), $template);
 
 echo $template;
 ?>
