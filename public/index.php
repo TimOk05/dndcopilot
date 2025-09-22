@@ -359,6 +359,10 @@ $template = file_get_contents(__DIR__ . '/template.html');
 $template = str_replace('{{fast_buttons}}', $fastBtns, $template);
 $template = str_replace('{{chat_messages}}', $chatMsgs, $template);
 $template = str_replace('{{notes_block}}', $notesBlock, $template);
+
+// Добавляем версионирование для принудительного обновления кэша
+$template = str_replace('v=3.0', 'v=' . time(), $template);
+
 echo $template;
 ?>
 
