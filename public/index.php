@@ -442,8 +442,7 @@ function updateDiceComment(dice, count) {
 // --- Генерация персонажей и противников ---
 // Статические данные удалены - теперь используются внешние API
 
-// --- Функция открытия генерации персонажей ---
-function openCharacterModal() {
+// --- Старая функция удалена, используется openCharacterGeneratorModal() ---
     showModal(`
         <div class="character-generator">
             <div class="generator-header">
@@ -4921,7 +4920,7 @@ document.querySelector('form').onsubmit = function(e) {
             // F2 для генерации персонажей
             if (e.key === 'F2') {
                 e.preventDefault();
-                openCharacterModal();
+                openCharacterGeneratorModal();
             }
             
             // F4 для генерации противников
