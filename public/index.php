@@ -3137,6 +3137,94 @@ const equipmentStyles = `
             box-shadow: var(--character-generator-shadow, 0 4px 15px rgba(0, 0, 0, 0.1));
         }
         
+        /* Упрощенный генератор */
+        .simple-generator {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        
+        .random-section {
+            margin-bottom: 30px;
+        }
+        
+        .dice-icon {
+            margin-bottom: 15px;
+        }
+        
+        .random-section h3 {
+            color: var(--character-generator-text, #e0e0e0);
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .random-section p {
+            color: var(--character-generator-text, #e0e0e0);
+            opacity: 0.8;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 0;
+        }
+        
+        .generator-actions {
+            margin-top: 20px;
+        }
+        
+        .generate-btn-simple {
+            background: linear-gradient(135deg, var(--character-generator-accent, #ff6b35), var(--character-generator-accent-hover, #ff8c5a));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--character-generator-accent-shadow, rgba(255, 107, 53, 0.3));
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
+        }
+        
+        .generate-btn-simple:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--character-generator-accent-shadow-hover, rgba(255, 107, 53, 0.4));
+        }
+        
+        .generate-btn-simple:active {
+            transform: translateY(0);
+        }
+        
+        /* Детальный генератор */
+        .detailed-generator {
+            margin-top: 20px;
+        }
+        
+        .toggle-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .toggle-btn {
+            background: var(--character-generator-bg, rgba(255, 255, 255, 0.05));
+            color: var(--character-generator-text, #e0e0e0);
+            border: 1px solid var(--character-generator-border, rgba(255, 255, 255, 0.1));
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .toggle-btn:hover {
+            background: var(--character-generator-accent, #ff6b35);
+            color: white;
+            border-color: var(--character-generator-accent, #ff6b35);
+        }
+        
         /* Темы для генератора персонажей */
         .theme-dark .character-generator-container {
             --character-generator-bg: rgba(30, 30, 30, 0.8);
@@ -5610,12 +5698,37 @@ function saveAllEnemiesToNotes(enemies) {
         showModal(`
             <div class="character-generator">
                 <div class="generator-header">
-                    <h2 style="color: var(--character-generator-text, #e0e0e0); margin-bottom: 10px;">Генератор персонажей</h2>
-                    <p class="generator-subtitle" style="color: var(--character-generator-text, #e0e0e0); opacity: 0.8; margin: 0;">Создайте полноценного персонажа с использованием D&D API и AI</p>
+                    <h2 style="color: var(--character-generator-text, #e0e0e0); margin-bottom: 10px;">Генератор персонажей D&D 5e</h2>
+                    <p class="generator-subtitle" style="color: var(--character-generator-text, #e0e0e0); opacity: 0.8; margin: 0;">Создайте уникального персонажа о → Выйти</p>
                 </div>
-                
-                <!-- Форма генератора персонажей -->
-                <div id="characterGeneratorContainer" class="character-generator-container">
+
+                <!-- Упрощенный генератор -->
+                <div class="simple-generator">
+                    <div class="random-section">
+                        <div class="dice-icon">
+                            <span class="svg-icon" data-icon="dice" style="width: 40px; height: 40px; color: white;"></span>
+                        </div>
+                        <h3>Полная случайность</h3>
+                        <p>Генератор выберет всё за вас: расу, класс, характеристики, снаряжение и заклинания</p>
+                    </div>
+                    
+                    <div class="generator-actions">
+                        <button type="button" class="generate-btn-simple" onclick="generateRandomCharacter()">
+                            <span class="svg-icon" data-icon="hero" style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                            Создать персонажа
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Детальный генератор (скрыт по умолчанию) -->
+                <div id="detailedGenerator" class="detailed-generator" style="display: none;">
+                    <div class="toggle-section">
+                        <button type="button" class="toggle-btn" onclick="toggleGeneratorMode()">
+                            <span class="svg-icon" data-icon="settings" style="width: 16px; height: 16px; margin-right: 8px;"></span>
+                            Детальные настройки
+                        </button>
+                    </div>
+                    
                     <form id="characterForm" class="character-form-new" method="post">
                         <!-- Первая строка: Раса и Класс -->
                         <div class="form-row">
@@ -5632,7 +5745,7 @@ function saveAllEnemiesToNotes(enemies) {
                                 </select>
                             </div>
                         </div>
-                        
+
                         <!-- Вторая строка: Подраса и Архетип -->
                         <div class="form-row">
                             <div class="form-group">
@@ -5648,7 +5761,7 @@ function saveAllEnemiesToNotes(enemies) {
                                 </select>
                             </div>
                         </div>
-                        
+
                         <!-- Третья строка: Уровень и Пол -->
                         <div class="form-row">
                             <div class="form-group">
@@ -5685,7 +5798,7 @@ function saveAllEnemiesToNotes(enemies) {
                                 </select>
                             </div>
                         </div>
-                        
+
                         <!-- Четвертая строка: Мировоззрение и Возраст -->
                         <div class="form-row">
                             <div class="form-group">
@@ -5711,7 +5824,7 @@ function saveAllEnemiesToNotes(enemies) {
                                 </select>
                             </div>
                         </div>
-                        
+
                         <!-- Кнопка генерации -->
                         <div class="form-actions">
                             <button type="submit" class="generate-btn">
@@ -5720,29 +5833,98 @@ function saveAllEnemiesToNotes(enemies) {
                             </button>
                         </div>
                     </form>
-                    
-                    <!-- Прогресс-бар -->
-                    <div id="characterProgress" class="progress-container" style="display: none;">
-                        <div class="progress-bar">
-                            <div class="progress-fill"></div>
-                        </div>
-                        <p class="progress-text">Генерация персонажа...</p>
-                    </div>
-                    
-                    <!-- Результат -->
-                    <div id="characterResult" class="character-result" style="display: none;"></div>
                 </div>
+
+                <!-- Прогресс-бар -->
+                <div id="characterProgress" class="progress-container" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <p class="progress-text">Генерация персонажа...</p>
+                </div>
+
+                <!-- Результат -->
+                <div id="characterResult" class="character-result" style="display: none;"></div>
             </div>
         `);
-        
-        // Загружаем данные для выпадающих списков
+
+        // Загружаем данные для выпадающих списков (для детального режима)
         loadCharacterData();
+
+        // Обработчик формы (для детального режима)
+        const form = document.getElementById('characterForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                generateCharacter();
+            });
+        }
+    }
+    
+    // Функция переключения режима генератора
+    function toggleGeneratorMode() {
+        const simpleGenerator = document.querySelector('.simple-generator');
+        const detailedGenerator = document.getElementById('detailedGenerator');
+        const toggleBtn = document.querySelector('.toggle-btn');
         
-        // Обработчик формы
-        document.getElementById('characterForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            generateCharacter();
-        });
+        if (detailedGenerator.style.display === 'none') {
+            // Показываем детальный режим
+            simpleGenerator.style.display = 'none';
+            detailedGenerator.style.display = 'block';
+            toggleBtn.innerHTML = '<span class="svg-icon" data-icon="dice" style="width: 16px; height: 16px; margin-right: 8px;"></span> Простой режим';
+        } else {
+            // Показываем простой режим
+            simpleGenerator.style.display = 'block';
+            detailedGenerator.style.display = 'none';
+            toggleBtn.innerHTML = '<span class="svg-icon" data-icon="settings" style="width: 16px; height: 16px; margin-right: 8px;"></span> Детальные настройки';
+        }
+    }
+    
+    // Функция генерации случайного персонажа (упрощенный режим)
+    async function generateRandomCharacter() {
+        const resultDiv = document.getElementById('characterResult');
+        const progressDiv = document.getElementById('characterProgress');
+        
+        // Показываем прогресс
+        progressDiv.style.display = 'block';
+        resultDiv.style.display = 'none';
+        
+        try {
+            // Генерируем полностью случайного персонажа
+            const response = await fetch('api/generate-character.php?action=generate');
+            const characterData = await response.json();
+            
+            if (response.ok) {
+                // Теперь генерируем ИИ описание и предысторию
+                const aiResponse = await fetch('api/generate-full-character.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        character: characterData,
+                        use_ai: true
+                    })
+                });
+                
+                const aiData = await aiResponse.json();
+                
+                if (aiResponse.ok) {
+                    displayCharacterResult(aiData.character || characterData);
+                } else {
+                    // Если ИИ не сработал, показываем базового персонажа
+                    displayCharacterResult(characterData);
+                }
+            } else {
+                throw new Error(characterData.error || 'Ошибка генерации персонажа');
+            }
+        } catch (error) {
+            console.error('Ошибка генерации персонажа:', error);
+            resultDiv.innerHTML = `<div class="error">Ошибка: ${error.message}</div>`;
+            resultDiv.style.display = 'block';
+        } finally {
+            progressDiv.style.display = 'none';
+        }
     }
     
     // Загрузка данных для генератора персонажей
