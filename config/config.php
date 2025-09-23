@@ -10,7 +10,7 @@ define('DB_PASS', '');
 // API ключи
 function getApiKey($service) {
     $apiKeys = [
-        'deepseek' => '', // 🔑 API ключ DeepSeek для AI генерации
+        'deepseek' => 'sk-1e898ddba737411e948af435d767e893', // 🔑 API ключ DeepSeek для AI генерации
     ];
     
     return $apiKeys[$service] ?? '';

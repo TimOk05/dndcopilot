@@ -2939,6 +2939,10 @@ const equipmentStyles = `
         .character-generator {
             max-width: 600px;
             margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-secondary);
         }
         
         .character-generator .generator-header {
