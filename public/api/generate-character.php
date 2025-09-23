@@ -127,6 +127,126 @@ class CharacterGenerator {
     }
     
     /**
+     * Генерирует персонажа по заданным параметрам
+     */
+    public function generateCharacterByParams($params) {
+        try {
+            // Загружаем данные рас и классов
+            $racesData = $this->loadJsonData($this->dataPath . 'расы/races.json');
+            $raceData = $racesData['races'][$params['race']];
+            
+            if (!$raceData) {
+                throw new Exception("Раса не найдена: " . $params['race']);
+            }
+            
+            // Получаем данные класса
+            $classData = $this->getClassById($params['class']);
+            $fullClassData = $classData['class'];
+            
+            // Выбираем подрасу если указана
+            $selectedSubrace = null;
+            if ($params['subrace'] && isset($raceData['subraces'])) {
+                foreach ($raceData['subraces'] as $subrace) {
+                    if ($subrace['id'] === $params['subrace']) {
+                        $selectedSubrace = $subrace;
+                        break;
+                    }
+                }
+            }
+            
+            // Выбираем архетип если указан
+            $selectedSubclass = null;
+            if ($params['subclass'] && isset($fullClassData['subclasses'])) {
+                foreach ($fullClassData['subclasses'] as $subclass) {
+                    if ($subclass['name'] === $params['subclass']) {
+                        $selectedSubclass = $subclass;
+                        break;
+                    }
+                }
+            }
+            
+            // Генерируем базовые характеристики (метод 4d6 drop lowest)
+            $abilities = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
+            $abilityScores = [];
+            
+            foreach ($abilities as $ability) {
+                $rolls = [];
+                for ($i = 0; $i < 4; $i++) {
+                    $rolls[] = rand(1, 6);
+                }
+                sort($rolls);
+                array_shift($rolls); // Убираем наименьший
+                $abilityScores[$ability] = array_sum($rolls);
+            }
+            
+            // Применяем бонусы расы
+            $finalScores = $abilityScores;
+            
+            // Бонусы основной расы
+            if (isset($raceData['ability_bonuses'])) {
+                foreach ($raceData['ability_bonuses'] as $bonus) {
+                    if (isset($bonus['ability']) && $bonus['ability'] !== 'ALL') {
+                        $finalScores[$bonus['ability']] += $bonus['bonus'];
+                    } elseif ($bonus['ability'] === 'ALL') {
+                        foreach ($finalScores as $ability => $score) {
+                            $finalScores[$ability] += $bonus['bonus'];
+                        }
+                    }
+                }
+            }
+            
+            // Бонусы подрасы
+            if ($selectedSubrace && isset($selectedSubrace['ability_bonuses'])) {
+                foreach ($selectedSubrace['ability_bonuses'] as $bonus) {
+                    if (isset($bonus['ability']) && $bonus['ability'] !== 'ALL') {
+                        $finalScores[$bonus['ability']] += $bonus['bonus'];
+                    }
+                }
+            }
+            
+            // Генерируем стартовое снаряжение
+            $equipment = $this->generateStartingEquipment($fullClassData);
+            
+            // Создаем персонажа
+            $character = [
+                'race' => [
+                    'id' => $params['race'],
+                    'name' => $raceData['name'],
+                    'name_en' => $raceData['name_en']
+                ],
+                'subrace' => $selectedSubrace ? [
+                    'id' => $selectedSubrace['id'],
+                    'name' => $selectedSubrace['name']
+                ] : null,
+                'class' => [
+                    'id' => $params['class'],
+                    'name' => $fullClassData['name']['ru'],
+                    'name_en' => $fullClassData['name']['en'],
+                    'hit_die' => $fullClassData['hit_die']
+                ],
+                'subclass' => $selectedSubclass ? [
+                    'name' => $selectedSubclass['name']
+                ] : null,
+                'level' => $params['level'],
+                'gender' => $params['gender'],
+                'alignment' => $params['alignment'],
+                'age' => $params['age'],
+                'ability_scores' => $finalScores,
+                'ability_modifiers' => $this->calculateModifiers($finalScores),
+                'equipment' => $equipment,
+                'traits' => $this->getRaceTraits($raceData, $selectedSubrace),
+                'languages' => $this->getLanguages($raceData, $selectedSubrace),
+                'generated_at' => date('Y-m-d H:i:s')
+            ];
+            
+            return $character;
+            
+        } catch (Exception $e) {
+            throw new Exception("Ошибка генерации персонажа по параметрам: " . $e->getMessage());
+        }
+    }
+    
+    /**
      * Генерирует случайного персонажа
      */
     public function generateRandomCharacter() {
@@ -337,6 +457,33 @@ try {
         }
         
         echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Обработка POST запроса для генерации персонажа по параметрам
+        $input = json_decode(file_get_contents('php://input'), true);
+        
+        if (!$input) {
+            // Если JSON не получен, пробуем получить данные из FormData
+            $input = [
+                'race' => $_POST['race'] ?? null,
+                'class' => $_POST['class'] ?? null,
+                'subrace' => $_POST['subrace'] ?? null,
+                'subclass' => $_POST['subclass'] ?? null,
+                'level' => intval($_POST['level'] ?? 1),
+                'gender' => $_POST['gender'] ?? 'male',
+                'alignment' => $_POST['alignment'] ?? 'neutral',
+                'age' => $_POST['age'] ?? 'adult'
+            ];
+        }
+        
+        if (!$input || !isset($input['race']) || !isset($input['class'])) {
+            throw new Exception('Неверные входные данные');
+        }
+        
+        // Генерируем персонажа по заданным параметрам
+        $character = $generator->generateCharacterByParams($input);
+        
+        echo json_encode($character, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         
     } else {
         http_response_code(405);

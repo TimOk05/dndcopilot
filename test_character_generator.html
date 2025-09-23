@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест генератора персонажей</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #333;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        
+        .error {
+            color: #ff6b6b;
+        }
+        
+        .success {
+            color: #51cf66;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Тест генератора персонажей D&D</h1>
+
+    <div class="test-section">
+        <h2>1. Тест получения рас</h2>
+        <button onclick="testGetRaces()">Получить список рас</button>
+        <div id="racesResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Тест получения классов</h2>
+        <button onclick="testGetClasses()">Получить список классов</button>
+        <div id="classesResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Тест генерации случайного персонажа</h2>
+        <button onclick="testRandomCharacter()">Сгенерировать случайного персонажа</button>
+        <div id="randomResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Тест генерации персонажа по параметрам</h2>
+        <button onclick="testCharacterByParams()">Сгенерировать персонажа по параметрам</button>
+        <div id="paramsResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Тест полной генерации с ИИ</h2>
+        <button onclick="testFullCharacter()">Сгенерировать полного персонажа с ИИ</button>
+        <div id="fullResult" class="result"></div>
+    </div>
+
+    <script>
+        async function testGetRaces() {
+            const resultDiv = document.getElementById('racesResult');
+            resultDiv.innerHTML = 'Загрузка...';
+
+            try {
+                const response = await fetch('public/api/generate-character.php?action=races');
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.innerHTML = `<div class="success">Успешно получено ${data.length} рас:</div>\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Ошибка: ${data.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Ошибка запроса: ${error.message}</div>`;
+            }
+        }
+
+        async function testGetClasses() {
+            const resultDiv = document.getElementById('classesResult');
+            resultDiv.innerHTML = 'Загрузка...';
+
+            try {
+                const response = await fetch('public/api/generate-character.php?action=classes');
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.innerHTML = `<div class="success">Успешно получено ${data.length} классов:</div>\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Ошибка: ${data.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Ошибка запроса: ${error.message}</div>`;
+            }
+        }
+
+        async function testRandomCharacter() {
+            const resultDiv = document.getElementById('randomResult');
+            resultDiv.innerHTML = 'Загрузка...';
+
+            try {
+                const response = await fetch('public/api/generate-character.php?action=generate');
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.innerHTML = `<div class="success">Случайный персонаж сгенерирован:</div>\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Ошибка: ${data.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Ошибка запроса: ${error.message}</div>`;
+            }
+        }
+
+        async function testCharacterByParams() {
+            const resultDiv = document.getElementById('paramsResult');
+            resultDiv.innerHTML = 'Загрузка...';
+
+            try {
+                const params = {
+                    race: 'human',
+                    class: 'fighter',
+                    level: 1,
+                    gender: 'male',
+                    alignment: 'lawful_good',
+                    age: 'adult'
+                };
+
+                const response = await fetch('public/api/generate-character.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(params)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.innerHTML = `<div class="success">Персонаж по параметрам сгенерирован:</div>\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Ошибка: ${data.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Ошибка запроса: ${error.message}</div>`;
+            }
+        }
+
+        async function testFullCharacter() {
+            const resultDiv = document.getElementById('fullResult');
+            resultDiv.innerHTML = 'Загрузка...';
+
+            try {
+                // Сначала получаем базового персонажа
+                const params = {
+                    race: 'elf',
+                    class: 'wizard',
+                    level: 3,
+                    gender: 'female',
+                    alignment: 'neutral_good',
+                    age: 'adult'
+                };
+
+                const characterResponse = await fetch('public/api/generate-character.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(params)
+                });
+
+                const characterData = await characterResponse.json();
+
+                if (!characterResponse.ok) {
+                    throw new Error(characterData.error);
+                }
+
+                // Теперь генерируем полное описание с ИИ
+                const aiResponse = await fetch('public/api/generate-full-character.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        character: characterData,
+                        use_ai: true
+                    })
+                });
+
+                const aiData = await aiResponse.json();
+
+                if (aiResponse.ok) {
+                    resultDiv.innerHTML = `<div class="success">Полный персонаж с ИИ сгенерирован:</div>\n${JSON.stringify(aiData, null, 2)}`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Ошибка ИИ: ${aiData.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Ошибка запроса: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+
+</html>

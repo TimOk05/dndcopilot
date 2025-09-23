@@ -5605,6 +5605,373 @@ function saveAllEnemiesToNotes(enemies) {
         });
     }
     
+    // Функция открытия генератора персонажей
+    function openCharacterGeneratorModal() {
+        showModal(`
+            <div class="character-generator">
+                <div class="generator-header">
+                    <h2 style="color: var(--character-generator-text, #e0e0e0); margin-bottom: 10px;">Генератор персонажей</h2>
+                    <p class="generator-subtitle" style="color: var(--character-generator-text, #e0e0e0); opacity: 0.8; margin: 0;">Создайте полноценного персонажа с использованием D&D API и AI</p>
+                </div>
+                
+                <!-- Форма генератора персонажей -->
+                <div id="characterGeneratorContainer" class="character-generator-container">
+                    <form id="characterForm" class="character-form-new" method="post">
+                        <!-- Первая строка: Раса и Класс -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="character-race">Раса персонажа</label>
+                                <select id="character-race" name="race" required>
+                                    <option value="">Выберите расу...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="character-class">Класс персонажа</label>
+                                <select id="character-class" name="class" required>
+                                    <option value="">Выберите класс...</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Вторая строка: Подраса и Архетип -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="character-subrace">Подраса (опционально)</label>
+                                <select id="character-subrace" name="subrace">
+                                    <option value="">Выберите подрасу...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="character-subclass">Архетип (опционально)</label>
+                                <select id="character-subclass" name="subclass">
+                                    <option value="">Выберите архетип...</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Третья строка: Уровень и Пол -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="character-level">Уровень персонажа</label>
+                                <select id="character-level" name="level" required>
+                                    <option value="1">1 уровень</option>
+                                    <option value="2">2 уровень</option>
+                                    <option value="3">3 уровень</option>
+                                    <option value="4">4 уровень</option>
+                                    <option value="5">5 уровень</option>
+                                    <option value="6">6 уровень</option>
+                                    <option value="7">7 уровень</option>
+                                    <option value="8">8 уровень</option>
+                                    <option value="9">9 уровень</option>
+                                    <option value="10">10 уровень</option>
+                                    <option value="11">11 уровень</option>
+                                    <option value="12">12 уровень</option>
+                                    <option value="13">13 уровень</option>
+                                    <option value="14">14 уровень</option>
+                                    <option value="15">15 уровень</option>
+                                    <option value="16">16 уровень</option>
+                                    <option value="17">17 уровень</option>
+                                    <option value="18">18 уровень</option>
+                                    <option value="19">19 уровень</option>
+                                    <option value="20">20 уровень</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="character-gender">Пол персонажа</label>
+                                <select id="character-gender" name="gender" required>
+                                    <option value="male">Мужской</option>
+                                    <option value="female">Женский</option>
+                                    <option value="other">Другой</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Четвертая строка: Мировоззрение и Возраст -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="character-alignment">Мировоззрение</label>
+                                <select id="character-alignment" name="alignment" required>
+                                    <option value="lawful_good">Законно-добрый</option>
+                                    <option value="neutral_good">Нейтрально-добрый</option>
+                                    <option value="chaotic_good">Хаотично-добрый</option>
+                                    <option value="lawful_neutral">Законно-нейтральный</option>
+                                    <option value="neutral">Нейтральный</option>
+                                    <option value="chaotic_neutral">Хаотично-нейтральный</option>
+                                    <option value="lawful_evil">Законно-злой</option>
+                                    <option value="neutral_evil">Нейтрально-злой</option>
+                                    <option value="chaotic_evil">Хаотично-злой</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="character-age">Возраст</label>
+                                <select id="character-age" name="age" required>
+                                    <option value="young">Молодой</option>
+                                    <option value="adult">Зрелый</option>
+                                    <option value="old">Пожилой</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Кнопка генерации -->
+                        <div class="form-actions">
+                            <button type="submit" class="generate-btn">
+                                <span class="svg-icon" data-icon="hero" style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                Создать персонажа
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Прогресс-бар -->
+                    <div id="characterProgress" class="progress-container" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <p class="progress-text">Генерация персонажа...</p>
+                    </div>
+                    
+                    <!-- Результат -->
+                    <div id="characterResult" class="character-result" style="display: none;"></div>
+                </div>
+            </div>
+        `);
+        
+        // Загружаем данные для выпадающих списков
+        loadCharacterData();
+        
+        // Обработчик формы
+        document.getElementById('characterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generateCharacter();
+        });
+    }
+    
+    // Загрузка данных для генератора персонажей
+    async function loadCharacterData() {
+        try {
+            // Загружаем расы
+            const racesResponse = await fetch('api/generate-character.php?action=races');
+            const racesData = await racesResponse.json();
+            
+            const raceSelect = document.getElementById('character-race');
+            racesData.forEach(race => {
+                const option = document.createElement('option');
+                option.value = race.id;
+                option.textContent = race.name;
+                raceSelect.appendChild(option);
+            });
+            
+            // Загружаем классы
+            const classesResponse = await fetch('api/generate-character.php?action=classes');
+            const classesData = await classesResponse.json();
+            
+            const classSelect = document.getElementById('character-class');
+            classesData.forEach(cls => {
+                const option = document.createElement('option');
+                option.value = cls.id;
+                option.textContent = cls.name;
+                classSelect.appendChild(option);
+            });
+            
+        } catch (error) {
+            console.error('Ошибка загрузки данных:', error);
+        }
+    }
+    
+    // Генерация персонажа
+    async function generateCharacter() {
+        const form = document.getElementById('characterForm');
+        const formData = new FormData(form);
+        const resultDiv = document.getElementById('characterResult');
+        const progressDiv = document.getElementById('characterProgress');
+        const generatorContainer = document.getElementById('characterGeneratorContainer');
+        
+        // Показываем прогресс
+        progressDiv.style.display = 'block';
+        resultDiv.style.display = 'none';
+        
+        try {
+            // Сначала генерируем базового персонажа
+            const characterResponse = await fetch('api/generate-character.php', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const characterData = await characterResponse.json();
+            
+            if (characterData.error) {
+                throw new Error(characterData.error);
+            }
+            
+            // Теперь генерируем ИИ описание и предысторию
+            const aiResponse = await fetch('api/generate-full-character.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    character: characterData,
+                    use_ai: true
+                })
+            });
+            
+            const aiData = await aiResponse.json();
+            
+            if (aiData.error) {
+                throw new Error(aiData.error);
+            }
+            
+            // Отображаем результат
+            displayCharacterResult(aiData.character || characterData);
+            
+        } catch (error) {
+            console.error('Ошибка генерации персонажа:', error);
+            resultDiv.innerHTML = `<div class="error">Ошибка: ${error.message}</div>`;
+            resultDiv.style.display = 'block';
+        } finally {
+            progressDiv.style.display = 'none';
+        }
+    }
+    
+    // Отображение результата генерации персонажа
+    function displayCharacterResult(character) {
+        const resultDiv = document.getElementById('characterResult');
+        
+        let html = `
+            <div class="character-card">
+                <div class="character-header">
+                    <h3>${character.name || 'Безымянный персонаж'}</h3>
+                    <p class="character-subtitle">${character.race?.name || 'Неизвестная раса'} ${character.class?.name || 'Неизвестный класс'} ${character.level || 1} уровня</p>
+                </div>
+                
+                <div class="character-stats">
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Сила</span>
+                            <span class="stat-value">${character.ability_scores?.STR || 10} (${character.ability_modifiers?.STR >= 0 ? '+' : ''}${character.ability_modifiers?.STR || 0})</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Ловкость</span>
+                            <span class="stat-value">${character.ability_scores?.DEX || 10} (${character.ability_modifiers?.DEX >= 0 ? '+' : ''}${character.ability_modifiers?.DEX || 0})</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Телосложение</span>
+                            <span class="stat-value">${character.ability_scores?.CON || 10} (${character.ability_modifiers?.CON >= 0 ? '+' : ''}${character.ability_modifiers?.CON || 0})</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Интеллект</span>
+                            <span class="stat-value">${character.ability_scores?.INT || 10} (${character.ability_modifiers?.INT >= 0 ? '+' : ''}${character.ability_modifiers?.INT || 0})</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Мудрость</span>
+                            <span class="stat-value">${character.ability_scores?.WIS || 10} (${character.ability_modifiers?.WIS >= 0 ? '+' : ''}${character.ability_modifiers?.WIS || 0})</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Харизма</span>
+                            <span class="stat-value">${character.ability_scores?.CHA || 10} (${character.ability_modifiers?.CHA >= 0 ? '+' : ''}${character.ability_modifiers?.CHA || 0})</span>
+                        </div>
+                    </div>
+                </div>
+        `;
+        
+        // Добавляем описание и предысторию если есть
+        if (character.description) {
+            html += `
+                <div class="character-description">
+                    <h4>Описание</h4>
+                    <p>${character.description}</p>
+                </div>
+            `;
+        }
+        
+        if (character.background) {
+            html += `
+                <div class="character-background">
+                    <h4>Предыстория</h4>
+                    <p>${character.background}</p>
+                </div>
+            `;
+        }
+        
+        // Добавляем черты расы
+        if (character.traits && character.traits.length > 0) {
+            html += `
+                <div class="character-traits">
+                    <h4>Черты расы</h4>
+                    <ul>
+            `;
+            character.traits.forEach(trait => {
+                html += `<li><strong>${trait.name}:</strong> ${trait.description}</li>`;
+            });
+            html += `</ul></div>`;
+        }
+        
+        // Добавляем снаряжение
+        if (character.equipment && character.equipment.length > 0) {
+            html += `
+                <div class="character-equipment">
+                    <h4>Снаряжение</h4>
+                    <ul>
+            `;
+            character.equipment.forEach(item => {
+                html += `<li>${item}</li>`;
+            });
+            html += `</ul></div>`;
+        }
+        
+        html += `
+                <div class="character-actions">
+                    <button class="btn btn-primary" onclick="saveCharacterAsNote('${character.name || 'Персонаж'}')">
+                        <span class="svg-icon" data-icon="description" style="width: 16px; height: 16px; margin-right: 4px;"></span>
+                        Сохранить в заметки
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateCharacter()">
+                        <span class="svg-icon" data-icon="hero" style="width: 16px; height: 16px; margin-right: 4px;"></span>
+                        Создать нового
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        resultDiv.innerHTML = html;
+        resultDiv.style.display = 'block';
+        
+        // Обновляем иконки
+        replaceIcons();
+    }
+    
+    // Сохранение персонажа в заметки
+    function saveCharacterAsNote(characterName) {
+        const characterCard = document.querySelector('.character-card');
+        if (characterCard) {
+            const noteContent = characterCard.outerHTML;
+            const title = characterName;
+            
+            // Отправляем в заметки
+            const formData = new FormData();
+            formData.append('fast_action', 'save_note');
+            formData.append('content', noteContent);
+            formData.append('title', title);
+            
+            fetch('', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result === 'OK') {
+                    alert('Персонаж сохранен в заметки!');
+                    closeModal();
+                } else {
+                    alert('Ошибка сохранения: ' + result);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка сохранения:', error);
+                alert('Ошибка сохранения персонажа');
+            });
+        }
+    }
+
     // Внешние сервисы
     window.externalServices = {
         // Генерация имен персонажей
