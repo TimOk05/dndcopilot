@@ -6311,6 +6311,37 @@
 
     <!-- Функции генераторов -->
     <script>
+        // --- Modal & Notes ---
+        function showModal(content) {
+            document.getElementById('modal-content').innerHTML = content;
+            document.getElementById('modal-bg').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-bg').classList.remove('active');
+            // Удаляем кнопку повторной генерации при закрытии
+            let regenerateBtn = document.querySelector('.modal-regenerate');
+            if (regenerateBtn) {
+                regenerateBtn.remove();
+            }
+        }
+
+        // Обработчики модального окна
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalClose = document.getElementById('modal-close');
+            const modalBg = document.getElementById('modal-bg');
+
+            if (modalClose) {
+                modalClose.onclick = closeModal;
+            }
+
+            if (modalBg) {
+                modalBg.onclick = function(e) {
+                    if (e.target === this) closeModal();
+                };
+            }
+        });
+
         // --- Dice Modal Steps ---
         function openDiceStep1() {
             showModal('<b class="mini-menu-title">Выберите тип кости:</b><div class="mini-menu-btns">' + ['d3', 'd4', 'd6', 'd8', 'd10', 'd12', 'd20', 'd100'].map(d => `<button onclick=\'openDiceStep2("${d}")\' class=\'fast-btn\'>${d}</button>`).join(' ') + '</div>');
@@ -6322,6 +6353,34 @@
             document.getElementById('modal-save').style.display = 'none';
             // Автофокус на поле количества
             setTimeout(() => document.getElementById('dice-count').focus(), 100);
+        }
+
+        function getDiceResult(dice) {
+            let count = document.getElementById('dice-count').value;
+            let label = document.getElementById('dice-label').value;
+            let diceStr = count + dice;
+            fetch('', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'fast_action=dice_result&dice=' + encodeURIComponent(diceStr) + '&label=' + encodeURIComponent(label)
+                })
+                .then(r => r.text())
+                .then(txt => {
+                    // Добавляем кнопку редактирования комментария
+                    const editButton = `<button class="fast-btn" onclick="editDiceComment('${dice}', '${count}', '${label}')" style="margin-bottom: 10px;">✏️ Редактировать комментарий</button>`;
+
+                    document.getElementById('modal-content').innerHTML = editButton + formatResultSegments(txt, false);
+                    document.getElementById('modal-save').style.display = '';
+                    document.getElementById('modal-save').onclick = function() {
+                        saveDiceResultAsNote(txt, label);
+                        closeModal();
+                    };
+
+                    // Автоматически сохраняем результат броска в заметки
+                    saveDiceResultAsNote(txt, label);
+                });
         }
 
         // --- Функция открытия генерации персонажей ---
@@ -6902,6 +6961,216 @@
                 closeModal();
             };
             updateInitiativeDisplay();
+        }
+
+        // --- Вспомогательные функции для генераторов ---
+        function loadNewCharacterData() {
+            // Загружаем расы
+            fetch('api/generate-characters.php?action=races')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const raceSelect = document.getElementById('new-character-race');
+                        raceSelect.innerHTML = '<option value="">Выберите расу</option>';
+                        data.races.forEach(race => {
+                            raceSelect.innerHTML += `<option value="${race.id}">${race.name}</option>`;
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading races:', error));
+
+            // Загружаем классы
+            fetch('api/generate-characters.php?action=classes')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const classSelect = document.getElementById('new-character-class');
+                        classSelect.innerHTML = '<option value="">Выберите класс</option>';
+                        data.classes.forEach(cls => {
+                            classSelect.innerHTML += `<option value="${cls.id}">${cls.name}</option>`;
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading classes:', error));
+
+            // Загружаем предыстории
+            fetch('api/generate-characters.php?action=backgrounds')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const backgroundSelect = document.getElementById('new-character-background');
+                        backgroundSelect.innerHTML = '<option value="random">Случайная</option>';
+                        data.backgrounds.forEach(bg => {
+                            backgroundSelect.innerHTML += `<option value="${bg.id}">${bg.name}</option>`;
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading backgrounds:', error));
+        }
+
+        function formatNewCharacter(character) {
+            let html = `
+                <div class="character-card">
+                    <div class="character-header">
+                        <h3>${character.name}</h3>
+                        <p class="character-subtitle">${character.race} ${character.class} ${character.level} уровня</p>
+                    </div>
+                    
+                    <div class="character-stats">
+                        <div class="stat-grid">
+                            <div class="stat-item">
+                                <span class="stat-label">Сила</span>
+                                <span class="stat-value">${character.abilities.str}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Ловкость</span>
+                                <span class="stat-value">${character.abilities.dex}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Телосложение</span>
+                                <span class="stat-value">${character.abilities.con}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Интеллект</span>
+                                <span class="stat-value">${character.abilities.int}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Мудрость</span>
+                                <span class="stat-value">${character.abilities.wis}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Харизма</span>
+                                <span class="stat-value">${character.abilities.cha}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="character-details">
+                        <p><strong>Пол:</strong> ${character.gender}</p>
+                        <p><strong>Мировоззрение:</strong> ${character.alignment}</p>
+                        <p><strong>Предыстория:</strong> ${character.background}</p>
+                    </div>
+                    
+                    ${character.description ? `<div class="character-description"><p>${character.description}</p></div>` : ''}
+                    ${character.background_story ? `<div class="character-background"><p>${character.background_story}</p></div>` : ''}
+                </div>
+            `;
+            return html;
+        }
+        
+        function saveNewCharacterToNotes(character) {
+            const noteContent = `
+                <div class="character-note">
+                    <div class="character-note-title">${character.name}</div>
+                    <div class="character-note-content">
+                        <p><strong>Раса:</strong> ${character.race}</p>
+                        <p><strong>Класс:</strong> ${character.class}</p>
+                        <p><strong>Уровень:</strong> ${character.level}</p>
+                        <p><strong>Пол:</strong> ${character.gender}</p>
+                        <p><strong>Мировоззрение:</strong> ${character.alignment}</p>
+                        <p><strong>Предыстория:</strong> ${character.background}</p>
+                        <p><strong>Характеристики:</strong> СИЛ ${character.abilities.str}, ЛОВ ${character.abilities.dex}, ТЕЛ ${character.abilities.con}, ИНТ ${character.abilities.int}, МДР ${character.abilities.wis}, ХАР ${character.abilities.cha}</p>
+                        ${character.description ? `<p><strong>Описание:</strong> ${character.description}</p>` : ''}
+                        ${character.background_story ? `<p><strong>Предыстория:</strong> ${character.background_story}</p>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Сохраняем в заметки
+            fetch('api/save-note.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `content=${encodeURIComponent(noteContent)}&type=character`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Character saved to notes');
+                }
+            })
+            .catch(error => console.error('Error saving character:', error));
+        }
+        
+        function regenerateCharacter() {
+            closeModal();
+            setTimeout(() => {
+                openCharacterModal();
+            }, 100);
+        }
+        
+        function formatEnemiesFromApi(enemies) {
+            let html = '<div class="enemies-grid">';
+            
+            enemies.forEach((enemy, index) => {
+                html += `
+                    <div class="enemy-card">
+                        <div class="enemy-header">
+                            <h4>${enemy.name}</h4>
+                            <span class="enemy-cr">CR ${enemy.cr}</span>
+                        </div>
+                        <div class="enemy-stats">
+                            <p><strong>Хиты:</strong> ${enemy.hp}</p>
+                            <p><strong>Класс брони:</strong> ${enemy.ac}</p>
+                            <p><strong>Скорость:</strong> ${enemy.speed} футов</p>
+                            <p><strong>Характеристики:</strong> СИЛ ${enemy.str}, ЛОВ ${enemy.dex}, ТЕЛ ${enemy.con}, ИНТ ${enemy.int}, МДР ${enemy.wis}, ХАР ${enemy.cha}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            return html;
+        }
+        
+        function formatPotionsFromApi(potions) {
+            let html = '<div class="potions-grid">';
+            
+            potions.forEach((potion, index) => {
+                html += `
+                    <div class="potion-card">
+                        <div class="potion-header">
+                            <h4>${potion.name}</h4>
+                            <span class="potion-rarity">${potion.rarity}</span>
+                        </div>
+                        <div class="potion-details">
+                            <p><strong>Тип:</strong> ${potion.type}</p>
+                            <p><strong>Эффект:</strong> ${potion.effect}</p>
+                            <p><strong>Стоимость:</strong> ${potion.cost}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            return html;
+        }
+        
+        function formatSpellsFromApi(spells) {
+            let html = '<div class="spells-grid">';
+            
+            spells.forEach((spell, index) => {
+                html += `
+                    <div class="spell-card">
+                        <div class="spell-header">
+                            <h4>${spell.name}</h4>
+                            <span class="spell-level">${spell.level} уровень</span>
+                        </div>
+                        <div class="spell-details">
+                            <p><strong>Школа:</strong> ${spell.school}</p>
+                            <p><strong>Время накладывания:</strong> ${spell.casting_time}</p>
+                            <p><strong>Дистанция:</strong> ${spell.range}</p>
+                            <p><strong>Компоненты:</strong> ${spell.components}</p>
+                            <p><strong>Длительность:</strong> ${spell.duration}</p>
+                            <p><strong>Описание:</strong> ${spell.description}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            return html;
         }
     </script>
 </body>
