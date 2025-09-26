@@ -118,14 +118,7 @@ class CharacterService {
      */
     public function getRaces() {
         $data = $this->loadRacesData();
-        $races = $data['races'] ?? [];
-        
-        // Если races - это объект, преобразуем в массив
-        if (is_object($races)) {
-            return array_values((array)$races);
-        }
-        
-        return $races;
+        return $data['races'] ?? [];
     }
     
     /**
@@ -135,27 +128,15 @@ class CharacterService {
         $data = $this->loadRacesData();
         $races = $data['races'] ?? [];
         
-        // Если races - это объект, ищем по ключу или по ID
-        if (is_object($races)) {
-            $racesArray = (array)$races;
-            
-            // Сначала ищем по ключу (например, "human" для race_human)
-            if (isset($racesArray[$raceId])) {
-                return $racesArray[$raceId];
-            }
-            
-            // Затем ищем по ID
-            foreach ($racesArray as $race) {
-                if (isset($race['id']) && $race['id'] === $raceId) {
-                    return $race;
-                }
-            }
-        } else {
-            // Если races - это массив, ищем в массиве
-            foreach ($races as $race) {
-                if (isset($race['id']) && $race['id'] === $raceId) {
-                    return $race;
-                }
+        // Ищем по ключу (например, "human" для race_human)
+        if (isset($races[$raceId])) {
+            return $races[$raceId];
+        }
+        
+        // Ищем по ID в значениях
+        foreach ($races as $race) {
+            if (isset($race['id']) && $race['id'] === $raceId) {
+                return $race;
             }
         }
         
@@ -163,10 +144,30 @@ class CharacterService {
     }
     
     /**
+     * Получает подрасы для указанной расы
+     */
+    public function getSubraces($raceId) {
+        $race = $this->getRaceById($raceId);
+        if ($race && isset($race['subraces'])) {
+            return $race['subraces'];
+        }
+        return [];
+    }
+    
+    /**
      * Получает все классы
      */
     public function getClasses() {
-        return array_values($this->loadClassesData());
+        $classes = $this->loadClassesData();
+        $result = [];
+        
+        foreach ($classes as $classData) {
+            if (isset($classData['class'])) {
+                $result[] = $classData['class'];
+            }
+        }
+        
+        return $result;
     }
     
     /**
@@ -174,7 +175,18 @@ class CharacterService {
      */
     public function getClassById($classId) {
         $classes = $this->loadClassesData();
-        return $classes[$classId] ?? null;
+        return $classes[$classId]['class'] ?? null;
+    }
+    
+    /**
+     * Получает архетипы для указанного класса
+     */
+    public function getArchetypes($classId) {
+        $class = $this->getClassById($classId);
+        if ($class && isset($class['archetypes'])) {
+            return $class['archetypes'];
+        }
+        return [];
     }
     
     /**

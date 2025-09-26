@@ -6474,6 +6474,22 @@
                         </div>
                         
                         <div class="form-row">
+                            <div class="form-group">
+                                <label for="new-character-subrace">Подрасса</label>
+                                <select id="new-character-subrace" name="subrace">
+                                    <option value="">Выберите расу сначала</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="new-character-archetype">Архетип</label>
+                                <select id="new-character-archetype" name="archetype">
+                                    <option value="">Выберите класс сначала</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
                             <div class="form-group full-width">
                                 <label for="new-character-ability-method">Метод генерации характеристик</label>
                                 <select id="new-character-ability-method" name="ability_method">
@@ -6972,8 +6988,13 @@
                     if (data.success) {
                         const raceSelect = document.getElementById('new-character-race');
                         raceSelect.innerHTML = '<option value="">Выберите расу</option>';
-                        data.races.forEach(race => {
+                        Object.values(data.races).forEach(race => {
                             raceSelect.innerHTML += `<option value="${race.id}">${race.name}</option>`;
+                        });
+
+                        // Добавляем обработчик изменения расы для подрас
+                        raceSelect.addEventListener('change', function() {
+                            loadSubraces(this.value);
                         });
                     }
                 })
@@ -6986,8 +7007,13 @@
                     if (data.success) {
                         const classSelect = document.getElementById('new-character-class');
                         classSelect.innerHTML = '<option value="">Выберите класс</option>';
-                        data.classes.forEach(cls => {
-                            classSelect.innerHTML += `<option value="${cls.id}">${cls.name}</option>`;
+                        Object.values(data.classes).forEach(cls => {
+                            classSelect.innerHTML += `<option value="${cls.id}">${cls.name.ru}</option>`;
+                        });
+
+                        // Добавляем обработчик изменения класса для архетипов
+                        classSelect.addEventListener('change', function() {
+                            loadArchetypes(this.value);
                         });
                     }
                 })
@@ -7001,11 +7027,49 @@
                         const backgroundSelect = document.getElementById('new-character-background');
                         backgroundSelect.innerHTML = '<option value="random">Случайная</option>';
                         data.backgrounds.forEach(bg => {
-                            backgroundSelect.innerHTML += `<option value="${bg.id}">${bg.name}</option>`;
+                            backgroundSelect.innerHTML += `<option value="${bg.id}">${bg.name_ru}</option>`;
                         });
                     }
                 })
                 .catch(error => console.error('Error loading backgrounds:', error));
+        }
+
+        function loadSubraces(raceId) {
+            const subraceSelect = document.getElementById('new-character-subrace');
+            subraceSelect.innerHTML = '<option value="">Нет подрас</option>';
+
+            if (!raceId) return;
+
+            fetch(`api/generate-characters.php?action=subraces&race=${raceId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.subraces && data.subraces.length > 0) {
+                        subraceSelect.innerHTML = '<option value="">Выберите подрасу</option>';
+                        data.subraces.forEach(subrace => {
+                            subraceSelect.innerHTML += `<option value="${subrace.id}">${subrace.name}</option>`;
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading subraces:', error));
+        }
+
+        function loadArchetypes(classId) {
+            const archetypeSelect = document.getElementById('new-character-archetype');
+            archetypeSelect.innerHTML = '<option value="">Нет архетипов</option>';
+
+            if (!classId) return;
+
+            fetch(`api/generate-characters.php?action=archetypes&class=${classId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.archetypes && data.archetypes.length > 0) {
+                        archetypeSelect.innerHTML = '<option value="">Выберите архетип</option>';
+                        data.archetypes.forEach(archetype => {
+                            archetypeSelect.innerHTML += `<option value="${archetype.id}">${archetype.name}</option>`;
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading archetypes:', error));
         }
 
         function formatNewCharacter(character) {

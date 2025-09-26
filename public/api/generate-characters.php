@@ -158,6 +158,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ], JSON_UNESCAPED_UNICODE);
                 break;
                 
+            case 'subraces':
+                $raceId = $_GET['race'] ?? '';
+                if ($raceId) {
+                    $subraces = $characterService->getSubraces($raceId);
+                    echo json_encode([
+                        'success' => true,
+                        'subraces' => $subraces
+                    ], JSON_UNESCAPED_UNICODE);
+                } else {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Не указан ID расы'
+                    ], JSON_UNESCAPED_UNICODE);
+                }
+                break;
+                
+            case 'archetypes':
+                $classId = $_GET['class'] ?? '';
+                if ($classId) {
+                    $archetypes = $characterService->getArchetypes($classId);
+                    echo json_encode([
+                        'success' => true,
+                        'archetypes' => $archetypes
+                    ], JSON_UNESCAPED_UNICODE);
+                } else {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Не указан ID класса'
+                    ], JSON_UNESCAPED_UNICODE);
+                }
+                break;
+                
             default:
                 echo json_encode([
                     'success' => false,
