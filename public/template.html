@@ -1320,6 +1320,8 @@
         
         .modal-bg.active {
             display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .modal {
@@ -1328,15 +1330,19 @@
             border-radius: 16px;
             box-shadow: 0 4px 24px var(--shadow-secondary);
             padding: 38px 32px 22px 32px;
-            max-width: 750px;
+            max-width: 900px;
             min-width: 320px;
             text-align: center;
             position: relative;
             font-size: 1.13em;
-            height: 540px;
+            min-height: 400px;
+            max-height: 90vh;
+            height: auto;
+            width: 90vw;
             display: flex;
             flex-direction: column;
             transition: all 0.3s ease;
+            overflow-y: auto;
         }
         
         [data-theme="mystic"] .modal {
@@ -1412,6 +1418,7 @@
             flex: 1 1 auto;
             overflow-y: auto;
             margin-bottom: 6px;
+            max-height: calc(90vh - 100px);
         }
         /* --- Стили для сегментов результата --- */
         
@@ -1748,10 +1755,12 @@
                 max-width: 99vw;
             }
             .modal {
-                max-width: 99vw;
+                max-width: 95vw;
                 min-width: 0;
-                height: 340px;
-                padding: 12px 2vw 8px 2vw;
+                height: auto;
+                min-height: 400px;
+                max-height: 90vh;
+                padding: 20px;
                 font-size: 1em;
             }
         }
@@ -3546,7 +3555,7 @@
                 max-width: 95vw;
                 height: 90vh;
                 max-height: 90vh;
-                margin: 2.5vw;
+                margin: 0;
                 border-radius: 12px;
                 overflow-y: auto;
             }
