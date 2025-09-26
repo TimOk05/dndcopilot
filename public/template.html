@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Character Generator v8.3 - Fixed Infinite Reload -->
+<!-- Character Generator v8.2 - Aggressive Cache Clearing -->
 <html lang="ru">
 
 <head>
@@ -6554,6 +6554,12 @@
 
             // Логирование
             console.log('Кэш принудительно очищен в', new Date().toLocaleTimeString());
+
+            // Принудительное обновление страницы если это не первая загрузка
+            if (performance.navigation.type === 1) {
+                console.log('Принудительное обновление страницы...');
+                window.location.reload(true);
+            }
         })();
 
         // JS для модального окна и заметок будет добавлен через PHP

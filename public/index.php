@@ -362,7 +362,7 @@ $template = str_replace('{{notes_block}}', $notesBlock, $template);
 
 // Добавляем версионирование для принудительного обновления кэша
 $cacheVersion = time() . '_' . rand(10000, 99999);
-$template = str_replace('v=8.3', 'v=' . $cacheVersion, $template);
+$template = str_replace('v=8.2', 'v=' . $cacheVersion, $template);
 $template = str_replace('{{cache_version}}', $cacheVersion, $template);
 
 echo $template;
