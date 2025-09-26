@@ -1319,9 +1319,9 @@
         }
         
         .modal-bg.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
         
         .modal {
@@ -1343,6 +1343,7 @@
             flex-direction: column;
             transition: all 0.3s ease;
             overflow-y: auto;
+            margin: 0 auto;
         }
         
         [data-theme="mystic"] .modal {
@@ -1762,6 +1763,7 @@
                 max-height: 90vh;
                 padding: 20px;
                 font-size: 1em;
+                margin: 0 auto;
             }
         }
         
@@ -3324,7 +3326,7 @@
             }
             /* Улучшенные модальные окна */
             .modal {
-                margin: 8px;
+                margin: 0 auto;
                 height: 85vh;
                 max-height: none;
                 border-radius: 12px;
@@ -3555,7 +3557,7 @@
                 max-width: 95vw;
                 height: 90vh;
                 max-height: 90vh;
-                margin: 0;
+                margin: 0 auto;
                 border-radius: 12px;
                 overflow-y: auto;
             }
