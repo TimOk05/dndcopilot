@@ -443,6 +443,197 @@ function updateDiceComment(dice, count) {
 // Статические данные удалены - теперь используются внешние API
 
 // --- Старая функция удалена, используется openCharacterGeneratorModal() ---
+    showModal(`
+        <div class="character-generator">
+            <div class="generator-header">
+                <h2 style="color: var(--character-generator-text, #e0e0e0); margin-bottom: 10px;">Генератор персонажей</h2>
+                <p class="generator-subtitle" style="color: var(--character-generator-text, #e0e0e0); opacity: 0.8; margin: 0;">Создайте полноценного персонажа с использованием D&D API и AI</p>
+            </div>
+            
+            <!-- Форма генератора персонажей -->
+            <div id="characterGeneratorContainer" class="character-generator-container">
+                <form id="characterForm" class="character-form-new" method="post">
+                    <!-- Первая строка: Раса и Класс -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="character-race">Раса персонажа</label>
+                            <div class="select-wrapper">
+                                <select id="character-race" name="race" required>
+                                    <option value="">Загрузка рас...</option>
+                                </select>
+                                <div class="subrace-tooltip" id="subraceTooltip"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="character-class">Класс персонажа</label>
+                            <select id="character-class" name="class" required>
+                                <option value="">Загрузка классов...</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Вторая строка: Уровень и Пол -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="character-level">Уровень персонажа</label>
+                            <select id="character-level" name="level" required>
+                                <option value="1">1 уровень</option>
+                                <option value="2">2 уровень</option>
+                                <option value="3">3 уровень</option>
+                                <option value="4">4 уровень</option>
+                                <option value="5">5 уровень</option>
+                                <option value="6">6 уровень</option>
+                                <option value="7">7 уровень</option>
+                                <option value="8">8 уровень</option>
+                                <option value="9">9 уровень</option>
+                                <option value="10">10 уровень</option>
+                                <option value="11">11 уровень</option>
+                                <option value="12">12 уровень</option>
+                                <option value="13">13 уровень</option>
+                                <option value="14">14 уровень</option>
+                                <option value="15">15 уровень</option>
+                                <option value="16">16 уровень</option>
+                                <option value="17">17 уровень</option>
+                                <option value="18">18 уровень</option>
+                                <option value="19">19 уровень</option>
+                                <option value="20">20 уровень</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="character-gender">Пол персонажа</label>
+                            <select id="character-gender" name="gender">
+                                <option value="random">Случайный</option>
+                                <option value="male">Мужской</option>
+                                <option value="female">Женский</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Третья строка: Мировоззрение и Происхождение -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="character-alignment">Мировоззрение</label>
+                            <select id="character-alignment" name="alignment">
+                                <option value="random">Случайное</option>
+                                <option value="lawful_good">Законопослушный добрый</option>
+                                <option value="neutral_good">Нейтральный добрый</option>
+                                <option value="chaotic_good">Хаотичный добрый</option>
+                                <option value="lawful_neutral">Законопослушный нейтральный</option>
+                                <option value="true_neutral">Истинно нейтральный</option>
+                                <option value="chaotic_neutral">Хаотичный нейтральный</option>
+                                <option value="lawful_evil">Законопослушный злой</option>
+                                <option value="neutral_evil">Нейтральный злой</option>
+                                <option value="chaotic_evil">Хаотичный злой</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="character-background">Происхождение</label>
+                            <select id="character-background" name="background">
+                                <option value="random">Случайное</option>
+                                <option value="">Загрузка происхождений...</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Четвертая строка: Метод генерации характеристик -->
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="ability-method">Метод генерации характеристик</label>
+                            <select id="ability-method" name="ability_method">
+                                <option value="standard_array">Standard Array (15,14,13,12,10,8)</option>
+                                <option value="point_buy">Point Buy (27 очков)</option>
+                                <option value="roll_4d6">4d6 drop lowest</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Скрытое поле для подрасы -->
+                    <div class="form-group" id="subrace-group" style="display: none;">
+                        <label for="character-subrace">Подраса</label>
+                        <select id="character-subrace" name="subrace">
+                            <option value="">Выберите подрасу</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Режим генерации -->
+                    
+                    <!-- Кнопка генерации -->
+                    <div class="form-actions">
+                        <button type="submit" class="generate-btn">🎲 Создать персонажа</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="characterProgress" class="progress-container" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Создание персонажа...</div>
+            </div>
+            
+            <div id="characterResult" class="result-container"></div>
+        </div>
+    `);
+    
+    document.getElementById('modal-save').style.display = 'none';
+    
+    // Динамическая загрузка данных из внешних API
+    loadCharacterData();
+    
+    document.getElementById('character-race').addEventListener('change', function() {
+        const selectedRace = this.value;
+        const subraceGroup = document.getElementById('subrace-group');
+        const subraceSelect = document.getElementById('character-subrace');
+        
+        // Очищаем список подрас
+        subraceSelect.innerHTML = '<option value="">Загрузка подрас...</option>';
+        
+        // Загружаем подрасы из API
+        if (selectedRace) {
+            loadSubracesForRace(selectedRace);
+            subraceGroup.style.display = 'block';
+        } else {
+            subraceGroup.style.display = 'none';
+        }
+    });
+    
+    // Добавляем обработчик формы
+    document.getElementById('characterForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const resultDiv = document.getElementById('characterResult');
+        const progressDiv = document.getElementById('characterProgress');
+        const generatorContainer = document.getElementById('characterGeneratorContainer');
+        
+        // Сохраняем параметры формы для повторной генерации
+        const formParams = {
+            race: formData.get('race'),
+            subrace: formData.get('subrace'),
+            class: formData.get('class'),
+            level: formData.get('level'),
+            alignment: formData.get('alignment'),
+            gender: formData.get('gender'),
+            background: formData.get('background'),
+            ability_method: formData.get('ability_method')
+        };
+        
+        // Всегда используем полноценную генерацию из внешних источников
+        formData.append('use_full_generation', 'true');
+        
+        // Скрываем форму и показываем прогресс
+        generatorContainer.style.display = 'none';
+        progressDiv.style.display = 'block';
+        
+        // Обновляем текст прогресса
+        const progressText = progressDiv.querySelector('#progressText');
+        progressText.textContent = 'Получение данных из внешних источников...';
+        
+        // Анимация прогресса
         const progressFill = progressDiv.querySelector('.progress-fill');
         let progress = 0;
         const progressInterval = setInterval(() => {
