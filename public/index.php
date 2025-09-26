@@ -436,43 +436,43 @@ function updateDiceComment(dice, count) {
 // --- Генерация персонажей и противников ---
 // Статические данные удалены - теперь используются внешние API
 
+
+
+
+
+
+
 // --- Функция открытия генерации персонажей ---
 function openCharacterModal() {
     showModal(`
         <div class="character-generator">
             <div class="generator-header">
-                <h2 style="color: var(--character-generator-text, #e0e0e0); margin-bottom: 10px;">Генератор персонажей</h2>
-                <p class="generator-subtitle" style="color: var(--character-generator-text, #e0e0e0); opacity: 0.8; margin: 0;">Создайте полноценного персонажа с использованием D&D API и AI</p>
+                <h2 style="color: var(--text-color, #e0e0e0); margin-bottom: 10px;">🎭 Генератор персонажей</h2>
+                <p class="generator-subtitle" style="color: var(--text-color, #e0e0e0); opacity: 0.8; margin: 0;">Создайте уникального персонажа D&D 5e с помощью AI</p>
             </div>
             
-            <!-- Форма генератора персонажей -->
-            <div id="characterGeneratorContainer" class="character-generator-container">
-                <form id="characterForm" class="character-form-new" method="post">
-                    <!-- Первая строка: Раса и Класс -->
+            <div class="character-form-container">
+                <form id="newCharacterForm" class="character-form">
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="character-race">Раса персонажа</label>
-                            <div class="select-wrapper">
-                                <select id="character-race" name="race" required>
-                                    <option value="">Загрузка рас...</option>
-                                </select>
-                                <div class="subrace-tooltip" id="subraceTooltip"></div>
-                            </div>
+                            <label for="new-character-race">Раса</label>
+                            <select id="new-character-race" name="race" required>
+                                <option value="">Загрузка рас...</option>
+                            </select>
                         </div>
                         
                         <div class="form-group">
-                            <label for="character-class">Класс персонажа</label>
-                            <select id="character-class" name="class" required>
+                            <label for="new-character-class">Класс</label>
+                            <select id="new-character-class" name="class" required>
                                 <option value="">Загрузка классов...</option>
                             </select>
                         </div>
                     </div>
                     
-                    <!-- Вторая строка: Уровень и Пол -->
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="character-level">Уровень персонажа</label>
-                            <select id="character-level" name="level" required>
+                            <label for="new-character-level">Уровень</label>
+                            <select id="new-character-level" name="level" required>
                                 <option value="1">1 уровень</option>
                                 <option value="2">2 уровень</option>
                                 <option value="3">3 уровень</option>
@@ -497,8 +497,8 @@ function openCharacterModal() {
                         </div>
                         
                         <div class="form-group">
-                            <label for="character-gender">Пол персонажа</label>
-                            <select id="character-gender" name="gender">
+                            <label for="new-character-gender">Пол</label>
+                            <select id="new-character-gender" name="gender">
                                 <option value="random">Случайный</option>
                                 <option value="male">Мужской</option>
                                 <option value="female">Женский</option>
@@ -506,11 +506,10 @@ function openCharacterModal() {
                         </div>
                     </div>
                     
-                    <!-- Третья строка: Мировоззрение и Происхождение -->
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="character-alignment">Мировоззрение</label>
-                            <select id="character-alignment" name="alignment">
+                            <label for="new-character-alignment">Мировоззрение</label>
+                            <select id="new-character-alignment" name="alignment">
                                 <option value="random">Случайное</option>
                                 <option value="lawful_good">Законопослушный добрый</option>
                                 <option value="neutral_good">Нейтральный добрый</option>
@@ -525,334 +524,343 @@ function openCharacterModal() {
                         </div>
                         
                         <div class="form-group">
-                            <label for="character-background">Происхождение</label>
-                            <select id="character-background" name="background">
-                                <option value="random">Случайное</option>
-                                <option value="">Загрузка происхождений...</option>
+                            <label for="new-character-background">Предыстория</label>
+                            <select id="new-character-background" name="background">
+                                <option value="random">Случайная</option>
+                                <option value="">Загрузка предысторий...</option>
                             </select>
                         </div>
                     </div>
                     
-                    <!-- Четвертая строка: Метод генерации характеристик -->
                     <div class="form-row">
                         <div class="form-group full-width">
-                            <label for="ability-method">Метод генерации характеристик</label>
-                            <select id="ability-method" name="ability_method">
-                                <option value="standard_array">Standard Array (15,14,13,12,10,8)</option>
-                                <option value="point_buy">Point Buy (27 очков)</option>
+                            <label for="new-character-ability-method">Метод генерации характеристик</label>
+                            <select id="new-character-ability-method" name="ability_method">
+                                <option value="standard_array">Стандартный массив (15,14,13,12,10,8)</option>
+                                <option value="point_buy">Покупка очков (27 очков)</option>
                                 <option value="roll_4d6">4d6 drop lowest</option>
+                                <option value="roll_3d6">3d6 (классический)</option>
                             </select>
                         </div>
                     </div>
                     
-                    <!-- Скрытое поле для подрасы -->
-                    <div class="form-group" id="subrace-group" style="display: none;">
-                        <label for="character-subrace">Подраса</label>
-                        <select id="character-subrace" name="subrace">
-                            <option value="">Выберите подрасу</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Режим генерации -->
-                    
-                    <!-- Кнопка генерации -->
                     <div class="form-actions">
-                        <button type="submit" class="generate-btn">🎲 Создать персонажа</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-icon">🎲</span>
+                            Создать персонажа
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                            <span class="btn-icon">❌</span>
+                            Отмена
+                        </button>
                     </div>
                 </form>
-            </div>
-            
-            <div id="characterProgress" class="progress-container" style="display: none;">
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
+                
+                <div id="characterProgress" class="character-progress" style="display: none;">
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <div class="progress-text" id="characterProgressText">Создание персонажа...</div>
+                    </div>
                 </div>
-                <div class="progress-text" id="progressText">Создание персонажа...</div>
+                
+                <div id="characterResult" class="character-result" style="display: none;">
+                    <!-- Результат будет вставлен сюда -->
+                </div>
             </div>
-            
-            <div id="characterResult" class="result-container"></div>
         </div>
     `);
     
     document.getElementById('modal-save').style.display = 'none';
     
-    // Динамическая загрузка данных из внешних API
-    loadCharacterData();
+    // Загружаем данные
+    loadNewCharacterData();
     
-    document.getElementById('character-race').addEventListener('change', function() {
-        const selectedRace = this.value;
-        const subraceGroup = document.getElementById('subrace-group');
-        const subraceSelect = document.getElementById('character-subrace');
-        
-        // Очищаем список подрас
-        subraceSelect.innerHTML = '<option value="">Загрузка подрас...</option>';
-        
-        // Загружаем подрасы из API
-        if (selectedRace) {
-            loadSubracesForRace(selectedRace);
-            subraceGroup.style.display = 'block';
-        } else {
-            subraceGroup.style.display = 'none';
-        }
-    });
-    
-    // Добавляем обработчик формы
-    document.getElementById('characterForm').addEventListener('submit', function(e) {
+    // Обработчик формы
+    document.getElementById('newCharacterForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
         const formData = new FormData(this);
-        const submitBtn = this.querySelector('button[type="submit"]');
         const resultDiv = document.getElementById('characterResult');
         const progressDiv = document.getElementById('characterProgress');
-        const generatorContainer = document.getElementById('characterGeneratorContainer');
-        
-        // Сохраняем параметры формы для повторной генерации
-        const formParams = {
-            race: formData.get('race'),
-            subrace: formData.get('subrace'),
-            class: formData.get('class'),
-            level: formData.get('level'),
-            alignment: formData.get('alignment'),
-            gender: formData.get('gender'),
-            background: formData.get('background'),
-            ability_method: formData.get('ability_method')
-        };
-        
-        // Всегда используем полноценную генерацию из внешних источников
-        formData.append('use_full_generation', 'true');
+        const formContainer = document.querySelector('.character-form-container');
         
         // Скрываем форму и показываем прогресс
-        generatorContainer.style.display = 'none';
+        formContainer.style.display = 'none';
         progressDiv.style.display = 'block';
-        
-        // Обновляем текст прогресса
-        const progressText = progressDiv.querySelector('#progressText');
-        progressText.textContent = 'Получение данных из внешних источников...';
         
         // Анимация прогресса
         const progressFill = progressDiv.querySelector('.progress-fill');
+        const progressText = progressDiv.querySelector('#characterProgressText');
         let progress = 0;
         const progressInterval = setInterval(() => {
             progress += Math.random() * 15;
             if (progress > 90) progress = 90;
             progressFill.style.width = progress + '%';
+            
+            if (progress < 30) {
+                progressText.textContent = 'Загрузка данных персонажа...';
+            } else if (progress < 60) {
+                progressText.textContent = 'Генерация характеристик...';
+            } else if (progress < 90) {
+                progressText.textContent = 'Создание описания с помощью AI...';
+            } else {
+                progressText.textContent = 'Завершение генерации...';
+            }
         }, 200);
         
         fetch('api/generate-characters.php', {
             method: 'POST',
             body: formData
         })
-        .then(response => {
-            // Проверяем, что ответ можно распарсить как JSON
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-            return response.text().then(text => {
-                try {
-                    return JSON.parse(text);
-                } catch (e) {
-                    console.error('JSON parse error:', e);
-                    console.error('Response text:', text);
-                    throw new Error('Ошибка парсинга JSON: ' + e.message);
-                }
-            });
-        })
+        .then(response => response.json())
         .then(data => {
             clearInterval(progressInterval);
             progressFill.style.width = '100%';
             
             setTimeout(() => {
                 progressDiv.style.display = 'none';
-                this.style.display = 'block';
+                resultDiv.style.display = 'block';
                 
                 if (data.success) {
-                    const character = data.character || data.npc; // Поддержка старого и нового формата
-                    resultDiv.innerHTML = formatCharacterFromApi(character);
+                    const character = data.character;
+                    resultDiv.innerHTML = formatNewCharacter(character);
                     
-                    // Добавляем кнопку сохранения в заметки
-                    if (character && typeof character === 'object') {
-                        try {
-                            const characterJson = JSON.stringify(character).replace(/"/g, '&quot;');
-                            resultDiv.innerHTML += `
-                                <div class="save-character-section">
-                                    <button class="save-character-btn" onclick="saveCharacterToNotes(${characterJson})">
-                                        💾 Сохранить в заметки
-                                    </button>
-                                </div>
-                            `;
-                            
-                            // Автоматически сохраняем персонажа в заметки
-                            saveCharacterToNotes(character);
-                        } catch (e) {
-                            console.error('Error stringifying character:', e);
-                        }
-                    }
+                    // Добавляем кнопку сохранения
+                    const saveButton = document.createElement('div');
+                    saveButton.className = 'character-actions';
+                    saveButton.innerHTML = `
+                        <button onclick="saveNewCharacterToNotes()" class="btn btn-success">
+                            <span class="btn-icon">💾</span>
+                            Сохранить в заметки
+                        </button>
+                        <button onclick="regenerateCharacter()" class="btn btn-primary">
+                            <span class="btn-icon">🔄</span>
+                            Сгенерировать заново
+                        </button>
+                        <button onclick="closeModal()" class="btn btn-secondary">
+                            <span class="btn-icon">❌</span>
+                            Закрыть
+                        </button>
+                    `;
+                    resultDiv.appendChild(saveButton);
                     
-                    // Автоматическая прокрутка к результату
-                    setTimeout(() => {
-                        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 100);
+                    // Автоматически сохраняем персонажа
+                    saveNewCharacterToNotes(character);
                 } else {
-                    resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.error || 'Неизвестная ошибка') + '</div>';
+                    resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.message || 'Неизвестная ошибка') + '</div>';
                 }
             }, 500);
         })
         .catch(error => {
             clearInterval(progressInterval);
             progressDiv.style.display = 'none';
-            this.style.display = 'block';
+            formContainer.style.display = 'block';
             console.error('Generation error:', error);
-            resultDiv.innerHTML = '<div class="error">Ошибка сети: ' + error.message + '</div>';
+            alert('Ошибка сети: ' + error.message);
         });
     });
 }
 
-// --- Функции динамической загрузки данных ---
-function loadCharacterData() {
-    console.log('Начинаем загрузку данных персонажа...');
-    
-    // Небольшая задержка для гарантии загрузки DOM
-    setTimeout(() => {
-        console.log('DOM должен быть готов, начинаем загрузку...');
-        loadRaces();
-        loadClasses();
-        loadBackgrounds();
-    }, 100);
-}
-
-function loadRaces() {
-    console.log('Загружаем расы...');
-    const raceSelect = document.getElementById('character-race');
-    if (!raceSelect) {
-        console.error('Элемент character-race не найден');
-        return;
-    }
-    
-    console.log('Отправляем запрос к API...');
-    // Загружаем расы из D&D API
-    fetch('api/dnd-libraries.php?type=races')
-        .then(response => {
-            console.log('Получен ответ от API:', response.status);
-            return response.json();
-        })
+// --- Вспомогательные функции для нового генератора персонажей ---
+function loadNewCharacterData() {
+    // Загружаем расы
+    fetch('api/generate-characters.php?action=races')
+        .then(response => response.json())
         .then(data => {
-            console.log('Данные получены:', data);
             if (data.success && data.races) {
-                console.log('Успешно получены расы:', data.races.length);
+                const raceSelect = document.getElementById('new-character-race');
                 raceSelect.innerHTML = '<option value="">Выберите расу</option>';
                 data.races.forEach(race => {
                     const option = document.createElement('option');
-                    option.value = race.index;
-                    option.textContent = race.name;
-                    if (race.subraces && race.subraces.length > 0) {
-                        option.setAttribute('data-subraces', JSON.stringify(race.subraces));
-                    }
+                    option.value = race.id;
+                    option.textContent = race.name_ru || race.name;
                     raceSelect.appendChild(option);
                 });
-                console.log('Расы добавлены в select');
-            } else {
-                console.error('Ошибка в данных API:', data);
-                raceSelect.innerHTML = '<option value="">Ошибка загрузки рас</option>';
             }
         })
         .catch(error => {
             console.error('Error loading races:', error);
-            raceSelect.innerHTML = '<option value="">Ошибка загрузки рас</option>';
         });
-}
-
-function loadClasses() {
-    console.log('Загружаем классы...');
-    const classSelect = document.getElementById('character-class');
-    if (!classSelect) {
-        console.error('Элемент character-class не найден');
-        return;
-    }
     
-    console.log('Отправляем запрос к API для классов...');
-    // Загружаем классы из D&D API
-    fetch('api/dnd-libraries.php?type=classes')
-        .then(response => {
-            console.log('Получен ответ от API для классов:', response.status);
-            return response.json();
-        })
+    // Загружаем классы
+    fetch('api/generate-characters.php?action=classes')
+        .then(response => response.json())
         .then(data => {
-            console.log('Данные классов получены:', data);
             if (data.success && data.classes) {
-                console.log('Успешно получены классы:', data.classes.length);
+                const classSelect = document.getElementById('new-character-class');
                 classSelect.innerHTML = '<option value="">Выберите класс</option>';
                 data.classes.forEach(cls => {
                     const option = document.createElement('option');
-                    option.value = cls.index;
-                    option.textContent = cls.name;
+                    option.value = cls.id;
+                    option.textContent = cls.name_ru || cls.name;
                     classSelect.appendChild(option);
                 });
-                console.log('Классы добавлены в select');
-            } else {
-                console.error('Ошибка в данных API для классов:', data);
-                classSelect.innerHTML = '<option value="">Ошибка загрузки классов</option>';
             }
         })
         .catch(error => {
             console.error('Error loading classes:', error);
-            classSelect.innerHTML = '<option value="">Ошибка загрузки классов</option>';
         });
-}
-
-function loadBackgrounds() {
-    console.log('Загружаем происхождения...');
-    const backgroundSelect = document.getElementById('character-background');
-    if (!backgroundSelect) {
-        console.error('Элемент character-background не найден');
-        return;
-    }
     
-    console.log('Отправляем запрос к API для происхождений...');
-    // Загружаем происхождения из D&D API
-    fetch('api/dnd-libraries.php?type=backgrounds')
+    // Загружаем предыстории
+    fetch('api/generate-characters.php?action=backgrounds')
         .then(response => response.json())
         .then(data => {
             if (data.success && data.backgrounds) {
-                backgroundSelect.innerHTML = '<option value="random">Случайное</option>';
-                data.backgrounds.forEach(background => {
+                const backgroundSelect = document.getElementById('new-character-background');
+                backgroundSelect.innerHTML = '<option value="random">Случайная</option>';
+                data.backgrounds.forEach(bg => {
                     const option = document.createElement('option');
-                    option.value = background.index;
-                    option.textContent = background.name;
+                    option.value = bg.id;
+                    option.textContent = bg.name_ru || bg.name;
                     backgroundSelect.appendChild(option);
                 });
-            } else {
-                backgroundSelect.innerHTML = '<option value="random">Случайное</option><option value="">Ошибка загрузки происхождений</option>';
             }
         })
         .catch(error => {
             console.error('Error loading backgrounds:', error);
-            backgroundSelect.innerHTML = '<option value="random">Случайное</option><option value="">Ошибка загрузки происхождений</option>';
         });
 }
 
-function loadSubracesForRace(raceIndex) {
-    const subraceSelect = document.getElementById('character-subrace');
-    if (!subraceSelect) return;
+function formatNewCharacter(character) {
+    let html = `
+        <div class="character-card">
+            <div class="character-header">
+                <h3>${character.name}</h3>
+                <div class="character-subtitle">${character.race} - ${character.class} (${character.level} уровень)</div>
+            </div>
+            
+            <div class="character-stats">
+                <div class="stat-row">
+                    <div class="stat-item"><strong>Пол:</strong> ${character.gender}</div>
+                    <div class="stat-item"><strong>Мировоззрение:</strong> ${character.alignment}</div>
+                    <div class="stat-item"><strong>Предыстория:</strong> ${character.background}</div>
+                </div>
+                
+                <div class="stat-row">
+                    <div class="stat-item"><strong>Хиты:</strong> ${character.hit_points}</div>
+                    <div class="stat-item"><strong>КД:</strong> ${character.armor_class}</div>
+                    <div class="stat-item"><strong>Скорость:</strong> ${character.speed} футов</div>
+                </div>
+                
+                <div class="abilities-section">
+                    <h4>Характеристики</h4>
+                    <div class="abilities-grid">
+                        <div class="ability-item">СИЛ: ${character.abilities.str} (${character.modifiers.str >= 0 ? '+' : ''}${character.modifiers.str})</div>
+                        <div class="ability-item">ЛОВ: ${character.abilities.dex} (${character.modifiers.dex >= 0 ? '+' : ''}${character.modifiers.dex})</div>
+                        <div class="ability-item">ТЕЛ: ${character.abilities.con} (${character.modifiers.con >= 0 ? '+' : ''}${character.modifiers.con})</div>
+                        <div class="ability-item">ИНТ: ${character.abilities.int} (${character.modifiers.int >= 0 ? '+' : ''}${character.modifiers.int})</div>
+                        <div class="ability-item">МДР: ${character.abilities.wis} (${character.modifiers.wis >= 0 ? '+' : ''}${character.modifiers.wis})</div>
+                        <div class="ability-item">ХАР: ${character.abilities.cha} (${character.modifiers.cha >= 0 ? '+' : ''}${character.modifiers.cha})</div>
+                    </div>
+                </div>
+                
+                ${character.description ? `
+                    <div class="character-description">
+                        <h4>Описание</h4>
+                        <p>${character.description}</p>
+                    </div>
+                ` : ''}
+                
+                ${character.background_story ? `
+                    <div class="character-background">
+                        <h4>Предыстория</h4>
+                        <p>${character.background_story}</p>
+                    </div>
+                ` : ''}
+                
+                ${character.equipment ? `
+                    <div class="character-equipment">
+                        <h4>Снаряжение</h4>
+                        ${character.equipment.weapons && character.equipment.weapons.length > 0 ? `
+                            <div class="equipment-category">
+                                <strong>Оружие:</strong>
+                                <ul>${character.equipment.weapons.map(weapon => `<li>${weapon}</li>`).join('')}</ul>
+                            </div>
+                        ` : ''}
+                        ${character.equipment.armor && character.equipment.armor.length > 0 ? `
+                            <div class="equipment-category">
+                                <strong>Броня:</strong>
+                                <ul>${character.equipment.armor.map(armor => `<li>${armor}</li>`).join('')}</ul>
+                            </div>
+                        ` : ''}
+                        ${character.equipment.items && character.equipment.items.length > 0 ? `
+                            <div class="equipment-category">
+                                <strong>Предметы:</strong>
+                                <ul>${character.equipment.items.map(item => `<li>${item}</li>`).join('')}</ul>
+                            </div>
+                        ` : ''}
+                        ${character.equipment.money ? `
+                            <div class="equipment-category">
+                                <strong>Деньги:</strong> ${character.equipment.money}
+                            </div>
+                        ` : ''}
+                    </div>
+                ` : ''}
+                
+                ${character.spells && character.spells.length > 0 ? `
+                    <div class="character-spells">
+                        <h4>Заклинания</h4>
+                        <ul>${character.spells.map(spell => `<li>${spell}</li>`).join('')}</ul>
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `;
     
-    // Загружаем подрасы из D&D API
-    fetch(`api/dnd-libraries.php?type=races&race=${raceIndex}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.subraces && data.subraces.length > 0) {
-                subraceSelect.innerHTML = '<option value="">Выберите подрасу</option>';
-                data.subraces.forEach(subrace => {
-                    const option = document.createElement('option');
-                    option.value = subrace.index;
-                    option.textContent = subrace.name;
-                    subraceSelect.appendChild(option);
-                });
-            } else {
-                subraceSelect.innerHTML = '<option value="">Нет подрас</option>';
-            }
-        })
-        .catch(error => {
-            console.error('Error loading subraces:', error);
-            subraceSelect.innerHTML = '<option value="">Ошибка загрузки подрас</option>';
-        });
+    return html;
+}
+
+function saveNewCharacterToNotes(character) {
+    const noteContent = `
+        <div class="character-note">
+            <div class="character-note-title">${character.name}</div>
+            <div class="character-note-info">
+                <div><strong>Раса:</strong> ${character.race}</div>
+                <div><strong>Класс:</strong> ${character.class}</div>
+                <div><strong>Уровень:</strong> ${character.level}</div>
+                <div><strong>Пол:</strong> ${character.gender}</div>
+                <div><strong>Мировоззрение:</strong> ${character.alignment}</div>
+                <div><strong>Предыстория:</strong> ${character.background}</div>
+                <div><strong>Хиты:</strong> ${character.hit_points}</div>
+                <div><strong>КД:</strong> ${character.armor_class}</div>
+                <div><strong>Скорость:</strong> ${character.speed} футов</div>
+                <div><strong>Характеристики:</strong></div>
+                <div style="margin-left: 20px;">
+                    <div>СИЛ: ${character.abilities.str} (${character.modifiers.str >= 0 ? '+' : ''}${character.modifiers.str})</div>
+                    <div>ЛОВ: ${character.abilities.dex} (${character.modifiers.dex >= 0 ? '+' : ''}${character.modifiers.dex})</div>
+                    <div>ТЕЛ: ${character.abilities.con} (${character.modifiers.con >= 0 ? '+' : ''}${character.modifiers.con})</div>
+                    <div>ИНТ: ${character.abilities.int} (${character.modifiers.int >= 0 ? '+' : ''}${character.modifiers.int})</div>
+                    <div>МДР: ${character.abilities.wis} (${character.modifiers.wis >= 0 ? '+' : ''}${character.modifiers.wis})</div>
+                    <div>ХАР: ${character.abilities.cha} (${character.modifiers.cha >= 0 ? '+' : ''}${character.modifiers.cha})</div>
+                </div>
+                ${character.description ? `<div><strong>Описание:</strong> ${character.description}</div>` : ''}
+                ${character.background_story ? `<div><strong>Предыстория:</strong> ${character.background_story}</div>` : ''}
+            </div>
+        </div>
+    `;
+    
+    fetch('', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'fast_action=save_note&content=' + encodeURIComponent(noteContent) + '&title=' + encodeURIComponent(character.name)
+    })
+    .then(r => r.text())
+    .then(() => {
+        console.log('Персонаж ' + character.name + ' сохранен в заметки!');
+    })
+    .catch(error => {
+        console.error('Ошибка сохранения:', error);
+    });
+}
+
+function regenerateCharacter() {
+    // Закрываем модальное окно и открываем заново
+    closeModal();
+    setTimeout(() => {
+        openCharacterModal();
+    }, 100);
 }
 
 // --- Функция открытия генерации противников ---
@@ -2762,29 +2770,7 @@ function formatNpcBlocks(txt, forcedName = '') {
     return out;
 }
 
-// --- Форматирование персонажей от API системы ---
-function formatCharacterFromApi(character) {
-    // Проверяем, что character является валидным объектом
-    if (!character || typeof character !== 'object') {
-        return '<div class="error">Ошибка: Некорректные данные персонажа</div>';
-    }
-    
-    // Функция для безопасного отображения текста
-    function safeText(text) {
-        if (typeof text !== 'string') {
-            return 'Не определено';
-        }
-        // Экранируем HTML и заменяем проблемные символы
-        return text
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;')
-            .replace(/\n/g, '<br>');
-    }
-    
-    let out = '<div class="character-block">';
+// --- Перевод названий действий ---
     
     // Заголовок персонажа
     out += '<div class="character-header">';
@@ -3121,63 +3107,259 @@ const equipmentStyles = `
             font-size: 0.9em;
         }
         
-        /* Новые стили для интерфейса генератора с поддержкой тем */
-        .character-generator-container {
-            background: var(--character-generator-bg, rgba(255, 255, 255, 0.05));
+        /* Стили для нового генератора персонажей */
+        .character-generator {
+            background: var(--modal-bg, rgba(255, 255, 255, 0.05));
             border-radius: 12px;
             padding: 20px;
             margin: 20px 0;
-            border: 1px solid var(--character-generator-border, rgba(255, 255, 255, 0.1));
-            box-shadow: var(--character-generator-shadow, 0 4px 15px rgba(0, 0, 0, 0.1));
+            border: 1px solid var(--modal-border, rgba(255, 255, 255, 0.1));
+            box-shadow: var(--modal-shadow, 0 4px 15px rgba(0, 0, 0, 0.1));
         }
         
-        /* Темы для генератора персонажей */
-        .theme-dark .character-generator-container {
-            --character-generator-bg: rgba(30, 30, 30, 0.8);
-            --character-generator-border: rgba(255, 255, 255, 0.15);
-            --character-generator-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            --character-generator-text: #e0e0e0;
-            --character-generator-accent: #ff6b35;
-            --character-generator-accent-hover: #ff8c5a;
-            --character-generator-accent-shadow: rgba(255, 107, 53, 0.3);
-            --character-generator-accent-shadow-hover: rgba(255, 107, 53, 0.4);
-            --character-generator-option-bg: #2a2a2a;
+        .character-form-container {
+            margin-top: 20px;
         }
         
-        .theme-light .character-generator-container {
-            --character-generator-bg: rgba(255, 255, 255, 0.9);
-            --character-generator-border: rgba(0, 0, 0, 0.1);
-            --character-generator-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            --character-generator-text: #333333;
-            --character-generator-accent: #2196F3;
-            --character-generator-accent-hover: #1976D2;
-            --character-generator-accent-shadow: rgba(33, 150, 243, 0.3);
-            --character-generator-accent-shadow-hover: rgba(33, 150, 243, 0.4);
-            --character-generator-option-bg: #f5f5f5;
+        .character-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
         
-        .theme-mystic .character-generator-container {
-            --character-generator-bg: rgba(75, 0, 130, 0.8);
-            --character-generator-border: rgba(138, 43, 226, 0.3);
-            --character-generator-shadow: 0 4px 15px rgba(75, 0, 130, 0.3);
-            --character-generator-text: #e6d7ff;
-            --character-generator-accent: #9c27b0;
-            --character-generator-accent-hover: #7b1fa2;
-            --character-generator-accent-shadow: rgba(156, 39, 176, 0.3);
-            --character-generator-accent-shadow-hover: rgba(156, 39, 176, 0.4);
-            --character-generator-option-bg: rgba(75, 0, 130, 0.9);
+        .form-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
         }
         
-        .theme-orange .character-generator-container {
-            --character-generator-bg: rgba(255, 152, 0, 0.1);
-            --character-generator-border: rgba(255, 152, 0, 0.3);
-            --character-generator-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);
-            --character-generator-text: #fff3e0;
-            --character-generator-accent: #ff9800;
-            --character-generator-accent-hover: #f57c00;
-            --character-generator-accent-shadow: rgba(255, 152, 0, 0.3);
-            --character-generator-accent-shadow-hover: rgba(255, 152, 0, 0.4);
-            --character-generator-option-bg: rgba(255, 152, 0, 0.1);
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .form-group.full-width {
+            flex: 1 1 100%;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color, #e0e0e0);
+            font-size: 14px;
+        }
+        
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--input-border, rgba(255, 255, 255, 0.2));
+            border-radius: 8px;
+            background: var(--input-bg, rgba(255, 255, 255, 0.1));
+            color: var(--text-color, #ffffff);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-color, #ff6b35);
+            box-shadow: 0 0 0 3px var(--accent-shadow, rgba(255, 107, 53, 0.2));
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .character-progress {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .progress-container {
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .progress-text {
+            color: var(--text-color, #e0e0e0);
+            font-size: 14px;
+        }
+        
+        .character-result {
+            margin-top: 20px;
+        }
+        
+        .character-card {
+            background: var(--card-bg, rgba(255, 255, 255, 0.05));
+            border: 1px solid var(--card-border, rgba(255, 255, 255, 0.1));
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .character-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent-color, #ff6b35);
+        }
+        
+        .character-header h3 {
+            margin: 0 0 10px 0;
+            color: var(--text-color, #ffffff);
+            font-size: 24px;
+        }
+        
+        .character-subtitle {
+            color: var(--text-color, #e0e0e0);
+            opacity: 0.8;
+            font-size: 16px;
+        }
+        
+        .character-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .stat-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-color, #ff6b35);
+        }
+        
+        .abilities-section {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .abilities-section h4 {
+            margin: 0 0 15px 0;
+            color: var(--accent-color, #ff6b35);
+            font-size: 18px;
+        }
+        
+        .abilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .ability-item {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .character-description,
+        .character-background,
+        .character-equipment,
+        .character-spells {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 15px;
+        }
+        
+        .character-description h4,
+        .character-background h4,
+        .character-equipment h4,
+        .character-spells h4 {
+            margin: 0 0 10px 0;
+            color: var(--accent-color, #ff6b35);
+            font-size: 16px;
+        }
+        
+        .equipment-category {
+            margin: 10px 0;
+        }
+        
+        .equipment-category strong {
+            color: var(--accent-color, #ff6b35);
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .equipment-category ul {
+            margin: 5px 0 0 20px;
+            padding: 0;
+        }
+        
+        .equipment-category li {
+            margin: 3px 0;
+        }
+        
+        .character-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .character-note {
+            background: var(--note-bg, rgba(255, 255, 255, 0.05));
+            border: 1px solid var(--note-border, rgba(255, 255, 255, 0.1));
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .character-note-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--accent-color, #ff6b35);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .character-note-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .character-note-info div {
+            padding: 4px 0;
+        }
+        
+        .character-note-info strong {
+            color: var(--text-color, #ffffff);
         }
         
         /* Стили для генератора заклинаний */
@@ -3549,35 +3731,6 @@ const equipmentStyles = `
             flex: 1;
         }
         
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--character-generator-text, #e0e0e0);
-            font-size: 14px;
-        }
-        
-        .form-group select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid var(--character-generator-border, rgba(255, 255, 255, 0.2));
-            border-radius: 8px;
-            background: var(--character-generator-bg, rgba(255, 255, 255, 0.1));
-            color: var(--character-generator-text, #ffffff);
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-        
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--character-generator-accent, #ff6b35);
-            box-shadow: 0 0 0 3px var(--character-generator-accent-shadow, rgba(255, 107, 53, 0.2));
-        }
-        
-        .form-group select option {
-            background: var(--character-generator-option-bg, #2a2a2a);
-            color: var(--character-generator-text, #ffffff);
-        }
         
         .select-wrapper {
             position: relative;
@@ -3618,29 +3771,6 @@ const equipmentStyles = `
             margin: 4px 0;
         }
         
-        .form-actions {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        
-        .generate-btn {
-            background: linear-gradient(135deg, var(--character-generator-accent, #ff6b35), var(--character-generator-accent-hover, #f7931e));
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px var(--character-generator-accent-shadow, rgba(255, 107, 53, 0.3));
-        }
-        
-        .generate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px var(--character-generator-accent-shadow-hover, rgba(255, 107, 53, 0.4));
-        }
         
         .generate-btn:active {
             transform: translateY(0);
@@ -4872,53 +5002,6 @@ document.querySelector('form').onsubmit = function(e) {
             toggleSection(headerElement);
         }
         
-        // --- Функция сохранения персонажа в заметки ---
-        function saveCharacterToNotes(characterData) {
-            // Создаем полное содержимое заметки с именем персонажа как заголовком
-            const noteContent = `
-                <div class="character-note">
-                    <div class="character-note-title">${characterData.name}</div>
-                    <div class="character-note-info">
-                        <div><strong>Раса:</strong> ${characterData.race}</div>
-                        <div><strong>Класс:</strong> ${characterData.class}</div>
-                        <div><strong>Уровень:</strong> ${characterData.level}</div>
-                        <div><strong>Пол:</strong> ${characterData.gender || 'Не указан'}</div>
-                        <div><strong>Мировоззрение:</strong> ${characterData.alignment || 'Не указано'}</div>
-                        <div><strong>Профессия:</strong> ${characterData.occupation || 'Не указана'}</div>
-                        <div><strong>Хиты:</strong> ${characterData.hit_points || 'Не указаны'}</div>
-                        <div><strong>КД:</strong> ${characterData.armor_class || 'Не указан'}</div>
-                        <div><strong>Скорость:</strong> ${characterData.speed || 'Не указана'} футов</div>
-                        <div><strong>Инициатива:</strong> ${characterData.initiative || '0'}</div>
-                        <div><strong>Урон:</strong> ${characterData.damage || 'Не указан'}</div>
-                        <div><strong>Бонус мастерства:</strong> +${characterData.proficiency_bonus || '0'}</div>
-                        <div><strong>Характеристики:</strong></div>
-                        <div style="margin-left: 20px;">
-                            <div>СИЛ: ${characterData.abilities?.str || '0'}</div>
-                            <div>ЛОВ: ${characterData.abilities?.dex || '0'}</div>
-                            <div>ТЕЛ: ${characterData.abilities?.con || '0'}</div>
-                            <div>ИНТ: ${characterData.abilities?.int || '0'}</div>
-                            <div>МДР: ${characterData.abilities?.wis || '0'}</div>
-                            <div>ХАР: ${characterData.abilities?.cha || '0'}</div>
-                        </div>
-                        ${characterData.description ? `<div><strong>Описание:</strong> ${characterData.description}</div>` : ''}
-                        ${characterData.background ? `<div><strong>Предыстория:</strong> ${characterData.background}</div>` : ''}
-                    </div>
-                </div>
-            `;
-            
-            fetch('', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: 'fast_action=save_note&content=' + encodeURIComponent(noteContent) + '&title=' + encodeURIComponent(characterData.name)
-            })
-            .then(r => r.text())
-            .then(() => {
-                alert('Персонаж ' + characterData.name + ' сохранен в заметки!');
-            })
-            .catch(error => {
-                alert('Ошибка сохранения: ' + error.message);
-            });
-        }
 
         // --- Функция сохранения противника в заметки ---
         function saveEnemyToNotes(enemyData) {
