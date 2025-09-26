@@ -1319,9 +1319,9 @@
         }
         
         .modal-bg.active {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .modal {
@@ -3327,8 +3327,8 @@
             /* Улучшенные модальные окна */
             .modal {
                 margin: 0 auto;
-                height: 85vh;
-                max-height: none;
+                height: auto;
+                max-height: 90vh;
                 border-radius: 12px;
                 padding: 16px;
             }
@@ -3462,8 +3462,8 @@
             }
             /* Компактные модальные окна */
             .modal {
-                margin: 4px;
-                height: 90vh;
+                margin: 0 auto;
+                height: auto;
                 padding: 12px;
                 border-radius: 8px;
             }
@@ -3555,7 +3555,7 @@
             .modal {
                 width: 95vw;
                 max-width: 95vw;
-                height: 90vh;
+                height: auto;
                 max-height: 90vh;
                 margin: 0 auto;
                 border-radius: 12px;
@@ -5030,6 +5030,7 @@
             max-width: 800px;
             width: 90%;
             max-height: 90vh;
+            margin: 0 auto;
         }
         
         .character-modal .modal-header {
@@ -5182,6 +5183,7 @@
             .character-modal {
                 width: 95%;
                 max-height: 95vh;
+                margin: 0 auto;
             }
             .character-modal .form-grid {
                 grid-template-columns: 1fr;
