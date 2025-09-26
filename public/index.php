@@ -361,7 +361,7 @@ $template = str_replace('{{chat_messages}}', $chatMsgs, $template);
 $template = str_replace('{{notes_block}}', $notesBlock, $template);
 
 // Добавляем версионирование для принудительного обновления кэша
-$template = str_replace('v=4.0', 'v=' . time(), $template);
+$template = str_replace('v=3.0', 'v=' . time(), $template);
 
 echo $template;
 ?>
