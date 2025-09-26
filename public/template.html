@@ -6465,39 +6465,23 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="new-character-background">Предыстория</label>
-                                <select id="new-character-background" name="background">
-                                    <option value="random">Случайная</option>
-                                    <option value="">Загрузка предысторий...</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
                                 <label for="new-character-subrace">Подрасса</label>
                                 <select id="new-character-subrace" name="subrace">
                                     <option value="">Выберите расу сначала</option>
                                 </select>
                             </div>
-                            
+                        </div>
+                        
+                        <div class="form-row">
                             <div class="form-group">
                                 <label for="new-character-archetype">Архетип</label>
                                 <select id="new-character-archetype" name="archetype">
                                     <option value="">Выберите класс сначала</option>
                                 </select>
                             </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group full-width">
-                                <label for="new-character-ability-method">Метод генерации характеристик</label>
-                                <select id="new-character-ability-method" name="ability_method">
-                                    <option value="standard_array">Стандартный массив (15,14,13,12,10,8)</option>
-                                    <option value="point_buy">Покупка очков (27 очков)</option>
-                                    <option value="roll_4d6">4d6 drop lowest</option>
-                                    <option value="roll_3d6">3d6 (классический)</option>
-                                </select>
+                            
+                            <div class="form-group">
+                                <!-- Пустое поле для симметрии -->
                             </div>
                         </div>
                         
@@ -7007,7 +6991,7 @@
                     if (data.success) {
                         const classSelect = document.getElementById('new-character-class');
                         classSelect.innerHTML = '<option value="">Выберите класс</option>';
-                        Object.values(data.classes).forEach(cls => {
+                        data.classes.forEach(cls => {
                             classSelect.innerHTML += `<option value="${cls.id}">${cls.name.ru}</option>`;
                         });
 
@@ -7018,20 +7002,6 @@
                     }
                 })
                 .catch(error => console.error('Error loading classes:', error));
-
-            // Загружаем предыстории
-            fetch('api/generate-characters.php?action=backgrounds')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const backgroundSelect = document.getElementById('new-character-background');
-                        backgroundSelect.innerHTML = '<option value="random">Случайная</option>';
-                        data.backgrounds.forEach(bg => {
-                            backgroundSelect.innerHTML += `<option value="${bg.id}">${bg.name_ru}</option>`;
-                        });
-                    }
-                })
-                .catch(error => console.error('Error loading backgrounds:', error));
         }
 
         function loadSubraces(raceId) {

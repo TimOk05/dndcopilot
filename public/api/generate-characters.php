@@ -56,18 +56,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $level = isset($input['level']) ? (int)$input['level'] : 1;
         $gender = $input['gender'] ?? 'random';
         $alignment = $input['alignment'] ?? 'random';
-        $background = $input['background'] ?? 'random';
-        $abilityMethod = $input['ability_method'] ?? 'standard_array';
+        $subrace = $input['subrace'] ?? '';
+        $archetype = $input['archetype'] ?? '';
         
         // Валидация
         $errors = [];
         
         if ($level < 1 || $level > 20) {
             $errors[] = 'Уровень персонажа должен быть от 1 до 20';
-        }
-        
-        if (!in_array($abilityMethod, ['standard_array', 'point_buy', 'roll_4d6', 'roll_3d6'])) {
-            $errors[] = 'Недопустимый метод генерации характеристик';
         }
         
         if (!empty($errors)) {
@@ -89,8 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'level' => $level,
             'gender' => $gender,
             'alignment' => $alignment,
-            'background' => $background,
-            'ability_method' => $abilityMethod
+            'subrace' => $subrace,
+            'archetype' => $archetype
         ]);
         
         // Логируем успешную генерацию
@@ -150,13 +146,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ], JSON_UNESCAPED_UNICODE);
                 break;
                 
-            case 'backgrounds':
-                $backgrounds = $characterService->getBackgrounds();
-                echo json_encode([
-                    'success' => true,
-                    'backgrounds' => $backgrounds
-                ], JSON_UNESCAPED_UNICODE);
-                break;
                 
             case 'subraces':
                 $raceId = $_GET['race'] ?? '';

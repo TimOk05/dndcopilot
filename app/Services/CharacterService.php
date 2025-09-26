@@ -59,8 +59,11 @@ class CharacterService {
             $jsonContent = file_get_contents($file);
             $classData = json_decode($jsonContent, true);
             
-            if (json_last_error() === JSON_ERROR_NONE && isset($classData['id'])) {
-                $this->classesData[$classData['id']] = $classData;
+            if (json_last_error() === JSON_ERROR_NONE && isset($classData['class'])) {
+                $classInfo = $classData['class'];
+                if (isset($classInfo['id'])) {
+                    $this->classesData[$classInfo['id']] = $classInfo;
+                }
             }
         }
         
@@ -159,15 +162,7 @@ class CharacterService {
      */
     public function getClasses() {
         $classes = $this->loadClassesData();
-        $result = [];
-        
-        foreach ($classes as $classData) {
-            if (isset($classData['class'])) {
-                $result[] = $classData['class'];
-            }
-        }
-        
-        return $result;
+        return array_values($classes);
     }
     
     /**
@@ -175,7 +170,7 @@ class CharacterService {
      */
     public function getClassById($classId) {
         $classes = $this->loadClassesData();
-        return $classes[$classId]['class'] ?? null;
+        return $classes[$classId] ?? null;
     }
     
     /**
@@ -327,17 +322,12 @@ class CharacterService {
         $level = $params['level'] ?? 1;
         $gender = $params['gender'] ?? 'random';
         $alignment = $params['alignment'] ?? 'random';
-        $backgroundId = $params['background'] ?? 'random';
-        $abilityMethod = $params['ability_method'] ?? 'standard_array';
+        $subraceId = $params['subrace'] ?? '';
+        $archetypeId = $params['archetype'] ?? '';
         
-        // Получаем данные о расе, классе и предыстории
+        // Получаем данные о расе и классе
         $race = $this->getRaceById($raceId);
         $class = $this->getClassById($classId);
-        $background = null;
-        
-        if ($backgroundId !== 'random') {
-            $background = $this->getBackgroundById($backgroundId);
-        }
         
         if (!$race || !$class) {
             throw new Exception('Не найдены данные о расе или классе');
@@ -346,8 +336,8 @@ class CharacterService {
         // Генерируем имя
         $name = $this->generateRandomName($raceId, $gender);
         
-        // Генерируем характеристики
-        $abilities = $this->generateAbilities($abilityMethod);
+        // Генерируем характеристики (используем стандартный массив)
+        $abilities = $this->generateAbilities('standard_array');
         
         // Применяем бонусы расы
         if (isset($race['ability_bonuses'])) {
@@ -378,7 +368,7 @@ class CharacterService {
         $proficiencyBonus = 2; // Для 1-4 уровня
         
         // Генерируем снаряжение
-        $equipment = $this->generateEquipment($class, $background);
+        $equipment = $this->generateEquipment($class, null);
         
         // Генерируем заклинания (если есть)
         $spells = $this->generateSpells($class, $level);
@@ -391,7 +381,7 @@ class CharacterService {
             'level' => $level,
             'gender' => $gender,
             'alignment' => $this->getRandomAlignment($alignment),
-            'background' => $background ? ($background['name_ru'] ?? $background['name']) : 'Случайная',
+            'background' => 'Случайная',
             'abilities' => $abilities,
             'modifiers' => $modifiers,
             'hit_points' => $hitPoints,
@@ -401,8 +391,8 @@ class CharacterService {
             'proficiency_bonus' => $proficiencyBonus,
             'equipment' => $equipment,
             'spells' => $spells,
-            'description' => $this->generateDescription($race, $class, $background),
-            'background_story' => $this->generateBackgroundStory($race, $class, $background)
+            'description' => $this->generateDescription($race, $class, null),
+            'background_story' => $this->generateBackgroundStory($race, $class, null)
         ];
         
         return $character;
