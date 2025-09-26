@@ -1,3 +1,3 @@
 git add .
-git commit -m "npc generator"
+git commit -m "bg music"
 git push

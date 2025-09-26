@@ -5133,68 +5133,6 @@
         .character-modal .section-title {
             color: var(--accent-secondary);
             font-weight: bold;
-        }
-        /* Стили для новых элементов генератора персонажей */
-        
-        .trait-item {
-            margin-bottom: 8px;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 6px;
-            border-left: 3px solid var(--accent-primary);
-        }
-        
-        .equipment-item {
-            margin-bottom: 4px;
-            padding: 4px 0;
-        }
-        
-        .generate-background-btn {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 15px;
-        }
-        
-        .generate-background-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-        
-        .generate-background-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .background-result {
-            margin-top: 15px;
-        }
-        
-        .background-content {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            padding: 15px;
-            border-left: 4px solid var(--accent-info);
-        }
-        
-        .background-text {
-            line-height: 1.6;
-            color: var(--text-primary);
-        }
-        
-        .background-error {
-            background: rgba(183, 28, 28, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            border-left: 4px solid var(--accent-danger);
-            color: var(--accent-danger);
             margin-bottom: 10px;
             font-size: 1.1em;
             text-transform: uppercase;
@@ -6567,16 +6505,6 @@
             contentDiv.innerHTML = html;
             resultDiv.style.display = 'block';
             
-            // Добавляем обработчик для кнопки генерации предыстории
-            setTimeout(() => {
-                const backgroundBtn = document.getElementById('generateBackgroundBtn');
-                if (backgroundBtn) {
-                    backgroundBtn.addEventListener('click', function() {
-                        generateBackground(character);
-                    });
-                }
-            }, 100);
-            
             // Плавно прокручиваем к результату
             resultDiv.scrollIntoView({ behavior: 'smooth' });
         }
@@ -6657,6 +6585,9 @@
         
         // Функция генерации персонажа
         function generateCharacter() {
+            const form = document.getElementById('characterForm');
+            const formData = new FormData(form);
+            
             // Показываем индикатор загрузки
             const generateBtn = document.querySelector('.generate-btn');
             const originalText = generateBtn.textContent;
@@ -6664,8 +6595,9 @@
             generateBtn.disabled = true;
             
             // Отправляем запрос на генерацию персонажа
-            fetch('api/generate-character.php?action=generate', {
-                method: 'GET'
+            fetch('api/generate-characters.php', {
+                method: 'POST',
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
@@ -6673,7 +6605,7 @@
                 generateBtn.textContent = originalText;
                 generateBtn.disabled = false;
                 
-                if (data && !data.error) {
+                if (data.success) {
                     displayCharacter(data.character);
                 } else {
                     showCharacterError(data.error || 'Ошибка генерации персонажа');
@@ -6692,27 +6624,17 @@
             const resultDiv = document.getElementById('characterResult');
             const contentDiv = document.getElementById('characterContent');
             
-            // Формируем информацию о расе
-            let raceInfo = character.race.name;
-            if (character.subrace) {
-                raceInfo += ` (${character.subrace.name})`;
-            }
-            
-            // Формируем информацию о классе
-            let classInfo = character.class.name;
-            if (character.subclass) {
-                classInfo += ` (${character.subclass.name})`;
-            }
-            
             let html = `
                 <div class="character-section">
                     <div class="section-title">🎭 Основная информация</div>
                     <div class="section-content">
-                        <p><strong>Имя:</strong> ${character.name || 'Не указано'}</p>
-                        <p><strong>Раса:</strong> ${raceInfo}</p>
-                        <p><strong>Класс:</strong> ${classInfo}</p>
+                        <p><strong>Имя:</strong> ${character.name}</p>
+                        <p><strong>Раса:</strong> ${character.race}</p>
+                        <p><strong>Класс:</strong> ${character.class}</p>
                         <p><strong>Уровень:</strong> ${character.level}</p>
-                        <p><strong>Кости хитов:</strong> ${character.class.hit_die}</p>
+                        <p><strong>Пол:</strong> ${character.gender}</p>
+                        <p><strong>Мировоззрение:</strong> ${character.alignment}</p>
+                        <p><strong>Профессия:</strong> ${character.occupation}</p>
                     </div>
                 </div>
                 
@@ -6720,51 +6642,27 @@
                     <div class="section-title">⚔️ Характеристики</div>
                     <div class="section-content">
                         <div class="info-grid">
-                            <div class="info-item"><strong>Сила:</strong> ${character.ability_scores.STR} (${character.ability_modifiers.STR >= 0 ? '+' : ''}${character.ability_modifiers.STR})</div>
-                            <div class="info-item"><strong>Ловкость:</strong> ${character.ability_scores.DEX} (${character.ability_modifiers.DEX >= 0 ? '+' : ''}${character.ability_modifiers.DEX})</div>
-                            <div class="info-item"><strong>Телосложение:</strong> ${character.ability_scores.CON} (${character.ability_modifiers.CON >= 0 ? '+' : ''}${character.ability_modifiers.CON})</div>
-                            <div class="info-item"><strong>Интеллект:</strong> ${character.ability_scores.INT} (${character.ability_modifiers.INT >= 0 ? '+' : ''}${character.ability_modifiers.INT})</div>
-                            <div class="info-item"><strong>Мудрость:</strong> ${character.ability_scores.WIS} (${character.ability_modifiers.WIS >= 0 ? '+' : ''}${character.ability_modifiers.WIS})</div>
-                            <div class="info-item"><strong>Харизма:</strong> ${character.ability_scores.CHA} (${character.ability_modifiers.CHA >= 0 ? '+' : ''}${character.ability_modifiers.CHA})</div>
+                            <div class="info-item"><strong>Сила:</strong> ${character.abilities.str}</div>
+                            <div class="info-item"><strong>Ловкость:</strong> ${character.abilities.dex}</div>
+                            <div class="info-item"><strong>Телосложение:</strong> ${character.abilities.con}</div>
+                            <div class="info-item"><strong>Интеллект:</strong> ${character.abilities.int}</div>
+                            <div class="info-item"><strong>Мудрость:</strong> ${character.abilities.wis}</div>
+                            <div class="info-item"><strong>Харизма:</strong> ${character.abilities.cha}</div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="character-section">
-                    <div class="section-title">🎯 Расовые черты</div>
+                    <div class="section-title">🛡️ Боевые характеристики</div>
                     <div class="section-content">
-                        ${character.traits.map(trait => `
-                            <div class="trait-item">
-                                <strong>${trait.name}:</strong> ${trait.description}
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                
-                <div class="character-section">
-                    <div class="section-title">🗣️ Языки</div>
-                    <div class="section-content">
-                        <p>${character.languages.join(', ')}</p>
-                    </div>
-                </div>
-                
-                <div class="character-section">
-                    <div class="section-title">⚔️ Стартовое снаряжение</div>
-                    <div class="section-content">
-                        ${character.equipment.map(item => `
-                            <div class="equipment-item">• ${item}</div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-            
-            // Добавляем кнопку для генерации предыстории
-            html += `
-                <div class="character-section">
-                    <div class="section-title">📖 Предыстория</div>
-                    <div class="section-content">
-                        <button id="generateBackgroundBtn" class="generate-background-btn">🤖 Сгенерировать предысторию с AI</button>
-                        <div id="backgroundResult" class="background-result" style="display: none;"></div>
+                        <p><strong>Хиты:</strong> ${character.hit_points}</p>
+                        <p><strong>Класс брони:</strong> ${character.armor_class}</p>
+                        <p><strong>Скорость:</strong> ${character.speed} футов</p>
+                        <p><strong>Инициатива:</strong> ${character.initiative}</p>
+                        <p><strong>Бонус мастерства:</strong> +${character.proficiency_bonus}</p>
+                        <p><strong>Бонус атаки:</strong> +${character.attack_bonus}</p>
+                        <p><strong>Урон:</strong> ${character.damage}</p>
+                        <p><strong>Основное оружие:</strong> ${character.main_weapon}</p>
                     </div>
                 </div>
             `;
@@ -6832,16 +6730,6 @@
             contentDiv.innerHTML = html;
             resultDiv.style.display = 'block';
             
-            // Добавляем обработчик для кнопки генерации предыстории
-            setTimeout(() => {
-                const backgroundBtn = document.getElementById('generateBackgroundBtn');
-                if (backgroundBtn) {
-                    backgroundBtn.addEventListener('click', function() {
-                        generateBackground(character);
-                    });
-                }
-            }, 100);
-            
             // Плавно прокручиваем к результату
             resultDiv.scrollIntoView({ behavior: 'smooth' });
         }
@@ -6865,60 +6753,6 @@
             
             resultDiv.style.display = 'block';
             resultDiv.scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        // Функция генерации предыстории с AI
-        function generateBackground(character) {
-            const backgroundBtn = document.getElementById('generateBackgroundBtn');
-            const backgroundResult = document.getElementById('backgroundResult');
-            
-            // Показываем индикатор загрузки
-            const originalText = backgroundBtn.textContent;
-            backgroundBtn.textContent = '🤖 Генерирую предысторию...';
-            backgroundBtn.disabled = true;
-            
-            // Отправляем запрос на генерацию предыстории
-            fetch('api/generate-background.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ character: character })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Восстанавливаем кнопку
-                backgroundBtn.textContent = originalText;
-                backgroundBtn.disabled = false;
-                
-                if (data && !data.error) {
-                    backgroundResult.innerHTML = `
-                        <div class="background-content">
-                            <h4>📖 Предыстория персонажа</h4>
-                            <div class="background-text">${data.background.replace(/\n/g, '<br>')}</div>
-                        </div>
-                    `;
-                    backgroundResult.style.display = 'block';
-                } else {
-                    backgroundResult.innerHTML = `
-                        <div class="background-error">
-                            <p>Ошибка генерации предыстории: ${data.error || 'Неизвестная ошибка'}</p>
-                        </div>
-                    `;
-                    backgroundResult.style.display = 'block';
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка генерации предыстории:', error);
-                backgroundBtn.textContent = originalText;
-                backgroundBtn.disabled = false;
-                backgroundResult.innerHTML = `
-                    <div class="background-error">
-                        <p>Ошибка соединения с сервером</p>
-                    </div>
-                `;
-                backgroundResult.style.display = 'block';
-            });
         }
     </script>
 </body>
