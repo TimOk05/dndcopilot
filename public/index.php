@@ -3117,6 +3117,29 @@ const equipmentStyles = `
             box-shadow: var(--modal-shadow, 0 4px 15px rgba(0, 0, 0, 0.1));
         }
         
+        /* Исправление позиционирования модального окна для генератора персонажей */
+        .modal-bg.active {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        
+        .modal-bg.active .modal {
+            max-height: 90vh !important;
+            height: auto !important;
+            min-height: 400px !important;
+            max-width: 900px !important;
+            width: 90vw !important;
+            overflow-y: auto !important;
+            margin: 0 !important;
+            position: relative !important;
+        }
+        
+        .modal-bg.active .modal #modal-content {
+            max-height: calc(90vh - 100px) !important;
+            overflow-y: auto !important;
+        }
+        
         .character-form-container {
             margin-top: 20px;
         }
