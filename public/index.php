@@ -2935,27 +2935,14 @@ const equipmentStyles = `
             font-size: 0.9em;
         }
         
-        /* Генератор персонажей - как остальные генераторы */
-        .character-generator {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .character-generator .generator-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        
-        .character-generator .generator-header h2 {
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            font-size: 24px;
-        }
-        
-        .character-generator .generator-subtitle {
-            color: var(--text-secondary);
-            opacity: 0.8;
-            margin: 0;
+        /* Новые стили для интерфейса генератора с поддержкой тем */
+        .character-generator-container {
+            background: var(--character-generator-bg, rgba(255, 255, 255, 0.05));
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--character-generator-border, rgba(255, 255, 255, 0.1));
+            box-shadow: var(--character-generator-shadow, 0 4px 15px rgba(0, 0, 0, 0.1));
         }
         
         /* Упрощенный генератор */
@@ -5519,8 +5506,8 @@ function saveAllEnemiesToNotes(enemies) {
         showModal(`
             <div class="character-generator">
                 <div class="generator-header">
-                    <h2>Генератор персонажей D&D 5e</h2>
-                    <p class="generator-subtitle">Создайте уникального персонажа для своей кампании</p>
+                    <h2 style="color: var(--character-generator-text, #e0e0e0); margin-bottom: 10px;">Генератор персонажей D&D 5e</h2>
+                    <p class="generator-subtitle" style="color: var(--character-generator-text, #e0e0e0); opacity: 0.8; margin: 0;">Создайте уникального персонажа о → Выйти</p>
                 </div>
 
                 <!-- Упрощенный генератор -->
@@ -5532,7 +5519,7 @@ function saveAllEnemiesToNotes(enemies) {
                         <h3>Полная случайность</h3>
                         <p>Генератор выберет всё за вас: расу, класс, характеристики, снаряжение и заклинания</p>
                     </div>
-
+                    
                     <div class="generator-actions">
                         <button type="button" class="generate-btn-simple" onclick="generateRandomCharacter()">
                             <span class="svg-icon" data-icon="hero" style="width: 20px; height: 20px; margin-right: 8px;"></span>
@@ -5549,7 +5536,7 @@ function saveAllEnemiesToNotes(enemies) {
                             Детальные настройки
                         </button>
                     </div>
-
+                    
                     <form id="characterForm" class="character-form-new" method="post">
                         <!-- Первая строка: Раса и Класс -->
                         <div class="form-row">
@@ -5668,9 +5655,6 @@ function saveAllEnemiesToNotes(enemies) {
                 <div id="characterResult" class="character-result" style="display: none;"></div>
             </div>
         `);
-        
-        // Скрываем кнопку сохранения по умолчанию
-        document.getElementById('modal-save').style.display = 'none';
 
         // Загружаем данные для выпадающих списков (для детального режима)
         loadCharacterData();
@@ -5708,16 +5692,16 @@ function saveAllEnemiesToNotes(enemies) {
     async function generateRandomCharacter() {
         const resultDiv = document.getElementById('characterResult');
         const progressDiv = document.getElementById('characterProgress');
-
+        
         // Показываем прогресс
         progressDiv.style.display = 'block';
         resultDiv.style.display = 'none';
-
+        
         try {
             // Генерируем полностью случайного персонажа
             const response = await fetch('api/generate-character.php?action=generate');
             const characterData = await response.json();
-
+            
             if (response.ok) {
                 // Теперь генерируем ИИ описание и предысторию
                 const aiResponse = await fetch('api/generate-full-character.php', {
@@ -5730,25 +5714,14 @@ function saveAllEnemiesToNotes(enemies) {
                         use_ai: true
                     })
                 });
-
+                
                 const aiData = await aiResponse.json();
-
+                
                 if (aiResponse.ok) {
-                    // Показываем результат в модальном окне и скрываем кнопку сохранения
                     displayCharacterResult(aiData.character || characterData);
-                    document.getElementById('modal-save').style.display = '';
-                    document.getElementById('modal-save').onclick = function() { 
-                        saveNoteAndUpdate(document.getElementById('characterResult').innerHTML); 
-                        closeModal(); 
-                    };
                 } else {
                     // Если ИИ не сработал, показываем базового персонажа
                     displayCharacterResult(characterData);
-                    document.getElementById('modal-save').style.display = '';
-                    document.getElementById('modal-save').onclick = function() { 
-                        saveNoteAndUpdate(document.getElementById('characterResult').innerHTML); 
-                        closeModal(); 
-                    };
                 }
             } else {
                 throw new Error(characterData.error || 'Ошибка генерации персонажа');
