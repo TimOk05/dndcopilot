@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Character Generator v8.0 - Modal Integration Complete -->
+<!-- Character Generator v7.0 - Enhanced with Spells, Skills & AI -->
 <html lang="ru">
 
 <head>
@@ -6455,6 +6455,31 @@
             </div>
         </div>
 
+        <!-- Тестовый генератор персонажей -->
+        <div class="test-character-generator">
+            <div class="test-generator-header">
+                <h2>🎭 Тестовый генератор персонажей</h2>
+                <p>Новый интерфейс - одна кнопка для создания персонажа!</p>
+            </div>
+
+            <div class="test-generator-card">
+                <div class="test-card-icon">🎲</div>
+                <h3>Полная случайность</h3>
+                <p>Генератор выберет всё за вас: расу, класс, характеристики и снаряжение</p>
+                <button class="test-main-generate-btn" id="testGenerateCharacterBtn">
+                    <span class="test-btn-icon">⚔️</span>
+                    <span class="test-btn-text">Создать персонажа</span>
+                </button>
+            </div>
+
+            <div id="testCharacterResult" class="test-character-result" style="display: none;">
+                <div class="test-result-header">
+                    <h2>🎭 Ваш персонаж готов!</h2>
+                    <button class="test-regenerate-btn" onclick="testGenerateCharacter()">🔄 Создать другого</button>
+                </div>
+                <div id="testCharacterContent" class="test-character-content"></div>
+            </div>
+        </div>
 
         <div class="chat-box">
             {{chat_messages}}
@@ -7096,7 +7121,7 @@
         }
 
         // Функции для модального окна персонажей
-        function openCharacterGeneratorModal() {
+        function openCharacterModal() {
             const modal = document.getElementById('character-modal-bg');
             modal.style.display = 'block';
             
@@ -7108,11 +7133,6 @@
             
             // Добавляем обработчики событий
             setupCharacterModal();
-        }
-        
-        // Старая функция для совместимости
-        function openCharacterModal() {
-            openCharacterGeneratorModal();
         }
         
         function closeCharacterModal() {
@@ -7467,6 +7487,180 @@
             });
         }
         
+        // Функция тестового генератора персонажей
+        function testGenerateCharacter() {
+            const btn = document.getElementById('testGenerateCharacterBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="test-btn-icon">🎲</span><span class="test-btn-text">Генерирую...</span>';
+            btn.disabled = true;
+            
+            fetch('api/generate-character.php?action=generate', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                if (data && !data.error) {
+                    testDisplayCharacter(data);
+                } else {
+                    testShowCharacterError('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                testShowCharacterError('Ошибка соединения с сервером');
+            });
+        }
+        
+        // Функция отображения персонажа в тестовом генераторе
+        function testDisplayCharacter(character) {
+            const resultDiv = document.getElementById('testCharacterResult');
+            const contentDiv = document.getElementById('testCharacterContent');
+            
+            // Формируем информацию о расе
+            let raceInfo = character.race.name;
+            if (character.subrace) {
+                raceInfo += ` (${character.subrace.name})`;
+            }
+            
+            // Формируем информацию о классе
+            let classInfo = character.class.name;
+            if (character.subclass) {
+                classInfo += ` (${character.subclass.name})`;
+            }
+            
+            let html = `
+                <div class="character-section">
+                    <div class="section-title">🎭 Основная информация</div>
+                    <div class="section-content">
+                        <div class="character-info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Имя:</span>
+                                <span class="info-value">${character.name || 'Не указано'}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Раса:</span>
+                                <span class="info-value">${raceInfo}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Класс:</span>
+                                <span class="info-value">${classInfo}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Уровень:</span>
+                                <span class="info-value">${character.level}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Кости хитов:</span>
+                                <span class="info-value">${character.class.hit_die}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="character-section">
+                    <div class="section-title">⚔️ Характеристики</div>
+                    <div class="section-content">
+                        <div class="abilities-grid">
+                            <div class="ability-item">
+                                <div class="ability-name">Сила</div>
+                                <div class="ability-score">${character.ability_scores.STR}</div>
+                                <div class="ability-modifier">${character.ability_modifiers.STR >= 0 ? '+' : ''}${character.ability_modifiers.STR}</div>
+                            </div>
+                            <div class="ability-item">
+                                <div class="ability-name">Ловкость</div>
+                                <div class="ability-score">${character.ability_scores.DEX}</div>
+                                <div class="ability-modifier">${character.ability_modifiers.DEX >= 0 ? '+' : ''}${character.ability_modifiers.DEX}</div>
+                            </div>
+                            <div class="ability-item">
+                                <div class="ability-name">Телосложение</div>
+                                <div class="ability-score">${character.ability_scores.CON}</div>
+                                <div class="ability-modifier">${character.ability_modifiers.CON >= 0 ? '+' : ''}${character.ability_modifiers.CON}</div>
+                            </div>
+                            <div class="ability-item">
+                                <div class="ability-name">Интеллект</div>
+                                <div class="ability-score">${character.ability_scores.INT}</div>
+                                <div class="ability-modifier">${character.ability_modifiers.INT >= 0 ? '+' : ''}${character.ability_modifiers.INT}</div>
+                            </div>
+                            <div class="ability-item">
+                                <div class="ability-name">Мудрость</div>
+                                <div class="ability-score">${character.ability_scores.WIS}</div>
+                                <div class="ability-modifier">${character.ability_modifiers.WIS >= 0 ? '+' : ''}${character.ability_modifiers.WIS}</div>
+                            </div>
+                            <div class="ability-item">
+                                <div class="ability-name">Харизма</div>
+                                <div class="ability-score">${character.ability_scores.CHA}</div>
+                                <div class="ability-modifier">${character.ability_modifiers.CHA >= 0 ? '+' : ''}${character.ability_modifiers.CHA}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="character-section">
+                    <div class="section-title">🎯 Расовые черты</div>
+                    <div class="section-content">
+                        ${character.traits.map(trait => `
+                            <div class="trait-item">
+                                <div class="trait-name">${trait.name}</div>
+                                <div class="trait-description">${trait.description}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="character-section">
+                    <div class="section-title">🗣️ Языки</div>
+                    <div class="section-content">
+                        <div class="languages-list">${character.languages.join(', ')}</div>
+                    </div>
+                </div>
+                
+                <div class="character-section">
+                    <div class="section-title">⚔️ Стартовое снаряжение</div>
+                    <div class="section-content">
+                        <div class="equipment-list">
+                            ${character.equipment.map(item => `
+                                <div class="equipment-item">• ${item}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            contentDiv.innerHTML = html;
+            resultDiv.style.display = 'block';
+            
+            // Плавно прокручиваем к результату
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Функция показа ошибки в тестовом генераторе
+        function testShowCharacterError(message) {
+            const resultDiv = document.getElementById('testCharacterResult');
+            const contentDiv = document.getElementById('testCharacterContent');
+            
+            contentDiv.innerHTML = `
+                <div class="background-error">
+                    <h4>❌ Ошибка генерации</h4>
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Инициализация тестового генератора
+        document.addEventListener('DOMContentLoaded', function() {
+            const testGenerateBtn = document.getElementById('testGenerateCharacterBtn');
+            if (testGenerateBtn) {
+                testGenerateBtn.addEventListener('click', testGenerateCharacter);
+            }
+        });
         
         // Функция генерации описания персонажа с AI
         function generateDescription(character) {
