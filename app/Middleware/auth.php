@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Простая система пользователей в JSON файле
 $users_file = __DIR__ . '/../../data/users.json';
@@ -81,7 +83,7 @@ function isLoggedIn() {
 }
 
 // Обработка POST запросов
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
     
     $action = $_POST['action'] ?? '';
