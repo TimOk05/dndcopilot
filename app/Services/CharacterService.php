@@ -109,12 +109,12 @@ class CharacterService {
     public function getRaceById($raceId) {
         $races = $this->loadRacesData();
         
-        // Ищем по ключу (например, "human" для race_human)
+        // Ищем по ключу (например, "gnome" для race_gnome)
         if (isset($races[$raceId])) {
             return $races[$raceId];
         }
         
-        // Ищем по ID в значениях
+        // Ищем по ID в значениях (например, "race_gnome")
         foreach ($races as $race) {
             if (isset($race['id']) && $race['id'] === $raceId) {
                 return $race;
@@ -148,7 +148,13 @@ class CharacterService {
      */
     public function getClassById($classId) {
         $classes = $this->loadClassesData();
-        return $classes[$classId] ?? null;
+        
+        // Ищем по ключу (например, "fighter")
+        if (isset($classes[$classId])) {
+            return $classes[$classId];
+        }
+        
+        return null;
     }
     
     /**
@@ -272,8 +278,11 @@ class CharacterService {
         $race = $this->getRaceById($raceId);
         $class = $this->getClassById($classId);
         
-        if (!$race || !$class) {
-            throw new Exception('Не найдены данные о расе или классе');
+        if (!$race) {
+            throw new Exception("Раса не найдена: $raceId");
+        }
+        if (!$class) {
+            throw new Exception("Класс не найден: $classId");
         }
         
         // Генерируем имя

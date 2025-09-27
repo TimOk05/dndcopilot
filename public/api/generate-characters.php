@@ -44,11 +44,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
     
     try {
         // Получаем данные из запроса
-        $input = json_decode(file_get_contents('php://input'), true);
-        
-        if (!$input) {
-            $input = $_POST;
-        }
+        $input = $_POST; // Используем FormData из frontend
         
         // Валидация входных данных
         $race = $input['race'] ?? 'human';
@@ -90,12 +86,12 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         ]);
         
         // Логируем успешную генерацию
-        logMessage('INFO', 'Character generated successfully', [
-            'race' => $race,
-            'class' => $class,
-            'level' => $level,
-            'name' => $character['name']
-        ]);
+        // logMessage('INFO', 'Character generated successfully', [
+        //     'race' => $race,
+        //     'class' => $class,
+        //     'level' => $level,
+        //     'name' => $character['name']
+        // ]);
         
         // Возвращаем результат
         echo json_encode([
@@ -111,10 +107,10 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         
     } catch (Exception $e) {
         // Логируем ошибку
-        logMessage('ERROR', 'Character generation failed', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
+        // logMessage('ERROR', 'Character generation failed', [
+        //     'error' => $e->getMessage(),
+        //     'trace' => $e->getTraceAsString()
+        // ]);
         
         // Возвращаем ошибку
         echo json_encode([
@@ -187,10 +183,10 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         }
         
     } catch (Exception $e) {
-        logMessage('ERROR', 'API request failed', [
-            'error' => $e->getMessage(),
-            'action' => $action ?? 'unknown'
-        ]);
+        // logMessage('ERROR', 'API request failed', [
+        //     'error' => $e->getMessage(),
+        //     'action' => $action ?? 'unknown'
+        // ]);
         
         echo json_encode([
             'success' => false,
