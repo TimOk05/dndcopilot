@@ -9,6 +9,14 @@ header('Content-Type: application/json');
 // Подключаем конфигурацию
 require_once __DIR__ . '/../../config/config.php';
 
+// Проверяем, что функции загружены
+if (!function_exists('logMessage')) {
+    function logMessage($level, $message, $context = []) {
+        // Заглушка для логирования
+        error_log("[$level] $message");
+    }
+}
+
 // Подключаем сервисы
 require_once __DIR__ . '/../../app/Services/CharacterService.php';
 require_once __DIR__ . '/../../app/Services/AIService.php';
@@ -72,7 +80,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         }
         
         // Создаем экземпляр сервиса
-        $characterService = new \CharacterService();
+        $characterService = new CharacterService();
         
         // Генерируем персонажа
         $character = $characterService->generateCharacter([
@@ -86,12 +94,12 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         ]);
         
         // Логируем успешную генерацию
-        // logMessage('INFO', 'Character generated successfully', [
-        //     'race' => $race,
-        //     'class' => $class,
-        //     'level' => $level,
-        //     'name' => $character['name']
-        // ]);
+        logMessage('INFO', 'Character generated successfully', [
+            'race' => $race,
+            'class' => $class,
+            'level' => $level,
+            'name' => $character['name']
+        ]);
         
         // Возвращаем результат
         echo json_encode([
@@ -107,10 +115,10 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         
     } catch (Exception $e) {
         // Логируем ошибку
-        // logMessage('ERROR', 'Character generation failed', [
-        //     'error' => $e->getMessage(),
-        //     'trace' => $e->getTraceAsString()
-        // ]);
+        logMessage('ERROR', 'Character generation failed', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
         
         // Возвращаем ошибку
         echo json_encode([
@@ -121,7 +129,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 } else if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
     // Обработка GET запросов для получения данных
     try {
-        $characterService = new \CharacterService();
+        $characterService = new CharacterService();
         
         $action = $_GET['action'] ?? '';
         
@@ -183,10 +191,10 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         }
         
     } catch (Exception $e) {
-        // logMessage('ERROR', 'API request failed', [
-        //     'error' => $e->getMessage(),
-        //     'action' => $action ?? 'unknown'
-        // ]);
+        logMessage('ERROR', 'API request failed', [
+            'error' => $e->getMessage(),
+            'action' => $action ?? 'unknown'
+        ]);
         
         echo json_encode([
             'success' => false,
