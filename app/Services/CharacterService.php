@@ -7,19 +7,16 @@
 class CharacterService {
     private $racesData = null;
     private $classesData = null;
-    private $backgroundsData = null;
     private $namesData = null;
     
     private $racesFile;
     private $classesDir;
-    private $backgroundsFile;
-    private $namesDir;
+    private $namesFile;
     
     public function __construct() {
         $this->racesFile = __DIR__ . '/../../data/персонажи/расы/races.json';
         $this->classesDir = __DIR__ . '/../../data/персонажи/классы/';
-        $this->backgroundsFile = __DIR__ . '/../../data/персонажи/предыстории/предыстории.json';
-        $this->namesDir = __DIR__ . '/../../data/персонажи/имена/';
+        $this->namesFile = __DIR__ . '/../../data/персонажи/имена/имена.json';
     }
     
     /**
@@ -70,27 +67,6 @@ class CharacterService {
         return $this->classesData;
     }
     
-    /**
-     * Загружает данные о предысториях
-     */
-    private function loadBackgroundsData() {
-        if ($this->backgroundsData !== null) {
-            return $this->backgroundsData;
-        }
-        
-        if (!file_exists($this->backgroundsFile)) {
-            throw new Exception('Файл с предысториями не найден');
-        }
-        
-        $jsonContent = file_get_contents($this->backgroundsFile);
-        $this->backgroundsData = json_decode($jsonContent, true);
-        
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new Exception('Ошибка при чтении файла предысторий: ' . json_last_error_msg());
-        }
-        
-        return $this->backgroundsData;
-    }
     
     /**
      * Загружает данные об именах
@@ -100,17 +76,16 @@ class CharacterService {
             return $this->namesData;
         }
         
-        $this->namesData = [];
-        $nameFiles = glob($this->namesDir . '*.json');
+        if (!file_exists($this->namesFile)) {
+            $this->namesData = [];
+            return $this->namesData;
+        }
         
-        foreach ($nameFiles as $file) {
-            $jsonContent = file_get_contents($file);
-            $nameData = json_decode($jsonContent, true);
-            
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $filename = basename($file, '.json');
-                $this->namesData[$filename] = $nameData;
-            }
+        $jsonContent = file_get_contents($this->namesFile);
+        $this->namesData = json_decode($jsonContent, true);
+        
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->namesData = [];
         }
         
         return $this->namesData;
@@ -184,26 +159,6 @@ class CharacterService {
         return [];
     }
     
-    /**
-     * Получает все предыстории
-     */
-    public function getBackgrounds() {
-        $data = $this->loadBackgroundsData();
-        return $data['backgrounds'] ?? [];
-    }
-    
-    /**
-     * Получает предысторию по ID
-     */
-    public function getBackgroundById($backgroundId) {
-        $backgrounds = $this->getBackgrounds();
-        foreach ($backgrounds as $background) {
-            if ($background['id'] === $backgroundId) {
-                return $background;
-            }
-        }
-        return null;
-    }
     
     /**
      * Генерирует случайное имя для расы
@@ -211,30 +166,15 @@ class CharacterService {
     public function generateRandomName($raceId, $gender = 'random') {
         $namesData = $this->loadNamesData();
         
-        // Ищем файл с именами для данной расы
-        $raceNameFile = strtolower($raceId) . '_names.json';
-        
-        // Если нет специального файла для расы, используем общий
-        if (!isset($namesData[$raceNameFile])) {
-            $raceNameFile = 'common_names.json';
-        }
-        
-        // Если и общего файла нет, используем человеческие имена
-        if (!isset($namesData[$raceNameFile])) {
-            $raceNameFile = 'human_names.json';
-        }
-        
-        if (!isset($namesData[$raceNameFile])) {
+        if (empty($namesData)) {
             return 'Неизвестное имя';
         }
-        
-        $nameData = $namesData[$raceNameFile];
         
         if ($gender === 'random') {
             $gender = (rand(0, 1) === 0) ? 'male' : 'female';
         }
         
-        $names = $nameData[$gender] ?? $nameData['male'] ?? [];
+        $names = $namesData[$gender] ?? $namesData['male'] ?? [];
         
         if (empty($names)) {
             return 'Неизвестное имя';
@@ -368,7 +308,7 @@ class CharacterService {
         $proficiencyBonus = 2; // Для 1-4 уровня
         
         // Генерируем снаряжение
-        $equipment = $this->generateEquipment($class, null);
+        $equipment = $this->generateEquipment($class);
         
         // Генерируем заклинания (если есть)
         $spells = $this->generateSpells($class, $level);
@@ -391,8 +331,8 @@ class CharacterService {
             'proficiency_bonus' => $proficiencyBonus,
             'equipment' => $equipment,
             'spells' => $spells,
-            'description' => $this->generateDescription($race, $class, null),
-            'background_story' => $this->generateBackgroundStory($race, $class, null)
+            'description' => $this->generateDescription($race, $class),
+            'background_story' => $this->generateBackgroundStory($race, $class)
         ];
         
         return $character;
@@ -401,7 +341,7 @@ class CharacterService {
     /**
      * Генерирует снаряжение персонажа
      */
-    private function generateEquipment($class, $background) {
+    private function generateEquipment($class) {
         $equipment = [
             'weapons' => [],
             'armor' => [],
@@ -423,12 +363,10 @@ class CharacterService {
             }
         }
         
-        // Добавляем снаряжение предыстории
-        if ($background && isset($background['starting_equipment'])) {
-            foreach ($background['starting_equipment'] as $item) {
-                $equipment['items'][] = $item;
-            }
-        }
+        // Добавляем базовое снаряжение
+        $equipment['items'][] = 'Рюкзак';
+        $equipment['items'][] = 'Факел';
+        $equipment['items'][] = 'Веревка (50 футов)';
         
         return $equipment;
     }
@@ -459,7 +397,7 @@ class CharacterService {
     /**
      * Генерирует описание персонажа с помощью AI
      */
-    private function generateDescription($race, $class, $background) {
+    private function generateDescription($race, $class) {
         try {
             $aiService = new \AIService();
             $character = [
@@ -469,15 +407,15 @@ class CharacterService {
                 'level' => 1,
                 'gender' => 'неизвестен',
                 'alignment' => 'нейтральный',
-                'background' => $background ? ($background['name_ru'] ?? $background['name']) : 'Случайная',
+                'background' => 'Случайная',
                 'abilities' => ['str' => 10, 'dex' => 10, 'con' => 10, 'int' => 10, 'wis' => 10, 'cha' => 10]
             ];
             
             return $aiService->generateCharacterDescription($character);
         } catch (Exception $e) {
-            logMessage('WARNING', 'AI description generation failed', [
-                'error' => $e->getMessage()
-            ]);
+            // logMessage('WARNING', 'AI description generation failed', [
+            //     'error' => $e->getMessage()
+            // ]);
             
             // Fallback к статическим описаниям
             $descriptions = [
@@ -494,7 +432,7 @@ class CharacterService {
     /**
      * Генерирует предысторию персонажа с помощью AI
      */
-    private function generateBackgroundStory($race, $class, $background) {
+    private function generateBackgroundStory($race, $class) {
         try {
             $aiService = new \AIService();
             $character = [
@@ -504,15 +442,15 @@ class CharacterService {
                 'level' => 1,
                 'gender' => 'неизвестен',
                 'alignment' => 'нейтральный',
-                'background' => $background ? ($background['name_ru'] ?? $background['name']) : 'Случайная',
+                'background' => 'Случайная',
                 'abilities' => ['str' => 10, 'dex' => 10, 'con' => 10, 'int' => 10, 'wis' => 10, 'cha' => 10]
             ];
             
             return $aiService->generateCharacterBackground($character);
         } catch (Exception $e) {
-            logMessage('WARNING', 'AI background generation failed', [
-                'error' => $e->getMessage()
-            ]);
+            // logMessage('WARNING', 'AI background generation failed', [
+            //     'error' => $e->getMessage()
+            // ]);
             
             // Fallback к статическим историям
             $stories = [
