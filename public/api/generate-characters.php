@@ -14,7 +14,7 @@ require_once __DIR__ . '/../../app/Services/CharacterService.php';
 require_once __DIR__ . '/../../app/Services/AIService.php';
 
 // Обработка POST запросов
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // Проверяем, это запрос на сохранение заметки?
     if (isset($_POST['fast_action']) && $_POST['fast_action'] === 'save_note') {
         // Обрабатываем сохранение заметки
@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'message' => 'Ошибка при генерации персонажа: ' . $e->getMessage()
         ], JSON_UNESCAPED_UNICODE);
     }
-} else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+} else if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET') {
     // Обработка GET запросов для получения данных
     try {
         $characterService = new \CharacterService();

@@ -6972,7 +6972,7 @@
                     if (data.success) {
                         const raceSelect = document.getElementById('new-character-race');
                         raceSelect.innerHTML = '<option value="">Выберите расу</option>';
-                        Object.values(data.races).forEach(race => {
+                        data.races.forEach(race => {
                             raceSelect.innerHTML += `<option value="${race.id}">${race.name}</option>`;
                         });
 

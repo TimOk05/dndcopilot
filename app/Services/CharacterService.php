@@ -95,16 +95,15 @@ class CharacterService {
      * Получает все расы
      */
     public function getRaces() {
-        $data = $this->loadRacesData();
-        return $data['races'] ?? [];
+        $races = $this->loadRacesData();
+        return array_values($races);
     }
     
     /**
      * Получает расу по ID
      */
     public function getRaceById($raceId) {
-        $data = $this->loadRacesData();
-        $races = $data['races'] ?? [];
+        $races = $this->loadRacesData();
         
         // Ищем по ключу (например, "human" для race_human)
         if (isset($races[$raceId])) {
