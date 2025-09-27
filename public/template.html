@@ -7026,7 +7026,9 @@
                     if (data.success && data.subraces && data.subraces.length > 0) {
                         subraceSelect.innerHTML = '<option value="">Выберите подрасу</option>';
                         data.subraces.forEach(subrace => {
-                            subraceSelect.innerHTML += `<option value="${subrace.id}">${subrace.name}</option>`;
+                            if (subrace && subrace.id && subrace.name) {
+                                subraceSelect.innerHTML += `<option value="${subrace.id}">${subrace.name}</option>`;
+                            }
                         });
                     }
                 })
@@ -7045,7 +7047,9 @@
                     if (data.success && data.archetypes && data.archetypes.length > 0) {
                         archetypeSelect.innerHTML = '<option value="">Выберите архетип</option>';
                         data.archetypes.forEach(archetype => {
-                            archetypeSelect.innerHTML += `<option value="${archetype.id}">${archetype.name}</option>`;
+                            if (archetype && archetype.name) {
+                                archetypeSelect.innerHTML += `<option value="${archetype.name}">${archetype.name}</option>`;
+                            }
                         });
                     }
                 })

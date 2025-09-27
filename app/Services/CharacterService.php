@@ -156,8 +156,8 @@ class CharacterService {
      */
     public function getArchetypes($classId) {
         $class = $this->getClassById($classId);
-        if ($class && isset($class['archetypes'])) {
-            return $class['archetypes'];
+        if ($class && isset($class['subclasses'])) {
+            return $class['subclasses'];
         }
         return [];
     }
@@ -285,8 +285,19 @@ class CharacterService {
         // Применяем бонусы расы
         if (isset($race['ability_bonuses'])) {
             foreach ($race['ability_bonuses'] as $bonus) {
-                if (isset($abilities[$bonus['ability']])) {
-                    $abilities[$bonus['ability']] += $bonus['bonus'];
+                $abilityKey = strtolower($bonus['ability']);
+                // Преобразуем английские названия в русские ключи
+                $abilityMap = [
+                    'str' => 'str',
+                    'dex' => 'dex', 
+                    'con' => 'con',
+                    'int' => 'int',
+                    'wis' => 'wis',
+                    'cha' => 'cha'
+                ];
+                
+                if (isset($abilityMap[$abilityKey]) && isset($abilities[$abilityMap[$abilityKey]])) {
+                    $abilities[$abilityMap[$abilityKey]] += $bonus['bonus'];
                 }
             }
         }
@@ -298,7 +309,10 @@ class CharacterService {
         }
         
         // Генерируем хиты
-        $hitDie = $class['hit_die'] ?? 8;
+        $hitDie = 8; // По умолчанию
+        if (isset($class['hit_die'])) {
+            $hitDie = (int)str_replace('d', '', $class['hit_die']);
+        }
         $hitPoints = $hitDie + $modifiers['con'];
         
         // Генерируем КД
@@ -319,8 +333,8 @@ class CharacterService {
         // Создаем персонажа
         $character = [
             'name' => $name,
-            'race' => $race['name_ru'] ?? $race['name'],
-            'class' => $class['name_ru'] ?? $class['name'],
+            'race' => $race['name'] ?? 'Неизвестная раса',
+            'class' => $class['name']['ru'] ?? $class['name']['en'] ?? 'Неизвестный класс',
             'level' => $level,
             'gender' => $gender,
             'alignment' => $this->getRandomAlignment($alignment),
@@ -329,7 +343,7 @@ class CharacterService {
             'modifiers' => $modifiers,
             'hit_points' => $hitPoints,
             'armor_class' => $armorClass,
-            'speed' => $race['speed'] ?? 30,
+            'speed' => $race['speed']['walk'] ?? 30,
             'initiative' => $initiative,
             'proficiency_bonus' => $proficiencyBonus,
             'equipment' => $equipment,
@@ -350,26 +364,49 @@ class CharacterService {
             'armor' => [],
             'tools' => [],
             'items' => [],
-            'money' => '10 зм'
+            'money' => '2к4 × 10 зм'
         ];
         
-        // Добавляем стартовое снаряжение класса
-        if (isset($class['starting_equipment'])) {
-            foreach ($class['starting_equipment'] as $item) {
-                if (strpos($item, 'оружие') !== false || strpos($item, 'меч') !== false) {
-                    $equipment['weapons'][] = $item;
-                } elseif (strpos($item, 'доспех') !== false || strpos($item, 'броня') !== false) {
-                    $equipment['armor'][] = $item;
-                } else {
-                    $equipment['items'][] = $item;
+        // Добавляем снаряжение на основе владений класса
+        if (isset($class['weapon_proficiencies'])) {
+            foreach ($class['weapon_proficiencies'] as $prof) {
+                if (strpos($prof, 'Простое оружие') !== false) {
+                    $equipment['weapons'][] = 'Кинжал';
+                    break;
+                }
+                if (strpos($prof, 'Воинское оружие') !== false) {
+                    $equipment['weapons'][] = 'Длинный меч';
+                    break;
+                }
+            }
+        }
+        
+        if (isset($class['armor_proficiencies'])) {
+            foreach ($class['armor_proficiencies'] as $prof) {
+                if (strpos($prof, 'Лёгкие доспехи') !== false) {
+                    $equipment['armor'][] = 'Кожаный доспех';
+                    break;
+                }
+                if (strpos($prof, 'Средние доспехи') !== false) {
+                    $equipment['armor'][] = 'Кольчуга';
+                    break;
+                }
+                if (strpos($prof, 'Тяжёлые доспехи') !== false) {
+                    $equipment['armor'][] = 'Кольчуга';
+                    break;
                 }
             }
         }
         
         // Добавляем базовое снаряжение
         $equipment['items'][] = 'Рюкзак';
-        $equipment['items'][] = 'Факел';
+        $equipment['items'][] = 'Спальный мешок';
+        $equipment['items'][] = 'Столовые принадлежности';
+        $equipment['items'][] = 'Кремень и огниво';
+        $equipment['items'][] = 'Факел (10 штук)';
         $equipment['items'][] = 'Веревка (50 футов)';
+        $equipment['items'][] = 'Дневной рацион (10 дней)';
+        $equipment['items'][] = 'Бурдюк';
         
         return $equipment;
     }
@@ -380,18 +417,47 @@ class CharacterService {
     private function generateSpells($class, $level) {
         $spells = [];
         
-        // Простая логика для заклинаний
-        if (isset($class['spellcasting']) && $class['spellcasting']) {
-            $spellCount = min($level, 3); // Максимум 3 заклинания для простоты
-            
-            $commonSpells = [
-                'Магическая стрела', 'Обнаружение магии', 'Лечение ран',
-                'Щит', 'Огненный шар', 'Молния', 'Исцеление'
-            ];
-            
-            for ($i = 0; $i < $spellCount; $i++) {
-                $spells[] = $commonSpells[array_rand($commonSpells)];
-            }
+        // Заклинания на основе класса
+        $classId = $class['id'] ?? '';
+        switch ($classId) {
+            case 'wizard':
+                $spells = [
+                    'cantrips' => ['Волшебная рука', 'Свет', 'Чудотворство'],
+                    'level_1' => ['Магическая стрела', 'Щит', 'Обнаружение магии'],
+                    'spellbook' => 'Книга заклинаний с 6 заклинаниями 1-го уровня'
+                ];
+                break;
+            case 'sorcerer':
+                $spells = [
+                    'cantrips' => ['Огненная стрела', 'Свет', 'Волшебная рука'],
+                    'level_1' => ['Магическая стрела', 'Щит']
+                ];
+                break;
+            case 'bard':
+                $spells = [
+                    'cantrips' => ['Чудотворство', 'Злая насмешка'],
+                    'level_1' => ['Лечение ран', 'Очарование личности']
+                ];
+                break;
+            case 'cleric':
+                $spells = [
+                    'cantrips' => ['Свет', 'Чудотворство', 'Направленный удар'],
+                    'level_1' => ['Лечение ран', 'Священное пламя', 'Благословение']
+                ];
+                break;
+            case 'druid':
+                $spells = [
+                    'cantrips' => ['Друидотворство', 'Направленный удар'],
+                    'level_1' => ['Лечение ран', 'Добро животных', 'Волшебные ягоды']
+                ];
+                break;
+            case 'warlock':
+                $spells = [
+                    'cantrips' => ['Мистический взрыв', 'Свет'],
+                    'level_1' => ['Огненные руки', 'Очарование личности'],
+                    'pact' => 'Покровитель предоставляет особые способности'
+                ];
+                break;
         }
         
         return $spells;
@@ -405,8 +471,8 @@ class CharacterService {
             $aiService = new \AIService();
             $character = [
                 'name' => 'Персонаж',
-                'race' => $race['name_ru'] ?? $race['name'],
-                'class' => $class['name_ru'] ?? $class['name'],
+                'race' => $race['name'] ?? 'Неизвестная раса',
+                'class' => $class['name']['ru'] ?? $class['name']['en'] ?? 'Неизвестный класс',
                 'level' => 1,
                 'gender' => 'неизвестен',
                 'alignment' => 'нейтральный',
@@ -440,8 +506,8 @@ class CharacterService {
             $aiService = new \AIService();
             $character = [
                 'name' => 'Персонаж',
-                'race' => $race['name_ru'] ?? $race['name'],
-                'class' => $class['name_ru'] ?? $class['name'],
+                'race' => $race['name'] ?? 'Неизвестная раса',
+                'class' => $class['name']['ru'] ?? $class['name']['en'] ?? 'Неизвестный класс',
                 'level' => 1,
                 'gender' => 'неизвестен',
                 'alignment' => 'нейтральный',
