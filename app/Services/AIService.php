@@ -203,18 +203,18 @@ class AIService {
     }
     
     /**
-     * Возвращает fallback ответ, если AI недоступен
+     * Возвращает fallback ответ, используя данные из JSON файлов
      */
     private function getFallbackResponse($prompt) {
         // Извлекаем данные персонажа из промпта
         $characterData = $this->extractCharacterDataFromPrompt($prompt);
         
         if (strpos($prompt, 'описание персонажа') !== false) {
-            return $this->generateDescriptionFromData($characterData);
+            return $this->generateDescriptionFromJSON($characterData);
         }
         
         if (strpos($prompt, 'предыстория') !== false) {
-            return $this->generateBackgroundFromData($characterData);
+            return $this->generateBackgroundFromJSON($characterData);
         }
         
         return "Персонаж готов к приключениям и имеет все необходимые навыки для успешного путешествия.";
@@ -267,226 +267,239 @@ class AIService {
     }
     
     /**
-     * Генерирует описание персонажа на основе данных
+     * Генерирует описание персонажа на основе данных из JSON файлов
      */
-    private function generateDescriptionFromData($data) {
+    private function generateDescriptionFromJSON($data) {
         $description = [];
         
-        // Внешность на основе расы и характеристик
-        if (isset($data['race']) && isset($data['abilities'])) {
-            $description[] = $this->generateAppearance($data['race'], $data['abilities']);
+        // Загружаем данные расы из JSON
+        if (isset($data['race'])) {
+            $raceData = $this->loadRaceData($data['race']);
+            if ($raceData) {
+                $description[] = $this->generateAppearanceFromJSON($raceData, $data['abilities'] ?? []);
+                $description[] = $this->generateRaceTraitsFromJSON($raceData);
+            }
         }
         
-        // Характер на основе класса и мировоззрения
-        if (isset($data['class']) && isset($data['alignment'])) {
-            $description[] = $this->generatePersonality($data['class'], $data['alignment']);
-        }
-        
-        // Особые способности на основе расы и класса
-        if (isset($data['race']) && isset($data['class'])) {
-            $description[] = $this->generateAbilities($data['race'], $data['class']);
+        // Загружаем данные класса из JSON
+        if (isset($data['class'])) {
+            $classData = $this->loadClassData($data['class']);
+            if ($classData) {
+                $description[] = $this->generateClassFeaturesFromJSON($classData, $data['level'] ?? 1);
+            }
         }
         
         return implode("\n\n", array_filter($description));
     }
     
     /**
-     * Генерирует предысторию персонажа
+     * Генерирует предысторию персонажа на основе данных из JSON файлов
      */
-    private function generateBackgroundFromData($data) {
+    private function generateBackgroundFromJSON($data) {
         $background = [];
         
-        if (isset($data['race']) && isset($data['class'])) {
-            $background[] = $this->getRaceBackground($data['race']);
-            $background[] = $this->getClassBackground($data['class'], $data['level'] ?? 1);
+        // Загружаем данные расы из JSON
+        if (isset($data['race'])) {
+            $raceData = $this->loadRaceData($data['race']);
+            if ($raceData) {
+                $background[] = $this->generateRaceBackgroundFromJSON($raceData);
+            }
         }
         
-        if (isset($data['alignment'])) {
-            $background[] = $this->getAlignmentMotivation($data['alignment']);
+        // Загружаем данные класса из JSON
+        if (isset($data['class'])) {
+            $classData = $this->loadClassData($data['class']);
+            if ($classData) {
+                $background[] = $this->generateClassBackgroundFromJSON($classData, $data['level'] ?? 1);
+            }
         }
         
         return implode("\n\n", array_filter($background));
     }
     
     /**
-     * Генерирует описание внешности
+     * Загружает данные расы из JSON файла
      */
-    private function generateAppearance($race, $abilities) {
-        $raceAppearance = [
-            'человек' => 'Среднего роста с типичными человеческими чертами лица.',
-            'эльф' => 'Высокий и грациозный, с заостренными ушами и выразительными глазами.',
-            'дварф' => 'Крепкого телосложения, с густой бородой и решительным взглядом.',
-            'халфлинг' => 'Невысокого роста, с веселыми глазами и дружелюбной улыбкой.',
-            'гном' => 'Маленького роста, с любопытными глазами и живой мимикой.',
-            'полуорк' => 'Крупного телосложения, с выдающимися клыками и сильными чертами лица.',
-            'тифлинг' => 'С рогами, хвостом и необычным цветом кожи, что выдает его инфернальное происхождение.',
-            'драконорожденный' => 'С чешуйчатой кожей и драконьими чертами, отражающими его предков.',
-            'аасимар' => 'С небесным сиянием в глазах и благородными чертами лица.'
-        ];
+    private function loadRaceData($raceId) {
+        $racesFile = __DIR__ . '/../../data/персонажи/расы/races.json';
+        if (!file_exists($racesFile)) {
+            return null;
+        }
         
-        $baseAppearance = $raceAppearance[strtolower($race)] ?? 'С типичными чертами своей расы.';
+        $racesData = json_decode(file_get_contents($racesFile), true);
+        if (!$racesData || !isset($racesData['races'])) {
+            return null;
+        }
+        
+        // Ищем расу по ID или имени
+        foreach ($racesData['races'] as $race) {
+            if ($race['id'] === $raceId || 
+                strtolower($race['name']) === strtolower($raceId) ||
+                strtolower($race['name_en']) === strtolower($raceId)) {
+                return $race;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Загружает данные класса из JSON файла
+     */
+    private function loadClassData($classId) {
+        $classDir = __DIR__ . '/../../data/персонажи/классы/' . strtolower($classId);
+        $classFile = $classDir . '/' . strtolower($classId) . '.json';
+        
+        if (!file_exists($classFile)) {
+            return null;
+        }
+        
+        $classData = json_decode(file_get_contents($classFile), true);
+        return $classData['class'] ?? null;
+    }
+    
+    /**
+     * Генерирует описание внешности на основе данных из JSON
+     */
+    private function generateAppearanceFromJSON($raceData, $abilities) {
+        $appearance = "Внешность: ";
+        
+        // Используем данные из JSON о размере и характеристиках расы
+        if (isset($raceData['size'])) {
+            $appearance .= $this->getSizeDescription($raceData['size']);
+        }
+        
+        if (isset($raceData['height_ft'])) {
+            $appearance .= " Рост около {$raceData['height_ft']} футов.";
+        }
+        
+        if (isset($raceData['weight_lb'])) {
+            $appearance .= " Вес в пределах {$raceData['weight_lb']}.";
+        }
         
         // Добавляем детали на основе характеристик
-        $details = [];
-        if ($abilities['str'] >= 16) $details[] = 'мощного телосложения';
-        if ($abilities['dex'] >= 16) $details[] = 'ловкий и подвижный';
-        if ($abilities['con'] >= 16) $details[] = 'здоровый и выносливый';
-        if ($abilities['int'] >= 16) $details[] = 'с умным взглядом';
-        if ($abilities['wis'] >= 16) $details[] = 'с проницательными глазами';
-        if ($abilities['cha'] >= 16) $details[] = 'с харизматичной внешностью';
-        
-        if (!empty($details)) {
-            $baseAppearance .= ' ' . ucfirst(implode(', ', $details)) . '.';
+        if (!empty($abilities)) {
+            $details = [];
+            if ($abilities['str'] >= 16) $details[] = 'мощного телосложения';
+            if ($abilities['dex'] >= 16) $details[] = 'ловкий и подвижный';
+            if ($abilities['con'] >= 16) $details[] = 'здоровый и выносливый';
+            if ($abilities['int'] >= 16) $details[] = 'с умным взглядом';
+            if ($abilities['wis'] >= 16) $details[] = 'с проницательными глазами';
+            if ($abilities['cha'] >= 16) $details[] = 'с харизматичной внешностью';
+            
+            if (!empty($details)) {
+                $appearance .= ' ' . ucfirst(implode(', ', $details)) . '.';
+            }
         }
         
-        return "Внешность: " . $baseAppearance;
+        return $appearance;
     }
     
     /**
-     * Генерирует описание личности
+     * Получает описание размера
      */
-    private function generatePersonality($class, $alignment) {
-        $classTraits = [
-            'воин' => 'дисциплинированный и храбрый',
-            'варвар' => 'яростный и свободолюбивый',
-            'паладин' => 'благородный и праведный',
-            'рейнджер' => 'осторожный и наблюдательный',
-            'следопыт' => 'мудрый и терпеливый',
-            'маг' => 'любознательный и методичный',
-            'волшебник' => 'аналитичный и упорный',
-            'колдун' => 'амбициозный и хитрый',
-            'чародей' => 'эмоциональный и импульсивный',
-            'жрец' => 'набожный и сострадательный',
-            'друид' => 'связанный с природой и мудрый',
-            'бард' => 'артистичный и общительный',
-            'плут' => 'хитрый и находчивый'
+    private function getSizeDescription($size) {
+        $sizeDescriptions = [
+            'Small' => 'Небольшого размера',
+            'Medium' => 'Среднего размера',
+            'Large' => 'Крупного размера'
         ];
         
-        $alignmentTraits = [
-            'законно-добрый' => 'следует правилам и помогает другим',
-            'нейтрально-добрый' => 'делает добро без привязанности к законам',
-            'хаотично-добрый' => 'свободолюбивый и помогающий другим',
-            'законно-нейтральный' => 'следует порядку и традициям',
-            'нейтральный' => 'балансирует между разными подходами',
-            'хаотично-нейтральный' => 'ценит личную свободу выше всего',
-            'законно-злой' => 'использует систему для личной выгоды',
-            'нейтрально-злой' => 'преследует собственные интересы',
-            'хаотично-злой' => 'действует импульсивно и эгоистично'
-        ];
-        
-        $classTrait = $classTraits[strtolower($class)] ?? 'уникальный';
-        $alignmentTrait = $alignmentTraits[strtolower($alignment)] ?? 'сбалансированный';
-        
-        return "Характер: " . ucfirst($classTrait) . ", " . $alignmentTrait . ".";
+        return $sizeDescriptions[$size] ?? 'Среднего размера';
     }
     
     /**
-     * Генерирует описание способностей
+     * Генерирует расовые черты на основе данных из JSON
      */
-    private function generateAbilities($race, $class) {
-        $abilities = [];
-        
-        // Расовые способности
-        $raceAbilities = [
-            'человек' => 'универсальность и адаптивность',
-            'эльф' => 'острое зрение и грация',
-            'дварф' => 'выносливость и устойчивость к ядам',
-            'халфлинг' => 'удача и смелость',
-            'гном' => 'остроумие и магические способности',
-            'полуорк' => 'ярость и выносливость',
-            'тифлинг' => 'магические способности и сопротивление огню',
-            'драконорожденный' => 'дыхание дракона и сопротивление',
-            'аасимар' => 'небесные способности и исцеление'
-        ];
-        
-        // Классовые способности
-        $classAbilities = [
-            'воин' => 'мастерство в бою и второе дыхание',
-            'варвар' => 'ярость и неистовство',
-            'паладин' => 'божественные заклинания и аура',
-            'рейнджер' => 'связь с природой и следопытство',
-            'следопыт' => 'заклинания природы и животные-спутники',
-            'маг' => 'широкий спектр заклинаний',
-            'волшебник' => 'знания о магии и ритуалы',
-            'колдун' => 'пактовая магия и мистические арканумы',
-            'чародей' => 'врожденная магия и метамагия',
-            'жрец' => 'божественные заклинания и каналы',
-            'друид' => 'дикая форма и заклинания природы',
-            'бард' => 'магическая музыка и вдохновение',
-            'плут' => 'ловкость рук и скрытность'
-        ];
-        
-        $raceAbility = $raceAbilities[strtolower($race)] ?? 'уникальные расовые черты';
-        $classAbility = $classAbilities[strtolower($class)] ?? 'классовые навыки';
-        
-        return "Способности: Обладает " . $raceAbility . ", а также " . $classAbility . ".";
-    }
-    
-    /**
-     * Получает предысторию расы
-     */
-    private function getRaceBackground($race) {
-        $raceBackgrounds = [
-            'человек' => 'Вырос в человеческом обществе, где научились ценить разнообразие и адаптивность.',
-            'эльф' => 'Провел долгие годы в эльфийских лесах, изучая древние традиции и магию.',
-            'дварф' => 'Вырос в горных крепостях, где почитаются мастерство, честь и семейные узы.',
-            'халфлинг' => 'Провел детство в уютных деревнях, где ценится покой, дружба и хорошая еда.',
-            'гном' => 'Изучал древние секреты и изобретения в гномьих мастерских.',
-            'полуорк' => 'Жил между двумя мирами, научившись выживать в суровых условиях.',
-            'тифлинг' => 'Столкнулся с предрассудками из-за своего происхождения, что закалило характер.',
-            'драконорожденный' => 'Воспитывался в традициях драконьей чести и силы.',
-            'аасимар' => 'Получил божественное благословение и особую миссию.'
-        ];
-        
-        return $raceBackgrounds[strtolower($race)] ?? 'Происходит из своей родной культуры.';
-    }
-    
-    /**
-     * Получает предысторию класса
-     */
-    private function getClassBackground($class, $level) {
-        $classBackgrounds = [
-            'воин' => 'Прошел военную подготовку и участвовал в сражениях.',
-            'варвар' => 'Жил в диких землях, где выживание зависело от силы и ярости.',
-            'паладин' => 'Принял священную клятву и посвятил себя служению высшей цели.',
-            'рейнджер' => 'Патрулировал границы цивилизации, защищая от угроз.',
-            'следопыт' => 'Изучал древние знания и общался с силами природы.',
-            'маг' => 'Обучался в академии магии, изучая тайны заклинаний.',
-            'волшебник' => 'Провел годы в библиотеках, постигая магические теории.',
-            'колдун' => 'Заключил договор с могущественным существом.',
-            'чародей' => 'Обнаружил в себе врожденные магические способности.',
-            'жрец' => 'Служил в храме, получая благословения божества.',
-            'друид' => 'Прошел инициацию в круге друидов.',
-            'бард' => 'Путешествовал по миру, собирая истории и песни.',
-            'плут' => 'Жил на улицах, изучая искусство обмана и воровства.'
-        ];
-        
-        $baseBackground = $classBackgrounds[strtolower($class)] ?? 'Приобрел свои навыки через обучение и опыт.';
-        
-        if ($level > 1) {
-            $baseBackground .= " За это время накопил значительный опыт приключений.";
+    private function generateRaceTraitsFromJSON($raceData) {
+        if (!isset($raceData['traits']) || empty($raceData['traits'])) {
+            return '';
         }
         
-        return $baseBackground;
+        $traits = "Расовые черты:\n";
+        foreach ($raceData['traits'] as $trait) {
+            $traits .= "• {$trait['name']}: {$trait['description']}\n";
+        }
+        
+        return trim($traits);
     }
     
     /**
-     * Получает мотивацию по мировоззрению
+     * Генерирует классовые способности на основе данных из JSON
      */
-    private function getAlignmentMotivation($alignment) {
-        $motivations = [
-            'законно-добрый' => 'Стремится создать справедливое общество через закон и порядок.',
-            'нейтрально-добрый' => 'Помогает другим, не привязываясь к строгим правилам.',
-            'хаотично-добрый' => 'Борется за свободу и справедливость для всех.',
-            'законно-нейтральный' => 'Следует традициям и поддерживает стабильность.',
-            'нейтральный' => 'Ищет баланс и избегает крайностей.',
-            'хаотично-нейтральный' => 'Ценит личную свободу и независимость.',
-            'законно-злой' => 'Использует систему для достижения своих целей.',
-            'нейтрально-злой' => 'Преследует собственные интересы любой ценой.',
-            'хаотично-злой' => 'Действует импульсивно, не считаясь с последствиями.'
-        ];
+    private function generateClassFeaturesFromJSON($classData, $level) {
+        if (!isset($classData['class_features']) || empty($classData['class_features'])) {
+            return '';
+        }
         
-        return $motivations[strtolower($alignment)] ?? 'Имеет собственные принципы и цели.';
+        $features = "Классовые способности:\n";
+        foreach ($classData['class_features'] as $feature) {
+            if ($feature['level'] <= $level) {
+                $features .= "• {$feature['name']} (ур. {$feature['level']}): {$feature['description']}\n";
+            }
+        }
+        
+        return trim($features);
     }
+    
+    /**
+     * Генерирует предысторию расы на основе данных из JSON
+     */
+    private function generateRaceBackgroundFromJSON($raceData) {
+        $background = '';
+        
+        if (isset($raceData['name'])) {
+            $background .= "Раса: {$raceData['name']}\n";
+        }
+        
+        if (isset($raceData['alignment'])) {
+            $background .= "Типичное мировоззрение: {$raceData['alignment']}\n";
+        }
+        
+        if (isset($raceData['lifespan_years'])) {
+            $lifespan = $raceData['lifespan_years'];
+            $background .= "Продолжительность жизни: {$lifespan['min']}-{$lifespan['max']} лет (в среднем {$lifespan['avg']})\n";
+        }
+        
+        if (isset($raceData['languages'])) {
+            $background .= "Языки: " . implode(', ', $raceData['languages']) . "\n";
+        }
+        
+        return trim($background);
+    }
+    
+    /**
+     * Генерирует предысторию класса на основе данных из JSON
+     */
+    private function generateClassBackgroundFromJSON($classData, $level) {
+        $background = '';
+        
+        if (isset($classData['name']['ru'])) {
+            $background .= "Класс: {$classData['name']['ru']} (уровень {$level})\n";
+        }
+        
+        if (isset($classData['hit_die'])) {
+            $background .= "Кость хитов: {$classData['hit_die']}\n";
+        }
+        
+        if (isset($classData['primary_abilities'])) {
+            $background .= "Основные характеристики: " . implode(', ', $classData['primary_abilities']) . "\n";
+        }
+        
+        if (isset($classData['saving_throws'])) {
+            $background .= "Спасброски: " . implode(', ', $classData['saving_throws']) . "\n";
+        }
+        
+        if (isset($classData['armor_proficiencies'])) {
+            $background .= "Владение доспехами: " . implode(', ', $classData['armor_proficiencies']) . "\n";
+        }
+        
+        if (isset($classData['weapon_proficiencies'])) {
+            $background .= "Владение оружием: " . implode(', ', $classData['weapon_proficiencies']) . "\n";
+        }
+        
+        return trim($background);
+    }
+    
 }
 ?>
