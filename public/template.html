@@ -6969,17 +6969,22 @@
             fetch('api/generate-characters.php?action=races')
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
+                    console.log('Races data:', data);
+                    if (data.success && data.races) {
                         const raceSelect = document.getElementById('new-character-race');
                         raceSelect.innerHTML = '<option value="">Выберите расу</option>';
                         data.races.forEach(race => {
-                            raceSelect.innerHTML += `<option value="${race.id}">${race.name}</option>`;
+                            if (race && race.id && race.name) {
+                                raceSelect.innerHTML += `<option value="${race.id}">${race.name}</option>`;
+                            }
                         });
 
                         // Добавляем обработчик изменения расы для подрас
                         raceSelect.addEventListener('change', function() {
                             loadSubraces(this.value);
                         });
+                    } else {
+                        console.error('Failed to load races:', data);
                     }
                 })
                 .catch(error => console.error('Error loading races:', error));
@@ -6988,17 +6993,22 @@
             fetch('api/generate-characters.php?action=classes')
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
+                    console.log('Classes data:', data);
+                    if (data.success && data.classes) {
                         const classSelect = document.getElementById('new-character-class');
                         classSelect.innerHTML = '<option value="">Выберите класс</option>';
                         data.classes.forEach(cls => {
-                            classSelect.innerHTML += `<option value="${cls.id}">${cls.name.ru}</option>`;
+                            if (cls && cls.id && cls.name && cls.name.ru) {
+                                classSelect.innerHTML += `<option value="${cls.id}">${cls.name.ru}</option>`;
+                            }
                         });
 
                         // Добавляем обработчик изменения класса для архетипов
                         classSelect.addEventListener('change', function() {
                             loadArchetypes(this.value);
                         });
+                    } else {
+                        console.error('Failed to load classes:', data);
                     }
                 })
                 .catch(error => console.error('Error loading classes:', error));

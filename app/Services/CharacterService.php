@@ -28,15 +28,19 @@ class CharacterService {
         }
         
         if (!file_exists($this->racesFile)) {
-            throw new Exception('Файл с расами не найден');
+            $this->racesData = [];
+            return $this->racesData;
         }
         
         $jsonContent = file_get_contents($this->racesFile);
-        $this->racesData = json_decode($jsonContent, true);
+        $data = json_decode($jsonContent, true);
         
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new Exception('Ошибка при чтении файла рас: ' . json_last_error_msg());
+            $this->racesData = [];
+            return $this->racesData;
         }
+        
+        $this->racesData = $data['races'] ?? [];
         
         return $this->racesData;
     }
