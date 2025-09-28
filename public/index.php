@@ -1049,7 +1049,7 @@ function openEnemyModal() {
         
         // Обновляем доступные типы
         Array.from(typeSelect.options).forEach(option => {
-            if (option.value === '') return; // Пропускаем "Любой тип"
+            if (option.value === '') { return; } // Пропускаем "Любой тип"
             
             if (threatLevel && availableTypes[threatLevel]) {
                 option.disabled = !availableTypes[threatLevel].includes(option.value);
@@ -1066,7 +1066,7 @@ function openEnemyModal() {
         
         // Обновляем доступные среды
         Array.from(environmentSelect.options).forEach(option => {
-            if (option.value === '') return; // Пропускаем "Любая среда"
+            if (option.value === '') { return; } // Пропускаем "Любая среда"
             
             if (threatLevel && availableEnvironments[threatLevel]) {
                 option.disabled = !availableEnvironments[threatLevel].includes(option.value);
