@@ -273,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message']) && !isset(
 // --- Генерация быстрых кнопок ---
 $fastBtns = '<div class="button-grid">';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей"><span class="svg-icon icon-dice" data-icon="dice"></span> Кости</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей"><span class="svg-icon icon-hero" data-icon="hero"></span> Персонаж</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="console.log(\'Character button clicked!\'); openCharacterModal();" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей"><span class="svg-icon icon-hero" data-icon="hero"></span> Персонаж</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников"><span class="svg-icon icon-enemy" data-icon="enemy"></span> Противники</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий"><span class="svg-icon icon-potion" data-icon="potion"></span> Зелья</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openSpellModal()" data-tooltip="Создать заклинания" aria-label="Открыть генератор заклинаний"><span class="svg-icon icon-spell" data-icon="spell"></span> Заклинания</button>';
@@ -446,6 +446,7 @@ function updateDiceComment(dice, count) {
 
 // --- Функция открытия генерации персонажей ---
 function openCharacterModal() {
+    console.log('=== OPEN CHARACTER MODAL CALLED ===');
     showModal(`
         <div class="character-generator">
             <div class="generator-header">
@@ -581,7 +582,7 @@ function openCharacterModal() {
     
     // Ждем, пока DOM обновится, затем привязываем обработчики
     setTimeout(() => {
-        console.log('Setting up character generator handlers...');
+        console.log('=== SETTING UP CHARACTER GENERATOR HANDLERS ===');
         
         // Добавляем отладку для кнопки
         const submitButton = document.querySelector('#newCharacterForm button[type="submit"]');
@@ -4455,8 +4456,10 @@ function formatResultSegments(txt, isNpc) {
 }
 // --- Modal & Notes ---
 function showModal(content) {
+    console.log('=== SHOW MODAL CALLED ===');
     document.getElementById('modal-content').innerHTML = content;
     document.getElementById('modal-bg').classList.add('active');
+    console.log('Modal content set and shown');
 }
 function closeModal() {
     document.getElementById('modal-bg').classList.remove('active');
