@@ -638,6 +638,9 @@ function openCharacterModal() {
                 progressDiv.style.display = 'none';
                 resultDiv.style.display = 'block';
                 
+                console.log('Data success:', data.success);
+                console.log('Data character:', data.character);
+                
                 if (data.success) {
                     const character = data.character;
                     resultDiv.innerHTML = formatNewCharacter(character);
@@ -1049,35 +1052,35 @@ function openEnemyModal() {
         
         // Обновляем доступные типы
         Array.from(typeSelect.options).forEach(option => {
-            if (option.value === '') { return; } // Пропускаем "Любой тип"
-            
-            if (threatLevel && availableTypes[threatLevel]) {
-                option.disabled = !availableTypes[threatLevel].includes(option.value);
-                if (option.disabled) {
-                    option.style.display = 'none';
+            if (option.value !== '') { // Пропускаем "Любой тип"
+                if (threatLevel && availableTypes[threatLevel]) {
+                    option.disabled = !availableTypes[threatLevel].includes(option.value);
+                    if (option.disabled) {
+                        option.style.display = 'none';
+                    } else {
+                        option.style.display = 'block';
+                    }
                 } else {
+                    option.disabled = false;
                     option.style.display = 'block';
                 }
-            } else {
-                option.disabled = false;
-                option.style.display = 'block';
             }
         });
         
         // Обновляем доступные среды
         Array.from(environmentSelect.options).forEach(option => {
-            if (option.value === '') { return; } // Пропускаем "Любая среда"
-            
-            if (threatLevel && availableEnvironments[threatLevel]) {
-                option.disabled = !availableEnvironments[threatLevel].includes(option.value);
-                if (option.disabled) {
-                    option.style.display = 'none';
+            if (option.value !== '') { // Пропускаем "Любая среда"
+                if (threatLevel && availableEnvironments[threatLevel]) {
+                    option.disabled = !availableEnvironments[threatLevel].includes(option.value);
+                    if (option.disabled) {
+                        option.style.display = 'none';
+                    } else {
+                        option.style.display = 'block';
+                    }
                 } else {
+                    option.disabled = false;
                     option.style.display = 'block';
                 }
-            } else {
-                option.disabled = false;
-                option.style.display = 'block';
             }
         });
     }
