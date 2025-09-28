@@ -667,8 +667,12 @@ function openCharacterModal() {
 function loadNewCharacterData() {
     // Загружаем расы
     fetch('api/generate-characters.php?action=races')
-        .then(response => response.json())
+        .then(response => {
+            console.log('Races response status:', response.status);
+            return response.json();
+        })
         .then(data => {
+            console.log('Races data:', data);
             if (data.success && data.races) {
                 const raceSelect = document.getElementById('new-character-race');
                 raceSelect.innerHTML = '<option value="">Выберите расу</option>';
@@ -678,6 +682,9 @@ function loadNewCharacterData() {
                     option.textContent = race.name_ru || race.name;
                     raceSelect.appendChild(option);
                 });
+                console.log('Races loaded successfully:', data.races.length);
+            } else {
+                console.error('Failed to load races:', data);
             }
         })
         .catch(error => {
@@ -686,8 +693,12 @@ function loadNewCharacterData() {
     
     // Загружаем классы
     fetch('api/generate-characters.php?action=classes')
-        .then(response => response.json())
+        .then(response => {
+            console.log('Classes response status:', response.status);
+            return response.json();
+        })
         .then(data => {
+            console.log('Classes data:', data);
             if (data.success && data.classes) {
                 const classSelect = document.getElementById('new-character-class');
                 classSelect.innerHTML = '<option value="">Выберите класс</option>';
@@ -697,30 +708,30 @@ function loadNewCharacterData() {
                     option.textContent = cls.name_ru || cls.name;
                     classSelect.appendChild(option);
                 });
+                console.log('Classes loaded successfully:', data.classes.length);
+            } else {
+                console.error('Failed to load classes:', data);
             }
         })
         .catch(error => {
             console.error('Error loading classes:', error);
         });
     
-    // Загружаем предыстории
-    fetch('api/generate-characters.php?action=backgrounds')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.backgrounds) {
-                const backgroundSelect = document.getElementById('new-character-background');
-                backgroundSelect.innerHTML = '<option value="random">Случайная</option>';
-                data.backgrounds.forEach(bg => {
-                    const option = document.createElement('option');
-                    option.value = bg.id;
-                    option.textContent = bg.name_ru || bg.name;
-                    backgroundSelect.appendChild(option);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error loading backgrounds:', error);
-        });
+    // Предыстории пока статичные
+    const backgroundSelect = document.getElementById('new-character-background');
+    backgroundSelect.innerHTML = `
+        <option value="random">Случайная</option>
+        <option value="acolyte">Аколит</option>
+        <option value="criminal">Преступник</option>
+        <option value="folk_hero">Народный герой</option>
+        <option value="noble">Дворянин</option>
+        <option value="soldier">Солдат</option>
+        <option value="sage">Мудрец</option>
+        <option value="sailor">Матрос</option>
+        <option value="guild_artisan">Гильдейский ремесленник</option>
+        <option value="hermit">Отшельник</option>
+        <option value="outlander">Бродяга</option>
+    `;
 }
 
 function formatNewCharacter(character) {
