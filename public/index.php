@@ -799,10 +799,54 @@ function formatNewCharacter(character) {
                     </div>
                 ` : ''}
                 
-                ${character.spells && character.spells.length > 0 ? `
+                ${character.spells ? `
                     <div class="character-spells">
                         <h4>Заклинания</h4>
-                        <ul>${character.spells.map(spell => `<li>${spell}</li>`).join('')}</ul>
+                        ${character.spells.cantrips && character.spells.cantrips.length > 0 ? `
+                            <div class="spell-category">
+                                <strong>Заговоры:</strong>
+                                <ul>${character.spells.cantrips.map(spell => `<li>${spell}</li>`).join('')}</ul>
+                            </div>
+                        ` : ''}
+                        ${character.spells.level_1 && character.spells.level_1.length > 0 ? `
+                            <div class="spell-category">
+                                <strong>1-й уровень:</strong>
+                                <ul>${character.spells.level_1.map(spell => `<li>${spell}</li>`).join('')}</ul>
+                            </div>
+                        ` : ''}
+                        ${character.spells.spellbook ? `
+                            <div class="spell-info">
+                                <strong>Книга заклинаний:</strong> ${character.spells.spellbook}
+                            </div>
+                        ` : ''}
+                    </div>
+                ` : ''}
+                
+                ${character.potions && character.potions.length > 0 ? `
+                    <div class="character-potions">
+                        <h4>Зелья</h4>
+                        <ul>${character.potions.map(potion => `<li>${potion.name} - ${potion.effect}</li>`).join('')}</ul>
+                    </div>
+                ` : ''}
+                
+                ${character.personality ? `
+                    <div class="character-personality">
+                        <h4>Черты характера</h4>
+                        ${character.personality.Идеал ? `
+                            <div class="personality-trait">
+                                <strong>Идеал:</strong> ${character.personality.Идеал.name} - ${character.personality.Идеал.description}
+                            </div>
+                        ` : ''}
+                        ${character.personality.Привязанность ? `
+                            <div class="personality-trait">
+                                <strong>Привязанность:</strong> ${character.personality.Привязанность.name} - ${character.personality.Привязанность.description}
+                            </div>
+                        ` : ''}
+                        ${character.personality.Недостаток ? `
+                            <div class="personality-trait">
+                                <strong>Недостаток:</strong> ${character.personality.Недостаток.name} - ${character.personality.Недостаток.description}
+                            </div>
+                        ` : ''}
                     </div>
                 ` : ''}
             </div>
@@ -822,7 +866,7 @@ function saveNewCharacterToNotes(character) {
                 <div><strong>Уровень:</strong> ${character.level}</div>
                 <div><strong>Пол:</strong> ${character.gender}</div>
                 <div><strong>Мировоззрение:</strong> ${character.alignment}</div>
-                <div><strong>Предыстория:</strong> ${character.background}</div>
+                <div><strong>Предыстория:</strong> ${character.background.name || character.background}</div>
                 <div><strong>Хиты:</strong> ${character.hit_points}</div>
                 <div><strong>КД:</strong> ${character.armor_class}</div>
                 <div><strong>Скорость:</strong> ${character.speed} футов</div>
