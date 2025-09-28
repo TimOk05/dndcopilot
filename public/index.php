@@ -273,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message']) && !isset(
 // --- Генерация быстрых кнопок ---
 $fastBtns = '<div class="button-grid">';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей"><span class="svg-icon icon-dice" data-icon="dice"></span> Кости</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="console.log(\'Character button clicked!\'); try { openCharacterModal(); } catch(e) { console.error(\'Error calling openCharacterModal:\', e); }" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей"><span class="svg-icon icon-hero" data-icon="hero"></span> Персонаж</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="console.log(\'Character button clicked!\'); testCharacterModal();" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей"><span class="svg-icon icon-hero" data-icon="hero"></span> Персонаж</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников"><span class="svg-icon icon-enemy" data-icon="enemy"></span> Противники</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий"><span class="svg-icon icon-potion" data-icon="potion"></span> Зелья</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openSpellModal()" data-tooltip="Создать заклинания" aria-label="Открыть генератор заклинаний"><span class="svg-icon icon-spell" data-icon="spell"></span> Заклинания</button>';
@@ -444,9 +444,32 @@ function updateDiceComment(dice, count) {
 
 
 
+// --- Тестовая функция для проверки ---
+function testCharacterModal() {
+    console.log('=== TEST CHARACTER MODAL ===');
+    console.log('Testing modal elements...');
+    
+    const modalContent = document.getElementById('modal-content');
+    const modalBg = document.getElementById('modal-bg');
+    
+    console.log('Modal content element:', modalContent);
+    console.log('Modal bg element:', modalBg);
+    
+    if (modalContent && modalBg) {
+        console.log('Modal elements found, opening modal...');
+        modalContent.innerHTML = '<div style="padding: 20px; text-align: center;"><h2>🎭 Тест генератора</h2><p>Модальное окно работает!</p><button onclick="closeModal()" class="btn btn-primary">Закрыть</button></div>';
+        modalBg.classList.add('active');
+        console.log('Modal opened successfully!');
+    } else {
+        console.error('Modal elements not found!');
+        alert('Ошибка: элементы модального окна не найдены');
+    }
+}
+
 // --- Функция открытия генерации персонажей ---
 function openCharacterModal() {
     console.log('=== OPEN CHARACTER MODAL CALLED ===');
+    console.log('Function openCharacterModal is working!');
     
     const content = `
         <div class="character-generator">
@@ -5098,9 +5121,29 @@ function formatResultSegments(txt, isNpc) {
 // --- Modal & Notes ---
 function showModal(content) {
     console.log('=== SHOW MODAL CALLED ===');
-    document.getElementById('modal-content').innerHTML = content;
-    document.getElementById('modal-bg').classList.add('active');
-    console.log('Modal content set and shown');
+    console.log('Content to show:', content.substring(0, 100) + '...');
+    
+    const modalContent = document.getElementById('modal-content');
+    const modalBg = document.getElementById('modal-bg');
+    
+    console.log('Modal content element:', modalContent);
+    console.log('Modal bg element:', modalBg);
+    
+    if (modalContent) {
+        modalContent.innerHTML = content;
+        console.log('Modal content set successfully');
+    } else {
+        console.error('Modal content element not found!');
+    }
+    
+    if (modalBg) {
+        modalBg.classList.add('active');
+        console.log('Modal bg active class added');
+    } else {
+        console.error('Modal bg element not found!');
+    }
+    
+    console.log('Modal setup complete');
 }
 function closeModal() {
     document.getElementById('modal-bg').classList.remove('active');
