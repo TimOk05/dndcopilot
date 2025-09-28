@@ -181,24 +181,14 @@
             <div class="form-group">
                 <label for="race">Раса:</label>
                 <select id="race" required>
-                    <option value="">Выберите расу</option>
-                    <option value="human">Человек</option>
-                    <option value="elf">Эльф</option>
-                    <option value="dwarf">Дварф</option>
-                    <option value="halfling">Полурослик</option>
-                    <option value="dragonborn">Драконорожденный</option>
+                    <option value="">Загрузка рас...</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="class">Класс:</label>
                 <select id="class" required>
-                    <option value="">Выберите класс</option>
-                    <option value="fighter">Воин</option>
-                    <option value="wizard">Маг</option>
-                    <option value="rogue">Плут</option>
-                    <option value="cleric">Жрец</option>
-                    <option value="ranger">Следопыт</option>
+                    <option value="">Загрузка классов...</option>
                 </select>
             </div>
 
@@ -223,10 +213,68 @@
     <script>
         console.log('Character generator loaded');
 
+        // Загружаем данные при загрузке страницы
+        window.addEventListener('load', function() {
+            loadRaces();
+            loadClasses();
+        });
+
         document.getElementById('characterForm').addEventListener('submit', function(e) {
             e.preventDefault();
             generateCharacter();
         });
+
+        function loadRaces() {
+            fetch('api/generate-characters.php?action=races')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Races loaded:', data);
+                    if (data.success && data.races) {
+                        const raceSelect = document.getElementById('race');
+                        raceSelect.innerHTML = '<option value="">Выберите расу</option>';
+                        data.races.forEach(race => {
+                            const option = document.createElement('option');
+                            option.value = race.id;
+                            option.textContent = race.name_ru || race.name;
+                            raceSelect.appendChild(option);
+                        });
+                        console.log('Races loaded successfully:', data.races.length);
+                    } else {
+                        console.error('Failed to load races:', data);
+                        document.getElementById('race').innerHTML = '<option value="">Ошибка загрузки рас</option>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading races:', error);
+                    document.getElementById('race').innerHTML = '<option value="">Ошибка загрузки рас</option>';
+                });
+        }
+
+        function loadClasses() {
+            fetch('api/generate-characters.php?action=classes')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Classes loaded:', data);
+                    if (data.success && data.classes) {
+                        const classSelect = document.getElementById('class');
+                        classSelect.innerHTML = '<option value="">Выберите класс</option>';
+                        data.classes.forEach(cls => {
+                            const option = document.createElement('option');
+                            option.value = cls.id;
+                            option.textContent = cls.name_ru || cls.name;
+                            classSelect.appendChild(option);
+                        });
+                        console.log('Classes loaded successfully:', data.classes.length);
+                    } else {
+                        console.error('Failed to load classes:', data);
+                        document.getElementById('class').innerHTML = '<option value="">Ошибка загрузки классов</option>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading classes:', error);
+                    document.getElementById('class').innerHTML = '<option value="">Ошибка загрузки классов</option>';
+                });
+        }
 
         function generateCharacter() {
             const race = document.getElementById('race').value;
