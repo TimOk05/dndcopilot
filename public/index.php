@@ -547,7 +547,7 @@ function openCharacterModal() {
                     </div>
                     
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary" id="generateCharacterBtn">
                             <span class="btn-icon">🎲</span>
                             Создать персонажа
                         </button>
@@ -588,6 +588,24 @@ function openCharacterModal() {
             console.log('Submit button clicked!');
             console.log('Form data before submit:', new FormData(document.getElementById('newCharacterForm')));
         });
+        
+        // Альтернативный обработчик - если форма не работает
+        submitButton.addEventListener('click', function(e) {
+            console.log('=== ALTERNATIVE BUTTON CLICK ===');
+            e.preventDefault();
+            
+            const form = document.getElementById('newCharacterForm');
+            const formData = new FormData(form);
+            
+            console.log('Alternative handler - form data:', {
+                race: formData.get('race'),
+                class: formData.get('class'),
+                background: formData.get('background')
+            });
+            
+            // Вызываем генерацию напрямую
+            generateCharacterDirectly(formData);
+        });
     }
     
     // Обработчик формы
@@ -596,11 +614,11 @@ function openCharacterModal() {
     
     if (form) {
         form.addEventListener('submit', function(e) {
-        console.log('Form submitted, starting character generation...');
-        e.preventDefault();
-        
-        // Проверяем, что форма действительно отправляется
-        console.log('Form submission prevented, processing...');
+            console.log('=== FORM SUBMISSION STARTED ===');
+            e.preventDefault();
+            
+            // Проверяем, что форма действительно отправляется
+            console.log('Form submission prevented, processing...');
         
         const formData = new FormData(this);
         const useAI = document.getElementById('use-ai').checked;
@@ -997,6 +1015,122 @@ function showCharacterForm() {
     if (formContainer) formContainer.style.display = 'block';
     if (resultDiv) resultDiv.style.display = 'none';
     if (progressDiv) progressDiv.style.display = 'none';
+}
+
+function generateCharacterDirectly(formData) {
+    console.log('=== DIRECT GENERATION STARTED ===');
+    
+    const useAI = document.getElementById('use-ai').checked;
+    formData.append('use_ai', useAI ? '1' : '0');
+    
+    console.log('Direct generation - form data:', {
+        race: formData.get('race'),
+        class: formData.get('class'),
+        background: formData.get('background'),
+        use_ai: formData.get('use_ai')
+    });
+    
+    // Проверяем, что все необходимые поля заполнены
+    if (!formData.get('race') || !formData.get('class')) {
+        alert('Пожалуйста, выберите расу и класс');
+        return;
+    }
+    
+    const resultDiv = document.getElementById('characterResult');
+    const progressDiv = document.getElementById('characterProgress');
+    const formContainer = document.querySelector('.character-form-container');
+    
+    // Скрываем форму и показываем прогресс
+    formContainer.style.display = 'none';
+    progressDiv.style.display = 'block';
+    
+    // Анимация прогресса
+    const progressFill = progressDiv.querySelector('.progress-fill');
+    const progressText = progressDiv.querySelector('#characterProgressText');
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress > 90) progress = 90;
+        progressFill.style.width = progress + '%';
+        
+        if (progress < 30) {
+            progressText.textContent = 'Загрузка данных...';
+        } else if (progress < 60) {
+            progressText.textContent = 'Генерация персонажа...';
+        } else if (progress < 90) {
+            progressText.textContent = 'Создание описания...';
+        } else {
+            progressText.textContent = 'Завершение генерации...';
+        }
+    }, 200);
+    
+    fetch('api/generate-characters.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        console.log('Direct generation response status:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Direct generation response data:', JSON.stringify(data, null, 2));
+        clearInterval(progressInterval);
+        progressFill.style.width = '100%';
+        
+        setTimeout(() => {
+            progressDiv.style.display = 'none';
+            formContainer.style.display = 'none';
+            resultDiv.style.display = 'block';
+            
+            console.log('Data success:', data.success);
+            console.log('Data character:', data.character);
+            
+            if (data.success) {
+                const character = data.character;
+                console.log('Character data received:', character);
+                console.log('Formatting character...');
+                const formattedCharacter = formatNewCharacter(character);
+                console.log('Formatted character HTML:', formattedCharacter);
+                resultDiv.innerHTML = formattedCharacter;
+                console.log('Character HTML inserted into resultDiv');
+                
+                // Добавляем кнопки действий
+                const actionButtons = document.createElement('div');
+                actionButtons.className = 'character-actions';
+                actionButtons.innerHTML = `
+                    <button onclick="saveNewCharacterToNotes()" class="btn btn-success">
+                        <span class="btn-icon">💾</span>
+                        Сохранить в заметки
+                    </button>
+                    <button onclick="regenerateCharacter()" class="btn btn-primary">
+                        <span class="btn-icon">🔄</span>
+                        Сгенерировать заново
+                    </button>
+                    <button onclick="showCharacterForm()" class="btn btn-outline">
+                        <span class="btn-icon">➕</span>
+                        Новый персонаж
+                    </button>
+                    <button onclick="closeModal()" class="btn btn-secondary">
+                        <span class="btn-icon">❌</span>
+                        Закрыть
+                    </button>
+                `;
+                resultDiv.appendChild(actionButtons);
+                
+                // Автоматически сохраняем персонажа
+                saveNewCharacterToNotes(character);
+            } else {
+                resultDiv.innerHTML = '<div class="error">Ошибка: ' + (data.message || 'Неизвестная ошибка') + '</div>';
+            }
+        }, 500);
+    })
+    .catch(error => {
+        console.error('Direct generation error:', error);
+        clearInterval(progressInterval);
+        progressDiv.style.display = 'none';
+        formContainer.style.display = 'block';
+        alert('Ошибка сети: ' + error.message);
+    });
 }
 
 // --- Функция открытия генерации противников ---
