@@ -579,9 +579,20 @@ function openCharacterModal() {
     
     // Обработчик формы
     document.getElementById('newCharacterForm').addEventListener('submit', function(e) {
+        console.log('Form submitted, starting character generation...');
         e.preventDefault();
         
         const formData = new FormData(this);
+        const useAI = document.getElementById('use-ai').checked;
+        formData.append('use_ai', useAI ? '1' : '0');
+        
+        console.log('Form data:', {
+            race: formData.get('race'),
+            class: formData.get('class'),
+            background: formData.get('background'),
+            use_ai: formData.get('use_ai')
+        });
+        
         const resultDiv = document.getElementById('characterResult');
         const progressDiv = document.getElementById('characterProgress');
         const formContainer = document.querySelector('.character-form-container');
@@ -679,6 +690,10 @@ function loadNewCharacterData() {
             console.log('Races data:', JSON.stringify(data, null, 2));
             if (data.success && data.races) {
                 const raceSelect = document.getElementById('new-character-race');
+                if (!raceSelect) {
+                    console.error('Race select element not found!');
+                    return;
+                }
                 raceSelect.innerHTML = '<option value="">Выберите расу</option>';
                 data.races.forEach(race => {
                     const option = document.createElement('option');
@@ -706,6 +721,10 @@ function loadNewCharacterData() {
             console.log('Classes data:', JSON.stringify(data, null, 2));
             if (data.success && data.classes) {
                 const classSelect = document.getElementById('new-character-class');
+                if (!classSelect) {
+                    console.error('Class select element not found!');
+                    return;
+                }
                 classSelect.innerHTML = '<option value="">Выберите класс</option>';
                 data.classes.forEach(cls => {
                     const option = document.createElement('option');
