@@ -273,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message']) && !isset(
 // --- Генерация быстрых кнопок ---
 $fastBtns = '<div class="button-grid">';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей"><span class="svg-icon icon-dice" data-icon="dice"></span> Кости</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="console.log(\'Character button clicked!\'); testCharacterModal();" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей"><span class="svg-icon icon-hero" data-icon="hero"></span> Персонаж</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="console.log(\'Character button clicked!\'); const modalContent = document.getElementById(\'modal-content\'); const modalBg = document.getElementById(\'modal-bg\'); if (modalContent && modalBg) { console.log(\'Modal elements found!\'); modalContent.innerHTML = \'<div style=\"padding: 20px; text-align: center;\"><h2>🎭 Генератор персонажей</h2><p>Выберите расу и класс:</p><select id=\"char-race\" style=\"margin: 10px; padding: 5px;\"><option value=\"\">Выберите расу</option><option value=\"race_human\">Человек</option><option value=\"race_elf\">Эльф</option><option value=\"race_dwarf\">Дварф</option></select><br><select id=\"char-class\" style=\"margin: 10px; padding: 5px;\"><option value=\"\">Выберите класс</option><option value=\"fighter\">Воин</option><option value=\"wizard\">Маг</option><option value=\"rogue\">Плут</option></select><br><button onclick=\"generateCharacter()\" class=\"btn btn-primary\" style=\"margin: 10px;\">🎲 Создать персонажа</button><button onclick=\"closeModal()\" class=\"btn btn-secondary\" style=\"margin: 10px;\">❌ Отмена</button></div>\'; modalBg.classList.add(\'active\'); console.log(\'Modal opened!\'); } else { console.error(\'Modal elements not found!\'); alert(\'Ошибка: элементы модального окна не найдены\'); }" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей"><span class="svg-icon icon-hero" data-icon="hero"></span> Персонаж</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников"><span class="svg-icon icon-enemy" data-icon="enemy"></span> Противники</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий"><span class="svg-icon icon-potion" data-icon="potion"></span> Зелья</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openSpellModal()" data-tooltip="Создать заклинания" aria-label="Открыть генератор заклинаний"><span class="svg-icon icon-spell" data-icon="spell"></span> Заклинания</button>';
@@ -476,7 +476,7 @@ function openCharacterModal() {
             <h2>🎭 Генератор персонажей</h2>
             <p>Создайте уникального персонажа D&D 5e</p>
             
-            <div class="form-group">
+                        <div class="form-group">
                 <label for="char-race">Раса</label>
                 <select id="char-race" required>
                     <option value="">Выберите расу</option>
@@ -485,10 +485,10 @@ function openCharacterModal() {
                     <option value="race_dwarf">Дварф</option>
                     <option value="race_halfling">Полурослик</option>
                     <option value="race_dragonborn">Драконорожденный</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
                 <label for="char-class">Класс</label>
                 <select id="char-class" required>
                     <option value="">Выберите класс</option>
@@ -497,8 +497,8 @@ function openCharacterModal() {
                     <option value="rogue">Плут</option>
                     <option value="cleric">Жрец</option>
                     <option value="ranger">Следопыт</option>
-                </select>
-            </div>
+                            </select>
+                        </div>
             
             <div class="form-actions">
                 <button type="button" class="btn btn-primary" onclick="generateSimpleCharacter()">
@@ -507,19 +507,19 @@ function openCharacterModal() {
                 <button type="button" class="btn btn-secondary" onclick="closeModal()">
                     ❌ Отмена
                 </button>
-            </div>
-            
+                    </div>
+                    
             <div id="char-progress" style="display: none; margin-top: 20px;">
                 <div style="background: #333; border-radius: 10px; overflow: hidden;">
                     <div id="char-progress-bar" style="background: #007bff; height: 20px; width: 0%; transition: width 0.3s;"></div>
                 </div>
                 <div id="char-progress-text" style="text-align: center; margin-top: 10px;">Создание персонажа...</div>
-            </div>
-            
+                        </div>
+                        
             <div id="char-result" style="display: none; margin-top: 20px;">
                 <!-- Результат будет вставлен сюда -->
-            </div>
-        </div>
+                        </div>
+                    </div>
     `;
     
     showModal(content);
@@ -770,7 +770,7 @@ function loadNewCharacterData() {
     const backgroundSelect = document.getElementById('new-character-background');
     if (backgroundSelect) {
         backgroundSelect.innerHTML = `
-            <option value="random">Случайная</option>
+                                <option value="random">Случайная</option>
             <option value="acolyte">Аколит</option>
             <option value="criminal">Преступник</option>
             <option value="folk_hero">Народный герой</option>
@@ -822,9 +822,9 @@ function formatNewCharacter(character) {
                             <span class="stat-name">Харизма</span>
                             <span class="stat-value">${character.abilities.cha} (${character.modifiers.cha >= 0 ? '+' : ''}${character.modifiers.cha})</span>
                         </div>
+                        </div>
                     </div>
-                </div>
-                
+                    
                 <div class="stat-group">
                     <h4>Боевые характеристики</h4>
                     <div class="combat-stats">
@@ -1197,13 +1197,13 @@ function openEnemyModal() {
                         <option value="hard">Тяжелый</option>
                         <option value="deadly">Смертельный</option>
                     </select>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
                         👹 Создать противников
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">
                         ❌ Отмена
                     </button>
                 </div>
@@ -1276,15 +1276,15 @@ function openEnemyModal() {
         } else {
             console.error('Submit button not found!');
         }
-        
-        // Обработчик формы
+    
+    // Обработчик формы
         const form = document.getElementById('newCharacterForm');
         console.log('Form element found:', form);
         
         if (form) {
             form.addEventListener('submit', function(e) {
                 console.log('=== FORM SUBMISSION STARTED ===');
-                e.preventDefault();
+        e.preventDefault();
                 
                 // Проверяем, что форма действительно отправляется
                 console.log('Form submission prevented, processing...');
@@ -1472,7 +1472,7 @@ function loadNewCharacterData() {
         });
     
     // Предыстории пока статичные
-    const backgroundSelect = document.getElementById('new-character-background');
+                const backgroundSelect = document.getElementById('new-character-background');
     backgroundSelect.innerHTML = `
         <option value="random">Случайная</option>
         <option value="acolyte">Аколит</option>
@@ -1571,8 +1571,8 @@ function formatNewCharacter(character) {
                             <div class="spell-category">
                                 <strong>Заговоры:</strong>
                                 <ul>${character.spells.cantrips.map(spell => `<li>${spell}</li>`).join('')}</ul>
-                            </div>
-                        ` : ''}
+                    </div>
+                ` : ''}
                         ${character.spells.level_1 && character.spells.level_1.length > 0 ? `
                             <div class="spell-category">
                                 <strong>1-й уровень:</strong>
@@ -1658,7 +1658,7 @@ function saveNewCharacterToNotes(character) {
     .then(r => r.json())
     .then(data => {
         if (data.success) {
-            console.log('Персонаж ' + character.name + ' сохранен в заметки!');
+        console.log('Персонаж ' + character.name + ' сохранен в заметки!');
         } else {
             console.error('Ошибка сохранения:', data.message);
         }
@@ -1925,16 +1925,16 @@ function openEnemyModal() {
         // Обновляем доступные типы
         Array.from(typeSelect.options).forEach(option => {
             if (option.value !== '') { // Пропускаем "Любой тип"
-                if (threatLevel && availableTypes[threatLevel]) {
-                    option.disabled = !availableTypes[threatLevel].includes(option.value);
-                    if (option.disabled) {
-                        option.style.display = 'none';
-                    } else {
-                        option.style.display = 'block';
-                    }
+            if (threatLevel && availableTypes[threatLevel]) {
+                option.disabled = !availableTypes[threatLevel].includes(option.value);
+                if (option.disabled) {
+                    option.style.display = 'none';
                 } else {
-                    option.disabled = false;
                     option.style.display = 'block';
+                }
+            } else {
+                option.disabled = false;
+                option.style.display = 'block';
                 }
             }
         });
@@ -1942,16 +1942,16 @@ function openEnemyModal() {
         // Обновляем доступные среды
         Array.from(environmentSelect.options).forEach(option => {
             if (option.value !== '') { // Пропускаем "Любая среда"
-                if (threatLevel && availableEnvironments[threatLevel]) {
-                    option.disabled = !availableEnvironments[threatLevel].includes(option.value);
-                    if (option.disabled) {
-                        option.style.display = 'none';
-                    } else {
-                        option.style.display = 'block';
-                    }
+            if (threatLevel && availableEnvironments[threatLevel]) {
+                option.disabled = !availableEnvironments[threatLevel].includes(option.value);
+                if (option.disabled) {
+                    option.style.display = 'none';
                 } else {
-                    option.disabled = false;
                     option.style.display = 'block';
+                }
+            } else {
+                option.disabled = false;
+                option.style.display = 'block';
                 }
             }
         });
@@ -6767,4 +6767,6 @@ function saveAllEnemiesToNotes(enemies) {
     console.log('Icon loading completed');
 })();
 </script>
+
+<script src="js/character-generator.js"></script>
 
