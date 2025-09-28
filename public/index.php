@@ -614,8 +614,12 @@ function openCharacterModal() {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Generation response status:', response.status);
+            return response.json();
+        })
         .then(data => {
+            console.log('Generation response data:', JSON.stringify(data, null, 2));
             clearInterval(progressInterval);
             progressFill.style.width = '100%';
             
@@ -681,6 +685,7 @@ function loadNewCharacterData() {
                     option.value = race.id;
                     option.textContent = race.name_ru || race.name;
                     raceSelect.appendChild(option);
+                    console.log('Added race option:', race.id, race.name_ru || race.name);
                 });
                 console.log('Races loaded successfully:', data.races.length);
             } else {
@@ -707,6 +712,7 @@ function loadNewCharacterData() {
                     option.value = cls.id;
                     option.textContent = cls.name_ru || cls.name;
                     classSelect.appendChild(option);
+                    console.log('Added class option:', cls.id, cls.name_ru || cls.name);
                 });
                 console.log('Classes loaded successfully:', data.classes.length);
             } else {
