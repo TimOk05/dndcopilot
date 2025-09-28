@@ -642,7 +642,8 @@ function openCharacterModal() {
             
             setTimeout(() => {
                 progressDiv.style.display = 'none';
-                resultDiv.style.display = 'block';
+                formContainer.style.display = 'none'; // Скрываем форму
+                resultDiv.style.display = 'block'; // Показываем результат
                 
                 console.log('Data success:', data.success);
                 console.log('Data character:', data.character);
@@ -667,6 +668,10 @@ function openCharacterModal() {
                         <button onclick="regenerateCharacter()" class="btn btn-primary">
                             <span class="btn-icon">🔄</span>
                             Сгенерировать заново
+                        </button>
+                        <button onclick="showCharacterForm()" class="btn btn-outline">
+                            <span class="btn-icon">➕</span>
+                            Новый персонаж
                         </button>
                         <button onclick="closeModal()" class="btn btn-secondary">
                             <span class="btn-icon">❌</span>
@@ -959,6 +964,17 @@ function regenerateCharacter() {
     setTimeout(() => {
         openCharacterModal();
     }, 100);
+}
+
+function showCharacterForm() {
+    // Показываем форму и скрываем результат
+    const formContainer = document.querySelector('.character-form-container');
+    const resultDiv = document.getElementById('characterResult');
+    const progressDiv = document.getElementById('characterProgress');
+    
+    if (formContainer) formContainer.style.display = 'block';
+    if (resultDiv) resultDiv.style.display = 'none';
+    if (progressDiv) progressDiv.style.display = 'none';
 }
 
 // --- Функция открытия генерации противников ---
