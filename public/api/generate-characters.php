@@ -19,7 +19,12 @@ if (!function_exists('logMessage')) {
 
 // Подключаем сервисы
 require_once __DIR__ . '/../../app/Services/CharacterService.php';
-require_once __DIR__ . '/../../app/Services/AIService.php';
+
+// AIService подключаем опционально
+$aiServicePath = __DIR__ . '/../../app/Services/AIService.php';
+if (file_exists($aiServicePath)) {
+    require_once $aiServicePath;
+}
 
 // Обработка POST запросов
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {

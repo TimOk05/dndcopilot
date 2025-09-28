@@ -659,34 +659,39 @@ class CharacterService {
      */
     private function generateDescription($race, $class) {
         try {
-            $aiService = new \AIService();
-            $character = [
-                'name' => 'Персонаж',
-                'race' => $race['name'] ?? 'Неизвестная раса',
-                'class' => $class['name']['ru'] ?? $class['name']['en'] ?? 'Неизвестный класс',
-                'level' => 1,
-                'gender' => 'неизвестен',
-                'alignment' => 'нейтральный',
-                'background' => 'Случайная',
-                'abilities' => ['str' => 10, 'dex' => 10, 'con' => 10, 'int' => 10, 'wis' => 10, 'cha' => 10]
-            ];
-            
-            return $aiService->generateCharacterDescription($character);
+            // Проверяем, доступен ли AIService
+            if (class_exists('AIService')) {
+                $aiService = new \AIService();
+                $character = [
+                    'name' => 'Персонаж',
+                    'race' => $race['name'] ?? 'Неизвестная раса',
+                    'class' => $class['name']['ru'] ?? $class['name']['en'] ?? 'Неизвестный класс',
+                    'level' => 1,
+                    'gender' => 'неизвестен',
+                    'alignment' => 'нейтральный',
+                    'background' => 'Случайная',
+                    'abilities' => ['str' => 10, 'dex' => 10, 'con' => 10, 'int' => 10, 'wis' => 10, 'cha' => 10]
+                ];
+                
+                return $aiService->generateCharacterDescription($character);
+            }
         } catch (Exception $e) {
-            // logMessage('WARNING', 'AI description generation failed', [
-            //     'error' => $e->getMessage()
-            // ]);
-            
-            // Fallback к статическим описаниям
-            $descriptions = [
-                "{$race['name_ru']} {$class['name_ru']} с загадочным прошлым",
-                "Опытный {$class['name_ru']} из народа {$race['name_ru']}",
-                "Молодой {$race['name_ru']}, изучающий искусство {$class['name_ru']}",
-                "Ветеран-{$class['name_ru']} с благородным происхождением"
-            ];
-            
-            return $descriptions[array_rand($descriptions)];
+            // Логируем ошибку, но продолжаем работу
+            error_log('AI description generation failed: ' . $e->getMessage());
         }
+        
+        // Fallback к статическим описаниям
+        $raceName = $race['name'] ?? 'Неизвестная раса';
+        $className = $class['name']['ru'] ?? $class['name']['en'] ?? 'Неизвестный класс';
+        
+        $descriptions = [
+            "{$raceName} {$className} с загадочным прошлым",
+            "Опытный {$className} из народа {$raceName}",
+            "Молодой {$raceName}, изучающий искусство {$className}",
+            "Ветеран-{$className} с благородным происхождением"
+        ];
+        
+        return $descriptions[array_rand($descriptions)];
     }
     
     /**
@@ -694,34 +699,36 @@ class CharacterService {
      */
     private function generateBackgroundStory($race, $class) {
         try {
-            $aiService = new \AIService();
-            $character = [
-                'name' => 'Персонаж',
-                'race' => $race['name'] ?? 'Неизвестная раса',
-                'class' => $class['name']['ru'] ?? $class['name']['en'] ?? 'Неизвестный класс',
-                'level' => 1,
-                'gender' => 'неизвестен',
-                'alignment' => 'нейтральный',
-                'background' => 'Случайная',
-                'abilities' => ['str' => 10, 'dex' => 10, 'con' => 10, 'int' => 10, 'wis' => 10, 'cha' => 10]
-            ];
-            
-            return $aiService->generateCharacterBackground($character);
+            // Проверяем, доступен ли AIService
+            if (class_exists('AIService')) {
+                $aiService = new \AIService();
+                $character = [
+                    'name' => 'Персонаж',
+                    'race' => $race['name'] ?? 'Неизвестная раса',
+                    'class' => $class['name']['ru'] ?? $class['name']['en'] ?? 'Неизвестный класс',
+                    'level' => 1,
+                    'gender' => 'неизвестен',
+                    'alignment' => 'нейтральный',
+                    'background' => 'Случайная',
+                    'abilities' => ['str' => 10, 'dex' => 10, 'con' => 10, 'int' => 10, 'wis' => 10, 'cha' => 10]
+                ];
+                
+                return $aiService->generateCharacterBackground($character);
+            }
         } catch (Exception $e) {
-            // logMessage('WARNING', 'AI background generation failed', [
-            //     'error' => $e->getMessage()
-            // ]);
-            
-            // Fallback к статическим историям
-            $stories = [
-                "Родился в небольшой деревне и с детства мечтал о приключениях",
-                "Происходит из знатной семьи, но предпочел жизнь странника",
-                "Был учеником мастера, который научил его основам боевого искусства",
-                "Пережил трагедию в прошлом, что заставило его искать справедливости"
-            ];
-            
-            return $stories[array_rand($stories)];
+            // Логируем ошибку, но продолжаем работу
+            error_log('AI background generation failed: ' . $e->getMessage());
         }
+        
+        // Fallback к статическим историям
+        $stories = [
+            "Родился в небольшой деревне и с детства мечтал о приключениях",
+            "Происходит из знатной семьи, но предпочел жизнь странника",
+            "Был учеником мастера, который научил его основам боевого искусства",
+            "Пережил трагедию в прошлом, что заставило его искать справедливости"
+        ];
+        
+        return $stories[array_rand($stories)];
     }
     
     /**
