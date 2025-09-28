@@ -586,6 +586,7 @@ function openCharacterModal() {
     if (submitButton) {
         submitButton.addEventListener('click', function(e) {
             console.log('Submit button clicked!');
+            console.log('Form data before submit:', new FormData(document.getElementById('newCharacterForm')));
         });
     }
     
