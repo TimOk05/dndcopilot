@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор персонажей</title>
+    <style>
+        .character-generator-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .modal-title {
+            font-size: 2em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .close-btn {
+            background: rgba(255, 0, 0, 0.3);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 0, 0, 0.5);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        select,
+        input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        select:focus,
+        input:focus {
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            display: none;
+        }
+        
+        .character-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .character-name {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .character-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            color: #ff6b6b;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="character-generator-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">🎭 Генератор персонажей D&D</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+
+            <form id="characterForm">
+                <div class="form-group">
+                    <label for="race">Раса:</label>
+                    <select id="race" required>
+                        <option value="">Загрузка рас...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="class">Класс:</label>
+                    <select id="class" required>
+                        <option value="">Загрузка классов...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="level">Уровень:</label>
+                    <input type="number" id="level" value="1" min="1" max="20" required>
+                </div>
+
+                <button type="submit" class="btn">
+                    🎲 Создать персонажа
+                </button>
+            </form>
+
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Создание персонажа...</p>
+            </div>
+
+            <div id="result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        console.log('Modal character generator loaded');
+
+        // Загружаем данные при загрузке страницы
+        window.addEventListener('load', function() {
+            loadRaces();
+            loadClasses();
+        });
+
+        document.getElementById('characterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generateCharacter();
+        });
+
+        function loadRaces() {
+            fetch('api/generate-characters.php?action=races')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Races loaded:', data);
+                    if (data.success && data.races) {
+                        const raceSelect = document.getElementById('race');
+                        raceSelect.innerHTML = '<option value="">Выберите расу</option>';
+                        data.races.forEach(race => {
+                            const option = document.createElement('option');
+                            option.value = race.id;
+                            option.textContent = race.name_ru || race.name;
+                            raceSelect.appendChild(option);
+                        });
+                        console.log('Races loaded successfully:', data.races.length);
+                    } else {
+                        console.error('Failed to load races:', data);
+                        document.getElementById('race').innerHTML = '<option value="">Ошибка загрузки рас</option>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading races:', error);
+                    document.getElementById('race').innerHTML = '<option value="">Ошибка загрузки рас</option>';
+                });
+        }
+
+        function loadClasses() {
+            fetch('api/generate-characters.php?action=classes')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Classes loaded:', data);
+                    if (data.success && data.classes) {
+                        const classSelect = document.getElementById('class');
+                        classSelect.innerHTML = '<option value="">Выберите класс</option>';
+                        data.classes.forEach(cls => {
+                            const option = document.createElement('option');
+                            option.value = cls.id;
+                            option.textContent = cls.name_ru || cls.name;
+                            classSelect.appendChild(option);
+                        });
+                        console.log('Classes loaded successfully:', data.classes.length);
+                    } else {
+                        console.error('Failed to load classes:', data);
+                        document.getElementById('class').innerHTML = '<option value="">Ошибка загрузки классов</option>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading classes:', error);
+                    document.getElementById('class').innerHTML = '<option value="">Ошибка загрузки классов</option>';
+                });
+        }
+
+        function generateCharacter() {
+            const race = document.getElementById('race').value;
+            const charClass = document.getElementById('class').value;
+            const level = document.getElementById('level').value;
+
+            if (!race || !charClass) {
+                alert('Пожалуйста, выберите расу и класс');
+                return;
+            }
+
+            console.log('Generating character:', {
+                race,
+                class: charClass,
+                level
+            });
+
+            // Показываем загрузку
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+
+            // Создаем FormData для API
+            const formData = new FormData();
+            formData.append('race', race);
+            formData.append('class', charClass);
+            formData.append('level', level);
+            formData.append('gender', 'random');
+            formData.append('alignment', 'random');
+            formData.append('use_ai', '1');
+
+            fetch('api/generate-characters.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    console.log('API response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('API response data:', data);
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('result').style.display = 'block';
+
+                    if (data.success && data.character) {
+                        displayCharacter(data.character);
+                    } else {
+                        showError(data.message || 'Неизвестная ошибка');
+                    }
+                })
+                .catch(error => {
+                    console.error('Generation error:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('result').style.display = 'block';
+                    showError('Ошибка сети: ' + error.message);
+                });
+        }
+
+        function displayCharacter(character) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <div class="character-card">
+                    <div class="character-name">${character.name}</div>
+                    <div style="text-align: center; margin-bottom: 20px; opacity: 0.8;">
+                        ${character.race} ${character.class} (${character.level} уровень)
+                    </div>
+                    
+                    <div class="character-info">
+                        <div class="stat-box">
+                            <div class="stat-label">Хиты</div>
+                            <div class="stat-value" style="color: #4CAF50;">${character.hit_points}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Класс брони</div>
+                            <div class="stat-value" style="color: #2196F3;">${character.armor_class}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Скорость</div>
+                            <div class="stat-value" style="color: #FF9800;">${character.speed} фт</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Инициатива</div>
+                            <div class="stat-value" style="color: #9C27B0;">${character.initiative >= 0 ? '+' : ''}${character.initiative}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="character-info">
+                        <div class="stat-box">
+                            <div class="stat-label">Сила</div>
+                            <div class="stat-value">${character.abilities.str} (${character.modifiers.str >= 0 ? '+' : ''}${character.modifiers.str})</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Ловкость</div>
+                            <div class="stat-value">${character.abilities.dex} (${character.modifiers.dex >= 0 ? '+' : ''}${character.modifiers.dex})</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Телосложение</div>
+                            <div class="stat-value">${character.abilities.con} (${character.modifiers.con >= 0 ? '+' : ''}${character.modifiers.con})</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Интеллект</div>
+                            <div class="stat-value">${character.abilities.int} (${character.modifiers.int >= 0 ? '+' : ''}${character.modifiers.int})</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Мудрость</div>
+                            <div class="stat-value">${character.abilities.wis} (${character.modifiers.wis >= 0 ? '+' : ''}${character.modifiers.wis})</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Харизма</div>
+                            <div class="stat-value">${character.abilities.cha} (${character.modifiers.cha >= 0 ? '+' : ''}${character.modifiers.cha})</div>
+                        </div>
+                    </div>
+                    
+                    ${character.description ? `
+                        <div style="margin-top: 20px; padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 10px;">
+                            <strong>Описание:</strong> ${character.description}
+                        </div>
+                    ` : ''}
+                    
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button onclick="saveCharacter('${character.name}', '${character.race}', '${character.class}')" class="btn" style="width: auto; margin: 5px;">
+                            💾 Сохранить в заметки
+                        </button>
+                        <button onclick="generateCharacter()" class="btn" style="width: auto; margin: 5px;">
+                            🔄 Сгенерировать заново
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showError(message) {
+            document.getElementById('result').innerHTML = `
+                <div class="error">
+                    <h3>Ошибка генерации</h3>
+                    <p>${message}</p>
+                    <button onclick="generateCharacter()" class="btn" style="width: auto; margin-top: 15px;">
+                        Попробовать снова
+                    </button>
+                </div>
+            `;
+        }
+        
+        function saveCharacter(name, race, charClass) {
+            const noteContent = `<div><strong>${name}</strong> - ${race} ${charClass}</div>`;
+            
+            fetch('api/save-note.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'content=' + encodeURIComponent(noteContent) + '&title=' + encodeURIComponent(name)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Персонаж сохранен в заметки!');
+                } else {
+                    alert('Ошибка сохранения: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка сохранения:', error);
+                alert('Ошибка сохранения: ' + error.message);
+            });
+        }
+        
+        function closeModal() {
+            // Закрываем модальное окно
+            document.querySelector('.character-generator-modal').style.display = 'none';
+        }
+        
+        // Закрытие по клику вне модального окна
+        document.querySelector('.character-generator-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Закрытие по Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

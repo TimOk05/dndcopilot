@@ -273,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message']) && !isset(
 // --- Генерация быстрых кнопок ---
 $fastBtns = '<div class="button-grid">';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openDiceStep1()" data-tooltip="Бросить кости" aria-label="Открыть генератор бросков костей"><span class="svg-icon icon-dice" data-icon="dice"></span> Кости</button>';
-$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="window.open(\'character-generator.html\', \'_blank\')" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей"><span class="svg-icon icon-hero" data-icon="hero"></span> Персонаж</button>';
+$fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openCharacterGeneratorModal()" data-tooltip="Создать персонажа" aria-label="Открыть генератор персонажей"><span class="svg-icon icon-hero" data-icon="hero"></span> Персонаж</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openEnemyModal()" data-tooltip="Создать противника" aria-label="Открыть генератор противников"><span class="svg-icon icon-enemy" data-icon="enemy"></span> Противники</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openPotionModalSimple()" data-tooltip="Создать зелье" aria-label="Открыть генератор зелий"><span class="svg-icon icon-potion" data-icon="potion"></span> Зелья</button>';
 $fastBtns .= '<button class="fast-btn btn btn-primary interactive" onclick="openSpellModal()" data-tooltip="Создать заклинания" aria-label="Открыть генератор заклинаний"><span class="svg-icon icon-spell" data-icon="spell"></span> Заклинания</button>';
@@ -452,19 +452,19 @@ function openEnemyModal() {
             <p>Создайте противников для вашей кампании</p>
             
             <form id="enemyForm" class="enemy-form">
-                <div class="form-group">
+                        <div class="form-group">
                     <label for="enemy-count">Количество</label>
                     <input type="number" id="enemy-count" name="count" value="1" min="1" max="10" required>
-                </div>
-                
-                <div class="form-group">
+                        </div>
+                        
+                        <div class="form-group">
                     <label for="enemy-level">Уровень угрозы</label>
                     <select id="enemy-level" name="level" required>
                         <option value="easy">Легкий</option>
                         <option value="medium">Средний</option>
                         <option value="hard">Тяжелый</option>
                         <option value="deadly">Смертельный</option>
-                    </select>
+                            </select>
                     </div>
                     
                     <div class="form-actions">
@@ -474,13 +474,13 @@ function openEnemyModal() {
                         <button type="button" class="btn btn-secondary" onclick="closeModal()">
                         ❌ Отмена
                     </button>
-                </div>
+                        </div>
             </form>
             
             <div id="enemyResult" class="enemy-result" style="display: none;">
                 <!-- Результат будет вставлен сюда -->
-            </div>
-        </div>
+                        </div>
+                    </div>
     `);
 }
 
@@ -6257,5 +6257,39 @@ function saveCharacterToNotes(name, race, charClass) {
 }
 
 console.log('Character generator functions defined');
+
+// --- Функция открытия модального генератора персонажей ---
+function openCharacterGeneratorModal() {
+    console.log('Opening character generator modal');
+    
+    // Создаем iframe для модального окна
+    const iframe = document.createElement('iframe');
+    iframe.src = 'modal-character-generator.html';
+    iframe.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        z-index: 10000;
+        background: rgba(0, 0, 0, 0.8);
+    `;
+    
+    // Добавляем iframe в body
+    document.body.appendChild(iframe);
+    
+    // Закрытие по клику вне iframe
+    iframe.addEventListener('load', function() {
+        // Добавляем обработчик закрытия
+        window.addEventListener('message', function(e) {
+            if (e.data === 'closeModal') {
+                document.body.removeChild(iframe);
+            }
+        });
+    });
+    
+    console.log('Character generator modal opened');
+}
 </script>
 
