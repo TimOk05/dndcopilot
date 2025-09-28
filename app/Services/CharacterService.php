@@ -20,7 +20,7 @@ class CharacterService {
         $this->racesFile = __DIR__ . '/../../data/персонажи/расы/races.json';
         $this->classesDir = __DIR__ . '/../../data/персонажи/классы/';
         $this->namesFile = __DIR__ . '/../../data/персонажи/имена/имена.json';
-        $this->equipmentFile = __DIR__ . '/../../data/персонажи/снаряжение/equipment.json';
+        $this->equipmentFile = __DIR__ . '/../../data/персонажи/снаряжение/снаряжение.json';
         $this->spellsFile = __DIR__ . '/../../data/заклинания/заклинания.json';
         $this->potionsFile = __DIR__ . '/../../data/зелья/зелья.json';
     }
