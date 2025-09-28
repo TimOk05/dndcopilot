@@ -672,7 +672,7 @@ function loadNewCharacterData() {
             return response.json();
         })
         .then(data => {
-            console.log('Races data:', data);
+            console.log('Races data:', JSON.stringify(data, null, 2));
             if (data.success && data.races) {
                 const raceSelect = document.getElementById('new-character-race');
                 raceSelect.innerHTML = '<option value="">Выберите расу</option>';
@@ -698,7 +698,7 @@ function loadNewCharacterData() {
             return response.json();
         })
         .then(data => {
-            console.log('Classes data:', data);
+            console.log('Classes data:', JSON.stringify(data, null, 2));
             if (data.success && data.classes) {
                 const classSelect = document.getElementById('new-character-class');
                 classSelect.innerHTML = '<option value="">Выберите класс</option>';
@@ -896,14 +896,18 @@ function saveNewCharacterToNotes(character) {
         </div>
     `;
     
-    fetch('', {
+    fetch('api/save-note.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: 'fast_action=save_note&content=' + encodeURIComponent(noteContent) + '&title=' + encodeURIComponent(character.name)
+        body: 'content=' + encodeURIComponent(noteContent) + '&title=' + encodeURIComponent(character.name)
     })
-    .then(r => r.text())
-    .then(() => {
-        console.log('Персонаж ' + character.name + ' сохранен в заметки!');
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Персонаж ' + character.name + ' сохранен в заметки!');
+        } else {
+            console.error('Ошибка сохранения:', data.message);
+        }
     })
     .catch(error => {
         console.error('Ошибка сохранения:', error);
