@@ -547,7 +547,7 @@ function openCharacterModal() {
                     </div>
                     
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary" id="generateCharacterBtn">
+                        <button type="button" class="btn btn-primary" id="generateCharacterBtn" onclick="generateCharacterFromForm()">
                             <span class="btn-icon">🎲</span>
                             Создать персонажа
                         </button>
@@ -579,46 +579,50 @@ function openCharacterModal() {
     // Загружаем данные
     loadNewCharacterData();
     
-    // Добавляем отладку для кнопки
-    const submitButton = document.querySelector('#newCharacterForm button[type="submit"]');
-    console.log('Submit button found:', submitButton);
-    
-    if (submitButton) {
-        submitButton.addEventListener('click', function(e) {
-            console.log('Submit button clicked!');
-            console.log('Form data before submit:', new FormData(document.getElementById('newCharacterForm')));
-        });
+    // Ждем, пока DOM обновится, затем привязываем обработчики
+    setTimeout(() => {
+        console.log('Setting up character generator handlers...');
         
-        // Альтернативный обработчик - если форма не работает
-        submitButton.addEventListener('click', function(e) {
-            console.log('=== ALTERNATIVE BUTTON CLICK ===');
-            e.preventDefault();
+        // Добавляем отладку для кнопки
+        const submitButton = document.querySelector('#newCharacterForm button[type="submit"]');
+        console.log('Submit button found:', submitButton);
+        
+        if (submitButton) {
+            // Удаляем старые обработчики, если есть
+            submitButton.replaceWith(submitButton.cloneNode(true));
+            const newSubmitButton = document.querySelector('#newCharacterForm button[type="submit"]');
             
-            const form = document.getElementById('newCharacterForm');
-            const formData = new FormData(form);
-            
-            console.log('Alternative handler - form data:', {
-                race: formData.get('race'),
-                class: formData.get('class'),
-                background: formData.get('background')
+            newSubmitButton.addEventListener('click', function(e) {
+                console.log('=== BUTTON CLICKED ===');
+                e.preventDefault();
+                
+                const form = document.getElementById('newCharacterForm');
+                const formData = new FormData(form);
+                
+                console.log('Button click - form data:', {
+                    race: formData.get('race'),
+                    class: formData.get('class'),
+                    background: formData.get('background')
+                });
+                
+                // Вызываем генерацию напрямую
+                generateCharacterDirectly(formData);
             });
-            
-            // Вызываем генерацию напрямую
-            generateCharacterDirectly(formData);
-        });
-    }
-    
-    // Обработчик формы
-    const form = document.getElementById('newCharacterForm');
-    console.log('Form element found:', form);
-    
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            console.log('=== FORM SUBMISSION STARTED ===');
-            e.preventDefault();
-            
-            // Проверяем, что форма действительно отправляется
-            console.log('Form submission prevented, processing...');
+        } else {
+            console.error('Submit button not found!');
+        }
+        
+        // Обработчик формы
+        const form = document.getElementById('newCharacterForm');
+        console.log('Form element found:', form);
+        
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                console.log('=== FORM SUBMISSION STARTED ===');
+                e.preventDefault();
+                
+                // Проверяем, что форма действительно отправляется
+                console.log('Form submission prevented, processing...');
         
         const formData = new FormData(this);
         const useAI = document.getElementById('use-ai').checked;
@@ -732,9 +736,10 @@ function openCharacterModal() {
             console.error('Generation error:', error);
             alert('Ошибка сети: ' + error.message);
         });
-    } else {
-        console.error('Form element not found!');
-    }
+        } else {
+            console.error('Form element not found!');
+        }
+    }, 100); // Ждем 100мс для обновления DOM
 }
 
 // --- Вспомогательные функции для нового генератора персонажей ---
@@ -1015,6 +1020,25 @@ function showCharacterForm() {
     if (formContainer) formContainer.style.display = 'block';
     if (resultDiv) resultDiv.style.display = 'none';
     if (progressDiv) progressDiv.style.display = 'none';
+}
+
+function generateCharacterFromForm() {
+    console.log('=== GENERATE CHARACTER FROM FORM ===');
+    
+    const form = document.getElementById('newCharacterForm');
+    if (!form) {
+        console.error('Form not found!');
+        return;
+    }
+    
+    const formData = new FormData(form);
+    console.log('Form data from onclick:', {
+        race: formData.get('race'),
+        class: formData.get('class'),
+        background: formData.get('background')
+    });
+    
+    generateCharacterDirectly(formData);
 }
 
 function generateCharacterDirectly(formData) {
