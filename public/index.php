@@ -6,6 +6,8 @@ require_once '../app/Middleware/auth.php';
 
 // Мобильная версия будет переписана позже
 
+require_once '../app/Middleware/auth.php';
+
 // Проверяем авторизацию
 if (!isLoggedIn()) {
     header('Location: login.php');
@@ -577,10 +579,27 @@ function openCharacterModal() {
     // Загружаем данные
     loadNewCharacterData();
     
+    // Добавляем отладку для кнопки
+    const submitButton = document.querySelector('#newCharacterForm button[type="submit"]');
+    console.log('Submit button found:', submitButton);
+    
+    if (submitButton) {
+        submitButton.addEventListener('click', function(e) {
+            console.log('Submit button clicked!');
+        });
+    }
+    
     // Обработчик формы
-    document.getElementById('newCharacterForm').addEventListener('submit', function(e) {
+    const form = document.getElementById('newCharacterForm');
+    console.log('Form element found:', form);
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
         console.log('Form submitted, starting character generation...');
         e.preventDefault();
+        
+        // Проверяем, что форма действительно отправляется
+        console.log('Form submission prevented, processing...');
         
         const formData = new FormData(this);
         const useAI = document.getElementById('use-ai').checked;
@@ -694,7 +713,9 @@ function openCharacterModal() {
             console.error('Generation error:', error);
             alert('Ошибка сети: ' + error.message);
         });
-    });
+    } else {
+        console.error('Form element not found!');
+    }
 }
 
 // --- Вспомогательные функции для нового генератора персонажей ---
