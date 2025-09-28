@@ -593,6 +593,12 @@ function openCharacterModal() {
             use_ai: formData.get('use_ai')
         });
         
+        // Проверяем, что все необходимые поля заполнены
+        if (!formData.get('race') || !formData.get('class')) {
+            alert('Пожалуйста, выберите расу и класс');
+            return;
+        }
+        
         const resultDiv = document.getElementById('characterResult');
         const progressDiv = document.getElementById('characterProgress');
         const formContainer = document.querySelector('.character-form-container');
@@ -643,7 +649,12 @@ function openCharacterModal() {
                 
                 if (data.success) {
                     const character = data.character;
-                    resultDiv.innerHTML = formatNewCharacter(character);
+                    console.log('Character data received:', character);
+                    console.log('Formatting character...');
+                    const formattedCharacter = formatNewCharacter(character);
+                    console.log('Formatted character HTML:', formattedCharacter);
+                    resultDiv.innerHTML = formattedCharacter;
+                    console.log('Character HTML inserted into resultDiv');
                     
                     // Добавляем кнопку сохранения
                     const saveButton = document.createElement('div');
