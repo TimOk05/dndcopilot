@@ -3,10 +3,7 @@ session_start();
 require_once '../app/Middleware/auth.php';
 
 // Language Service будет переписан для новой архитектуры
-
 // Мобильная версия будет переписана позже
-
-require_once '../app/Middleware/auth.php';
 
 // Проверяем авторизацию
 if (!isLoggedIn()) {

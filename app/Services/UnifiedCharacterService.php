@@ -1,10 +1,11 @@
 <?php
 /**
- * Сервис для работы с персонажами D&D 5e
- * Обеспечивает загрузку, генерацию и форматирование персонажей
+ * Унифицированный сервис для работы с персонажами D&D 5e
+ * Объединяет лучшие части CharacterService и ImprovedCharacterService
+ * Версия 3.0
  */
 
-class CharacterService {
+class UnifiedCharacterService {
     private $racesData = null;
     private $classesData = null;
     private $namesData = null;
@@ -34,19 +35,31 @@ class CharacterService {
         }
         
         if (!file_exists($this->racesFile)) {
+            logMessage('ERROR', 'Races file not found: ' . $this->racesFile);
             $this->racesData = [];
             return $this->racesData;
         }
         
         $jsonContent = file_get_contents($this->racesFile);
+        if ($jsonContent === false) {
+            logMessage('ERROR', 'Failed to read races file: ' . $this->racesFile);
+            $this->racesData = [];
+            return $this->racesData;
+        }
+        
         $data = json_decode($jsonContent, true);
         
         if (json_last_error() !== JSON_ERROR_NONE) {
+            logMessage('ERROR', 'JSON decode error in races file: ' . json_last_error_msg());
             $this->racesData = [];
             return $this->racesData;
         }
         
         $this->racesData = $data['races'] ?? [];
+        
+        logMessage('INFO', 'Races data loaded successfully', [
+            'count' => count($this->racesData)
+        ]);
         
         return $this->racesData;
     }
@@ -60,13 +73,29 @@ class CharacterService {
         }
         
         $this->classesData = [];
+        
+        if (!is_dir($this->classesDir)) {
+            logMessage('ERROR', 'Classes directory not found: ' . $this->classesDir);
+            return $this->classesData;
+        }
+        
         $classFiles = glob($this->classesDir . '*/' . '*.json');
         
         foreach ($classFiles as $file) {
             $jsonContent = file_get_contents($file);
+            if ($jsonContent === false) {
+                logMessage('WARNING', 'Failed to read class file: ' . $file);
+                continue;
+            }
+            
             $classData = json_decode($jsonContent, true);
             
-            if (json_last_error() === JSON_ERROR_NONE && isset($classData['class'])) {
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                logMessage('WARNING', 'JSON decode error in class file ' . $file . ': ' . json_last_error_msg());
+                continue;
+            }
+            
+            if (isset($classData['class'])) {
                 $classInfo = $classData['class'];
                 if (isset($classInfo['id'])) {
                     $this->classesData[$classInfo['id']] = $classInfo;
@@ -74,9 +103,12 @@ class CharacterService {
             }
         }
         
+        logMessage('INFO', 'Classes data loaded successfully', [
+            'count' => count($this->classesData)
+        ]);
+        
         return $this->classesData;
     }
-    
     
     /**
      * Загружает данные об именах для конкретной расы
@@ -86,84 +118,38 @@ class CharacterService {
             return $this->namesData;
         }
         
-        // Пытаемся загрузить расовые имена
-        $raceNamesFile = __DIR__ . '/../../data/персонажи/имена/' . $raceId . '/мужские_имена.json';
+        // Пытаемся загрузить расовые имена из папки names
+        $raceNamesFile = __DIR__ . '/../../names/' . $raceId . '_names.json';
         if (file_exists($raceNamesFile)) {
             $jsonContent = file_get_contents($raceNamesFile);
-            $data = json_decode($jsonContent, true);
-            
-            if (json_last_error() === JSON_ERROR_NONE) {
-                return $data;
+            if ($jsonContent !== false) {
+                $data = json_decode($jsonContent, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    return $data;
+                }
             }
         }
         
         // Fallback к общим именам
         if (!file_exists($this->namesFile)) {
+            logMessage('WARNING', 'Names file not found: ' . $this->namesFile);
             return [];
         }
         
         $jsonContent = file_get_contents($this->namesFile);
+        if ($jsonContent === false) {
+            logMessage('WARNING', 'Failed to read names file: ' . $this->namesFile);
+            return [];
+        }
+        
         $this->namesData = json_decode($jsonContent, true);
         
         if (json_last_error() !== JSON_ERROR_NONE) {
+            logMessage('WARNING', 'JSON decode error in names file: ' . json_last_error_msg());
             $this->namesData = [];
         }
         
         return $this->namesData;
-    }
-    
-    /**
-     * Загружает данные о снаряжении
-     */
-    private function loadEquipmentData() {
-        if (!file_exists($this->equipmentFile)) {
-            return [];
-        }
-        
-        $jsonContent = file_get_contents($this->equipmentFile);
-        $data = json_decode($jsonContent, true);
-        
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return [];
-        }
-        
-        return $data;
-    }
-    
-    /**
-     * Загружает данные о заклинаниях
-     */
-    private function loadSpellsData() {
-        if (!file_exists($this->spellsFile)) {
-            return [];
-        }
-        
-        $jsonContent = file_get_contents($this->spellsFile);
-        $data = json_decode($jsonContent, true);
-        
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return [];
-        }
-        
-        return $data;
-    }
-    
-    /**
-     * Загружает данные о зельях
-     */
-    private function loadPotionsData() {
-        if (!file_exists($this->potionsFile)) {
-            return [];
-        }
-        
-        $jsonContent = file_get_contents($this->potionsFile);
-        $data = json_decode($jsonContent, true);
-        
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return [];
-        }
-        
-        return $data;
     }
     
     /**
@@ -180,12 +166,12 @@ class CharacterService {
     public function getRaceById($raceId) {
         $races = $this->loadRacesData();
         
-        // Ищем по ключу (например, "gnome" для race_gnome)
+        // Ищем по ключу (например, "aarakocra")
         if (isset($races[$raceId])) {
             return $races[$raceId];
         }
         
-        // Ищем по ID в значениях (например, "race_gnome")
+        // Ищем по ID в значениях (например, "race_aarakocra")
         foreach ($races as $race) {
             if (isset($race['id']) && $race['id'] === $raceId) {
                 return $race;
@@ -220,7 +206,7 @@ class CharacterService {
     public function getClassById($classId) {
         $classes = $this->loadClassesData();
         
-        // Ищем по ключу (например, "fighter")
+        // Ищем по ключу
         if (isset($classes[$classId])) {
             return $classes[$classId];
         }
@@ -238,7 +224,6 @@ class CharacterService {
         }
         return [];
     }
-    
     
     /**
      * Генерирует случайное имя для расы
@@ -351,6 +336,13 @@ class CharacterService {
         $subraceId = $params['subrace'] ?? '';
         $archetypeId = $params['archetype'] ?? '';
         
+        logMessage('INFO', 'Starting character generation', [
+            'race' => $raceId,
+            'class' => $classId,
+            'level' => $level,
+            'gender' => $gender
+        ]);
+        
         // Получаем данные о расе и классе
         $race = $this->getRaceById($raceId);
         $class = $this->getClassById($classId);
@@ -449,6 +441,12 @@ class CharacterService {
             'background_story' => $this->generateBackgroundStory($race, $class)
         ];
         
+        logMessage('INFO', 'Character generated successfully', [
+            'name' => $character['name'],
+            'race' => $character['race'],
+            'class' => $character['class']
+        ]);
+        
         return $character;
     }
     
@@ -464,14 +462,6 @@ class CharacterService {
             'money' => '2к4 × 10 зм'
         ];
         
-        // Загружаем данные о снаряжении
-        $equipmentData = $this->loadEquipmentData();
-        
-        // Генерируем стартовое снаряжение на основе класса
-        if (isset($class['starting_equipment'])) {
-            $this->processStartingEquipment($class['starting_equipment'], $equipment, $equipmentData);
-        }
-        
         // Добавляем базовое снаряжение
         $equipment['items'][] = 'Рюкзак';
         $equipment['items'][] = 'Спальный мешок';
@@ -486,129 +476,17 @@ class CharacterService {
     }
     
     /**
-     * Обрабатывает стартовое снаряжение класса
-     */
-    private function processStartingEquipment($startingEquipment, &$equipment, $equipmentData) {
-        // Обрабатываем фиксированное снаряжение
-        if (isset($startingEquipment['fixed'])) {
-            foreach ($startingEquipment['fixed'] as $item) {
-                $equipment['items'][] = $item;
-            }
-        }
-        
-        // Обрабатываем выборы снаряжения
-        if (isset($startingEquipment['choices'])) {
-            foreach ($startingEquipment['choices'] as $choice) {
-                if (isset($choice['choose']) && isset($choice['options'])) {
-                    $chooseCount = $choice['choose'];
-                    $options = $choice['options'];
-                    
-                    // Случайно выбираем опции
-                    $selectedOptions = array_rand($options, min($chooseCount, count($options)));
-                    if (!is_array($selectedOptions)) {
-                        $selectedOptions = [$selectedOptions];
-                    }
-                    
-                    foreach ($selectedOptions as $optionIndex) {
-                        $option = $options[$optionIndex];
-                        if (is_string($option)) {
-                            $equipment['items'][] = $option;
-                        } elseif (is_array($option) && isset($option['type'])) {
-                            $this->processEquipmentOption($option, $equipment, $equipmentData);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    /**
-     * Обрабатывает опцию снаряжения
-     */
-    private function processEquipmentOption($option, &$equipment, $equipmentData) {
-        switch ($option['type']) {
-            case 'bundle':
-                if (isset($option['items'])) {
-                    foreach ($option['items'] as $item) {
-                        if (isset($item['ref']) && isset($equipmentData['weapons'])) {
-                            // Ищем оружие по ссылке
-                            foreach ($equipmentData['weapons'] as $weapon) {
-                                if (isset($weapon['id']) && $weapon['id'] === $item['ref']) {
-                                    $equipment['weapons'][] = $weapon['name'];
-                                    break;
-                                }
-                            }
-                        } elseif (isset($item['ref']) && isset($equipmentData['armors'])) {
-                            // Ищем доспех по ссылке
-                            foreach ($equipmentData['armors'] as $armor) {
-                                if (isset($armor['id']) && $armor['id'] === $item['ref']) {
-                                    $equipment['armor'][] = $armor['name'];
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-        }
-    }
-    
-    /**
      * Генерирует заклинания для персонажа
      */
     private function generateSpells($class, $level) {
         $spells = [];
-        $spellsData = $this->loadSpellsData();
-        
-        if (empty($spellsData)) {
-            return $this->getDefaultSpells($class);
-        }
         
         $classId = $class['id'] ?? '';
-        $classSpells = [];
         
-        // Фильтруем заклинания по классу
-        foreach ($spellsData as $spell) {
-            if (isset($spell['classes']) && in_array($classId, $spell['classes'])) {
-                $classSpells[] = $spell;
-            }
-        }
-        
-        // Генерируем заговоры
-        $cantrips = $this->getSpellsByLevel($classSpells, 0, 3);
-        if (!empty($cantrips)) {
-            $spells['cantrips'] = array_column($cantrips, 'name');
-        }
-        
-        // Генерируем заклинания 1-го уровня
-        if ($level >= 1) {
-            $level1Spells = $this->getSpellsByLevel($classSpells, 1, 2);
-            if (!empty($level1Spells)) {
-                $spells['level_1'] = array_column($level1Spells, 'name');
-            }
-        }
-        
-        // Добавляем информацию о книге заклинаний для волшебника
-        if ($classId === 'wizard') {
-            $spells['spellbook'] = 'Книга заклинаний с 6 заклинаниями 1-го уровня';
-        }
+        // Генерируем заклинания по умолчанию
+        $spells = $this->getDefaultSpells($class);
         
         return $spells;
-    }
-    
-    /**
-     * Получает заклинания по уровню
-     */
-    private function getSpellsByLevel($spells, $level, $count) {
-        $levelSpells = array_filter($spells, function($spell) use ($level) {
-            return isset($spell['level']) && $spell['level'] == $level;
-        });
-        
-        if (count($levelSpells) <= $count) {
-            return array_values($levelSpells);
-        }
-        
-        return array_slice(array_values($levelSpells), 0, $count);
     }
     
     /**
@@ -655,32 +533,9 @@ class CharacterService {
     }
     
     /**
-     * Генерирует описание персонажа с помощью AI
+     * Генерирует описание персонажа
      */
     private function generateDescription($race, $class) {
-        try {
-            // Проверяем, доступен ли AIService
-            if (class_exists('AIService')) {
-                $aiService = new \AIService();
-                $character = [
-                    'name' => 'Персонаж',
-                    'race' => $race['name'] ?? 'Неизвестная раса',
-                    'class' => $class['name']['ru'] ?? $class['name']['en'] ?? 'Неизвестный класс',
-                    'level' => 1,
-                    'gender' => 'неизвестен',
-                    'alignment' => 'нейтральный',
-                    'background' => 'Случайная',
-                    'abilities' => ['str' => 10, 'dex' => 10, 'con' => 10, 'int' => 10, 'wis' => 10, 'cha' => 10]
-                ];
-                
-                return $aiService->generateCharacterDescription($character);
-            }
-        } catch (Exception $e) {
-            // Логируем ошибку, но продолжаем работу
-            error_log('AI description generation failed: ' . $e->getMessage());
-        }
-        
-        // Fallback к статическим описаниям
         $raceName = $race['name'] ?? 'Неизвестная раса';
         $className = $class['name']['ru'] ?? $class['name']['en'] ?? 'Неизвестный класс';
         
@@ -695,32 +550,9 @@ class CharacterService {
     }
     
     /**
-     * Генерирует предысторию персонажа с помощью AI
+     * Генерирует предысторию персонажа
      */
     private function generateBackgroundStory($race, $class) {
-        try {
-            // Проверяем, доступен ли AIService
-            if (class_exists('AIService')) {
-                $aiService = new \AIService();
-                $character = [
-                    'name' => 'Персонаж',
-                    'race' => $race['name'] ?? 'Неизвестная раса',
-                    'class' => $class['name']['ru'] ?? $class['name']['en'] ?? 'Неизвестный класс',
-                    'level' => 1,
-                    'gender' => 'неизвестен',
-                    'alignment' => 'нейтральный',
-                    'background' => 'Случайная',
-                    'abilities' => ['str' => 10, 'dex' => 10, 'con' => 10, 'int' => 10, 'wis' => 10, 'cha' => 10]
-                ];
-                
-                return $aiService->generateCharacterBackground($character);
-            }
-        } catch (Exception $e) {
-            // Логируем ошибку, но продолжаем работу
-            error_log('AI background generation failed: ' . $e->getMessage());
-        }
-        
-        // Fallback к статическим историям
         $stories = [
             "Родился в небольшой деревне и с детства мечтал о приключениях",
             "Происходит из знатной семьи, но предпочел жизнь странника",
@@ -752,32 +584,18 @@ class CharacterService {
      * Получает случайные зелья
      */
     public function getRandomPotions($count = 2) {
-        $potionsData = $this->loadPotionsData();
+        $potions = [
+            ['name' => 'Зелье лечения', 'description' => 'Восстанавливает 2к4+2 хитов'],
+            ['name' => 'Зелье силы', 'description' => 'Увеличивает силу на 1 час'],
+            ['name' => 'Зелье ловкости', 'description' => 'Увеличивает ловкость на 1 час']
+        ];
         
-        if (empty($potionsData) || !isset($potionsData['items'])) {
-            return [];
+        $selectedPotions = [];
+        for ($i = 0; $i < min($count, count($potions)); $i++) {
+            $selectedPotions[] = $potions[array_rand($potions)];
         }
         
-        $potions = $potionsData['items'];
-        $commonPotions = array_filter($potions, function($potion) {
-            return isset($potion['rarity']) && $potion['rarity'] === 'uncommon';
-        });
-        
-        if (count($commonPotions) <= $count) {
-            return array_values($commonPotions);
-        }
-        
-        $selectedPotions = array_rand($commonPotions, $count);
-        if (!is_array($selectedPotions)) {
-            $selectedPotions = [$selectedPotions];
-        }
-        
-        $result = [];
-        foreach ($selectedPotions as $index) {
-            $result[] = $commonPotions[$index];
-        }
-        
-        return $result;
+        return $selectedPotions;
     }
     
     /**

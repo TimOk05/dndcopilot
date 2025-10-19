@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест API v3 - Генератор персонажей D&D</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        
+        .test-section h3 {
+            color: #555;
+            margin-top: 0;
+        }
+        
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .success {
+            border-color: #4CAF50;
+            background: #f0fff0;
+        }
+        
+        .error {
+            border-color: #f44336;
+            background: #fff0f0;
+        }
+        
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+        
+        .character-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .character-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .character-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .detail-group {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .abilities {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .ability {
+            text-align: center;
+            background: #e3f2fd;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        
+        .ability-name {
+            font-weight: bold;
+            color: #1976d2;
+        }
+        
+        .ability-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎲 Тест API v3 - Генератор персонажей D&D</h1>
+
+        <div class="test-section">
+            <h3>🔧 Тест API</h3>
+            <button onclick="testAPI()">Тест API</button>
+            <button onclick="testStats()">Статистика</button>
+            <button onclick="testRaces()">Список рас</button>
+            <button onclick="testClasses()">Список классов</button>
+            <div id="api-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>⚔️ Генерация персонажей</h3>
+            <button onclick="generateRandomCharacter()">Случайный персонаж</button>
+            <button onclick="generateHumanFighter()">Человек-Воин</button>
+            <button onclick="generateElfWizard()">Эльф-Волшебник</button>
+            <button onclick="generateDwarfCleric()">Дварф-Жрец</button>
+            <div id="character-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Кастомная генерация</h3>
+            <div style="margin-bottom: 15px;">
+                <label>Раса: </label>
+                <select id="race-select">
+                    <option value="human">Человек</option>
+                    <option value="elf">Эльф</option>
+                    <option value="dwarf">Дварф</option>
+                    <option value="halfling">Полурослик</option>
+                    <option value="gnome">Гном</option>
+                </select>
+
+                <label style="margin-left: 20px;">Класс: </label>
+                <select id="class-select">
+                    <option value="fighter">Воин</option>
+                    <option value="wizard">Волшебник</option>
+                    <option value="cleric">Жрец</option>
+                    <option value="rogue">Плут</option>
+                    <option value="barbarian">Варвар</option>
+                </select>
+
+                <label style="margin-left: 20px;">Уровень: </label>
+                <select id="level-select">
+                    <option value="1">1</option>
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <button onclick="generateCustomCharacter()">Генерировать</button>
+            <div id="custom-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'api/v3/characters.php';
+
+        async function makeRequest(action, params = {}) {
+            const url = new URL(API_BASE, window.location.origin);
+            url.searchParams.set('action', action);
+
+            Object.keys(params).forEach(key => {
+                url.searchParams.set(key, params[key]);
+            });
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                return {
+                    success: false,
+                    error: error.message
+                };
+            }
+        }
+
+        async function makePostRequest(action, params = {}) {
+            const formData = new FormData();
+            formData.append('action', action);
+
+            Object.keys(params).forEach(key => {
+                formData.append(key, params[key]);
+            });
+
+            try {
+                const response = await fetch(API_BASE, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                return {
+                    success: false,
+                    error: error.message
+                };
+            }
+        }
+
+        function displayResult(elementId, data) {
+            const element = document.getElementById(elementId);
+            element.className = 'result';
+
+            if (data.success) {
+                element.classList.add('success');
+            } else {
+                element.classList.add('error');
+            }
+
+            element.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        }
+
+        function displayCharacter(elementId, character) {
+            const element = document.getElementById(elementId);
+            element.className = 'result success';
+
+            element.innerHTML = `
+                <div class="character-card">
+                    <div class="character-name">${character.name}</div>
+                    <div><strong>Раса:</strong> ${character.race}</div>
+                    <div><strong>Класс:</strong> ${character.class} (${character.level} уровень)</div>
+                    <div><strong>Мировоззрение:</strong> ${character.alignment}</div>
+                    <div><strong>Предыстория:</strong> ${character.background.name}</div>
+                    
+                    <div class="character-details">
+                        <div class="detail-group">
+                            <div class="detail-label">Характеристики</div>
+                            <div class="abilities">
+                                <div class="ability">
+                                    <div class="ability-name">СИЛ</div>
+                                    <div class="ability-value">${character.abilities.str} (${character.modifiers.str >= 0 ? '+' : ''}${character.modifiers.str})</div>
+                                </div>
+                                <div class="ability">
+                                    <div class="ability-name">ЛОВ</div>
+                                    <div class="ability-value">${character.abilities.dex} (${character.modifiers.dex >= 0 ? '+' : ''}${character.modifiers.dex})</div>
+                                </div>
+                                <div class="ability">
+                                    <div class="ability-name">ТЕЛ</div>
+                                    <div class="ability-value">${character.abilities.con} (${character.modifiers.con >= 0 ? '+' : ''}${character.modifiers.con})</div>
+                                </div>
+                                <div class="ability">
+                                    <div class="ability-name">ИНТ</div>
+                                    <div class="ability-value">${character.abilities.int} (${character.modifiers.int >= 0 ? '+' : ''}${character.modifiers.int})</div>
+                                </div>
+                                <div class="ability">
+                                    <div class="ability-name">МДР</div>
+                                    <div class="ability-value">${character.abilities.wis} (${character.modifiers.wis >= 0 ? '+' : ''}${character.modifiers.wis})</div>
+                                </div>
+                                <div class="ability">
+                                    <div class="ability-name">ХАР</div>
+                                    <div class="ability-value">${character.abilities.cha} (${character.modifiers.cha >= 0 ? '+' : ''}${character.modifiers.cha})</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <div class="detail-label">Боевые характеристики</div>
+                            <div><strong>Хиты:</strong> ${character.hit_points}</div>
+                            <div><strong>КД:</strong> ${character.armor_class}</div>
+                            <div><strong>Скорость:</strong> ${character.speed} футов</div>
+                            <div><strong>Инициатива:</strong> ${character.initiative >= 0 ? '+' : ''}${character.initiative}</div>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <div class="detail-label">Снаряжение</div>
+                            <div><strong>Деньги:</strong> ${character.equipment.money}</div>
+                            <div><strong>Предметы:</strong> ${character.equipment.items.join(', ')}</div>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <div class="detail-label">Описание</div>
+                            <div>${character.description}</div>
+                            <div style="margin-top: 10px;"><strong>История:</strong> ${character.background_story}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function testAPI() {
+            const result = document.getElementById('api-result');
+            result.innerHTML = '<div class="loading">Тестирование API...</div>';
+
+            const data = await makeRequest('test');
+            displayResult('api-result', data);
+        }
+
+        async function testStats() {
+            const result = document.getElementById('api-result');
+            result.innerHTML = '<div class="loading">Получение статистики...</div>';
+
+            const data = await makeRequest('stats');
+            displayResult('api-result', data);
+        }
+
+        async function testRaces() {
+            const result = document.getElementById('api-result');
+            result.innerHTML = '<div class="loading">Загрузка рас...</div>';
+
+            const data = await makeRequest('races');
+            displayResult('api-result', data);
+        }
+
+        async function testClasses() {
+            const result = document.getElementById('api-result');
+            result.innerHTML = '<div class="loading">Загрузка классов...</div>';
+
+            const data = await makeRequest('classes');
+            displayResult('api-result', data);
+        }
+
+        async function generateRandomCharacter() {
+            const result = document.getElementById('character-result');
+            result.innerHTML = '<div class="loading">Генерация случайного персонажа...</div>';
+
+            const data = await makePostRequest('generate', {
+                race: 'human',
+                class: 'fighter',
+                level: 1,
+                gender: 'random',
+                alignment: 'random'
+            });
+
+            if (data.success && data.character) {
+                displayCharacter('character-result', data.character);
+            } else {
+                displayResult('character-result', data);
+            }
+        }
+
+        async function generateHumanFighter() {
+            const result = document.getElementById('character-result');
+            result.innerHTML = '<div class="loading">Генерация человека-воина...</div>';
+
+            const data = await makePostRequest('generate', {
+                race: 'human',
+                class: 'fighter',
+                level: 1,
+                gender: 'random',
+                alignment: 'random'
+            });
+
+            if (data.success && data.character) {
+                displayCharacter('character-result', data.character);
+            } else {
+                displayResult('character-result', data);
+            }
+        }
+
+        async function generateElfWizard() {
+            const result = document.getElementById('character-result');
+            result.innerHTML = '<div class="loading">Генерация эльфа-волшебника...</div>';
+
+            const data = await makePostRequest('generate', {
+                race: 'elf',
+                class: 'wizard',
+                level: 1,
+                gender: 'random',
+                alignment: 'random'
+            });
+
+            if (data.success && data.character) {
+                displayCharacter('character-result', data.character);
+            } else {
+                displayResult('character-result', data);
+            }
+        }
+
+        async function generateDwarfCleric() {
+            const result = document.getElementById('character-result');
+            result.innerHTML = '<div class="loading">Генерация дварфа-жреца...</div>';
+
+            const data = await makePostRequest('generate', {
+                race: 'dwarf',
+                class: 'cleric',
+                level: 1,
+                gender: 'random',
+                alignment: 'random'
+            });
+
+            if (data.success && data.character) {
+                displayCharacter('character-result', data.character);
+            } else {
+                displayResult('character-result', data);
+            }
+        }
+
+        async function generateCustomCharacter() {
+            const result = document.getElementById('custom-result');
+            result.innerHTML = '<div class="loading">Генерация кастомного персонажа...</div>';
+
+            const race = document.getElementById('race-select').value;
+            const class_ = document.getElementById('class-select').value;
+            const level = document.getElementById('level-select').value;
+
+            const data = await makePostRequest('generate', {
+                race: race,
+                class: class_,
+                level: level,
+                gender: 'random',
+                alignment: 'random'
+            });
+
+            if (data.success && data.character) {
+                displayCharacter('custom-result', data.character);
+            } else {
+                displayResult('custom-result', data);
+            }
+        }
+
+        // Автоматический тест при загрузке
+        window.onload = function() {
+            testAPI();
+        };
+    </script>
+</body>
+
+</html>
