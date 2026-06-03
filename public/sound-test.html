@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест звука D&D Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+            width: 200px;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            min-height: 50px;
+        }
+        
+        .success {
+            border-color: #4CAF50;
+            background: #f0fff0;
+        }
+        
+        .error {
+            border-color: #f44336;
+            background: #fff0f0;
+        }
+        
+        .info {
+            border-color: #2196F3;
+            background: #e3f2fd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎵 Тест звука D&D Generator</h1>
+
+        <div class="result info">
+            <h3>🔊 Тестирование звуковых возможностей</h3>
+            <p>Нажмите кнопки ниже для тестирования различных звуковых функций.</p>
+        </div>
+
+        <div style="text-align: center;">
+            <button onclick="testBasicSound()">🎵 Базовый звук</button>
+            <button onclick="testDiceSound()">🎲 Звук костей</button>
+            <button onclick="testCharacterSound()">⚔️ Звук персонажа</button>
+            <button onclick="testBackgroundMusic()">🎶 Фоновая музыка</button>
+            <button onclick="stopAllSounds()">🔇 Остановить все</button>
+        </div>
+
+        <div id="sound-result" class="result">
+            <h3>📊 Результаты тестирования:</h3>
+            <p>Нажмите кнопки выше для начала тестирования</p>
+        </div>
+
+        <div class="result info">
+            <h3>🔧 Информация о браузере:</h3>
+            <p><strong>User Agent:</strong> <span id="user-agent"></span></p>
+            <p><strong>Поддержка Web Audio:</strong> <span id="web-audio-support"></span></p>
+            <p><strong>Поддержка HTML5 Audio:</strong> <span id="html5-audio-support"></span></p>
+        </div>
+    </div>
+
+    <script>
+        let audioContext = null;
+        let currentSounds = [];
+
+        // Проверяем поддержку звука
+        function checkAudioSupport() {
+            const userAgent = navigator.userAgent;
+            document.getElementById('user-agent').textContent = userAgent;
+
+            // Проверяем Web Audio API
+            const webAudioSupported = !!(window.AudioContext || window.webkitAudioContext);
+            document.getElementById('web-audio-support').textContent = webAudioSupported ? '✅ Поддерживается' : '❌ Не поддерживается';
+
+            // Проверяем HTML5 Audio
+            const html5AudioSupported = !!(document.createElement('audio').canPlayType);
+            document.getElementById('html5-audio-support').textContent = html5AudioSupported ? '✅ Поддерживается' : '❌ Не поддерживается';
+
+            return webAudioSupported || html5AudioSupported;
+        }
+
+        function updateResult(message, type = 'info') {
+            const result = document.getElementById('sound-result');
+            result.className = 'result ' + type;
+            result.innerHTML = '<h3>📊 Результаты тестирования:</h3><p>' + message + '</p>';
+        }
+
+        function testBasicSound() {
+            updateResult('🎵 Воспроизведение базового звука...', 'info');
+
+            try {
+                if (window.AudioContext || window.webkitAudioContext) {
+                    // Используем Web Audio API
+                    const audioContext = new(window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+
+                    oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.5);
+
+                    updateResult('✅ Базовый звук воспроизведен успешно через Web Audio API!', 'success');
+                } else {
+                    updateResult('❌ Web Audio API не поддерживается в этом браузере', 'error');
+                }
+            } catch (error) {
+                updateResult('❌ Ошибка воспроизведения базового звука: ' + error.message, 'error');
+            }
+        }
+
+        function testDiceSound() {
+            updateResult('🎲 Воспроизведение звука костей...', 'info');
+
+            try {
+                if (window.AudioContext || window.webkitAudioContext) {
+                    const audioContext = new(window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+
+                    // Создаем звук "броска костей" - несколько быстрых тонов
+                    oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(300, audioContext.currentTime + 0.1);
+                    oscillator.frequency.setValueAtTime(400, audioContext.currentTime + 0.2);
+
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime + 0.3);
+
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.5);
+
+                    updateResult('✅ Звук костей воспроизведен успешно!', 'success');
+                } else {
+                    updateResult('❌ Web Audio API не поддерживается в этом браузере', 'error');
+                }
+            } catch (error) {
+                updateResult('❌ Ошибка воспроизведения звука костей: ' + error.message, 'error');
+            }
+        }
+
+        function testCharacterSound() {
+            updateResult('⚔️ Воспроизведение звука персонажа...', 'info');
+
+            try {
+                if (window.AudioContext || window.webkitAudioContext) {
+                    const audioContext = new(window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+
+                    // Создаем "героический" звук - восходящая мелодия
+                    oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(330, audioContext.currentTime + 0.2);
+                    oscillator.frequency.setValueAtTime(440, audioContext.currentTime + 0.4);
+                    oscillator.frequency.setValueAtTime(550, audioContext.currentTime + 0.6);
+
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime + 0.8);
+
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 1.0);
+
+                    updateResult('✅ Звук персонажа воспроизведен успешно!', 'success');
+                } else {
+                    updateResult('❌ Web Audio API не поддерживается в этом браузере', 'error');
+                }
+            } catch (error) {
+                updateResult('❌ Ошибка воспроизведения звука персонажа: ' + error.message, 'error');
+            }
+        }
+
+        function testBackgroundMusic() {
+            updateResult('🎶 Тестирование фоновой музыки...', 'info');
+
+            try {
+                // Пытаемся загрузить существующий звуковой файл
+                const audio = new Audio();
+                audio.src = 'sound/bg music dark.mp3';
+
+                audio.onloadeddata = function() {
+                    updateResult('✅ Фоновый звуковой файл загружен успешно!', 'success');
+                };
+
+                audio.onerror = function() {
+                    updateResult('❌ Не удалось загрузить фоновый звуковой файл. Файл не найден или не поддерживается.', 'error');
+                };
+
+                audio.load();
+            } catch (error) {
+                updateResult('❌ Ошибка загрузки фоновой музыки: ' + error.message, 'error');
+            }
+        }
+
+        function stopAllSounds() {
+            updateResult('🔇 Все звуки остановлены', 'info');
+
+            // Останавливаем все активные звуки
+            currentSounds.forEach(sound => {
+                if (sound.stop) {
+                    sound.stop();
+                }
+            });
+            currentSounds = [];
+        }
+
+        // Инициализация при загрузке страницы
+        window.onload = function() {
+            checkAudioSupport();
+        };
+    </script>
+</body>
+
+</html>
