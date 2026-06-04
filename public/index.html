@@ -74,7 +74,10 @@
 
         <div class="quick-grid">
           <button class="feature-button" type="button">Создать NPC</button>
-          <button class="feature-button" type="button">Бросить кость</button>
+          <button class="feature-button generator-button" type="button">
+            <span class="generator-button-icon icon-dice" aria-hidden="true"></span>
+            <span>Бросить кость</span>
+          </button>
           <button class="feature-button" type="button">Добавить заметку</button>
           <button class="feature-button" type="button">Открыть инициативу</button>
         </div>
@@ -100,18 +103,20 @@
           <h3>Генераторы</h3>
           <p>Кнопки будущих инструментов. Пока без логики, чтобы дальше подключать их аккуратно.</p>
         </div>
-        <div class="button-board">
-          <button type="button">Персонаж</button>
-          <button type="button">NPC</button>
-          <button type="button" data-panel="bestiary">Бестиарий</button>
-          <button type="button">Противники</button>
-          <button type="button" data-open-potion-generator>Зелья</button>
-          <button type="button">Заклинания</button>
-          <button type="button" data-open-loot-generator>Лут</button>
-          <button type="button">Локация</button>
-          <button type="button">Квест</button>
-          <button type="button">Таверна</button>
-          <button type="button">Случайное событие</button>
+        <div class="button-board generator-board">
+          <button class="generator-button" type="button">Персонаж</button>
+          <button class="generator-button" type="button">НПС</button>
+          <button class="generator-button" type="button" data-panel="bestiary">
+            <span class="generator-button-icon icon-enemy" aria-hidden="true"></span>
+            <span>Монстры</span>
+          </button>
+          <button class="generator-button" type="button" data-open-loot-generator>Лут</button>
+          <button class="generator-button" type="button">Таверна</button>
+          <button class="generator-button" type="button">Случайное событие</button>
+          <button class="generator-button" type="button" data-open-potion-generator>
+            <span class="generator-button-icon icon-potion" aria-hidden="true"></span>
+            <span>Зелья</span>
+          </button>
         </div>
       </section>
 
