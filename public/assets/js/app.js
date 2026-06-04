@@ -21,6 +21,7 @@ const panelTitles = {
   dashboard: "Главная",
   generators: "Генераторы",
   bestiary: "Бестиарий",
+  spells: "Заклинания",
   session: "Сессия",
   library: "Библиотека",
   notes: "Заметки",
@@ -83,6 +84,16 @@ const monsterModal = document.querySelector("[data-monster-modal]");
 const monsterName = document.querySelector("[data-monster-name]");
 const monsterDetail = document.querySelector("[data-monster-detail]");
 const deleteCustomMonsterButton = document.querySelector("[data-delete-custom-monster]");
+const spellsSearch = document.querySelector("[data-spells-search]");
+const spellsLevel = document.querySelector("[data-spells-level]");
+const spellsSchool = document.querySelector("[data-spells-school]");
+const spellsClass = document.querySelector("[data-spells-class]");
+const spellsTag = document.querySelector("[data-spells-tag]");
+const spellsSummary = document.querySelector("[data-spells-summary]");
+const spellsList = document.querySelector("[data-spells-list]");
+const spellModal = document.querySelector("[data-spell-modal]");
+const spellName = document.querySelector("[data-spell-name]");
+const spellDetail = document.querySelector("[data-spell-detail]");
 const randomMonsterModal = document.querySelector("[data-random-monster-modal]");
 const randomCrInput = document.querySelector("[data-random-cr]");
 const randomKindInput = document.querySelector("[data-random-kind]");
@@ -120,6 +131,10 @@ let bestiaryMonsters = [];
 let bestiaryById = new Map();
 let bestiaryLocaleById = new Map();
 let currentMonster = null;
+let spellsIndex = [];
+let spells = [];
+let spellsById = new Map();
+let currentSpell = null;
 let currentRandomMonsters = [];
 let bestiaryScope = "all";
 let potionsIndex = [];
@@ -161,6 +176,27 @@ const TYPE_ALIASES = {
   "or small undead": "undead",
   "swarm of tiny beasts": "beast",
   "swarm of tiny undead": "undead",
+};
+const SCHOOL_LABELS_RU = {
+  abjuration: "ограждение",
+  conjuration: "вызов",
+  divination: "прорицание",
+  enchantment: "очарование",
+  evocation: "воплощение",
+  illusion: "иллюзия",
+  necromancy: "некромантия",
+  transmutation: "преобразование",
+};
+const CLASS_LABELS_RU = {
+  artificer: "изобретатель",
+  bard: "бард",
+  cleric: "жрец",
+  druid: "друид",
+  paladin: "паладин",
+  ranger: "следопыт",
+  sorcerer: "чародей",
+  warlock: "колдун",
+  wizard: "волшебник",
 };
 const RARITY_LABELS_RU = {
   common: "обычная",
@@ -285,6 +321,9 @@ function openPanel(panel) {
   if (panel === "bestiary") {
     loadBestiary();
   }
+  if (panel === "spells") {
+    loadSpells();
+  }
 }
 
 function capitalize(value) {
@@ -361,6 +400,45 @@ function normalizeCreatureType(value) {
 function getTypeLabelRu(type) {
   const clean = normalizeCreatureType(type);
   return TYPE_LABELS_RU[clean] || capitalize(clean);
+}
+
+function getSchoolLabel(schoolKey, fallback = "") {
+  return SCHOOL_LABELS_RU[schoolKey] || fallback || "неизвестная школа";
+}
+
+function getClassLabel(classKey, fallback = "") {
+  return CLASS_LABELS_RU[classKey] || fallback || classKey || "-";
+}
+
+function getSpellLevelLabel(level) {
+  const value = Number(level);
+  return value === 0 ? "заговор" : `${value} уровень`;
+}
+
+function getSpellComponents(spell) {
+  const components = spell.components || {};
+  const rows = [];
+  if (components.verbal) rows.push("В");
+  if (components.somatic) rows.push("С");
+  if (components.material) rows.push("М");
+  const base = rows.join(", ") || "-";
+  return components.material_specified ? `${base} (${components.material_specified})` : base;
+}
+
+function getSpellClasses(spell) {
+  return (spell.classes || []).map((item) => getClassLabel(item.key, item.name)).join(", ") || "-";
+}
+
+function getSpellName(spell) {
+  return spell.name_ru || spell.name;
+}
+
+function getSpellDescription(spell) {
+  return normalizeRichText(spell.description_ru || spell.description);
+}
+
+function getSpellHigherLevel(spell) {
+  return normalizeRichText(spell.higher_level_ru || spell.higher_level);
 }
 
 function getRarityLabel(rarityValue, rarity = "") {
@@ -572,6 +650,233 @@ async function loadBestiary() {
     bestiarySummary.textContent = "Не удалось загрузить бестиарий.";
     bestiaryList.innerHTML = `<div class="library-empty"><strong>Ошибка загрузки</strong><span>${escapeHtml(error.message)}</span></div>`;
   }
+}
+
+async function loadSpells() {
+  if (spellsIndex.length || !spellsList) {
+    return;
+  }
+
+  spellsSummary.textContent = "Загрузка заклинаний...";
+
+  try {
+    const [indexResponse, spellsResponse] = await Promise.all([
+      fetch("data/srd/spells.index.json"),
+      fetch("data/srd/spells.json"),
+    ]);
+
+    if (!indexResponse.ok || !spellsResponse.ok) {
+      throw new Error("Не удалось загрузить базу заклинаний");
+    }
+
+    spellsIndex = await indexResponse.json();
+    spells = await spellsResponse.json();
+    spellsById = new Map(spells.map((spell) => [spell.id, spell]));
+
+    setupSpellFilters();
+    renderSpells();
+  } catch (error) {
+    spellsSummary.textContent = "Не удалось загрузить заклинания.";
+    spellsList.innerHTML = `<div class="library-empty"><strong>Ошибка загрузки</strong><span>${escapeHtml(error.message)}</span></div>`;
+  }
+}
+
+function setupSpellFilters() {
+  const levels = [...new Set(spellsIndex.map((spell) => spell.level))]
+    .filter((level) => level !== undefined && level !== null)
+    .sort((left, right) => Number(left) - Number(right));
+  const schools = [...new Set(spellsIndex.map((spell) => spell.school_key).filter(Boolean))]
+    .sort((left, right) => getSchoolLabel(left).localeCompare(getSchoolLabel(right), "ru"));
+  const classes = [...new Set(spellsIndex.flatMap((spell) => spell.classes || []).map((item) => item.key).filter(Boolean))]
+    .sort((left, right) => getClassLabel(left).localeCompare(getClassLabel(right), "ru"));
+
+  spellsLevel.innerHTML = `
+    <option value="">Любой</option>
+    ${levels.map((level) => `<option value="${escapeHtml(level)}">${escapeHtml(getSpellLevelLabel(level))}</option>`).join("")}
+  `;
+  spellsSchool.innerHTML = `
+    <option value="">Все школы</option>
+    ${schools.map((school) => `<option value="${escapeHtml(school)}">${escapeHtml(getSchoolLabel(school))}</option>`).join("")}
+  `;
+  spellsClass.innerHTML = `
+    <option value="">Любой класс</option>
+    ${classes.map((classKey) => `<option value="${escapeHtml(classKey)}">${escapeHtml(getClassLabel(classKey))}</option>`).join("")}
+  `;
+}
+
+function getFilteredSpells() {
+  const query = spellsSearch.value.trim().toLowerCase();
+  const level = spellsLevel.value;
+  const school = spellsSchool.value;
+  const classKey = spellsClass.value;
+  const tag = spellsTag.value;
+
+  return spellsIndex.filter((spell) => {
+    const matchesQuery = !query || spell.name.toLowerCase().includes(query) || (spell.name_ru || "").toLowerCase().includes(query);
+    const matchesLevel = !level || String(spell.level) === level;
+    const matchesSchool = !school || spell.school_key === school;
+    const matchesClass = !classKey || (spell.classes || []).some((item) => item.key === classKey);
+    const matchesTag = !tag || (tag === "concentration" && spell.concentration) || (tag === "ritual" && spell.ritual);
+    return matchesQuery && matchesLevel && matchesSchool && matchesClass && matchesTag;
+  });
+}
+
+function renderSpells() {
+  const filtered = getFilteredSpells();
+  spellsSummary.textContent = `Показано ${filtered.length} из ${spellsIndex.length} заклинаний`;
+
+  if (!filtered.length) {
+    spellsList.innerHTML = `<div class="library-empty"><strong>Ничего не найдено</strong><span>Попробуй изменить поиск или фильтры.</span></div>`;
+    return;
+  }
+
+  spellsList.innerHTML = filtered
+    .map((spell) => {
+      const classes = (spell.classes || []).map((item) => getClassLabel(item.key, item.name)).join(", ") || "классы не указаны";
+      const tags = [spell.concentration ? "концентрация" : "", spell.ritual ? "ритуал" : ""].filter(Boolean).join(" · ");
+      return `
+        <button class="monster-card spell-card" type="button" data-spell-id="${escapeHtml(spell.id)}">
+          <span>${escapeHtml(getSpellLevelLabel(spell.level))} · ${escapeHtml(getSchoolLabel(spell.school_key, spell.school))}</span>
+          <strong>${escapeHtml(spell.name_ru || spell.name)}</strong>
+          <em>${escapeHtml(spell.name)}</em>
+          <small>${escapeHtml(classes)}${tags ? ` · ${escapeHtml(tags)}` : ""}</small>
+        </button>
+      `;
+    })
+    .join("");
+}
+
+function openSpellModal(id) {
+  const spell = spellsById.get(id);
+  if (!spell) {
+    return;
+  }
+
+  currentSpell = spell;
+  spellName.textContent = getSpellName(spell);
+  spellDetail.innerHTML = renderSpellDetail(spell);
+  spellModal.classList.remove("is-hidden");
+}
+
+function closeSpellModal() {
+  spellModal.classList.add("is-hidden");
+  currentSpell = null;
+}
+
+function renderSpellDetail(spell) {
+  const flags = [spell.concentration ? "концентрация" : "", spell.ritual ? "ритуал" : ""].filter(Boolean).join(", ") || "-";
+  const damage = spell.damage_roll
+    ? `${spell.damage_roll}${spell.damage_types?.length ? ` (${spell.damage_types.join(", ")})` : ""}`
+    : "-";
+  const saveOrAttack = [
+    spell.saving_throw_ability ? `спасбросок: ${spell.saving_throw_ability}` : "",
+    spell.attack_roll ? "бросок атаки" : "",
+  ].filter(Boolean).join(", ") || "-";
+  const higherLevel = getSpellHigherLevel(spell);
+
+  return `
+    <div class="monster-meta-grid">
+      <div><span>Английское название</span><strong>${escapeHtml(spell.name)}</strong></div>
+      <div><span>Уровень</span><strong>${escapeHtml(getSpellLevelLabel(spell.level))}</strong></div>
+      <div><span>Школа</span><strong>${escapeHtml(getSchoolLabel(spell.school_key, spell.school))}</strong></div>
+      <div><span>Время сотворения</span><strong>${escapeHtml(spell.casting_time || "-")}</strong></div>
+      <div><span>Дистанция</span><strong>${escapeHtml(spell.range_text || "-")}</strong></div>
+      <div><span>Длительность</span><strong>${escapeHtml(spell.duration || "-")}</strong></div>
+      <div><span>Компоненты</span><strong>${escapeHtml(getSpellComponents(spell))}</strong></div>
+      <div><span>Классы</span><strong>${escapeHtml(getSpellClasses(spell))}</strong></div>
+      <div><span>Особенности</span><strong>${escapeHtml(flags)}</strong></div>
+      <div><span>Урон</span><strong>${escapeHtml(damage)}</strong></div>
+      <div><span>Проверка</span><strong>${escapeHtml(saveOrAttack)}</strong></div>
+      <div><span>Источник</span><strong>${escapeHtml(spell.source_display || spell.source || "Open5e")}</strong></div>
+    </div>
+
+    <section class="monster-section">
+      <h4>Описание</h4>
+      <div class="monster-text-list">
+        ${renderRichDescription(getSpellDescription(spell) || "Описание отсутствует.")}
+      </div>
+    </section>
+
+    ${higherLevel ? `
+      <section class="monster-section">
+        <h4>На высоких уровнях</h4>
+        <div class="monster-text-list">
+          ${renderRichDescription(higherLevel)}
+        </div>
+      </section>
+    ` : ""}
+
+    <div class="license-note">
+      Данные: Open5e API v2. Источник записи: ${escapeHtml(spell.source_display || spell.source || "Open5e")}.
+    </div>
+  `;
+}
+
+function toSavedSpell(spell) {
+  return {
+    id: crypto.randomUUID(),
+    source_id: spell.id,
+    name: getSpellName(spell),
+    original_name: spell.name,
+    level: spell.level,
+    level_label: getSpellLevelLabel(spell.level),
+    school: getSchoolLabel(spell.school_key, spell.school),
+    classes: getSpellClasses(spell),
+    summary: getPlainTextExcerpt(getSpellDescription(spell)),
+    source: spell.source_display || spell.source || "Open5e",
+    savedAt: new Date().toISOString(),
+  };
+}
+
+function saveCurrentSpell() {
+  if (!currentSpell) {
+    return;
+  }
+
+  const savedSpells = getSavedSpells();
+  savedSpells.unshift(toSavedSpell(currentSpell));
+  setSavedSpells(savedSpells.slice(0, 200));
+  closeSpellModal();
+  openPanel("library");
+}
+
+function deleteSavedSpell(id) {
+  setSavedSpells(getSavedSpells().filter((spell) => spell.id !== id));
+}
+
+async function openSavedSpell(id) {
+  await loadSpells();
+  const entry = getSavedSpells().find((spell) => spell.id === id);
+  if (!entry) {
+    return;
+  }
+
+  const source = spellsById.get(entry.source_id);
+  const spell = source || {
+    id: entry.source_id || entry.id,
+    name: entry.original_name || entry.name,
+    name_ru: entry.name,
+    level: entry.level,
+    school: entry.school,
+    school_key: "",
+    classes: [],
+    casting_time: "",
+    range_text: "",
+    duration: "",
+    components: {},
+    concentration: false,
+    ritual: false,
+    description: entry.summary || "",
+    higher_level: "",
+    damage_types: [],
+    source: entry.source,
+    source_display: entry.source,
+  };
+
+  currentSpell = spell;
+  spellName.textContent = getSpellName(spell);
+  spellDetail.innerHTML = renderSpellDetail(spell);
+  spellModal.classList.remove("is-hidden");
 }
 
 async function loadPotions() {
@@ -929,6 +1234,20 @@ function setSavedPotions(savedPotions) {
   renderLibraryPotions();
 }
 
+function getSavedSpells() {
+  try {
+    return JSON.parse(storage.get("dnd-saved-spells", "[]"));
+  } catch {
+    return [];
+  }
+}
+
+function setSavedSpells(savedSpells) {
+  storage.set("dnd-saved-spells", JSON.stringify(savedSpells));
+  updateSavedRollsCount();
+  renderLibrarySpells();
+}
+
 function getSavedLoot() {
   try {
     return JSON.parse(storage.get("dnd-saved-loot", "[]"));
@@ -947,7 +1266,7 @@ function updateSavedRollsCount() {
   if (!notesTotal) {
     return;
   }
-  const count = getSavedRolls().length + getSavedMonsters().length + getSavedPotions().length + getSavedLoot().length;
+  const count = getSavedRolls().length + getSavedMonsters().length + getSavedPotions().length + getSavedSpells().length + getSavedLoot().length;
   notesTotal.textContent = `${count} сохранено`;
 }
 
@@ -1080,6 +1399,48 @@ function renderLibraryPotions() {
               <small class="potion-description">${escapeHtml(getPlainTextExcerpt(entry.description))}</small>
             </article>
           `)
+        .join("")}
+    </div>
+  `;
+}
+
+function renderLibrarySpells() {
+  if (!libraryPanel) {
+    return;
+  }
+
+  let list = libraryPanel.querySelector("[data-saved-spells]");
+  if (!list) {
+    list = document.createElement("div");
+    list.className = "saved-rolls";
+    list.dataset.savedSpells = "";
+    libraryPanel.appendChild(list);
+  }
+
+  const savedSpells = getSavedSpells();
+  if (!savedSpells.length) {
+    list.innerHTML = `
+      <div class="library-empty">
+        <strong>Сохранённых заклинаний пока нет</strong>
+        <span>Сохрани заклинание из списка, и оно появится здесь.</span>
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = `
+    <h4>Сохранённые заклинания</h4>
+    <div class="saved-monster-grid">
+      ${savedSpells
+        .map((entry) => `
+          <article class="saved-monster-card spell-library-card" data-open-saved-spell="${escapeHtml(entry.id)}" tabindex="0" role="button">
+            <button class="card-remove" type="button" data-delete-saved-spell="${escapeHtml(entry.id)}" aria-label="Удалить заклинание">×</button>
+            <span>${escapeHtml(entry.level_label)} · ${escapeHtml(entry.school)}</span>
+            <strong>${escapeHtml(entry.name)}</strong>
+            <em>${escapeHtml(entry.classes || "-")}</em>
+            <small>${escapeHtml(entry.summary || "-")}</small>
+          </article>
+        `)
         .join("")}
     </div>
   `;
@@ -2238,10 +2599,11 @@ document.addEventListener("click", (event) => {
   const button = event.target.closest("button");
   const savedMonsterCard = event.target.closest("[data-open-saved-monster]");
   const savedPotionCard = event.target.closest("[data-open-saved-potion]");
+  const savedSpellCard = event.target.closest("[data-open-saved-spell]");
   const savedLootCard = event.target.closest("[data-open-saved-loot]");
   const potionResultCard = event.target.closest("[data-open-potion-result]");
   const lootResultCard = event.target.closest("[data-open-loot-result]");
-  if (!button && !savedMonsterCard && !savedPotionCard && !savedLootCard && !potionResultCard && !lootResultCard) {
+  if (!button && !savedMonsterCard && !savedPotionCard && !savedSpellCard && !savedLootCard && !potionResultCard && !lootResultCard) {
     return;
   }
 
@@ -2254,6 +2616,11 @@ document.addEventListener("click", (event) => {
 
   if (button?.dataset.deleteSavedPotion) {
     setSavedPotions(getSavedPotions().filter((potion) => potion.id !== button.dataset.deleteSavedPotion));
+    return;
+  }
+
+  if (button?.dataset.deleteSavedSpell) {
+    deleteSavedSpell(button.dataset.deleteSavedSpell);
     return;
   }
 
@@ -2274,6 +2641,11 @@ document.addEventListener("click", (event) => {
 
   if (!button && savedPotionCard) {
     openSavedPotion(savedPotionCard.dataset.openSavedPotion);
+    return;
+  }
+
+  if (!button && savedSpellCard) {
+    openSavedSpell(savedSpellCard.dataset.openSavedSpell);
     return;
   }
 
@@ -2353,6 +2725,10 @@ document.addEventListener("click", (event) => {
     openMonsterModal(button.dataset.monsterId);
   }
 
+  if (button.dataset.spellId) {
+    openSpellModal(button.dataset.spellId);
+  }
+
   if (button.matches("[data-close-monster]")) {
     closeMonsterModal();
   }
@@ -2363,6 +2739,14 @@ document.addEventListener("click", (event) => {
 
   if (button.matches("[data-delete-custom-monster]")) {
     deleteCustomMonster();
+  }
+
+  if (button.matches("[data-close-spell]")) {
+    closeSpellModal();
+  }
+
+  if (button.matches("[data-save-current-spell]")) {
+    saveCurrentSpell();
   }
 
   if (button.matches("[data-open-random-monster]")) {
@@ -2449,6 +2833,9 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !monsterModal.classList.contains("is-hidden")) {
     closeMonsterModal();
   }
+  if (event.key === "Escape" && !spellModal.classList.contains("is-hidden")) {
+    closeSpellModal();
+  }
   if (event.key === "Escape" && !randomMonsterModal.classList.contains("is-hidden")) {
     closeRandomMonsterModal();
   }
@@ -2478,6 +2865,11 @@ volumeControl.addEventListener("input", (event) => {
   control?.addEventListener("change", renderBestiary);
 });
 
+[spellsSearch, spellsLevel, spellsSchool, spellsClass, spellsTag].forEach((control) => {
+  control?.addEventListener("input", renderSpells);
+  control?.addEventListener("change", renderSpells);
+});
+
 createMonsterForm?.addEventListener("submit", saveCustomMonster);
 
 setVolume(state.volume);
@@ -2488,6 +2880,7 @@ updateSavedRollsCount();
 renderLibraryRolls();
 renderLibraryMonsters();
 renderLibraryPotions();
+renderLibrarySpells();
 renderLibraryLoot();
 
 if (state.soundEnabled) {

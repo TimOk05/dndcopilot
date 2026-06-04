@@ -1,0 +1,4542 @@
+{
+  "source_api": "https://api.open5e.com/v2/spells/",
+  "raw_count": 1955,
+  "imported_count": 1319,
+  "duplicate_group_count": 324,
+  "source_counts": {
+    "srd-2024": 339,
+    "deepm": 515,
+    "a5e-ag": 57,
+    "spells-that-dont-suck": 176,
+    "wz": 43,
+    "deepmx": 64,
+    "kp": 31,
+    "toh": 91,
+    "srd-2014": 2,
+    "open5e": 1
+  },
+  "school_counts": {
+    "evocation": 209,
+    "conjuration": 218,
+    "transmutation": 295,
+    "enchantment": 136,
+    "abjuration": 131,
+    "necromancy": 143,
+    "divination": 115,
+    "illusion": 72
+  },
+  "level_counts": {
+    "0": 91,
+    "1": 220,
+    "2": 233,
+    "3": 211,
+    "4": 157,
+    "5": 137,
+    "6": 90,
+    "7": 78,
+    "8": 55,
+    "9": 47
+  },
+  "class_counts": {
+    "sorcerer": 264,
+    "wizard": 456,
+    "bard": 209,
+    "druid": 237,
+    "warlock": 196,
+    "cleric": 202,
+    "ranger": 90,
+    "paladin": 52
+  },
+  "duplicate_groups": {
+    "acid arrow": [
+      {
+        "key": "a5e-ag_acid-arrow",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_acid-arrow",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_acid-arrow",
+        "document": "srd-2014"
+      }
+    ],
+    "acid splash": [
+      {
+        "key": "a5e-ag_acid-splash",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_acid-splash",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_acid-splash",
+        "document": "srd-2014"
+      }
+    ],
+    "aid": [
+      {
+        "key": "a5e-ag_aid",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_aid",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_aid",
+        "document": "srd-2014"
+      }
+    ],
+    "alarm": [
+      {
+        "key": "a5e-ag_alarm",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_alarm",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_alarm",
+        "document": "srd-2014"
+      }
+    ],
+    "alter self": [
+      {
+        "key": "a5e-ag_alter-self",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_alter-self",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_alter-self",
+        "document": "srd-2014"
+      }
+    ],
+    "animal friendship": [
+      {
+        "key": "a5e-ag_animal-friendship",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_animal-friendship",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_animal-friendship",
+        "document": "srd-2014"
+      }
+    ],
+    "animal messenger": [
+      {
+        "key": "a5e-ag_animal-messenger",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_animal-messenger",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_animal-messenger",
+        "document": "srd-2014"
+      }
+    ],
+    "animal shapes": [
+      {
+        "key": "a5e-ag_animal-shapes",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_animal-shapes",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_animal-shapes",
+        "document": "srd-2014"
+      }
+    ],
+    "animate dead": [
+      {
+        "key": "a5e-ag_animate-dead",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_animate-dead",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_animate-dead",
+        "document": "srd-2014"
+      }
+    ],
+    "animate objects": [
+      {
+        "key": "a5e-ag_animate-objects",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_animate-objects",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_animate-objects",
+        "document": "srd-2014"
+      }
+    ],
+    "antilife shell": [
+      {
+        "key": "a5e-ag_antilife-shell",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_antilife-shell",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_antilife-shell",
+        "document": "srd-2014"
+      }
+    ],
+    "antimagic field": [
+      {
+        "key": "a5e-ag_antimagic-field",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_antimagic-field",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_antimagic-field",
+        "document": "srd-2014"
+      }
+    ],
+    "antipathy/sympathy": [
+      {
+        "key": "a5e-ag_antipathysympathy",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_antipathysympathy",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_antipathysympathy",
+        "document": "srd-2014"
+      }
+    ],
+    "arcane eye": [
+      {
+        "key": "a5e-ag_arcane-eye",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_arcane-eye",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_arcane-eye",
+        "document": "srd-2014"
+      }
+    ],
+    "arcane hand": [
+      {
+        "key": "a5e-ag_arcane-hand",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_arcane-hand",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_arcane-hand",
+        "document": "srd-2014"
+      }
+    ],
+    "arcane lock": [
+      {
+        "key": "a5e-ag_arcane-lock",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_arcane-lock",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_arcane-lock",
+        "document": "srd-2014"
+      }
+    ],
+    "arcane sword": [
+      {
+        "key": "a5e-ag_arcane-sword",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_arcane-sword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_arcane-sword",
+        "document": "srd-2014"
+      }
+    ],
+    "arcanist's magic aura": [
+      {
+        "key": "a5e-ag_arcanists-magic-aura",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_arcanists-magic-aura",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_arcanists-magic-aura",
+        "document": "srd-2014"
+      }
+    ],
+    "astral projection": [
+      {
+        "key": "a5e-ag_astral-projection",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_astral-projection",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_astral-projection",
+        "document": "srd-2014"
+      }
+    ],
+    "augury": [
+      {
+        "key": "a5e-ag_augury",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_augury",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_augury",
+        "document": "srd-2014"
+      }
+    ],
+    "awaken": [
+      {
+        "key": "a5e-ag_awaken",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_awaken",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_awaken",
+        "document": "srd-2014"
+      }
+    ],
+    "bane": [
+      {
+        "key": "a5e-ag_bane",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_bane",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_bane",
+        "document": "srd-2014"
+      }
+    ],
+    "banishment": [
+      {
+        "key": "a5e-ag_banishment",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_banishment",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_banishment",
+        "document": "srd-2014"
+      }
+    ],
+    "barkskin": [
+      {
+        "key": "a5e-ag_barkskin",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_barkskin",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_barkskin",
+        "document": "srd-2014"
+      }
+    ],
+    "beacon of hope": [
+      {
+        "key": "a5e-ag_beacon-of-hope",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_beacon-of-hope",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_beacon-of-hope",
+        "document": "srd-2014"
+      }
+    ],
+    "benediction": [
+      {
+        "key": "deepm_benediction",
+        "document": "deepm"
+      },
+      {
+        "key": "spells-that-dont-suck_benediction",
+        "document": "spells-that-dont-suck"
+      }
+    ],
+    "bestow curse": [
+      {
+        "key": "a5e-ag_bestow-curse",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_bestow-curse",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_bestow-curse",
+        "document": "srd-2014"
+      }
+    ],
+    "black tentacles": [
+      {
+        "key": "a5e-ag_black-tentacles",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_black-tentacles",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_black-tentacles",
+        "document": "srd-2014"
+      }
+    ],
+    "blade barrier": [
+      {
+        "key": "a5e-ag_blade-barrier",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_blade-barrier",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_blade-barrier",
+        "document": "srd-2014"
+      }
+    ],
+    "bless": [
+      {
+        "key": "a5e-ag_bless",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_bless",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_bless",
+        "document": "srd-2014"
+      }
+    ],
+    "blight": [
+      {
+        "key": "a5e-ag_blight",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_blight",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_blight",
+        "document": "srd-2014"
+      }
+    ],
+    "blindness/deafness": [
+      {
+        "key": "a5e-ag_blindnessdeafness",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_blindnessdeafness",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_blindnessdeafness",
+        "document": "srd-2014"
+      }
+    ],
+    "blink": [
+      {
+        "key": "a5e-ag_blink",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_blink",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_blink",
+        "document": "srd-2014"
+      }
+    ],
+    "blur": [
+      {
+        "key": "a5e-ag_blur",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_blur",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_blur",
+        "document": "srd-2014"
+      }
+    ],
+    "burning hands": [
+      {
+        "key": "a5e-ag_burning-hands",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_burning-hands",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_burning-hands",
+        "document": "srd-2014"
+      }
+    ],
+    "call lightning": [
+      {
+        "key": "a5e-ag_call-lightning",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_call-lightning",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_call-lightning",
+        "document": "srd-2014"
+      }
+    ],
+    "calm emotions": [
+      {
+        "key": "a5e-ag_calm-emotions",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_calm-emotions",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_calm-emotions",
+        "document": "srd-2014"
+      }
+    ],
+    "chain lightning": [
+      {
+        "key": "a5e-ag_chain-lightning",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_chain-lightning",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_chain-lightning",
+        "document": "srd-2014"
+      }
+    ],
+    "charm monster": [
+      {
+        "key": "a5e-ag_charm-monster",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_charm-monster",
+        "document": "srd-2024"
+      }
+    ],
+    "charm person": [
+      {
+        "key": "a5e-ag_charm-person",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_charm-person",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_charm-person",
+        "document": "srd-2014"
+      }
+    ],
+    "chill touch": [
+      {
+        "key": "a5e-ag_chill-touch",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_chill-touch",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_chill-touch",
+        "document": "srd-2014"
+      }
+    ],
+    "circle of death": [
+      {
+        "key": "a5e-ag_circle-of-death",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_circle-of-death",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_circle-of-death",
+        "document": "srd-2014"
+      }
+    ],
+    "clairvoyance": [
+      {
+        "key": "a5e-ag_clairvoyance",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_clairvoyance",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_clairvoyance",
+        "document": "srd-2014"
+      }
+    ],
+    "clone": [
+      {
+        "key": "a5e-ag_clone",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_clone",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_clone",
+        "document": "srd-2014"
+      }
+    ],
+    "cloudkill": [
+      {
+        "key": "a5e-ag_cloudkill",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_cloudkill",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_cloudkill",
+        "document": "srd-2014"
+      }
+    ],
+    "color spray": [
+      {
+        "key": "a5e-ag_color-spray",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_color-spray",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_color-spray",
+        "document": "srd-2014"
+      }
+    ],
+    "command": [
+      {
+        "key": "a5e-ag_command",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_command",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_command",
+        "document": "srd-2014"
+      }
+    ],
+    "commune": [
+      {
+        "key": "a5e-ag_commune",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_commune",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_commune",
+        "document": "srd-2014"
+      }
+    ],
+    "commune with nature": [
+      {
+        "key": "a5e-ag_commune-with-nature",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_commune-with-nature",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_commune-with-nature",
+        "document": "srd-2014"
+      }
+    ],
+    "comprehend languages": [
+      {
+        "key": "a5e-ag_comprehend-languages",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_comprehend-languages",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_comprehend-languages",
+        "document": "srd-2014"
+      }
+    ],
+    "compulsion": [
+      {
+        "key": "srd-2024_compulsion",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_compulsion",
+        "document": "srd-2014"
+      }
+    ],
+    "cone of cold": [
+      {
+        "key": "a5e-ag_cone-of-cold",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_cone-of-cold",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_cone-of-cold",
+        "document": "srd-2014"
+      }
+    ],
+    "confusion": [
+      {
+        "key": "a5e-ag_confusion",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_confusion",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_confusion",
+        "document": "srd-2014"
+      }
+    ],
+    "conjure animals": [
+      {
+        "key": "a5e-ag_conjure-animals",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_conjure-animals",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_conjure-animals",
+        "document": "srd-2014"
+      }
+    ],
+    "conjure celestial": [
+      {
+        "key": "a5e-ag_conjure-celestial",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_conjure-celestial",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_conjure-celestial",
+        "document": "srd-2014"
+      }
+    ],
+    "conjure elemental": [
+      {
+        "key": "a5e-ag_conjure-elemental",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_conjure-elemental",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_conjure-elemental",
+        "document": "srd-2014"
+      }
+    ],
+    "conjure fey": [
+      {
+        "key": "a5e-ag_conjure-fey",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_conjure-fey",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_conjure-fey",
+        "document": "srd-2014"
+      }
+    ],
+    "conjure minor elementals": [
+      {
+        "key": "a5e-ag_conjure-minor-elementals",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_conjure-minor-elementals",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_conjure-minor-elementals",
+        "document": "srd-2014"
+      }
+    ],
+    "conjure woodland beings": [
+      {
+        "key": "a5e-ag_conjure-woodland-beings",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_conjure-woodland-beings",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_conjure-woodland-beings",
+        "document": "srd-2014"
+      }
+    ],
+    "contact other plane": [
+      {
+        "key": "a5e-ag_contact-other-plane",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_contact-other-plane",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_contact-other-plane",
+        "document": "srd-2014"
+      }
+    ],
+    "contagion": [
+      {
+        "key": "a5e-ag_contagion",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_contagion",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_contagion",
+        "document": "srd-2014"
+      }
+    ],
+    "contingency": [
+      {
+        "key": "a5e-ag_contingency",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_contingency",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_contingency",
+        "document": "srd-2014"
+      }
+    ],
+    "continual flame": [
+      {
+        "key": "a5e-ag_continual-flame",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_continual-flame",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_continual-flame",
+        "document": "srd-2014"
+      }
+    ],
+    "control water": [
+      {
+        "key": "a5e-ag_control-water",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_control-water",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_control-water",
+        "document": "srd-2014"
+      }
+    ],
+    "control weather": [
+      {
+        "key": "a5e-ag_control-weather",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_control-weather",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_control-weather",
+        "document": "srd-2014"
+      }
+    ],
+    "counterspell": [
+      {
+        "key": "a5e-ag_counterspell",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_counterspell",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_counterspell",
+        "document": "srd-2014"
+      }
+    ],
+    "create food and water": [
+      {
+        "key": "a5e-ag_create-food-and-water",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_create-food-and-water",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_create-food-and-water",
+        "document": "srd-2014"
+      }
+    ],
+    "create or destroy water": [
+      {
+        "key": "a5e-ag_create-or-destroy-water",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_create-or-destroy-water",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_create-or-destroy-water",
+        "document": "srd-2014"
+      }
+    ],
+    "create undead": [
+      {
+        "key": "a5e-ag_create-undead",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_create-undead",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_create-undead",
+        "document": "srd-2014"
+      }
+    ],
+    "creation": [
+      {
+        "key": "a5e-ag_creation",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_creation",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_creation",
+        "document": "srd-2014"
+      }
+    ],
+    "cure wounds": [
+      {
+        "key": "a5e-ag_cure-wounds",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_cure-wounds",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_cure-wounds",
+        "document": "srd-2014"
+      }
+    ],
+    "dancing lights": [
+      {
+        "key": "a5e-ag_dancing-lights",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_dancing-lights",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dancing-lights",
+        "document": "srd-2014"
+      }
+    ],
+    "darkness": [
+      {
+        "key": "a5e-ag_darkness",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_darkness",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_darkness",
+        "document": "srd-2014"
+      }
+    ],
+    "darkvision": [
+      {
+        "key": "a5e-ag_darkvision",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_darkvision",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_darkvision",
+        "document": "srd-2014"
+      }
+    ],
+    "daylight": [
+      {
+        "key": "a5e-ag_daylight",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_daylight",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_daylight",
+        "document": "srd-2014"
+      }
+    ],
+    "death ward": [
+      {
+        "key": "a5e-ag_death-ward",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_death-ward",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_death-ward",
+        "document": "srd-2014"
+      }
+    ],
+    "delayed blast fireball": [
+      {
+        "key": "a5e-ag_delayed-blast-fireball",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_delayed-blast-fireball",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_delayed-blast-fireball",
+        "document": "srd-2014"
+      }
+    ],
+    "demiplane": [
+      {
+        "key": "a5e-ag_demiplane",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_demiplane",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_demiplane",
+        "document": "srd-2014"
+      }
+    ],
+    "detect evil and good": [
+      {
+        "key": "a5e-ag_detect-evil-and-good",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_detect-evil-and-good",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_detect-evil-and-good",
+        "document": "srd-2014"
+      }
+    ],
+    "detect magic": [
+      {
+        "key": "a5e-ag_detect-magic",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_detect-magic",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_detect-magic",
+        "document": "srd-2014"
+      }
+    ],
+    "detect poison and disease": [
+      {
+        "key": "a5e-ag_detect-poison-and-disease",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_detect-poison-and-disease",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_detect-poison-and-disease",
+        "document": "srd-2014"
+      }
+    ],
+    "detect thoughts": [
+      {
+        "key": "a5e-ag_detect-thoughts",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_detect-thoughts",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_detect-thoughts",
+        "document": "srd-2014"
+      }
+    ],
+    "dimension door": [
+      {
+        "key": "a5e-ag_dimension-door",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_dimension-door",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dimension-door",
+        "document": "srd-2014"
+      }
+    ],
+    "disguise self": [
+      {
+        "key": "a5e-ag_disguise-self",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_disguise-self",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_disguise-self",
+        "document": "srd-2014"
+      }
+    ],
+    "disintegrate": [
+      {
+        "key": "a5e-ag_disintegrate",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_disintegrate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_disintegrate",
+        "document": "srd-2014"
+      }
+    ],
+    "dispel evil and good": [
+      {
+        "key": "a5e-ag_dispel-evil-and-good",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_dispel-evil-and-good",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dispel-evil-and-good",
+        "document": "srd-2014"
+      }
+    ],
+    "dispel magic": [
+      {
+        "key": "a5e-ag_dispel-magic",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_dispel-magic",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dispel-magic",
+        "document": "srd-2014"
+      }
+    ],
+    "divination": [
+      {
+        "key": "a5e-ag_divination",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_divination",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_divination",
+        "document": "srd-2014"
+      }
+    ],
+    "divine favor": [
+      {
+        "key": "a5e-ag_divine-favor",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_divine-favor",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_divine-favor",
+        "document": "srd-2014"
+      }
+    ],
+    "divine word": [
+      {
+        "key": "a5e-ag_divine-word",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_divine-word",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_divine-word",
+        "document": "srd-2014"
+      }
+    ],
+    "dominate beast": [
+      {
+        "key": "a5e-ag_dominate-beast",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_dominate-beast",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dominate-beast",
+        "document": "srd-2014"
+      }
+    ],
+    "dominate monster": [
+      {
+        "key": "a5e-ag_dominate-monster",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_dominate-monster",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dominate-monster",
+        "document": "srd-2014"
+      }
+    ],
+    "dominate person": [
+      {
+        "key": "a5e-ag_dominate-person",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_dominate-person",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dominate-person",
+        "document": "srd-2014"
+      }
+    ],
+    "dream": [
+      {
+        "key": "a5e-ag_dream",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_dream",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dream",
+        "document": "srd-2014"
+      }
+    ],
+    "druidcraft": [
+      {
+        "key": "a5e-ag_druidcraft",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_druidcraft",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_druidcraft",
+        "document": "srd-2014"
+      }
+    ],
+    "earthquake": [
+      {
+        "key": "a5e-ag_earthquake",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_earthquake",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_earthquake",
+        "document": "srd-2014"
+      }
+    ],
+    "eldritch blast": [
+      {
+        "key": "srd-2024_eldritch-blast",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_eldritch-blast",
+        "document": "srd-2014"
+      }
+    ],
+    "enhance ability": [
+      {
+        "key": "a5e-ag_enhance-ability",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_enhance-ability",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_enhance-ability",
+        "document": "srd-2014"
+      }
+    ],
+    "enlarge/reduce": [
+      {
+        "key": "a5e-ag_enlargereduce",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_enlargereduce",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_enlargereduce",
+        "document": "srd-2014"
+      }
+    ],
+    "entangle": [
+      {
+        "key": "a5e-ag_entangle",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_entangle",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_entangle",
+        "document": "srd-2014"
+      }
+    ],
+    "enthrall": [
+      {
+        "key": "a5e-ag_enthrall",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_enthrall",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_enthrall",
+        "document": "srd-2014"
+      }
+    ],
+    "etherealness": [
+      {
+        "key": "a5e-ag_etherealness",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_etherealness",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_etherealness",
+        "document": "srd-2014"
+      }
+    ],
+    "expeditious retreat": [
+      {
+        "key": "a5e-ag_expeditious-retreat",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_expeditious-retreat",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_expeditious-retreat",
+        "document": "srd-2014"
+      }
+    ],
+    "eyebite": [
+      {
+        "key": "a5e-ag_eyebite",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_eyebite",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_eyebite",
+        "document": "srd-2014"
+      }
+    ],
+    "fabricate": [
+      {
+        "key": "a5e-ag_fabricate",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_fabricate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_fabricate",
+        "document": "srd-2014"
+      }
+    ],
+    "faerie fire": [
+      {
+        "key": "a5e-ag_faerie-fire",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_faerie-fire",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_faerie-fire",
+        "document": "srd-2014"
+      }
+    ],
+    "faithful hound": [
+      {
+        "key": "a5e-ag_faithful-hound",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_faithful-hound",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_faithful-hound",
+        "document": "srd-2014"
+      }
+    ],
+    "false life": [
+      {
+        "key": "a5e-ag_false-life",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_false-life",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_false-life",
+        "document": "srd-2014"
+      }
+    ],
+    "fear": [
+      {
+        "key": "a5e-ag_fear",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_fear",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_fear",
+        "document": "srd-2014"
+      }
+    ],
+    "feather fall": [
+      {
+        "key": "a5e-ag_feather-fall",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_feather-fall",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_feather-fall",
+        "document": "srd-2014"
+      }
+    ],
+    "feeblemind": [
+      {
+        "key": "a5e-ag_feeblemind",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd_feeblemind",
+        "document": "srd-2014"
+      }
+    ],
+    "find familiar": [
+      {
+        "key": "a5e-ag_find-familiar",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_find-familiar",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_find-familiar",
+        "document": "srd-2014"
+      }
+    ],
+    "find steed": [
+      {
+        "key": "a5e-ag_find-steed",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_find-steed",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_find-steed",
+        "document": "srd-2014"
+      }
+    ],
+    "find the path": [
+      {
+        "key": "a5e-ag_find-the-path",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_find-the-path",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_find-the-path",
+        "document": "srd-2014"
+      }
+    ],
+    "find traps": [
+      {
+        "key": "a5e-ag_find-traps",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_find-traps",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_find-traps",
+        "document": "srd-2014"
+      }
+    ],
+    "finger of death": [
+      {
+        "key": "a5e-ag_finger-of-death",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_finger-of-death",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_finger-of-death",
+        "document": "srd-2014"
+      }
+    ],
+    "fire bolt": [
+      {
+        "key": "a5e-ag_fire-bolt",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_fire-bolt",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_fire-bolt",
+        "document": "srd-2014"
+      }
+    ],
+    "fire shield": [
+      {
+        "key": "a5e-ag_fire-shield",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_fire-shield",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_fire-shield",
+        "document": "srd-2014"
+      }
+    ],
+    "fire storm": [
+      {
+        "key": "a5e-ag_fire-storm",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_fire-storm",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_fire-storm",
+        "document": "srd-2014"
+      }
+    ],
+    "fireball": [
+      {
+        "key": "a5e-ag_fireball",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_fireball",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_fireball",
+        "document": "srd-2014"
+      }
+    ],
+    "flame blade": [
+      {
+        "key": "a5e-ag_flame-blade",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_flame-blade",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_flame-blade",
+        "document": "srd-2014"
+      }
+    ],
+    "flame strike": [
+      {
+        "key": "a5e-ag_flame-strike",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_flame-strike",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_flame-strike",
+        "document": "srd-2014"
+      }
+    ],
+    "flaming sphere": [
+      {
+        "key": "a5e-ag_flaming-sphere",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_flaming-sphere",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_flaming-sphere",
+        "document": "srd-2014"
+      }
+    ],
+    "flesh to stone": [
+      {
+        "key": "a5e-ag_flesh-to-stone",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_flesh-to-stone",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_flesh-to-stone",
+        "document": "srd-2014"
+      }
+    ],
+    "floating disk": [
+      {
+        "key": "a5e-ag_floating-disk",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_floating-disk",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_floating-disk",
+        "document": "srd-2014"
+      }
+    ],
+    "fly": [
+      {
+        "key": "a5e-ag_fly",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_fly",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_fly",
+        "document": "srd-2014"
+      }
+    ],
+    "fog cloud": [
+      {
+        "key": "a5e-ag_fog-cloud",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_fog-cloud",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_fog-cloud",
+        "document": "srd-2014"
+      }
+    ],
+    "forbiddance": [
+      {
+        "key": "a5e-ag_forbiddance",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_forbiddance",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_forbiddance",
+        "document": "srd-2014"
+      }
+    ],
+    "forcecage": [
+      {
+        "key": "a5e-ag_forcecage",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_forcecage",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_forcecage",
+        "document": "srd-2014"
+      }
+    ],
+    "foresight": [
+      {
+        "key": "a5e-ag_foresight",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_foresight",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_foresight",
+        "document": "srd-2014"
+      }
+    ],
+    "freedom of movement": [
+      {
+        "key": "a5e-ag_freedom-of-movement",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_freedom-of-movement",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_freedom-of-movement",
+        "document": "srd-2014"
+      }
+    ],
+    "freezing sphere": [
+      {
+        "key": "a5e-ag_freezing-sphere",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_freezing-sphere",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_freezing-sphere",
+        "document": "srd-2014"
+      }
+    ],
+    "gaseous form": [
+      {
+        "key": "a5e-ag_gaseous-form",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_gaseous-form",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_gaseous-form",
+        "document": "srd-2014"
+      }
+    ],
+    "gate": [
+      {
+        "key": "a5e-ag_gate",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_gate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_gate",
+        "document": "srd-2014"
+      }
+    ],
+    "geas": [
+      {
+        "key": "a5e-ag_geas",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_geas",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_geas",
+        "document": "srd-2014"
+      }
+    ],
+    "gentle repose": [
+      {
+        "key": "a5e-ag_gentle-repose",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_gentle-repose",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_gentle-repose",
+        "document": "srd-2014"
+      }
+    ],
+    "giant insect": [
+      {
+        "key": "a5e-ag_giant-insect",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_giant-insect",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_giant-insect",
+        "document": "srd-2014"
+      }
+    ],
+    "glibness": [
+      {
+        "key": "a5e-ag_glibness",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_glibness",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_glibness",
+        "document": "srd-2014"
+      }
+    ],
+    "globe of invulnerability": [
+      {
+        "key": "a5e-ag_globe-of-invulnerability",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_globe-of-invulnerability",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_globe-of-invulnerability",
+        "document": "srd-2014"
+      }
+    ],
+    "glyph of warding": [
+      {
+        "key": "a5e-ag_glyph-of-warding",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_glyph-of-warding",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_glyph-of-warding",
+        "document": "srd-2014"
+      }
+    ],
+    "goodberry": [
+      {
+        "key": "a5e-ag_goodberry",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_goodberry",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_goodberry",
+        "document": "srd-2014"
+      }
+    ],
+    "grease": [
+      {
+        "key": "a5e-ag_grease",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_grease",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_grease",
+        "document": "srd-2014"
+      }
+    ],
+    "greater invisibility": [
+      {
+        "key": "a5e-ag_greater-invisibility",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_greater-invisibility",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_greater-invisibility",
+        "document": "srd-2014"
+      }
+    ],
+    "greater restoration": [
+      {
+        "key": "a5e-ag_greater-restoration",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_greater-restoration",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_greater-restoration",
+        "document": "srd-2014"
+      }
+    ],
+    "guardian of faith": [
+      {
+        "key": "a5e-ag_guardian-of-faith",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_guardian-of-faith",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_guardian-of-faith",
+        "document": "srd-2014"
+      }
+    ],
+    "guards and wards": [
+      {
+        "key": "a5e-ag_guards-and-wards",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_guards-and-wards",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_guards-and-wards",
+        "document": "srd-2014"
+      }
+    ],
+    "guidance": [
+      {
+        "key": "a5e-ag_guidance",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_guidance",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_guidance",
+        "document": "srd-2014"
+      }
+    ],
+    "guiding bolt": [
+      {
+        "key": "a5e-ag_guiding-bolt",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_guiding-bolt",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_guiding-bolt",
+        "document": "srd-2014"
+      }
+    ],
+    "gust of wind": [
+      {
+        "key": "a5e-ag_gust-of-wind",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_gust-of-wind",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_gust-of-wind",
+        "document": "srd-2014"
+      }
+    ],
+    "hallow": [
+      {
+        "key": "a5e-ag_hallow",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_hallow",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_hallow",
+        "document": "srd-2014"
+      }
+    ],
+    "hallucinatory terrain": [
+      {
+        "key": "a5e-ag_hallucinatory-terrain",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_hallucinatory-terrain",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_hallucinatory-terrain",
+        "document": "srd-2014"
+      }
+    ],
+    "harm": [
+      {
+        "key": "a5e-ag_harm",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_harm",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_harm",
+        "document": "srd-2014"
+      }
+    ],
+    "haste": [
+      {
+        "key": "a5e-ag_haste",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_haste",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_haste",
+        "document": "srd-2014"
+      }
+    ],
+    "heal": [
+      {
+        "key": "a5e-ag_heal",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_heal",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_heal",
+        "document": "srd-2014"
+      }
+    ],
+    "healing word": [
+      {
+        "key": "a5e-ag_healing-word",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_healing-word",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_healing-word",
+        "document": "srd-2014"
+      }
+    ],
+    "heat metal": [
+      {
+        "key": "a5e-ag_heat-metal",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_heat-metal",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_heat-metal",
+        "document": "srd-2014"
+      }
+    ],
+    "hellish rebuke": [
+      {
+        "key": "srd-2024_hellish-rebuke",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_hellish-rebuke",
+        "document": "srd-2014"
+      }
+    ],
+    "heroes' feast": [
+      {
+        "key": "a5e-ag_heroes-feast",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_heroes-feast",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_heroes-feast",
+        "document": "srd-2014"
+      }
+    ],
+    "heroism": [
+      {
+        "key": "a5e-ag_heroism",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_heroism",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_heroism",
+        "document": "srd-2014"
+      }
+    ],
+    "hideous laughter": [
+      {
+        "key": "a5e-ag_hideous-laughter",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_hideous-laughter",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_hideous-laughter",
+        "document": "srd-2014"
+      }
+    ],
+    "hold monster": [
+      {
+        "key": "a5e-ag_hold-monster",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_hold-monster",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_hold-monster",
+        "document": "srd-2014"
+      }
+    ],
+    "hold person": [
+      {
+        "key": "a5e-ag_hold-person",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_hold-person",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_hold-person",
+        "document": "srd-2014"
+      }
+    ],
+    "holy aura": [
+      {
+        "key": "a5e-ag_holy-aura",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_holy-aura",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_holy-aura",
+        "document": "srd-2014"
+      }
+    ],
+    "hunter's mark": [
+      {
+        "key": "srd-2024_hunters-mark",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_hunters-mark",
+        "document": "srd-2014"
+      }
+    ],
+    "hypnotic pattern": [
+      {
+        "key": "a5e-ag_hypnotic-pattern",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_hypnotic-pattern",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_hypnotic-pattern",
+        "document": "srd-2014"
+      }
+    ],
+    "ice storm": [
+      {
+        "key": "a5e-ag_ice-storm",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_ice-storm",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ice-storm",
+        "document": "srd-2014"
+      }
+    ],
+    "identify": [
+      {
+        "key": "a5e-ag_identify",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_identify",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_identify",
+        "document": "srd-2014"
+      }
+    ],
+    "illusory script": [
+      {
+        "key": "a5e-ag_illusory-script",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_illusory-script",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_illusory-script",
+        "document": "srd-2014"
+      }
+    ],
+    "imprisonment": [
+      {
+        "key": "a5e-ag_imprisonment",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_imprisonment",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_imprisonment",
+        "document": "srd-2014"
+      }
+    ],
+    "incendiary cloud": [
+      {
+        "key": "a5e-ag_incendiary-cloud",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_incendiary-cloud",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_incendiary-cloud",
+        "document": "srd-2014"
+      }
+    ],
+    "inflict wounds": [
+      {
+        "key": "a5e-ag_inflict-wounds",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_inflict-wounds",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_inflict-wounds",
+        "document": "srd-2014"
+      }
+    ],
+    "insect plague": [
+      {
+        "key": "a5e-ag_insect-plague",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_insect-plague",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_insect-plague",
+        "document": "srd-2014"
+      }
+    ],
+    "instant summons": [
+      {
+        "key": "a5e-ag_instant-summons",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_instant-summons",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_instant-summons",
+        "document": "srd-2014"
+      }
+    ],
+    "invisibility": [
+      {
+        "key": "a5e-ag_invisibility",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_invisibility",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_invisibility",
+        "document": "srd-2014"
+      }
+    ],
+    "irresistible dance": [
+      {
+        "key": "a5e-ag_irresistible-dance",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_irresistible-dance",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_irresistible-dance",
+        "document": "srd-2014"
+      }
+    ],
+    "jump": [
+      {
+        "key": "a5e-ag_jump",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_jump",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_jump",
+        "document": "srd-2014"
+      }
+    ],
+    "knock": [
+      {
+        "key": "a5e-ag_knock",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_knock",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_knock",
+        "document": "srd-2014"
+      }
+    ],
+    "legend lore": [
+      {
+        "key": "a5e-ag_legend-lore",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_legend-lore",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_legend-lore",
+        "document": "srd-2014"
+      }
+    ],
+    "lesser restoration": [
+      {
+        "key": "a5e-ag_lesser-restoration",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_lesser-restoration",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_lesser-restoration",
+        "document": "srd-2014"
+      }
+    ],
+    "levitate": [
+      {
+        "key": "a5e-ag_levitate",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_levitate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_levitate",
+        "document": "srd-2014"
+      }
+    ],
+    "life drain": [
+      {
+        "key": "deepm_life-drain",
+        "document": "deepm"
+      },
+      {
+        "key": "spells-that-dont-suck_life-drain",
+        "document": "spells-that-dont-suck"
+      }
+    ],
+    "light": [
+      {
+        "key": "a5e-ag_light",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_light",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_light",
+        "document": "srd-2014"
+      }
+    ],
+    "lightning bolt": [
+      {
+        "key": "a5e-ag_lightning-bolt",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_lightning-bolt",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_lightning-bolt",
+        "document": "srd-2014"
+      }
+    ],
+    "locate animals or plants": [
+      {
+        "key": "a5e-ag_locate-animals-or-plants",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_locate-animals-or-plants",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_locate-animals-or-plants",
+        "document": "srd-2014"
+      }
+    ],
+    "locate creature": [
+      {
+        "key": "a5e-ag_locate-creature",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_locate-creature",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_locate-creature",
+        "document": "srd-2014"
+      }
+    ],
+    "locate object": [
+      {
+        "key": "a5e-ag_locate-object",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_locate-object",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_locate-object",
+        "document": "srd-2014"
+      }
+    ],
+    "longstrider": [
+      {
+        "key": "a5e-ag_longstrider",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_longstrider",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_longstrider",
+        "document": "srd-2014"
+      }
+    ],
+    "mage armor": [
+      {
+        "key": "a5e-ag_mage-armor",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_mage-armor",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mage-armor",
+        "document": "srd-2014"
+      }
+    ],
+    "mage hand": [
+      {
+        "key": "a5e-ag_mage-hand",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_mage-hand",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mage-hand",
+        "document": "srd-2014"
+      }
+    ],
+    "magic circle": [
+      {
+        "key": "a5e-ag_magic-circle",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_magic-circle",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_magic-circle",
+        "document": "srd-2014"
+      }
+    ],
+    "magic jar": [
+      {
+        "key": "a5e-ag_magic-jar",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_magic-jar",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_magic-jar",
+        "document": "srd-2014"
+      }
+    ],
+    "magic missile": [
+      {
+        "key": "a5e-ag_magic-missile",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_magic-missile",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_magic-missile",
+        "document": "srd-2014"
+      }
+    ],
+    "magic mouth": [
+      {
+        "key": "a5e-ag_magic-mouth",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_magic-mouth",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_magic-mouth",
+        "document": "srd-2014"
+      }
+    ],
+    "magic weapon": [
+      {
+        "key": "a5e-ag_magic-weapon",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_magic-weapon",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_magic-weapon",
+        "document": "srd-2014"
+      }
+    ],
+    "magnificent mansion": [
+      {
+        "key": "a5e-ag_magnificent-mansion",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_magnificent-mansion",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_magnificent-mansion",
+        "document": "srd-2014"
+      }
+    ],
+    "major image": [
+      {
+        "key": "a5e-ag_major-image",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_major-image",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_major-image",
+        "document": "srd-2014"
+      }
+    ],
+    "mass cure wounds": [
+      {
+        "key": "a5e-ag_mass-cure-wounds",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_mass-cure-wounds",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mass-cure-wounds",
+        "document": "srd-2014"
+      }
+    ],
+    "mass heal": [
+      {
+        "key": "a5e-ag_mass-heal",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_mass-heal",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mass-heal",
+        "document": "srd-2014"
+      }
+    ],
+    "mass healing word": [
+      {
+        "key": "a5e-ag_mass-healing-word",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_mass-healing-word",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mass-healing-word",
+        "document": "srd-2014"
+      }
+    ],
+    "mass suggestion": [
+      {
+        "key": "a5e-ag_mass-suggestion",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_mass-suggestion",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mass-suggestion",
+        "document": "srd-2014"
+      }
+    ],
+    "maze": [
+      {
+        "key": "a5e-ag_maze",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_maze",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_maze",
+        "document": "srd-2014"
+      }
+    ],
+    "meld into stone": [
+      {
+        "key": "a5e-ag_meld-into-stone",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_meld-into-stone",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_meld-into-stone",
+        "document": "srd-2014"
+      }
+    ],
+    "mending": [
+      {
+        "key": "a5e-ag_mending",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_mending",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mending",
+        "document": "srd-2014"
+      }
+    ],
+    "message": [
+      {
+        "key": "a5e-ag_message",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_message",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_message",
+        "document": "srd-2014"
+      }
+    ],
+    "meteor swarm": [
+      {
+        "key": "a5e-ag_meteor-swarm",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_meteor-swarm",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_meteor-swarm",
+        "document": "srd-2014"
+      }
+    ],
+    "mind blank": [
+      {
+        "key": "a5e-ag_mind-blank",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_mind-blank",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mind-blank",
+        "document": "srd-2014"
+      }
+    ],
+    "minor illusion": [
+      {
+        "key": "a5e-ag_minor-illusion",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_minor-illusion",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_minor-illusion",
+        "document": "srd-2014"
+      }
+    ],
+    "mirage arcane": [
+      {
+        "key": "a5e-ag_mirage-arcane",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_mirage-arcane",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mirage-arcane",
+        "document": "srd-2014"
+      }
+    ],
+    "mirror image": [
+      {
+        "key": "a5e-ag_mirror-image",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_mirror-image",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mirror-image",
+        "document": "srd-2014"
+      }
+    ],
+    "misdirection": [
+      {
+        "key": "spells-that-dont-suck_misdirection",
+        "document": "spells-that-dont-suck"
+      },
+      {
+        "key": "toh_misdirection",
+        "document": "toh"
+      }
+    ],
+    "mislead": [
+      {
+        "key": "a5e-ag_mislead",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_mislead",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mislead",
+        "document": "srd-2014"
+      }
+    ],
+    "misty step": [
+      {
+        "key": "a5e-ag_misty-step",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_misty-step",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_misty-step",
+        "document": "srd-2014"
+      }
+    ],
+    "modify memory": [
+      {
+        "key": "a5e-ag_modify-memory",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_modify-memory",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_modify-memory",
+        "document": "srd-2014"
+      }
+    ],
+    "moonbeam": [
+      {
+        "key": "a5e-ag_moonbeam",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_moonbeam",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_moonbeam",
+        "document": "srd-2014"
+      }
+    ],
+    "move earth": [
+      {
+        "key": "a5e-ag_move-earth",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_move-earth",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_move-earth",
+        "document": "srd-2014"
+      }
+    ],
+    "nondetection": [
+      {
+        "key": "a5e-ag_nondetection",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_nondetection",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_nondetection",
+        "document": "srd-2014"
+      }
+    ],
+    "pass without trace": [
+      {
+        "key": "a5e-ag_pass-without-trace",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_pass-without-trace",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_pass-without-trace",
+        "document": "srd-2014"
+      }
+    ],
+    "passwall": [
+      {
+        "key": "a5e-ag_passwall",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_passwall",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_passwall",
+        "document": "srd-2014"
+      }
+    ],
+    "phantasmal killer": [
+      {
+        "key": "a5e-ag_phantasmal-killer",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_phantasmal-killer",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_phantasmal-killer",
+        "document": "srd-2014"
+      }
+    ],
+    "phantom steed": [
+      {
+        "key": "a5e-ag_phantom-steed",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_phantom-steed",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_phantom-steed",
+        "document": "srd-2014"
+      }
+    ],
+    "planar ally": [
+      {
+        "key": "a5e-ag_planar-ally",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_planar-ally",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_planar-ally",
+        "document": "srd-2014"
+      }
+    ],
+    "planar binding": [
+      {
+        "key": "a5e-ag_planar-binding",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_planar-binding",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_planar-binding",
+        "document": "srd-2014"
+      }
+    ],
+    "plane shift": [
+      {
+        "key": "a5e-ag_plane-shift",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_plane-shift",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_plane-shift",
+        "document": "srd-2014"
+      }
+    ],
+    "plant growth": [
+      {
+        "key": "a5e-ag_plant-growth",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_plant-growth",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_plant-growth",
+        "document": "srd-2014"
+      }
+    ],
+    "poison spray": [
+      {
+        "key": "srd-2024_poison-spray",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_poison-spray",
+        "document": "srd-2014"
+      }
+    ],
+    "polymorph": [
+      {
+        "key": "a5e-ag_polymorph",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_polymorph",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_polymorph",
+        "document": "srd-2014"
+      }
+    ],
+    "power word kill": [
+      {
+        "key": "a5e-ag_power-word-kill",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_power-word-kill",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_power-word-kill",
+        "document": "srd-2014"
+      }
+    ],
+    "power word stun": [
+      {
+        "key": "a5e-ag_power-word-stun",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_power-word-stun",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_power-word-stun",
+        "document": "srd-2014"
+      }
+    ],
+    "prayer of healing": [
+      {
+        "key": "a5e-ag_prayer-of-healing",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_prayer-of-healing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_prayer-of-healing",
+        "document": "srd-2014"
+      }
+    ],
+    "prestidigitation": [
+      {
+        "key": "a5e-ag_prestidigitation",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_prestidigitation",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_prestidigitation",
+        "document": "srd-2014"
+      }
+    ],
+    "prismatic spray": [
+      {
+        "key": "a5e-ag_prismatic-spray",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_prismatic-spray",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_prismatic-spray",
+        "document": "srd-2014"
+      }
+    ],
+    "prismatic wall": [
+      {
+        "key": "a5e-ag_prismatic-wall",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_prismatic-wall",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_prismatic-wall",
+        "document": "srd-2014"
+      }
+    ],
+    "private sanctum": [
+      {
+        "key": "a5e-ag_private-sanctum",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_private-sanctum",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_private-sanctum",
+        "document": "srd-2014"
+      }
+    ],
+    "produce flame": [
+      {
+        "key": "a5e-ag_produce-flame",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_produce-flame",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_produce-flame",
+        "document": "srd-2014"
+      }
+    ],
+    "programmed illusion": [
+      {
+        "key": "a5e-ag_programmed-illusion",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_programmed-illusion",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_programmed-illusion",
+        "document": "srd-2014"
+      }
+    ],
+    "project image": [
+      {
+        "key": "a5e-ag_project-image",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_project-image",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_project-image",
+        "document": "srd-2014"
+      }
+    ],
+    "protection from energy": [
+      {
+        "key": "a5e-ag_protection-from-energy",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_protection-from-energy",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_protection-from-energy",
+        "document": "srd-2014"
+      }
+    ],
+    "protection from evil and good": [
+      {
+        "key": "a5e-ag_protection-from-evil-and-good",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_protection-from-evil-and-good",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_protection-from-evil-and-good",
+        "document": "srd-2014"
+      }
+    ],
+    "protection from poison": [
+      {
+        "key": "a5e-ag_protection-from-poison",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_protection-from-poison",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_protection-from-poison",
+        "document": "srd-2014"
+      }
+    ],
+    "purify food and drink": [
+      {
+        "key": "a5e-ag_purify-food-and-drink",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_purify-food-and-drink",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_purify-food-and-drink",
+        "document": "srd-2014"
+      }
+    ],
+    "raise dead": [
+      {
+        "key": "a5e-ag_raise-dead",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_raise-dead",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_raise-dead",
+        "document": "srd-2014"
+      }
+    ],
+    "ray of enfeeblement": [
+      {
+        "key": "a5e-ag_ray-of-enfeeblement",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_ray-of-enfeeblement",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ray-of-enfeeblement",
+        "document": "srd-2014"
+      }
+    ],
+    "ray of frost": [
+      {
+        "key": "a5e-ag_ray-of-frost",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_ray-of-frost",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ray-of-frost",
+        "document": "srd-2014"
+      }
+    ],
+    "ray of sickness": [
+      {
+        "key": "open5e_ray-of-sickness",
+        "document": "open5e"
+      },
+      {
+        "key": "srd-2024_ray-of-sickness",
+        "document": "srd-2024"
+      }
+    ],
+    "regenerate": [
+      {
+        "key": "a5e-ag_regenerate",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_regenerate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_regenerate",
+        "document": "srd-2014"
+      }
+    ],
+    "reincarnate": [
+      {
+        "key": "a5e-ag_reincarnate",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_reincarnate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_reincarnate",
+        "document": "srd-2014"
+      }
+    ],
+    "remove curse": [
+      {
+        "key": "a5e-ag_remove-curse",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_remove-curse",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_remove-curse",
+        "document": "srd-2014"
+      }
+    ],
+    "resilient sphere": [
+      {
+        "key": "a5e-ag_resilient-sphere",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_resilient-sphere",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_resilient-sphere",
+        "document": "srd-2014"
+      }
+    ],
+    "resistance": [
+      {
+        "key": "a5e-ag_resistance",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_resistance",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_resistance",
+        "document": "srd-2014"
+      }
+    ],
+    "resurrection": [
+      {
+        "key": "a5e-ag_resurrection",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_resurrection",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_resurrection",
+        "document": "srd-2014"
+      }
+    ],
+    "reverse gravity": [
+      {
+        "key": "a5e-ag_reverse-gravity",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_reverse-gravity",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_reverse-gravity",
+        "document": "srd-2014"
+      }
+    ],
+    "revivify": [
+      {
+        "key": "a5e-ag_revivify",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_revivify",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_revivify",
+        "document": "srd-2014"
+      }
+    ],
+    "riptide": [
+      {
+        "key": "deepm_riptide",
+        "document": "deepm"
+      },
+      {
+        "key": "spells-that-dont-suck_riptide",
+        "document": "spells-that-dont-suck"
+      }
+    ],
+    "rope trick": [
+      {
+        "key": "a5e-ag_rope-trick",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_rope-trick",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_rope-trick",
+        "document": "srd-2014"
+      }
+    ],
+    "sacred flame": [
+      {
+        "key": "a5e-ag_sacred-flame",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_sacred-flame",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sacred-flame",
+        "document": "srd-2014"
+      }
+    ],
+    "sanctuary": [
+      {
+        "key": "a5e-ag_sanctuary",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_sanctuary",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sanctuary",
+        "document": "srd-2014"
+      }
+    ],
+    "scorching ray": [
+      {
+        "key": "a5e-ag_scorching-ray",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_scorching-ray",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_scorching-ray",
+        "document": "srd-2014"
+      }
+    ],
+    "scrying": [
+      {
+        "key": "a5e-ag_scrying",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_scrying",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_scrying",
+        "document": "srd-2014"
+      }
+    ],
+    "secret chest": [
+      {
+        "key": "a5e-ag_secret-chest",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_secret-chest",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_secret-chest",
+        "document": "srd-2014"
+      }
+    ],
+    "see invisibility": [
+      {
+        "key": "a5e-ag_see-invisibility",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_see-invisibility",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_see-invisibility",
+        "document": "srd-2014"
+      }
+    ],
+    "seeming": [
+      {
+        "key": "a5e-ag_seeming",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_seeming",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_seeming",
+        "document": "srd-2014"
+      }
+    ],
+    "sending": [
+      {
+        "key": "a5e-ag_sending",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_sending",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sending",
+        "document": "srd-2014"
+      }
+    ],
+    "sequester": [
+      {
+        "key": "a5e-ag_sequester",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_sequester",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sequester",
+        "document": "srd-2014"
+      }
+    ],
+    "shapechange": [
+      {
+        "key": "a5e-ag_shapechange",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_shapechange",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shapechange",
+        "document": "srd-2014"
+      }
+    ],
+    "shatter": [
+      {
+        "key": "a5e-ag_shatter",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_shatter",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shatter",
+        "document": "srd-2014"
+      }
+    ],
+    "shield": [
+      {
+        "key": "a5e-ag_shield",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_shield",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shield",
+        "document": "srd-2014"
+      }
+    ],
+    "shield of faith": [
+      {
+        "key": "a5e-ag_shield-of-faith",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_shield-of-faith",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shield-of-faith",
+        "document": "srd-2014"
+      }
+    ],
+    "shillelagh": [
+      {
+        "key": "a5e-ag_shillelagh",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_shillelagh",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shillelagh",
+        "document": "srd-2014"
+      }
+    ],
+    "shocking grasp": [
+      {
+        "key": "a5e-ag_shocking-grasp",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_shocking-grasp",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shocking-grasp",
+        "document": "srd-2014"
+      }
+    ],
+    "silence": [
+      {
+        "key": "a5e-ag_silence",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_silence",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_silence",
+        "document": "srd-2014"
+      }
+    ],
+    "silent image": [
+      {
+        "key": "a5e-ag_silent-image",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_silent-image",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_silent-image",
+        "document": "srd-2014"
+      }
+    ],
+    "simulacrum": [
+      {
+        "key": "a5e-ag_simulacrum",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_simulacrum",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_simulacrum",
+        "document": "srd-2014"
+      }
+    ],
+    "sleep": [
+      {
+        "key": "a5e-ag_sleep",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_sleep",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sleep",
+        "document": "srd-2014"
+      }
+    ],
+    "sleet storm": [
+      {
+        "key": "a5e-ag_sleet-storm",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_sleet-storm",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sleet-storm",
+        "document": "srd-2014"
+      }
+    ],
+    "slow": [
+      {
+        "key": "a5e-ag_slow",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_slow",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_slow",
+        "document": "srd-2014"
+      }
+    ],
+    "spare the dying": [
+      {
+        "key": "a5e-ag_spare-the-dying",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_spare-the-dying",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_spare-the-dying",
+        "document": "srd-2014"
+      }
+    ],
+    "speak with animals": [
+      {
+        "key": "a5e-ag_speak-with-animals",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_speak-with-animals",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_speak-with-animals",
+        "document": "srd-2014"
+      }
+    ],
+    "speak with dead": [
+      {
+        "key": "a5e-ag_speak-with-dead",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_speak-with-dead",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_speak-with-dead",
+        "document": "srd-2014"
+      }
+    ],
+    "speak with plants": [
+      {
+        "key": "a5e-ag_speak-with-plants",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_speak-with-plants",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_speak-with-plants",
+        "document": "srd-2014"
+      }
+    ],
+    "spider climb": [
+      {
+        "key": "a5e-ag_spider-climb",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_spider-climb",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_spider-climb",
+        "document": "srd-2014"
+      }
+    ],
+    "spike growth": [
+      {
+        "key": "a5e-ag_spike-growth",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_spike-growth",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_spike-growth",
+        "document": "srd-2014"
+      }
+    ],
+    "spirit guardians": [
+      {
+        "key": "a5e-ag_spirit-guardians",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_spirit-guardians",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_spirit-guardians",
+        "document": "srd-2014"
+      }
+    ],
+    "spiritual weapon": [
+      {
+        "key": "a5e-ag_spiritual-weapon",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_spiritual-weapon",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_spiritual-weapon",
+        "document": "srd-2014"
+      }
+    ],
+    "stinking cloud": [
+      {
+        "key": "a5e-ag_stinking-cloud",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_stinking-cloud",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_stinking-cloud",
+        "document": "srd-2014"
+      }
+    ],
+    "stone shape": [
+      {
+        "key": "a5e-ag_stone-shape",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_stone-shape",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_stone-shape",
+        "document": "srd-2014"
+      }
+    ],
+    "stoneskin": [
+      {
+        "key": "a5e-ag_stoneskin",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_stoneskin",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_stoneskin",
+        "document": "srd-2014"
+      }
+    ],
+    "storm of vengeance": [
+      {
+        "key": "a5e-ag_storm-of-vengeance",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_storm-of-vengeance",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_storm-of-vengeance",
+        "document": "srd-2014"
+      }
+    ],
+    "suggestion": [
+      {
+        "key": "a5e-ag_suggestion",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_suggestion",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_suggestion",
+        "document": "srd-2014"
+      }
+    ],
+    "sunbeam": [
+      {
+        "key": "a5e-ag_sunbeam",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_sunbeam",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sunbeam",
+        "document": "srd-2014"
+      }
+    ],
+    "sunburst": [
+      {
+        "key": "a5e-ag_sunburst",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_sunburst",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sunburst",
+        "document": "srd-2014"
+      }
+    ],
+    "symbol": [
+      {
+        "key": "a5e-ag_symbol",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_symbol",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_symbol",
+        "document": "srd-2014"
+      }
+    ],
+    "telekinesis": [
+      {
+        "key": "a5e-ag_telekinesis",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_telekinesis",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_telekinesis",
+        "document": "srd-2014"
+      }
+    ],
+    "telepathic bond": [
+      {
+        "key": "a5e-ag_telepathic-bond",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_telepathic-bond",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_telepathic-bond",
+        "document": "srd-2014"
+      }
+    ],
+    "teleport": [
+      {
+        "key": "a5e-ag_teleport",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_teleport",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_teleport",
+        "document": "srd-2014"
+      }
+    ],
+    "teleportation circle": [
+      {
+        "key": "a5e-ag_teleportation-circle",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_teleportation-circle",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_teleportation-circle",
+        "document": "srd-2014"
+      }
+    ],
+    "thaumaturgy": [
+      {
+        "key": "a5e-ag_thaumaturgy",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_thaumaturgy",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_thaumaturgy",
+        "document": "srd-2014"
+      }
+    ],
+    "thunderwave": [
+      {
+        "key": "a5e-ag_thunderwave",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_thunderwave",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_thunderwave",
+        "document": "srd-2014"
+      }
+    ],
+    "time stop": [
+      {
+        "key": "a5e-ag_time-stop",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_time-stop",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_time-stop",
+        "document": "srd-2014"
+      }
+    ],
+    "tiny hut": [
+      {
+        "key": "a5e-ag_tiny-hut",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_tiny-hut",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_tiny-hut",
+        "document": "srd-2014"
+      }
+    ],
+    "tongues": [
+      {
+        "key": "a5e-ag_tongues",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_tongues",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_tongues",
+        "document": "srd-2014"
+      }
+    ],
+    "transport via plants": [
+      {
+        "key": "a5e-ag_transport-via-plants",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_transport-via-plants",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_transport-via-plants",
+        "document": "srd-2014"
+      }
+    ],
+    "tree stride": [
+      {
+        "key": "a5e-ag_tree-stride",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_tree-stride",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_tree-stride",
+        "document": "srd-2014"
+      }
+    ],
+    "true polymorph": [
+      {
+        "key": "a5e-ag_true-polymorph",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_true-polymorph",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_true-polymorph",
+        "document": "srd-2014"
+      }
+    ],
+    "true resurrection": [
+      {
+        "key": "a5e-ag_true-resurrection",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_true-resurrection",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_true-resurrection",
+        "document": "srd-2014"
+      }
+    ],
+    "true seeing": [
+      {
+        "key": "a5e-ag_true-seeing",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_true-seeing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_true-seeing",
+        "document": "srd-2014"
+      }
+    ],
+    "true strike": [
+      {
+        "key": "a5e-ag_true-strike",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_true-strike",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_true-strike",
+        "document": "srd-2014"
+      }
+    ],
+    "unseen servant": [
+      {
+        "key": "a5e-ag_unseen-servant",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_unseen-servant",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_unseen-servant",
+        "document": "srd-2014"
+      }
+    ],
+    "vampiric touch": [
+      {
+        "key": "a5e-ag_vampiric-touch",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_vampiric-touch",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_vampiric-touch",
+        "document": "srd-2014"
+      }
+    ],
+    "vicious mockery": [
+      {
+        "key": "a5e-ag_vicious-mockery",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_vicious-mockery",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_vicious-mockery",
+        "document": "srd-2014"
+      }
+    ],
+    "wall of fire": [
+      {
+        "key": "a5e-ag_wall-of-fire",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_wall-of-fire",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wall-of-fire",
+        "document": "srd-2014"
+      }
+    ],
+    "wall of force": [
+      {
+        "key": "a5e-ag_wall-of-force",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_wall-of-force",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wall-of-force",
+        "document": "srd-2014"
+      }
+    ],
+    "wall of ice": [
+      {
+        "key": "a5e-ag_wall-of-ice",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_wall-of-ice",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wall-of-ice",
+        "document": "srd-2014"
+      }
+    ],
+    "wall of stone": [
+      {
+        "key": "a5e-ag_wall-of-stone",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_wall-of-stone",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wall-of-stone",
+        "document": "srd-2014"
+      }
+    ],
+    "wall of thorns": [
+      {
+        "key": "a5e-ag_wall-of-thorns",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_wall-of-thorns",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wall-of-thorns",
+        "document": "srd-2014"
+      }
+    ],
+    "warding bond": [
+      {
+        "key": "a5e-ag_warding-bond",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_warding-bond",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_warding-bond",
+        "document": "srd-2014"
+      }
+    ],
+    "water breathing": [
+      {
+        "key": "a5e-ag_water-breathing",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_water-breathing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_water-breathing",
+        "document": "srd-2014"
+      }
+    ],
+    "water walk": [
+      {
+        "key": "a5e-ag_water-walk",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_water-walk",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_water-walk",
+        "document": "srd-2014"
+      }
+    ],
+    "web": [
+      {
+        "key": "a5e-ag_web",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_web",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_web",
+        "document": "srd-2014"
+      }
+    ],
+    "weird": [
+      {
+        "key": "a5e-ag_weird",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_weird",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_weird",
+        "document": "srd-2014"
+      }
+    ],
+    "wind walk": [
+      {
+        "key": "a5e-ag_wind-walk",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_wind-walk",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wind-walk",
+        "document": "srd-2014"
+      }
+    ],
+    "wind wall": [
+      {
+        "key": "a5e-ag_wind-wall",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_wind-wall",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wind-wall",
+        "document": "srd-2014"
+      }
+    ],
+    "wish": [
+      {
+        "key": "a5e-ag_wish",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_wish",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wish",
+        "document": "srd-2014"
+      }
+    ],
+    "word of recall": [
+      {
+        "key": "a5e-ag_word-of-recall",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_word-of-recall",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_word-of-recall",
+        "document": "srd-2014"
+      }
+    ],
+    "zone of truth": [
+      {
+        "key": "a5e-ag_zone-of-truth",
+        "document": "a5e-ag"
+      },
+      {
+        "key": "srd-2024_zone-of-truth",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_zone-of-truth",
+        "document": "srd-2014"
+      }
+    ]
+  },
+  "warnings": [],
+  "warning_count": 0
+}

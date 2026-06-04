@@ -23,6 +23,7 @@
         <button class="nav-button active" type="button" data-panel="dashboard">Главная</button>
         <button class="nav-button" type="button" data-panel="generators">Генераторы</button>
         <button class="nav-button" type="button" data-panel="bestiary">Бестиарий</button>
+        <button class="nav-button" type="button" data-panel="spells">Заклинания</button>
         <button class="nav-button" type="button" data-panel="session">Сессия</button>
         <button class="nav-button" type="button" data-panel="library">Библиотека</button>
         <button class="nav-button" type="button" data-panel="notes">Заметки</button>
@@ -160,6 +161,49 @@
         <div class="bestiary-list" data-bestiary-list></div>
       </section>
 
+      <section class="panel" data-panel-view="spells">
+        <div class="section-heading">
+          <h3>Заклинания</h3>
+          <p>Заклинания из локальной базы Open5e. Доступны поиск, фильтры по уровню, школе, классу, концентрации и ритуалам, подробная карточка и сохранение в библиотеку.</p>
+        </div>
+
+        <div class="bestiary-toolbar spells-toolbar">
+          <label class="field">
+            <span>Поиск</span>
+            <input type="search" placeholder="Название заклинания" data-spells-search>
+          </label>
+          <label class="field">
+            <span>Уровень</span>
+            <select data-spells-level>
+              <option value="">Любой</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Школа</span>
+            <select data-spells-school>
+              <option value="">Все школы</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Класс</span>
+            <select data-spells-class>
+              <option value="">Любой класс</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Особенность</span>
+            <select data-spells-tag>
+              <option value="">Любая</option>
+              <option value="concentration">Концентрация</option>
+              <option value="ritual">Ритуал</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="bestiary-summary" data-spells-summary>Загрузка заклинаний...</div>
+        <div class="bestiary-list spells-list" data-spells-list></div>
+      </section>
+
       <section class="panel" data-panel-view="session">
         <div class="section-heading">
           <h3>Ведение сессии</h3>
@@ -284,6 +328,21 @@
         <button type="button" data-save-current-monster>Сохранить в библиотеку</button>
         <button type="button" class="danger-action is-hidden" data-delete-custom-monster>Удалить своё существо</button>
         <button type="button" data-close-monster>Закрыть</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-spell-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="spell-modal-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-spell aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Spell card</p>
+        <h2 id="spell-modal-title" data-spell-name>Заклинание</h2>
+      </div>
+      <div class="monster-detail" data-spell-detail></div>
+      <div class="modal-actions monster-actions">
+        <button type="button" data-save-current-spell>Сохранить в библиотеку</button>
+        <button type="button" data-close-spell>Закрыть</button>
       </div>
     </section>
   </div>

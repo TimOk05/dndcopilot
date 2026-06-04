@@ -738,6 +738,10 @@ input[type="range"] {
   box-shadow: 0 16px 38px var(--shadow);
 }
 
+.spells-toolbar {
+  grid-template-columns: minmax(220px, 1.5fr) minmax(110px, 0.7fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr);
+}
+
 .bestiary-summary {
   margin: 10px 0 14px;
   color: var(--muted);
@@ -795,6 +799,14 @@ input[type="range"] {
 .monster-card strong {
   font-size: 20px;
   line-height: 1.15;
+}
+
+.spell-card small,
+.spell-library-card small {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .monster-card.is-custom {
