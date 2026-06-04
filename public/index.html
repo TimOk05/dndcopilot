@@ -107,7 +107,7 @@
           <button type="button">Противники</button>
           <button type="button" data-open-potion-generator>Зелья</button>
           <button type="button">Заклинания</button>
-          <button type="button">Лут</button>
+          <button type="button" data-open-loot-generator>Лут</button>
           <button type="button">Локация</button>
           <button type="button">Квест</button>
           <button type="button">Таверна</button>
@@ -180,6 +180,7 @@
           <button type="button">Мои монстры</button>
           <button type="button">Мои предметы</button>
           <button type="button">Мои зелья</button>
+          <button type="button">Мой лут</button>
           <button type="button">Мои заклинания</button>
           <button type="button">Мои локации</button>
           <button type="button">Кампании</button>
@@ -454,6 +455,65 @@
       <div class="monster-detail" data-potion-detail></div>
       <div class="modal-actions monster-actions">
         <button type="button" data-close-potion-detail>Закрыть</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-loot-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="loot-modal-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-loot-generator aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Loot find tool</p>
+        <h2 id="loot-modal-title">Генератор лута</h2>
+      </div>
+
+      <div class="bestiary-toolbar random-monster-form loot-form">
+        <label class="field">
+          <span>Опасность</span>
+          <select data-loot-tier></select>
+        </label>
+        <label class="field">
+          <span>Состав</span>
+          <select data-loot-find-type>
+            <option value="mixed" selected>По таблице</option>
+            <option value="coins">Монеты</option>
+            <option value="valuable">Ценность</option>
+            <option value="mundane">Странная вещь</option>
+            <option value="magic">Магический предмет</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Категория</span>
+          <select data-loot-category>
+            <option value="">Любая</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Количество</span>
+          <input type="number" min="1" max="8" value="1" data-loot-count>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="primary-action" type="button" data-generate-loot>Получить результат</button>
+        <button type="button" data-save-loot disabled>Сохранить в библиотеку</button>
+        <button type="button" data-close-loot-generator>Закрыть</button>
+      </div>
+
+      <div class="random-monster-results loot-results" data-loot-results></div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-loot-detail-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="loot-detail-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-loot-detail aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Loot find</p>
+        <h2 id="loot-detail-title" data-loot-detail-name>Лут</h2>
+      </div>
+      <div class="monster-detail" data-loot-detail></div>
+      <div class="modal-actions monster-actions">
+        <button type="button" data-close-loot-detail>Закрыть</button>
       </div>
     </section>
   </div>

@@ -917,8 +917,34 @@ input[type="range"] {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.loot-form {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .random-monster-results {
   margin-top: 16px;
+}
+
+.loot-magic-list {
+  gap: 12px;
+}
+
+.loot-magic-item {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.loot-magic-item h5,
+.loot-magic-item p {
+  margin: 0;
+}
+
+.loot-magic-item small {
+  color: var(--muted);
 }
 
 .checkbox-row {

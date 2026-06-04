@@ -103,6 +103,16 @@ const savePotionsButton = document.querySelector("[data-save-potions]");
 const potionDetailModal = document.querySelector("[data-potion-detail-modal]");
 const potionDetailName = document.querySelector("[data-potion-detail-name]");
 const potionDetail = document.querySelector("[data-potion-detail]");
+const lootModal = document.querySelector("[data-loot-modal]");
+const lootTierInput = document.querySelector("[data-loot-tier]");
+const lootFindTypeInput = document.querySelector("[data-loot-find-type]");
+const lootCategoryInput = document.querySelector("[data-loot-category]");
+const lootCountInput = document.querySelector("[data-loot-count]");
+const lootResults = document.querySelector("[data-loot-results]");
+const saveLootButton = document.querySelector("[data-save-loot]");
+const lootDetailModal = document.querySelector("[data-loot-detail-modal]");
+const lootDetailName = document.querySelector("[data-loot-detail-name]");
+const lootDetail = document.querySelector("[data-loot-detail]");
 
 let lastDiceRoll = null;
 let bestiaryIndex = [];
@@ -117,6 +127,11 @@ let potions = [];
 let potionsById = new Map();
 let potionsLocaleById = new Map();
 let currentPotionResults = [];
+let lootTables = null;
+let lootItemsIndex = [];
+let lootItems = [];
+let lootItemsById = new Map();
+let currentLootResults = [];
 const DICE_LABEL_LIMIT = 48;
 const CR_GROUPS = [
   { value: "0-0.125", label: "CR 0-1/8", min: 0, max: 0.125 },
@@ -154,9 +169,31 @@ const RARITY_LABELS_RU = {
   "very-rare": "очень редкая",
   legendary: "легендарная",
   "rarity-varies": "редкость варьируется",
+  artifact: "артефакт",
   unknown: "неизвестно",
 };
 const POTION_RARITY_ORDER = ["common", "uncommon", "rare", "very-rare", "legendary"];
+const MAGIC_RARITY_ORDER = ["common", "uncommon", "rare", "very-rare", "legendary", "artifact"];
+const MAGIC_CATEGORY_LABELS_RU = {
+  ammunition: "боеприпасы",
+  armor: "доспех",
+  potion: "зелье",
+  ring: "кольцо",
+  rod: "жезл",
+  scroll: "свиток",
+  shield: "щит",
+  staff: "посох",
+  wand: "волшебная палочка",
+  weapon: "оружие",
+  "wondrous-item": "чудесный предмет",
+};
+const COIN_LABELS_RU = {
+  cp: "мм",
+  sp: "см",
+  ep: "эм",
+  gp: "зм",
+  pp: "пм",
+};
 
 function cleanDiceLabel(value) {
   return value.trim().replace(/\s+/g, " ").slice(0, DICE_LABEL_LIMIT);
@@ -564,6 +601,54 @@ async function loadPotions() {
   setupPotionRarityOptions();
 }
 
+async function loadLoot() {
+  if (lootTables && lootItems.length) {
+    return;
+  }
+
+  const [tablesResponse, indexResponse, itemsResponse] = await Promise.all([
+    fetch("data/srd/loot-tables.json"),
+    fetch("data/srd/loot-items.index.json"),
+    fetch("data/srd/loot-items.json"),
+  ]);
+
+  if (!tablesResponse.ok || !indexResponse.ok || !itemsResponse.ok) {
+    throw new Error("Не удалось загрузить базу лута.");
+  }
+
+  lootTables = await tablesResponse.json();
+  lootItemsIndex = await indexResponse.json();
+  lootItems = await itemsResponse.json();
+  lootItemsById = new Map(lootItems.map((item) => [item.id, item]));
+
+  setupLootTierOptions();
+  setupLootCategoryOptions();
+}
+
+function setupLootTierOptions() {
+  if (!lootTierInput || !lootTables?.tiers?.length) {
+    return;
+  }
+
+  lootTierInput.innerHTML = lootTables.tiers
+    .map((tier) => `<option value="${escapeHtml(tier.id)}">${escapeHtml(tier.label)}</option>`)
+    .join("");
+}
+
+function setupLootCategoryOptions() {
+  if (!lootCategoryInput) {
+    return;
+  }
+
+  const categories = [...new Set(lootItemsIndex.map((item) => item.category_key).filter(Boolean))]
+    .sort((left, right) => getMagicCategoryLabel(left).localeCompare(getMagicCategoryLabel(right), "ru"));
+
+  lootCategoryInput.innerHTML = `
+    <option value="">Любая</option>
+    ${categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(getMagicCategoryLabel(category))}</option>`).join("")}
+  `;
+}
+
 function setupPotionRarityOptions() {
   if (!potionRarityInput) {
     return;
@@ -844,11 +929,25 @@ function setSavedPotions(savedPotions) {
   renderLibraryPotions();
 }
 
+function getSavedLoot() {
+  try {
+    return JSON.parse(storage.get("dnd-saved-loot", "[]"));
+  } catch {
+    return [];
+  }
+}
+
+function setSavedLoot(savedLoot) {
+  storage.set("dnd-saved-loot", JSON.stringify(savedLoot));
+  updateSavedRollsCount();
+  renderLibraryLoot();
+}
+
 function updateSavedRollsCount() {
   if (!notesTotal) {
     return;
   }
-  const count = getSavedRolls().length + getSavedMonsters().length + getSavedPotions().length;
+  const count = getSavedRolls().length + getSavedMonsters().length + getSavedPotions().length + getSavedLoot().length;
   notesTotal.textContent = `${count} сохранено`;
 }
 
@@ -981,6 +1080,48 @@ function renderLibraryPotions() {
               <small class="potion-description">${escapeHtml(getPlainTextExcerpt(entry.description))}</small>
             </article>
           `)
+        .join("")}
+    </div>
+  `;
+}
+
+function renderLibraryLoot() {
+  if (!libraryPanel) {
+    return;
+  }
+
+  let list = libraryPanel.querySelector("[data-saved-loot]");
+  if (!list) {
+    list = document.createElement("div");
+    list.className = "saved-rolls";
+    list.dataset.savedLoot = "";
+    libraryPanel.appendChild(list);
+  }
+
+  const savedLoot = getSavedLoot();
+  if (!savedLoot.length) {
+    list.innerHTML = `
+      <div class="library-empty">
+        <strong>Сохранённого лута пока нет</strong>
+        <span>Сгенерируй находку, чтобы карточка появилась здесь.</span>
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = `
+    <h4>Сохранённый лут</h4>
+    <div class="saved-monster-grid">
+      ${savedLoot
+        .map((entry) => `
+          <article class="saved-monster-card loot-library-card" data-open-saved-loot="${escapeHtml(entry.id)}" tabindex="0" role="button">
+            <button class="card-remove" type="button" data-delete-saved-loot="${escapeHtml(entry.id)}" aria-label="Удалить лут">×</button>
+            <span>${escapeHtml(entry.typeLabel || "находка")}</span>
+            <strong>${escapeHtml(entry.title)}</strong>
+            <em>${escapeHtml(getLootCardMeta(entry))}</em>
+            <small class="potion-description">${escapeHtml(getLootSummaryText(entry))}</small>
+          </article>
+        `)
         .join("")}
     </div>
   `;
@@ -1505,6 +1646,463 @@ function closePotionGenerator() {
   currentPotionResults = [];
 }
 
+function rollFormula(formula) {
+  const text = String(formula || "0").replace(/\s+/g, "");
+  const fixed = text.match(/^\d+$/);
+  if (fixed) {
+    return Number(text);
+  }
+
+  const match = text.match(/^(\d*)d(\d+)([+-]\d+)?(?:\*(\d+))?$/i);
+  if (!match) {
+    return 0;
+  }
+
+  const count = Number(match[1] || 1);
+  const sides = Number(match[2]);
+  const modifier = Number(match[3] || 0);
+  const multiplier = Number(match[4] || 1);
+  const subtotal = Array.from({ length: count }, () => randomInt(1, sides)).reduce((sum, value) => sum + value, modifier);
+  return Math.max(0, subtotal * multiplier);
+}
+
+function pickWeighted(weightMap) {
+  const entries = Object.entries(weightMap || {}).filter(([, weight]) => Number(weight) > 0);
+  const total = entries.reduce((sum, [, weight]) => sum + Number(weight), 0);
+  if (!total) {
+    return "";
+  }
+
+  let roll = randomInt(1, total);
+  for (const [value, weight] of entries) {
+    roll -= Number(weight);
+    if (roll <= 0) {
+      return value;
+    }
+  }
+  return entries[entries.length - 1][0];
+}
+
+function pickFrom(values) {
+  return values?.length ? values[randomInt(0, values.length - 1)] : "";
+}
+
+function getLootTier() {
+  return lootTables?.tiers?.find((tier) => tier.id === lootTierInput.value) || lootTables?.tiers?.[0];
+}
+
+function getMagicCategoryLabel(category) {
+  return MAGIC_CATEGORY_LABELS_RU[category] || capitalize(String(category || "предмет").replace(/-/g, " "));
+}
+
+function getMagicRarityLabel(rarityValue, rarity = "") {
+  return RARITY_LABELS_RU[rarityValue] || rarity || "неизвестно";
+}
+
+function addCoins(target, coinRows) {
+  coinRows.forEach((row) => {
+    target[row.coin] = (target[row.coin] || 0) + rollFormula(row.formula);
+  });
+}
+
+function getCoinsGpValue(coins) {
+  const values = lootTables?.coin_values_gp || {};
+  return Object.entries(coins || {}).reduce((sum, [coin, amount]) => sum + (Number(amount) || 0) * (Number(values[coin]) || 0), 0);
+}
+
+function formatCoins(coins) {
+  const order = ["pp", "gp", "ep", "sp", "cp"];
+  const rows = order
+    .filter((coin) => coins?.[coin])
+    .map((coin) => `${coins[coin]} ${COIN_LABELS_RU[coin] || coin}`);
+  return rows.length ? rows.join(", ") : "монет нет";
+}
+
+function formatGp(value) {
+  const amount = Math.round((Number(value) || 0) * 10) / 10;
+  return `${amount.toLocaleString("ru-RU")} зм`;
+}
+
+function rollValuable(table) {
+  const count = rollFormula(table.formula);
+  const valueKey = String(table.value);
+  const source = table.kind === "art" ? lootTables.art_tables?.[valueKey] : lootTables.gem_tables?.[valueKey];
+  const names = Array.from({ length: count }, () => pickFrom(source)).filter(Boolean);
+  return {
+    kind: table.kind,
+    kindLabel: table.kind === "art" ? "арт-объекты" : "драгоценности",
+    value_gp: table.value,
+    count,
+    names,
+    total_gp: count * table.value,
+  };
+}
+
+function rollSingleValuable(tier) {
+  const tables = tier.hoard?.valuables?.length ? tier.hoard.valuables : [];
+  const table = pickFrom(tables);
+  if (!table) {
+    return null;
+  }
+
+  const valueKey = String(table.value);
+  const source = table.kind === "art" ? lootTables.art_tables?.[valueKey] : lootTables.gem_tables?.[valueKey];
+  return {
+    kind: table.kind,
+    kindLabel: table.kind === "art" ? "арт-объект" : "драгоценность",
+    value_gp: table.value,
+    count: 1,
+    names: [pickFrom(source)].filter(Boolean),
+    total_gp: table.value,
+  };
+}
+
+function getMagicItemPool(rarityValue = "") {
+  const category = lootCategoryInput.value;
+  return lootItemsIndex
+    .filter((item) => !rarityValue || item.rarity_value === rarityValue)
+    .filter((item) => !category || item.category_key === category)
+    .map((item) => lootItemsById.get(item.id))
+    .filter(Boolean);
+}
+
+function getFallbackMagicItemPool(rarityValue = "") {
+  const category = lootCategoryInput.value;
+  if (category) {
+    const categoryPool = lootItemsIndex
+      .filter((item) => item.category_key === category)
+      .map((item) => lootItemsById.get(item.id))
+      .filter(Boolean);
+    if (categoryPool.length) {
+      return categoryPool;
+    }
+  }
+
+  return lootItemsIndex
+    .filter((item) => !rarityValue || item.rarity_value === rarityValue)
+    .map((item) => lootItemsById.get(item.id))
+    .filter(Boolean);
+}
+
+function pickMagicItem(magicTable) {
+  const rarityValue = pickWeighted(magicTable?.rarities);
+  const strictPool = getMagicItemPool(rarityValue);
+  const fallbackPool = strictPool.length ? strictPool : getFallbackMagicItemPool(rarityValue);
+  const item = pickFrom(fallbackPool);
+  if (!item) {
+    return null;
+  }
+
+  return {
+    id: item.id,
+    name: item.name,
+    category: getMagicCategoryLabel(item.category_key),
+    category_key: item.category_key,
+    rarity: getMagicRarityLabel(item.rarity_value, item.rarity),
+    rarity_value: item.rarity_value,
+    attunement: Boolean(item.attunement),
+    source: item.source_display || item.source || "Open5e",
+    description: normalizeRichText(item.description),
+  };
+}
+
+function getLootFindType() {
+  const selectedCategory = lootCategoryInput.value;
+  const selectedType = lootFindTypeInput?.value || "mixed";
+
+  if (selectedCategory || selectedType === "magic") {
+    return "magic";
+  }
+  if (selectedType !== "mixed") {
+    return selectedType;
+  }
+
+  const weights = {
+    coins: 56,
+    valuable: 20,
+    mundane: 18,
+    magic: 6,
+  };
+  return pickWeighted(weights) || "coins";
+}
+
+function baseLootFind(tier, findType, title) {
+  return {
+    id: crypto.randomUUID(),
+    title,
+    findType,
+    tierId: tier.id,
+    tierLabel: tier.label,
+    tone: tier.tone,
+    total_gp: 0,
+    source_note: "Монеты, ценности и странные вещи: локальные таблицы D&D Copilot.",
+    savedAt: new Date().toISOString(),
+  };
+}
+
+function buildCoinFind(tier) {
+  const coins = {};
+  const roll = randomInt(1, 100);
+  const row = tier.individual.find((entry) => roll >= entry.min && roll <= entry.max) || tier.individual[0];
+  addCoins(coins, row.coins || []);
+
+  return {
+    ...baseLootFind(tier, "coins", `Монеты: ${formatCoins(coins)}`),
+    typeLabel: "монеты",
+    coins,
+    total_gp: getCoinsGpValue(coins),
+  };
+}
+
+function buildValuableFind(tier) {
+  const valuable = rollSingleValuable(tier);
+  const name = valuable?.names?.[0] || "Ценность";
+  return {
+    ...baseLootFind(tier, "valuable", name),
+    typeLabel: valuable?.kindLabel || "ценность",
+    valuable,
+    total_gp: valuable?.total_gp || 0,
+  };
+}
+
+function buildMundaneFind(tier) {
+  const item = pickFrom(lootTables.mundane_finds) || "странная вещь";
+  return {
+    ...baseLootFind(tier, "mundane", capitalize(item)),
+    typeLabel: "странная вещь",
+    mundane: item,
+  };
+}
+
+function buildMagicFind(tier) {
+  const item = pickMagicItem(tier.hoard?.magic);
+  if (!item) {
+    return buildMundaneFind(tier);
+  }
+
+  return {
+    ...baseLootFind(tier, "magic", item.name),
+    typeLabel: item.category,
+    magic_item: item,
+    source_note: "Магические предметы: Open5e API v2.",
+  };
+}
+
+function buildLootCard() {
+  const tier = getLootTier();
+  const findType = getLootFindType();
+  const builders = {
+    coins: buildCoinFind,
+    valuable: buildValuableFind,
+    mundane: buildMundaneFind,
+    magic: buildMagicFind,
+  };
+
+  return (builders[findType] || buildCoinFind)(tier);
+}
+
+function getLootSummaryText(loot) {
+  if (loot.findType === "coins") {
+    return `${formatCoins(loot.coins)} · ${formatGp(loot.total_gp)}`;
+  }
+  if (loot.findType === "valuable") {
+    return `${loot.typeLabel || "ценность"} · ${formatGp(loot.total_gp)}`;
+  }
+  if (loot.findType === "magic" && loot.magic_item) {
+    return getPlainTextExcerpt(loot.magic_item.description) || `${loot.magic_item.category} · ${loot.magic_item.rarity}`;
+  }
+  if (loot.findType === "mundane") {
+    return "странная вещь";
+  }
+
+  const legacyParts = [];
+  if (Object.values(loot.coins || {}).some(Boolean)) {
+    legacyParts.push(formatCoins(loot.coins));
+  }
+  if (loot.valuables?.length) {
+    legacyParts.push(`${loot.valuables.reduce((sum, item) => sum + item.count, 0)} ценностей`);
+  }
+  if (loot.magic_items?.length) {
+    legacyParts.push(`${loot.magic_items.length} маг. предмет(а)`);
+  }
+  return legacyParts.length ? legacyParts.join(" · ") : "находка";
+}
+
+function getLootCardMeta(loot) {
+  if (loot.findType === "magic" && loot.magic_item) {
+    return `${loot.magic_item.category} · ${loot.magic_item.rarity}`;
+  }
+  if (loot.findType === "coins" || loot.findType === "valuable") {
+    return formatGp(loot.total_gp);
+  }
+  return loot.typeLabel || "находка";
+}
+
+function renderLootDetail(loot) {
+  if (loot.findType === "magic" && loot.magic_item) {
+    const item = loot.magic_item;
+    return `
+      <div class="monster-meta-grid">
+        <div><span>Категория</span><strong>${escapeHtml(item.category)}</strong></div>
+        <div><span>Редкость</span><strong>${escapeHtml(item.rarity)}</strong></div>
+        <div><span>Настройка</span><strong>${item.attunement ? "требуется" : "не требуется"}</strong></div>
+        <div><span>Источник</span><strong>${escapeHtml(item.source)}</strong></div>
+      </div>
+      <section class="monster-section">
+        <h4>Описание</h4>
+        <div class="monster-text-list">
+          ${renderRichDescription(item.description || "Описание отсутствует.")}
+        </div>
+      </section>
+    `;
+  }
+
+  if (loot.findType === "coins") {
+    return `
+      <div class="monster-meta-grid">
+        <div><span>Монеты</span><strong>${escapeHtml(formatCoins(loot.coins))}</strong></div>
+        <div><span>Оценка</span><strong>${escapeHtml(formatGp(loot.total_gp))}</strong></div>
+        <div><span>Опасность</span><strong>${escapeHtml(loot.tierLabel)}</strong></div>
+      </div>
+      <div class="license-note">${escapeHtml(loot.source_note || "Локально сохранённая запись.")}</div>
+    `;
+  }
+
+  if (loot.findType === "valuable" && loot.valuable) {
+    return `
+      <div class="monster-meta-grid">
+        <div><span>Тип</span><strong>${escapeHtml(loot.valuable.kindLabel)}</strong></div>
+        <div><span>Оценка</span><strong>${escapeHtml(formatGp(loot.valuable.total_gp))}</strong></div>
+        <div><span>Опасность</span><strong>${escapeHtml(loot.tierLabel)}</strong></div>
+      </div>
+      <section class="monster-section">
+        <h4>Описание</h4>
+        <div class="monster-text-list">
+          <p>${escapeHtml(loot.title)}</p>
+        </div>
+      </section>
+      <div class="license-note">${escapeHtml(loot.source_note || "Локально сохранённая запись.")}</div>
+    `;
+  }
+
+  if (loot.findType === "mundane") {
+    return `
+      <div class="monster-meta-grid">
+        <div><span>Тип</span><strong>странная вещь</strong></div>
+        <div><span>Опасность</span><strong>${escapeHtml(loot.tierLabel)}</strong></div>
+      </div>
+      <section class="monster-section">
+        <h4>Описание</h4>
+        <div class="monster-text-list">
+          <p>${escapeHtml(loot.mundane || loot.title)}</p>
+        </div>
+      </section>
+      <div class="license-note">${escapeHtml(loot.source_note || "Локально сохранённая запись.")}</div>
+    `;
+  }
+
+  return `
+    <section class="monster-section">
+      <h4>Находка</h4>
+      <div class="monster-text-list">
+        <p>${escapeHtml(getLootSummaryText(loot))}</p>
+      </div>
+    </section>
+  `;
+}
+
+function openLootDetailCard(loot) {
+  if (!loot) {
+    return;
+  }
+
+  lootDetailName.textContent = loot.title;
+  lootDetail.innerHTML = renderLootDetail(loot);
+  lootDetailModal.classList.remove("is-hidden");
+}
+
+function closeLootDetail() {
+  lootDetailModal.classList.add("is-hidden");
+}
+
+function openLootResult(id) {
+  openLootDetailCard(currentLootResults.find((loot) => loot.id === id));
+}
+
+function openSavedLoot(id) {
+  openLootDetailCard(getSavedLoot().find((loot) => loot.id === id));
+}
+
+function renderLootResults() {
+  if (!currentLootResults.length) {
+    lootResults.innerHTML = "";
+    saveLootButton.disabled = true;
+    return;
+  }
+
+  lootResults.innerHTML = currentLootResults
+    .map((loot, index) => `
+      <article class="random-monster-card potion-result-card loot-result-card" data-open-loot-result="${escapeHtml(loot.id)}" tabindex="0" role="button">
+        <button class="card-remove" type="button" data-delete-loot-result="${escapeHtml(loot.id)}" aria-label="Убрать лут">×</button>
+        <span>${index + 1}. ${escapeHtml(loot.typeLabel || "находка")}</span>
+        <strong>${escapeHtml(loot.title)}</strong>
+        <em>${escapeHtml(getLootCardMeta(loot))}</em>
+        <small class="potion-description">${escapeHtml(getLootSummaryText(loot))}</small>
+      </article>
+    `)
+    .join("");
+  saveLootButton.disabled = false;
+}
+
+function generateLoot() {
+  const count = Math.min(Math.max(Number(lootCountInput.value) || 1, 1), 8);
+  lootCountInput.value = String(count);
+  currentLootResults.push(...Array.from({ length: count }, buildLootCard));
+  renderLootResults();
+}
+
+function deleteLootResult(id) {
+  currentLootResults = currentLootResults.filter((loot) => loot.id !== id);
+  renderLootResults();
+}
+
+function saveGeneratedLoot() {
+  if (!currentLootResults.length) {
+    return;
+  }
+
+  const savedLoot = getSavedLoot();
+  currentLootResults.forEach((loot) => {
+    savedLoot.unshift({
+      ...JSON.parse(JSON.stringify(loot)),
+      id: crypto.randomUUID(),
+      savedAt: new Date().toISOString(),
+    });
+  });
+  setSavedLoot(savedLoot.slice(0, 200));
+  closeLootGenerator();
+  openPanel("library");
+}
+
+async function openLootGenerator() {
+  try {
+    await loadLoot();
+    currentLootResults = [];
+    lootResults.innerHTML = "";
+    saveLootButton.disabled = true;
+    lootModal.classList.remove("is-hidden");
+  } catch (error) {
+    lootModal.classList.remove("is-hidden");
+    lootResults.innerHTML = `<div class="library-empty"><strong>Ошибка загрузки</strong><span>${escapeHtml(error.message)}</span></div>`;
+    saveLootButton.disabled = true;
+  }
+}
+
+function closeLootGenerator() {
+  lootModal.classList.add("is-hidden");
+  currentLootResults = [];
+}
+
 function saveRandomMonsters() {
   if (!currentRandomMonsters.length) {
     return;
@@ -1640,8 +2238,10 @@ document.addEventListener("click", (event) => {
   const button = event.target.closest("button");
   const savedMonsterCard = event.target.closest("[data-open-saved-monster]");
   const savedPotionCard = event.target.closest("[data-open-saved-potion]");
+  const savedLootCard = event.target.closest("[data-open-saved-loot]");
   const potionResultCard = event.target.closest("[data-open-potion-result]");
-  if (!button && !savedMonsterCard && !savedPotionCard && !potionResultCard) {
+  const lootResultCard = event.target.closest("[data-open-loot-result]");
+  if (!button && !savedMonsterCard && !savedPotionCard && !savedLootCard && !potionResultCard && !lootResultCard) {
     return;
   }
 
@@ -1654,6 +2254,11 @@ document.addEventListener("click", (event) => {
 
   if (button?.dataset.deleteSavedPotion) {
     setSavedPotions(getSavedPotions().filter((potion) => potion.id !== button.dataset.deleteSavedPotion));
+    return;
+  }
+
+  if (button?.dataset.deleteSavedLoot) {
+    setSavedLoot(getSavedLoot().filter((loot) => loot.id !== button.dataset.deleteSavedLoot));
     return;
   }
 
@@ -1672,8 +2277,18 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  if (!button && savedLootCard) {
+    openSavedLoot(savedLootCard.dataset.openSavedLoot);
+    return;
+  }
+
   if (!button && potionResultCard) {
     openPotionResult(potionResultCard.dataset.openPotionResult);
+    return;
+  }
+
+  if (!button && lootResultCard) {
+    openLootResult(lootResultCard.dataset.openLootResult);
     return;
   }
 
@@ -1801,6 +2416,30 @@ document.addEventListener("click", (event) => {
   if (button.matches("[data-save-potions]")) {
     saveGeneratedPotions();
   }
+
+  if (button.matches("[data-open-loot-generator]")) {
+    openLootGenerator();
+  }
+
+  if (button.matches("[data-close-loot-generator]")) {
+    closeLootGenerator();
+  }
+
+  if (button.matches("[data-close-loot-detail]")) {
+    closeLootDetail();
+  }
+
+  if (button.matches("[data-generate-loot]")) {
+    generateLoot();
+  }
+
+  if (button.dataset.deleteLootResult) {
+    deleteLootResult(button.dataset.deleteLootResult);
+  }
+
+  if (button.matches("[data-save-loot]")) {
+    saveGeneratedLoot();
+  }
 });
 
 document.addEventListener("keydown", (event) => {
@@ -1821,6 +2460,12 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "Escape" && !potionDetailModal.classList.contains("is-hidden")) {
     closePotionDetail();
+  }
+  if (event.key === "Escape" && !lootModal.classList.contains("is-hidden")) {
+    closeLootGenerator();
+  }
+  if (event.key === "Escape" && !lootDetailModal.classList.contains("is-hidden")) {
+    closeLootDetail();
   }
 });
 
@@ -1843,6 +2488,7 @@ updateSavedRollsCount();
 renderLibraryRolls();
 renderLibraryMonsters();
 renderLibraryPotions();
+renderLibraryLoot();
 
 if (state.soundEnabled) {
   music.play().then(hideAudioGate).catch(showAudioGate);

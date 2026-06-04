@@ -1,0 +1,3467 @@
+{
+  "source_api": "https://api.open5e.com/v2/magicitems/",
+  "raw_count": 2319,
+  "imported_count": 1976,
+  "duplicate_group_count": 343,
+  "source_counts": {
+    "vom": 1062,
+    "srd-2024": 757,
+    "srd-2014": 157
+  },
+  "category_counts": {
+    "scroll": 23,
+    "wondrous-item": 590,
+    "armor": 278,
+    "shield": 14,
+    "weapon": 753,
+    "ammunition": 16,
+    "potion": 101,
+    "wand": 48,
+    "rod": 38,
+    "staff": 55,
+    "ring": 60
+  },
+  "rarity_counts": {
+    "rare": 742,
+    "uncommon": 518,
+    "common": 160,
+    "very-rare": 371,
+    "legendary": 183,
+    "artifact": 2
+  },
+  "duplicate_groups": {
+    "adamantine armor (breastplate)": [
+      {
+        "key": "srd-2024_adamantine-armor-breastplate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_adamantine-armor-breastplate",
+        "document": "srd-2014"
+      }
+    ],
+    "adamantine armor (plate)": [
+      {
+        "key": "srd-2024_adamantine-armor-plate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_adamantine-armor-plate",
+        "document": "srd-2014"
+      }
+    ],
+    "adamantine armor (splint)": [
+      {
+        "key": "srd-2024_adamantine-armor-splint",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_adamantine-armor-splint",
+        "document": "srd-2014"
+      }
+    ],
+    "amulet of health": [
+      {
+        "key": "srd-2024_amulet-of-health",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_amulet-of-health",
+        "document": "srd-2014"
+      }
+    ],
+    "amulet of proof against detection and location": [
+      {
+        "key": "srd-2024_amulet-of-proof-against-detection-and-location",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_amulet-of-proof-against-detection-and-location",
+        "document": "srd-2014"
+      }
+    ],
+    "amulet of the planes": [
+      {
+        "key": "srd-2024_amulet-of-the-planes",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_amulet-of-the-planes",
+        "document": "srd-2014"
+      }
+    ],
+    "animated shield": [
+      {
+        "key": "srd-2024_animated-shield",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_animated-shield",
+        "document": "srd-2014"
+      }
+    ],
+    "apparatus of the crab": [
+      {
+        "key": "srd-2024_apparatus-of-the-crab",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_apparatus-of-the-crab",
+        "document": "srd-2014"
+      }
+    ],
+    "armor of invulnerability": [
+      {
+        "key": "srd-2024_armor-of-invulnerability",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_armor-of-invulnerability",
+        "document": "srd-2014"
+      }
+    ],
+    "armor of resistance (breastplate)": [
+      {
+        "key": "srd-2024_armor-of-resistance-breastplate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_armor-of-resistance-breastplate",
+        "document": "srd-2014"
+      }
+    ],
+    "armor of resistance (chain mail)": [
+      {
+        "key": "srd-2024_armor-of-resistance-chain-mail",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_armor-of-resistance-chain-mail",
+        "document": "srd-2014"
+      }
+    ],
+    "armor of resistance (chain shirt)": [
+      {
+        "key": "srd-2024_armor-of-resistance-chain-shirt",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_armor-of-resistance-chain-shirt",
+        "document": "srd-2014"
+      }
+    ],
+    "armor of resistance (half plate)": [
+      {
+        "key": "srd-2024_armor-of-resistance-half-plate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_armor-of-resistance-half-plate",
+        "document": "srd-2014"
+      }
+    ],
+    "armor of resistance (padded)": [
+      {
+        "key": "srd-2024_armor-of-resistance-padded",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_armor-of-resistance-padded",
+        "document": "srd-2014"
+      }
+    ],
+    "armor of resistance (plate)": [
+      {
+        "key": "srd-2024_armor-of-resistance-plate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_armor-of-resistance-plate",
+        "document": "srd-2014"
+      }
+    ],
+    "armor of resistance (ring mail)": [
+      {
+        "key": "srd-2024_armor-of-resistance-ring-mail",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_armor-of-resistance-ring-mail",
+        "document": "srd-2014"
+      }
+    ],
+    "armor of resistance (scale mail)": [
+      {
+        "key": "srd-2024_armor-of-resistance-scale-mail",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_armor-of-resistance-scale-mail",
+        "document": "srd-2014"
+      }
+    ],
+    "armor of resistance (splint)": [
+      {
+        "key": "srd-2024_armor-of-resistance-splint",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_armor-of-resistance-splint",
+        "document": "srd-2014"
+      }
+    ],
+    "arrow-catching shield": [
+      {
+        "key": "srd-2024_arrow-catching-shield",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_arrow-catching-shield",
+        "document": "srd-2014"
+      }
+    ],
+    "bag of beans": [
+      {
+        "key": "srd-2024_bag-of-beans",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_bag-of-beans",
+        "document": "srd-2014"
+      }
+    ],
+    "bag of devouring": [
+      {
+        "key": "srd-2024_bag-of-devouring",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_bag-of-devouring",
+        "document": "srd-2014"
+      }
+    ],
+    "bag of holding": [
+      {
+        "key": "srd-2024_bag-of-holding",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_bag-of-holding",
+        "document": "srd-2014"
+      }
+    ],
+    "bag of tricks": [
+      {
+        "key": "srd-2024_bag-of-tricks",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_bag-of-tricks",
+        "document": "srd-2014"
+      }
+    ],
+    "battleaxe (+1)": [
+      {
+        "key": "srd-2024_battleaxe-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_battleaxe-1",
+        "document": "srd-2014"
+      }
+    ],
+    "battleaxe (+2)": [
+      {
+        "key": "srd-2024_battleaxe-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_battleaxe-2",
+        "document": "srd-2014"
+      }
+    ],
+    "battleaxe (+3)": [
+      {
+        "key": "srd-2024_battleaxe-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_battleaxe-3",
+        "document": "srd-2014"
+      }
+    ],
+    "bead of force": [
+      {
+        "key": "srd-2024_bead-of-force",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_bead-of-force",
+        "document": "srd-2014"
+      }
+    ],
+    "blowgun (+1)": [
+      {
+        "key": "srd-2024_blowgun-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_blowgun-1",
+        "document": "srd-2014"
+      }
+    ],
+    "blowgun (+2)": [
+      {
+        "key": "srd-2024_blowgun-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_blowgun-2",
+        "document": "srd-2014"
+      }
+    ],
+    "blowgun (+3)": [
+      {
+        "key": "srd-2024_blowgun-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_blowgun-3",
+        "document": "srd-2014"
+      }
+    ],
+    "boots of elvenkind": [
+      {
+        "key": "srd-2024_boots-of-elvenkind",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_boots-of-elvenkind",
+        "document": "srd-2014"
+      }
+    ],
+    "boots of levitation": [
+      {
+        "key": "srd-2024_boots-of-levitation",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_boots-of-levitation",
+        "document": "srd-2014"
+      }
+    ],
+    "boots of speed": [
+      {
+        "key": "srd-2024_boots-of-speed",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_boots-of-speed",
+        "document": "srd-2014"
+      }
+    ],
+    "boots of striding and springing": [
+      {
+        "key": "srd-2024_boots-of-striding-and-springing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_boots-of-striding-and-springing",
+        "document": "srd-2014"
+      }
+    ],
+    "boots of the winterlands": [
+      {
+        "key": "srd-2024_boots-of-the-winterlands",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_boots-of-the-winterlands",
+        "document": "srd-2014"
+      }
+    ],
+    "bowl of commanding water elementals": [
+      {
+        "key": "srd-2024_bowl-of-commanding-water-elementals",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_bowl-of-commanding-water-elementals",
+        "document": "srd-2014"
+      }
+    ],
+    "bracers of archery": [
+      {
+        "key": "srd-2024_bracers-of-archery",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_bracers-of-archery",
+        "document": "srd-2014"
+      }
+    ],
+    "bracers of defense": [
+      {
+        "key": "srd-2024_bracers-of-defense",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_bracers-of-defense",
+        "document": "srd-2014"
+      }
+    ],
+    "brazier of commanding fire elementals": [
+      {
+        "key": "srd-2024_brazier-of-commanding-fire-elementals",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_brazier-of-commanding-fire-elementals",
+        "document": "srd-2014"
+      }
+    ],
+    "brooch of shielding": [
+      {
+        "key": "srd-2024_brooch-of-shielding",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_brooch-of-shielding",
+        "document": "srd-2014"
+      }
+    ],
+    "broom of flying": [
+      {
+        "key": "srd-2024_broom-of-flying",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_broom-of-flying",
+        "document": "srd-2014"
+      }
+    ],
+    "candle of invocation": [
+      {
+        "key": "srd-2024_candle-of-invocation",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_candle-of-invocation",
+        "document": "srd-2014"
+      }
+    ],
+    "cape of the mountebank": [
+      {
+        "key": "srd-2024_cape-of-the-mountebank",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_cape-of-the-mountebank",
+        "document": "srd-2014"
+      }
+    ],
+    "carpet of flying": [
+      {
+        "key": "srd-2024_carpet-of-flying",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_carpet-of-flying",
+        "document": "srd-2014"
+      }
+    ],
+    "censer of controlling air elementals": [
+      {
+        "key": "srd-2024_censer-of-controlling-air-elementals",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_censer-of-controlling-air-elementals",
+        "document": "srd-2014"
+      }
+    ],
+    "chime of opening": [
+      {
+        "key": "srd-2024_chime-of-opening",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_chime-of-opening",
+        "document": "srd-2014"
+      }
+    ],
+    "circlet of blasting": [
+      {
+        "key": "srd-2024_circlet-of-blasting",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_circlet-of-blasting",
+        "document": "srd-2014"
+      }
+    ],
+    "cloak of arachnida": [
+      {
+        "key": "srd-2024_cloak-of-arachnida",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_cloak-of-arachnida",
+        "document": "srd-2014"
+      }
+    ],
+    "cloak of displacement": [
+      {
+        "key": "srd-2024_cloak-of-displacement",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_cloak-of-displacement",
+        "document": "srd-2014"
+      }
+    ],
+    "cloak of elvenkind": [
+      {
+        "key": "srd-2024_cloak-of-elvenkind",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_cloak-of-elvenkind",
+        "document": "srd-2014"
+      }
+    ],
+    "cloak of protection": [
+      {
+        "key": "srd-2024_cloak-of-protection",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_cloak-of-protection",
+        "document": "srd-2014"
+      }
+    ],
+    "cloak of the bat": [
+      {
+        "key": "srd-2024_cloak-of-the-bat",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_cloak-of-the-bat",
+        "document": "srd-2014"
+      }
+    ],
+    "cloak of the manta ray": [
+      {
+        "key": "srd-2024_cloak-of-the-manta-ray",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_cloak-of-the-manta-ray",
+        "document": "srd-2014"
+      }
+    ],
+    "club (+1)": [
+      {
+        "key": "srd-2024_club-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_club-1",
+        "document": "srd-2014"
+      }
+    ],
+    "club (+2)": [
+      {
+        "key": "srd-2024_club-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_club-2",
+        "document": "srd-2014"
+      }
+    ],
+    "club (+3)": [
+      {
+        "key": "srd-2024_club-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_club-3",
+        "document": "srd-2014"
+      }
+    ],
+    "crystal ball": [
+      {
+        "key": "srd-2024_crystal-ball",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_crystal-ball",
+        "document": "srd-2014"
+      }
+    ],
+    "crystal ball of mind reading": [
+      {
+        "key": "srd-2024_crystal-ball-of-mind-reading",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_crystal-ball-of-mind-reading",
+        "document": "srd-2014"
+      }
+    ],
+    "crystal ball of telepathy": [
+      {
+        "key": "srd-2024_crystal-ball-of-telepathy",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_crystal-ball-of-telepathy",
+        "document": "srd-2014"
+      }
+    ],
+    "crystal ball of true seeing": [
+      {
+        "key": "srd-2024_crystal-ball-of-true-seeing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_crystal-ball-of-true-seeing",
+        "document": "srd-2014"
+      }
+    ],
+    "cube of force": [
+      {
+        "key": "srd-2024_cube-of-force",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_cube-of-force",
+        "document": "srd-2014"
+      }
+    ],
+    "cubic gate": [
+      {
+        "key": "srd-2024_cubic-gate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_cubic-gate",
+        "document": "srd-2014"
+      }
+    ],
+    "dagger (+1)": [
+      {
+        "key": "srd-2024_dagger-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dagger-1",
+        "document": "srd-2014"
+      }
+    ],
+    "dagger (+2)": [
+      {
+        "key": "srd-2024_dagger-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dagger-2",
+        "document": "srd-2014"
+      }
+    ],
+    "dagger (+3)": [
+      {
+        "key": "srd-2024_dagger-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dagger-3",
+        "document": "srd-2014"
+      }
+    ],
+    "dagger of venom": [
+      {
+        "key": "srd-2024_dagger-of-venom",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dagger-of-venom",
+        "document": "srd-2014"
+      }
+    ],
+    "dart (+1)": [
+      {
+        "key": "srd-2024_dart-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dart-1",
+        "document": "srd-2014"
+      }
+    ],
+    "dart (+2)": [
+      {
+        "key": "srd-2024_dart-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dart-2",
+        "document": "srd-2014"
+      }
+    ],
+    "dart (+3)": [
+      {
+        "key": "srd-2024_dart-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dart-3",
+        "document": "srd-2014"
+      }
+    ],
+    "decanter of endless water": [
+      {
+        "key": "srd-2024_decanter-of-endless-water",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_decanter-of-endless-water",
+        "document": "srd-2014"
+      }
+    ],
+    "deck of illusions": [
+      {
+        "key": "srd-2024_deck-of-illusions",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_deck-of-illusions",
+        "document": "srd-2014"
+      }
+    ],
+    "defender (greatsword)": [
+      {
+        "key": "srd-2024_defender-greatsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_defender-greatsword",
+        "document": "srd-2014"
+      }
+    ],
+    "defender (longsword)": [
+      {
+        "key": "srd-2024_defender-longsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_defender-longsword",
+        "document": "srd-2014"
+      }
+    ],
+    "defender (rapier)": [
+      {
+        "key": "srd-2024_defender-rapier",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_defender-rapier",
+        "document": "srd-2014"
+      }
+    ],
+    "defender (shortsword)": [
+      {
+        "key": "srd-2024_defender-shortsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_defender-shortsword",
+        "document": "srd-2014"
+      }
+    ],
+    "dimensional shackles": [
+      {
+        "key": "srd-2024_dimensional-shackles",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dimensional-shackles",
+        "document": "srd-2014"
+      }
+    ],
+    "dragon scale mail": [
+      {
+        "key": "srd-2024_dragon-scale-mail",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dragon-scale-mail",
+        "document": "srd-2014"
+      }
+    ],
+    "dust of disappearance": [
+      {
+        "key": "srd-2024_dust-of-disappearance",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dust-of-disappearance",
+        "document": "srd-2014"
+      }
+    ],
+    "dust of dryness": [
+      {
+        "key": "srd-2024_dust-of-dryness",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dust-of-dryness",
+        "document": "srd-2014"
+      }
+    ],
+    "dust of sneezing and choking": [
+      {
+        "key": "srd-2024_dust-of-sneezing-and-choking",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dust-of-sneezing-and-choking",
+        "document": "srd-2014"
+      }
+    ],
+    "dwarven plate": [
+      {
+        "key": "srd-2024_dwarven-plate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dwarven-plate",
+        "document": "srd-2014"
+      }
+    ],
+    "dwarven thrower": [
+      {
+        "key": "srd-2024_dwarven-thrower",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_dwarven-thrower",
+        "document": "srd-2014"
+      }
+    ],
+    "efficient quiver": [
+      {
+        "key": "srd-2024_efficient-quiver",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_efficient-quiver",
+        "document": "srd-2014"
+      }
+    ],
+    "efreeti bottle": [
+      {
+        "key": "srd-2024_efreeti-bottle",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_efreeti-bottle",
+        "document": "srd-2014"
+      }
+    ],
+    "elemental gem": [
+      {
+        "key": "srd-2024_elemental-gem",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_elemental-gem",
+        "document": "srd-2014"
+      }
+    ],
+    "eversmoking bottle": [
+      {
+        "key": "srd-2024_eversmoking-bottle",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_eversmoking-bottle",
+        "document": "srd-2014"
+      }
+    ],
+    "eyes of charming": [
+      {
+        "key": "srd-2024_eyes-of-charming",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_eyes-of-charming",
+        "document": "srd-2014"
+      }
+    ],
+    "eyes of minute seeing": [
+      {
+        "key": "srd-2024_eyes-of-minute-seeing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_eyes-of-minute-seeing",
+        "document": "srd-2014"
+      }
+    ],
+    "eyes of the eagle": [
+      {
+        "key": "srd-2024_eyes-of-the-eagle",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_eyes-of-the-eagle",
+        "document": "srd-2014"
+      }
+    ],
+    "feather token": [
+      {
+        "key": "srd_feather-token",
+        "document": "srd-2014"
+      },
+      {
+        "key": "vom_feather-token",
+        "document": "vom"
+      }
+    ],
+    "figurine of wondrous power (bronze griffon)": [
+      {
+        "key": "srd-2024_figurine-of-wondrous-power-bronze-griffon",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_figurine-of-wondrous-power-bronze-griffon",
+        "document": "srd-2014"
+      }
+    ],
+    "figurine of wondrous power (ebony fly)": [
+      {
+        "key": "srd-2024_figurine-of-wondrous-power-ebony-fly",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_figurine-of-wondrous-power-ebony-fly",
+        "document": "srd-2014"
+      }
+    ],
+    "figurine of wondrous power (golden lions)": [
+      {
+        "key": "srd-2024_figurine-of-wondrous-power-golden-lions",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_figurine-of-wondrous-power-golden-lions",
+        "document": "srd-2014"
+      }
+    ],
+    "figurine of wondrous power (ivory goats)": [
+      {
+        "key": "srd-2024_figurine-of-wondrous-power-ivory-goats",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_figurine-of-wondrous-power-ivory-goats",
+        "document": "srd-2014"
+      }
+    ],
+    "figurine of wondrous power (marble elephant)": [
+      {
+        "key": "srd-2024_figurine-of-wondrous-power-marble-elephant",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_figurine-of-wondrous-power-marble-elephant",
+        "document": "srd-2014"
+      }
+    ],
+    "figurine of wondrous power (onyx dog)": [
+      {
+        "key": "srd-2024_figurine-of-wondrous-power-onyx-dog",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_figurine-of-wondrous-power-onyx-dog",
+        "document": "srd-2014"
+      }
+    ],
+    "figurine of wondrous power (serpentine owl)": [
+      {
+        "key": "srd-2024_figurine-of-wondrous-power-serpentine-owl",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_figurine-of-wondrous-power-serpentine-owl",
+        "document": "srd-2014"
+      }
+    ],
+    "figurine of wondrous power (silver raven)": [
+      {
+        "key": "srd-2024_figurine-of-wondrous-power-silver-raven",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_figurine-of-wondrous-power-silver-raven",
+        "document": "srd-2014"
+      }
+    ],
+    "flail (+1)": [
+      {
+        "key": "srd-2024_flail-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_flail-1",
+        "document": "srd-2014"
+      }
+    ],
+    "flail (+2)": [
+      {
+        "key": "srd-2024_flail-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_flail-2",
+        "document": "srd-2014"
+      }
+    ],
+    "flail (+3)": [
+      {
+        "key": "srd-2024_flail-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_flail-3",
+        "document": "srd-2014"
+      }
+    ],
+    "folding boat": [
+      {
+        "key": "srd-2024_folding-boat",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_folding-boat",
+        "document": "srd-2014"
+      }
+    ],
+    "frost brand (greatsword)": [
+      {
+        "key": "srd-2024_frost-brand-greatsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_frost-brand-greatsword",
+        "document": "srd-2014"
+      }
+    ],
+    "frost brand (longsword)": [
+      {
+        "key": "srd-2024_frost-brand-longsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_frost-brand-longsword",
+        "document": "srd-2014"
+      }
+    ],
+    "frost brand (rapier)": [
+      {
+        "key": "srd-2024_frost-brand-rapier",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_frost-brand-rapier",
+        "document": "srd-2014"
+      }
+    ],
+    "frost brand (shortsword)": [
+      {
+        "key": "srd-2024_frost-brand-shortsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_frost-brand-shortsword",
+        "document": "srd-2014"
+      }
+    ],
+    "gauntlets of ogre power": [
+      {
+        "key": "srd-2024_gauntlets-of-ogre-power",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_gauntlets-of-ogre-power",
+        "document": "srd-2014"
+      }
+    ],
+    "gem of brightness": [
+      {
+        "key": "srd-2024_gem-of-brightness",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_gem-of-brightness",
+        "document": "srd-2014"
+      }
+    ],
+    "gem of seeing": [
+      {
+        "key": "srd-2024_gem-of-seeing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_gem-of-seeing",
+        "document": "srd-2014"
+      }
+    ],
+    "giant slayer (battleaxe)": [
+      {
+        "key": "srd-2024_giant-slayer-battleaxe",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_giant-slayer-battleaxe",
+        "document": "srd-2014"
+      }
+    ],
+    "giant slayer (greataxe)": [
+      {
+        "key": "srd-2024_giant-slayer-greataxe",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_giant-slayer-greataxe",
+        "document": "srd-2014"
+      }
+    ],
+    "giant slayer (greatsword)": [
+      {
+        "key": "srd-2024_giant-slayer-greatsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_giant-slayer-greatsword",
+        "document": "srd-2014"
+      }
+    ],
+    "giant slayer (handaxe)": [
+      {
+        "key": "srd-2024_giant-slayer-handaxe",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_giant-slayer-handaxe",
+        "document": "srd-2014"
+      }
+    ],
+    "giant slayer (longsword)": [
+      {
+        "key": "srd-2024_giant-slayer-longsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_giant-slayer-longsword",
+        "document": "srd-2014"
+      }
+    ],
+    "giant slayer (rapier)": [
+      {
+        "key": "srd-2024_giant-slayer-rapier",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_giant-slayer-rapier",
+        "document": "srd-2014"
+      }
+    ],
+    "giant slayer (shortsword)": [
+      {
+        "key": "srd-2024_giant-slayer-shortsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_giant-slayer-shortsword",
+        "document": "srd-2014"
+      }
+    ],
+    "glaive (+1)": [
+      {
+        "key": "srd-2024_glaive-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_glaive-1",
+        "document": "srd-2014"
+      }
+    ],
+    "glaive (+2)": [
+      {
+        "key": "srd-2024_glaive-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_glaive-2",
+        "document": "srd-2014"
+      }
+    ],
+    "glaive (+3)": [
+      {
+        "key": "srd-2024_glaive-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_glaive-3",
+        "document": "srd-2014"
+      }
+    ],
+    "glamoured studded leather": [
+      {
+        "key": "srd-2024_glamoured-studded-leather",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_glamoured-studded-leather",
+        "document": "srd-2014"
+      }
+    ],
+    "gloves of missile snaring": [
+      {
+        "key": "srd-2024_gloves-of-missile-snaring",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_gloves-of-missile-snaring",
+        "document": "srd-2014"
+      }
+    ],
+    "gloves of swimming and climbing": [
+      {
+        "key": "srd-2024_gloves-of-swimming-and-climbing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_gloves-of-swimming-and-climbing",
+        "document": "srd-2014"
+      }
+    ],
+    "goggles of night": [
+      {
+        "key": "srd-2024_goggles-of-night",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_goggles-of-night",
+        "document": "srd-2014"
+      }
+    ],
+    "greataxe (+1)": [
+      {
+        "key": "srd-2024_greataxe-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_greataxe-1",
+        "document": "srd-2014"
+      }
+    ],
+    "greataxe (+2)": [
+      {
+        "key": "srd-2024_greataxe-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_greataxe-2",
+        "document": "srd-2014"
+      }
+    ],
+    "greataxe (+3)": [
+      {
+        "key": "srd-2024_greataxe-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_greataxe-3",
+        "document": "srd-2014"
+      }
+    ],
+    "greatclub (+1)": [
+      {
+        "key": "srd-2024_greatclub-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_greatclub-1",
+        "document": "srd-2014"
+      }
+    ],
+    "greatclub (+2)": [
+      {
+        "key": "srd-2024_greatclub-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_greatclub-2",
+        "document": "srd-2014"
+      }
+    ],
+    "greatclub (+3)": [
+      {
+        "key": "srd-2024_greatclub-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_greatclub-3",
+        "document": "srd-2014"
+      }
+    ],
+    "greatsword (+1)": [
+      {
+        "key": "srd-2024_greatsword-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_greatsword-1",
+        "document": "srd-2014"
+      }
+    ],
+    "greatsword (+2)": [
+      {
+        "key": "srd-2024_greatsword-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_greatsword-2",
+        "document": "srd-2014"
+      }
+    ],
+    "greatsword (+3)": [
+      {
+        "key": "srd-2024_greatsword-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_greatsword-3",
+        "document": "srd-2014"
+      }
+    ],
+    "halberd (+1)": [
+      {
+        "key": "srd-2024_halberd-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_halberd-1",
+        "document": "srd-2014"
+      }
+    ],
+    "halberd (+2)": [
+      {
+        "key": "srd-2024_halberd-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_halberd-2",
+        "document": "srd-2014"
+      }
+    ],
+    "halberd (+3)": [
+      {
+        "key": "srd-2024_halberd-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_halberd-3",
+        "document": "srd-2014"
+      }
+    ],
+    "handaxe (+1)": [
+      {
+        "key": "srd-2024_handaxe-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_handaxe-1",
+        "document": "srd-2014"
+      }
+    ],
+    "handaxe (+2)": [
+      {
+        "key": "srd-2024_handaxe-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_handaxe-2",
+        "document": "srd-2014"
+      }
+    ],
+    "handaxe (+3)": [
+      {
+        "key": "srd-2024_handaxe-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_handaxe-3",
+        "document": "srd-2014"
+      }
+    ],
+    "handy haversack": [
+      {
+        "key": "srd-2024_handy-haversack",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_handy-haversack",
+        "document": "srd-2014"
+      }
+    ],
+    "hat of disguise": [
+      {
+        "key": "srd-2024_hat-of-disguise",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_hat-of-disguise",
+        "document": "srd-2014"
+      }
+    ],
+    "headband of intellect": [
+      {
+        "key": "srd-2024_headband-of-intellect",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_headband-of-intellect",
+        "document": "srd-2014"
+      }
+    ],
+    "helm of brilliance": [
+      {
+        "key": "srd-2024_helm-of-brilliance",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_helm-of-brilliance",
+        "document": "srd-2014"
+      }
+    ],
+    "helm of comprehending languages": [
+      {
+        "key": "srd-2024_helm-of-comprehending-languages",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_helm-of-comprehending-languages",
+        "document": "srd-2014"
+      }
+    ],
+    "helm of telepathy": [
+      {
+        "key": "srd-2024_helm-of-telepathy",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_helm-of-telepathy",
+        "document": "srd-2014"
+      }
+    ],
+    "helm of teleportation": [
+      {
+        "key": "srd-2024_helm-of-teleportation",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_helm-of-teleportation",
+        "document": "srd-2014"
+      }
+    ],
+    "holy avenger (greatsword)": [
+      {
+        "key": "srd-2024_holy-avenger-greatsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_holy-avenger-greatsword",
+        "document": "srd-2014"
+      }
+    ],
+    "holy avenger (longsword)": [
+      {
+        "key": "srd-2024_holy-avenger-longsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_holy-avenger-longsword",
+        "document": "srd-2014"
+      }
+    ],
+    "holy avenger (rapier)": [
+      {
+        "key": "srd-2024_holy-avenger-rapier",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_holy-avenger-rapier",
+        "document": "srd-2014"
+      }
+    ],
+    "holy avenger (shortsword)": [
+      {
+        "key": "srd-2024_holy-avenger-shortsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_holy-avenger-shortsword",
+        "document": "srd-2014"
+      }
+    ],
+    "horn of blasting": [
+      {
+        "key": "srd-2024_horn-of-blasting",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_horn-of-blasting",
+        "document": "srd-2014"
+      }
+    ],
+    "horseshoes of a zephyr": [
+      {
+        "key": "srd-2024_horseshoes-of-a-zephyr",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_horseshoes-of-a-zephyr",
+        "document": "srd-2014"
+      }
+    ],
+    "horseshoes of speed": [
+      {
+        "key": "srd-2024_horseshoes-of-speed",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_horseshoes-of-speed",
+        "document": "srd-2014"
+      }
+    ],
+    "immovable rod": [
+      {
+        "key": "srd-2024_immovable-rod",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_immovable-rod",
+        "document": "srd-2014"
+      }
+    ],
+    "instant fortress": [
+      {
+        "key": "srd-2024_instant-fortress",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_instant-fortress",
+        "document": "srd-2014"
+      }
+    ],
+    "iron flask": [
+      {
+        "key": "srd-2024_iron-flask",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_iron-flask",
+        "document": "srd-2014"
+      }
+    ],
+    "javelin (+1)": [
+      {
+        "key": "srd-2024_javelin-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_javelin-1",
+        "document": "srd-2014"
+      }
+    ],
+    "javelin (+2)": [
+      {
+        "key": "srd-2024_javelin-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_javelin-2",
+        "document": "srd-2014"
+      }
+    ],
+    "javelin (+3)": [
+      {
+        "key": "srd-2024_javelin-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_javelin-3",
+        "document": "srd-2014"
+      }
+    ],
+    "javelin of lightning": [
+      {
+        "key": "srd-2024_javelin-of-lightning",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_javelin-of-lightning",
+        "document": "srd-2014"
+      }
+    ],
+    "lance (+1)": [
+      {
+        "key": "srd-2024_lance-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_lance-1",
+        "document": "srd-2014"
+      }
+    ],
+    "lance (+2)": [
+      {
+        "key": "srd-2024_lance-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_lance-2",
+        "document": "srd-2014"
+      }
+    ],
+    "lance (+3)": [
+      {
+        "key": "srd-2024_lance-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_lance-3",
+        "document": "srd-2014"
+      }
+    ],
+    "lantern of revealing": [
+      {
+        "key": "srd-2024_lantern-of-revealing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_lantern-of-revealing",
+        "document": "srd-2014"
+      }
+    ],
+    "longbow (+1)": [
+      {
+        "key": "srd-2024_longbow-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_longbow-1",
+        "document": "srd-2014"
+      }
+    ],
+    "longbow (+2)": [
+      {
+        "key": "srd-2024_longbow-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_longbow-2",
+        "document": "srd-2014"
+      }
+    ],
+    "longbow (+3)": [
+      {
+        "key": "srd-2024_longbow-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_longbow-3",
+        "document": "srd-2014"
+      }
+    ],
+    "longsword (+1)": [
+      {
+        "key": "srd-2024_longsword-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_longsword-1",
+        "document": "srd-2014"
+      }
+    ],
+    "longsword (+2)": [
+      {
+        "key": "srd-2024_longsword-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_longsword-2",
+        "document": "srd-2014"
+      }
+    ],
+    "longsword (+3)": [
+      {
+        "key": "srd-2024_longsword-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_longsword-3",
+        "document": "srd-2014"
+      }
+    ],
+    "luck blade (greatsword)": [
+      {
+        "key": "srd-2024_luck-blade-greatsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_luck-blade-greatsword",
+        "document": "srd-2014"
+      }
+    ],
+    "luck blade (longsword)": [
+      {
+        "key": "srd-2024_luck-blade-longsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_luck-blade-longsword",
+        "document": "srd-2014"
+      }
+    ],
+    "luck blade (rapier)": [
+      {
+        "key": "srd-2024_luck-blade-rapier",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_luck-blade-rapier",
+        "document": "srd-2014"
+      }
+    ],
+    "luck blade (shortsword)": [
+      {
+        "key": "srd-2024_luck-blade-shortsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_luck-blade-shortsword",
+        "document": "srd-2014"
+      }
+    ],
+    "mace (+1)": [
+      {
+        "key": "srd-2024_mace-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mace-1",
+        "document": "srd-2014"
+      }
+    ],
+    "mace (+2)": [
+      {
+        "key": "srd-2024_mace-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mace-2",
+        "document": "srd-2014"
+      }
+    ],
+    "mace (+3)": [
+      {
+        "key": "srd-2024_mace-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mace-3",
+        "document": "srd-2014"
+      }
+    ],
+    "mace of disruption": [
+      {
+        "key": "srd-2024_mace-of-disruption",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mace-of-disruption",
+        "document": "srd-2014"
+      }
+    ],
+    "mace of smiting": [
+      {
+        "key": "srd-2024_mace-of-smiting",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mace-of-smiting",
+        "document": "srd-2014"
+      }
+    ],
+    "mace of terror": [
+      {
+        "key": "srd-2024_mace-of-terror",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mace-of-terror",
+        "document": "srd-2014"
+      }
+    ],
+    "mantle of spell resistance": [
+      {
+        "key": "srd-2024_mantle-of-spell-resistance",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mantle-of-spell-resistance",
+        "document": "srd-2014"
+      }
+    ],
+    "manual of bodily health": [
+      {
+        "key": "srd-2024_manual-of-bodily-health",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_manual-of-bodily-health",
+        "document": "srd-2014"
+      }
+    ],
+    "manual of gainful exercise": [
+      {
+        "key": "srd-2024_manual-of-gainful-exercise",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_manual-of-gainful-exercise",
+        "document": "srd-2014"
+      }
+    ],
+    "manual of golems": [
+      {
+        "key": "srd-2024_manual-of-golems",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_manual-of-golems",
+        "document": "srd-2014"
+      }
+    ],
+    "manual of quickness of action": [
+      {
+        "key": "srd-2024_manual-of-quickness-of-action",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_manual-of-quickness-of-action",
+        "document": "srd-2014"
+      }
+    ],
+    "marvelous pigments": [
+      {
+        "key": "srd-2024_marvelous-pigments",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_marvelous-pigments",
+        "document": "srd-2014"
+      }
+    ],
+    "maul (+1)": [
+      {
+        "key": "srd-2024_maul-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_maul-1",
+        "document": "srd-2014"
+      }
+    ],
+    "maul (+2)": [
+      {
+        "key": "srd-2024_maul-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_maul-2",
+        "document": "srd-2014"
+      }
+    ],
+    "maul (+3)": [
+      {
+        "key": "srd-2024_maul-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_maul-3",
+        "document": "srd-2014"
+      }
+    ],
+    "medallion of thoughts": [
+      {
+        "key": "srd-2024_medallion-of-thoughts",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_medallion-of-thoughts",
+        "document": "srd-2014"
+      }
+    ],
+    "mirror of life trapping": [
+      {
+        "key": "srd-2024_mirror-of-life-trapping",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mirror-of-life-trapping",
+        "document": "srd-2014"
+      }
+    ],
+    "mithral armor (breastplate)": [
+      {
+        "key": "srd-2024_mithral-armor-breastplate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mithral-armor-breastplate",
+        "document": "srd-2014"
+      }
+    ],
+    "mithral armor (plate)": [
+      {
+        "key": "srd-2024_mithral-armor-plate",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mithral-armor-plate",
+        "document": "srd-2014"
+      }
+    ],
+    "mithral armor (splint)": [
+      {
+        "key": "srd-2024_mithral-armor-splint",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_mithral-armor-splint",
+        "document": "srd-2014"
+      }
+    ],
+    "morningstar (+1)": [
+      {
+        "key": "srd-2024_morningstar-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_morningstar-1",
+        "document": "srd-2014"
+      }
+    ],
+    "morningstar (+2)": [
+      {
+        "key": "srd-2024_morningstar-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_morningstar-2",
+        "document": "srd-2014"
+      }
+    ],
+    "morningstar (+3)": [
+      {
+        "key": "srd-2024_morningstar-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_morningstar-3",
+        "document": "srd-2014"
+      }
+    ],
+    "necklace of adaptation": [
+      {
+        "key": "srd-2024_necklace-of-adaptation",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_necklace-of-adaptation",
+        "document": "srd-2014"
+      }
+    ],
+    "necklace of fireballs": [
+      {
+        "key": "srd-2024_necklace-of-fireballs",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_necklace-of-fireballs",
+        "document": "srd-2014"
+      }
+    ],
+    "necklace of prayer beads": [
+      {
+        "key": "srd-2024_necklace-of-prayer-beads",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_necklace-of-prayer-beads",
+        "document": "srd-2014"
+      }
+    ],
+    "nine lives stealer (greatsword)": [
+      {
+        "key": "srd-2024_nine-lives-stealer-greatsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_nine-lives-stealer-greatsword",
+        "document": "srd-2014"
+      }
+    ],
+    "nine lives stealer (longsword)": [
+      {
+        "key": "srd-2024_nine-lives-stealer-longsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_nine-lives-stealer-longsword",
+        "document": "srd-2014"
+      }
+    ],
+    "nine lives stealer (rapier)": [
+      {
+        "key": "srd-2024_nine-lives-stealer-rapier",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_nine-lives-stealer-rapier",
+        "document": "srd-2014"
+      }
+    ],
+    "nine lives stealer (shortsword)": [
+      {
+        "key": "srd-2024_nine-lives-stealer-shortsword",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_nine-lives-stealer-shortsword",
+        "document": "srd-2014"
+      }
+    ],
+    "oil of etherealness": [
+      {
+        "key": "srd-2024_oil-of-etherealness",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_oil-of-etherealness",
+        "document": "srd-2014"
+      }
+    ],
+    "oil of sharpness": [
+      {
+        "key": "srd-2024_oil-of-sharpness",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_oil-of-sharpness",
+        "document": "srd-2014"
+      }
+    ],
+    "oil of slipperiness": [
+      {
+        "key": "srd-2024_oil-of-slipperiness",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_oil-of-slipperiness",
+        "document": "srd-2014"
+      }
+    ],
+    "pearl of power": [
+      {
+        "key": "srd-2024_pearl-of-power",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_pearl-of-power",
+        "document": "srd-2014"
+      }
+    ],
+    "periapt of health": [
+      {
+        "key": "srd-2024_periapt-of-health",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_periapt-of-health",
+        "document": "srd-2014"
+      }
+    ],
+    "periapt of proof against poison": [
+      {
+        "key": "srd-2024_periapt-of-proof-against-poison",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_periapt-of-proof-against-poison",
+        "document": "srd-2014"
+      }
+    ],
+    "periapt of wound closure": [
+      {
+        "key": "srd-2024_periapt-of-wound-closure",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_periapt-of-wound-closure",
+        "document": "srd-2014"
+      }
+    ],
+    "philter of love": [
+      {
+        "key": "srd-2024_philter-of-love",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_philter-of-love",
+        "document": "srd-2014"
+      }
+    ],
+    "pike (+1)": [
+      {
+        "key": "srd-2024_pike-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_pike-1",
+        "document": "srd-2014"
+      }
+    ],
+    "pike (+2)": [
+      {
+        "key": "srd-2024_pike-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_pike-2",
+        "document": "srd-2014"
+      }
+    ],
+    "pike (+3)": [
+      {
+        "key": "srd-2024_pike-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_pike-3",
+        "document": "srd-2014"
+      }
+    ],
+    "pipes of haunting": [
+      {
+        "key": "srd-2024_pipes-of-haunting",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_pipes-of-haunting",
+        "document": "srd-2014"
+      }
+    ],
+    "pipes of the sewers": [
+      {
+        "key": "srd-2024_pipes-of-the-sewers",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_pipes-of-the-sewers",
+        "document": "srd-2014"
+      }
+    ],
+    "plate armor of etherealness": [
+      {
+        "key": "srd-2024_plate-armor-of-etherealness",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_plate-armor-of-etherealness",
+        "document": "srd-2014"
+      }
+    ],
+    "portable hole": [
+      {
+        "key": "srd-2024_portable-hole",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_portable-hole",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of animal friendship": [
+      {
+        "key": "srd-2024_potion-of-animal-friendship",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-animal-friendship",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of clairvoyance": [
+      {
+        "key": "srd-2024_potion-of-clairvoyance",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-clairvoyance",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of climbing": [
+      {
+        "key": "srd-2024_potion-of-climbing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-climbing",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of diminution": [
+      {
+        "key": "srd-2024_potion-of-diminution",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-diminution",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of flying": [
+      {
+        "key": "srd-2024_potion-of-flying",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-flying",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of gaseous form": [
+      {
+        "key": "srd-2024_potion-of-gaseous-form",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-gaseous-form",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of growth": [
+      {
+        "key": "srd-2024_potion-of-growth",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-growth",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of heroism": [
+      {
+        "key": "srd-2024_potion-of-heroism",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-heroism",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of invisibility": [
+      {
+        "key": "srd-2024_potion-of-invisibility",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-invisibility",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of mind reading": [
+      {
+        "key": "srd-2024_potion-of-mind-reading",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-mind-reading",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of poison": [
+      {
+        "key": "srd-2024_potion-of-poison",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-poison",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of resistance": [
+      {
+        "key": "srd-2024_potion-of-resistance",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-resistance",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of speed": [
+      {
+        "key": "srd-2024_potion-of-speed",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-speed",
+        "document": "srd-2014"
+      }
+    ],
+    "potion of water breathing": [
+      {
+        "key": "srd-2024_potion-of-water-breathing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_potion-of-water-breathing",
+        "document": "srd-2014"
+      }
+    ],
+    "quarterstaff (+1)": [
+      {
+        "key": "srd-2024_quarterstaff-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_quarterstaff-1",
+        "document": "srd-2014"
+      }
+    ],
+    "quarterstaff (+2)": [
+      {
+        "key": "srd-2024_quarterstaff-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_quarterstaff-2",
+        "document": "srd-2014"
+      }
+    ],
+    "quarterstaff (+3)": [
+      {
+        "key": "srd-2024_quarterstaff-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_quarterstaff-3",
+        "document": "srd-2014"
+      }
+    ],
+    "rapier (+1)": [
+      {
+        "key": "srd-2024_rapier-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_rapier-1",
+        "document": "srd-2014"
+      }
+    ],
+    "rapier (+2)": [
+      {
+        "key": "srd-2024_rapier-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_rapier-2",
+        "document": "srd-2014"
+      }
+    ],
+    "rapier (+3)": [
+      {
+        "key": "srd-2024_rapier-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_rapier-3",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of animal influence": [
+      {
+        "key": "srd-2024_ring-of-animal-influence",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-animal-influence",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of djinni summoning": [
+      {
+        "key": "srd-2024_ring-of-djinni-summoning",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-djinni-summoning",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of elemental command": [
+      {
+        "key": "srd-2024_ring-of-elemental-command",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-elemental-command",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of evasion": [
+      {
+        "key": "srd-2024_ring-of-evasion",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-evasion",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of feather falling": [
+      {
+        "key": "srd-2024_ring-of-feather-falling",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-feather-falling",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of free action": [
+      {
+        "key": "srd-2024_ring-of-free-action",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-free-action",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of invisibility": [
+      {
+        "key": "srd-2024_ring-of-invisibility",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-invisibility",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of jumping": [
+      {
+        "key": "srd-2024_ring-of-jumping",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-jumping",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of mind shielding": [
+      {
+        "key": "srd-2024_ring-of-mind-shielding",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-mind-shielding",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of protection": [
+      {
+        "key": "srd-2024_ring-of-protection",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-protection",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of regeneration": [
+      {
+        "key": "srd-2024_ring-of-regeneration",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-regeneration",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of resistance": [
+      {
+        "key": "srd-2024_ring-of-resistance",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-resistance",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of shooting stars": [
+      {
+        "key": "srd-2024_ring-of-shooting-stars",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-shooting-stars",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of spell storing": [
+      {
+        "key": "srd-2024_ring-of-spell-storing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-spell-storing",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of spell turning": [
+      {
+        "key": "srd-2024_ring-of-spell-turning",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-spell-turning",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of swimming": [
+      {
+        "key": "srd-2024_ring-of-swimming",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-swimming",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of the ram": [
+      {
+        "key": "srd-2024_ring-of-the-ram",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-the-ram",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of three wishes": [
+      {
+        "key": "srd-2024_ring-of-three-wishes",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-three-wishes",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of warmth": [
+      {
+        "key": "srd-2024_ring-of-warmth",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-warmth",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of water walking": [
+      {
+        "key": "srd-2024_ring-of-water-walking",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-water-walking",
+        "document": "srd-2014"
+      }
+    ],
+    "ring of x-ray vision": [
+      {
+        "key": "srd-2024_ring-of-x-ray-vision",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_ring-of-x-ray-vision",
+        "document": "srd-2014"
+      }
+    ],
+    "robe of eyes": [
+      {
+        "key": "srd-2024_robe-of-eyes",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_robe-of-eyes",
+        "document": "srd-2014"
+      }
+    ],
+    "robe of scintillating colors": [
+      {
+        "key": "srd-2024_robe-of-scintillating-colors",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_robe-of-scintillating-colors",
+        "document": "srd-2014"
+      }
+    ],
+    "robe of stars": [
+      {
+        "key": "srd-2024_robe-of-stars",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_robe-of-stars",
+        "document": "srd-2014"
+      }
+    ],
+    "robe of the archmagi": [
+      {
+        "key": "srd-2024_robe-of-the-archmagi",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_robe-of-the-archmagi",
+        "document": "srd-2014"
+      }
+    ],
+    "robe of useful items": [
+      {
+        "key": "srd-2024_robe-of-useful-items",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_robe-of-useful-items",
+        "document": "srd-2014"
+      }
+    ],
+    "rod of absorption": [
+      {
+        "key": "srd-2024_rod-of-absorption",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_rod-of-absorption",
+        "document": "srd-2014"
+      }
+    ],
+    "rod of alertness": [
+      {
+        "key": "srd-2024_rod-of-alertness",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_rod-of-alertness",
+        "document": "srd-2014"
+      }
+    ],
+    "rod of lordly might": [
+      {
+        "key": "srd-2024_rod-of-lordly-might",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_rod-of-lordly-might",
+        "document": "srd-2014"
+      }
+    ],
+    "rod of rulership": [
+      {
+        "key": "srd-2024_rod-of-rulership",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_rod-of-rulership",
+        "document": "srd-2014"
+      }
+    ],
+    "rod of security": [
+      {
+        "key": "srd-2024_rod-of-security",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_rod-of-security",
+        "document": "srd-2014"
+      }
+    ],
+    "rope of climbing": [
+      {
+        "key": "srd-2024_rope-of-climbing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_rope-of-climbing",
+        "document": "srd-2014"
+      }
+    ],
+    "rope of entanglement": [
+      {
+        "key": "srd-2024_rope-of-entanglement",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_rope-of-entanglement",
+        "document": "srd-2014"
+      }
+    ],
+    "scarab of protection": [
+      {
+        "key": "srd-2024_scarab-of-protection",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_scarab-of-protection",
+        "document": "srd-2014"
+      }
+    ],
+    "scimitar (+1)": [
+      {
+        "key": "srd-2024_scimitar-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_scimitar-1",
+        "document": "srd-2014"
+      }
+    ],
+    "scimitar (+2)": [
+      {
+        "key": "srd-2024_scimitar-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_scimitar-2",
+        "document": "srd-2014"
+      }
+    ],
+    "scimitar (+3)": [
+      {
+        "key": "srd-2024_scimitar-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_scimitar-3",
+        "document": "srd-2014"
+      }
+    ],
+    "scimitar of speed": [
+      {
+        "key": "srd-2024_scimitar-of-speed",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_scimitar-of-speed",
+        "document": "srd-2014"
+      }
+    ],
+    "shield of missile attraction": [
+      {
+        "key": "srd-2024_shield-of-missile-attraction",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shield-of-missile-attraction",
+        "document": "srd-2014"
+      }
+    ],
+    "shortbow (+1)": [
+      {
+        "key": "srd-2024_shortbow-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shortbow-1",
+        "document": "srd-2014"
+      }
+    ],
+    "shortbow (+2)": [
+      {
+        "key": "srd-2024_shortbow-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shortbow-2",
+        "document": "srd-2014"
+      }
+    ],
+    "shortbow (+3)": [
+      {
+        "key": "srd-2024_shortbow-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shortbow-3",
+        "document": "srd-2014"
+      }
+    ],
+    "shortsword (+1)": [
+      {
+        "key": "srd-2024_shortsword-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shortsword-1",
+        "document": "srd-2014"
+      }
+    ],
+    "shortsword (+2)": [
+      {
+        "key": "srd-2024_shortsword-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shortsword-2",
+        "document": "srd-2014"
+      }
+    ],
+    "shortsword (+3)": [
+      {
+        "key": "srd-2024_shortsword-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_shortsword-3",
+        "document": "srd-2014"
+      }
+    ],
+    "sickle (+1)": [
+      {
+        "key": "srd-2024_sickle-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sickle-1",
+        "document": "srd-2014"
+      }
+    ],
+    "sickle (+2)": [
+      {
+        "key": "srd-2024_sickle-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sickle-2",
+        "document": "srd-2014"
+      }
+    ],
+    "sickle (+3)": [
+      {
+        "key": "srd-2024_sickle-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sickle-3",
+        "document": "srd-2014"
+      }
+    ],
+    "sling (+1)": [
+      {
+        "key": "srd-2024_sling-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sling-1",
+        "document": "srd-2014"
+      }
+    ],
+    "sling (+2)": [
+      {
+        "key": "srd-2024_sling-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sling-2",
+        "document": "srd-2014"
+      }
+    ],
+    "sling (+3)": [
+      {
+        "key": "srd-2024_sling-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sling-3",
+        "document": "srd-2014"
+      }
+    ],
+    "slippers of spider climbing": [
+      {
+        "key": "srd-2024_slippers-of-spider-climbing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_slippers-of-spider-climbing",
+        "document": "srd-2014"
+      }
+    ],
+    "sovereign glue": [
+      {
+        "key": "srd-2024_sovereign-glue",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sovereign-glue",
+        "document": "srd-2014"
+      }
+    ],
+    "spear (+1)": [
+      {
+        "key": "srd-2024_spear-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_spear-1",
+        "document": "srd-2014"
+      }
+    ],
+    "spear (+2)": [
+      {
+        "key": "srd-2024_spear-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_spear-2",
+        "document": "srd-2014"
+      }
+    ],
+    "spear (+3)": [
+      {
+        "key": "srd-2024_spear-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_spear-3",
+        "document": "srd-2014"
+      }
+    ],
+    "spellguard shield": [
+      {
+        "key": "srd-2024_spellguard-shield",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_spellguard-shield",
+        "document": "srd-2014"
+      }
+    ],
+    "sphere of annihilation": [
+      {
+        "key": "srd-2024_sphere-of-annihilation",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sphere-of-annihilation",
+        "document": "srd-2014"
+      }
+    ],
+    "staff of charming": [
+      {
+        "key": "srd-2024_staff-of-charming",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_staff-of-charming",
+        "document": "srd-2014"
+      }
+    ],
+    "staff of fire": [
+      {
+        "key": "srd-2024_staff-of-fire",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_staff-of-fire",
+        "document": "srd-2014"
+      }
+    ],
+    "staff of frost": [
+      {
+        "key": "srd-2024_staff-of-frost",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_staff-of-frost",
+        "document": "srd-2014"
+      }
+    ],
+    "staff of healing": [
+      {
+        "key": "srd-2024_staff-of-healing",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_staff-of-healing",
+        "document": "srd-2014"
+      }
+    ],
+    "staff of power": [
+      {
+        "key": "srd-2024_staff-of-power",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_staff-of-power",
+        "document": "srd-2014"
+      }
+    ],
+    "staff of striking": [
+      {
+        "key": "srd-2024_staff-of-striking",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_staff-of-striking",
+        "document": "srd-2014"
+      }
+    ],
+    "staff of swarming insects": [
+      {
+        "key": "srd-2024_staff-of-swarming-insects",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_staff-of-swarming-insects",
+        "document": "srd-2014"
+      }
+    ],
+    "staff of the magi": [
+      {
+        "key": "srd-2024_staff-of-the-magi",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_staff-of-the-magi",
+        "document": "srd-2014"
+      }
+    ],
+    "staff of the python": [
+      {
+        "key": "srd-2024_staff-of-the-python",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_staff-of-the-python",
+        "document": "srd-2014"
+      }
+    ],
+    "staff of the woodlands": [
+      {
+        "key": "srd-2024_staff-of-the-woodlands",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_staff-of-the-woodlands",
+        "document": "srd-2014"
+      }
+    ],
+    "staff of thunder and lightning": [
+      {
+        "key": "srd-2024_staff-of-thunder-and-lightning",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_staff-of-thunder-and-lightning",
+        "document": "srd-2014"
+      }
+    ],
+    "staff of withering": [
+      {
+        "key": "srd-2024_staff-of-withering",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_staff-of-withering",
+        "document": "srd-2014"
+      }
+    ],
+    "stone of controlling earth elementals": [
+      {
+        "key": "srd-2024_stone-of-controlling-earth-elementals",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_stone-of-controlling-earth-elementals",
+        "document": "srd-2014"
+      }
+    ],
+    "stone of good luck (luckstone)": [
+      {
+        "key": "srd-2024_stone-of-good-luck-luckstone",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_stone-of-good-luck-luckstone",
+        "document": "srd-2014"
+      }
+    ],
+    "sun blade": [
+      {
+        "key": "srd-2024_sun-blade",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_sun-blade",
+        "document": "srd-2014"
+      }
+    ],
+    "talisman of pure good": [
+      {
+        "key": "srd-2024_talisman-of-pure-good",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_talisman-of-pure-good",
+        "document": "srd-2014"
+      }
+    ],
+    "talisman of the sphere": [
+      {
+        "key": "srd-2024_talisman-of-the-sphere",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_talisman-of-the-sphere",
+        "document": "srd-2014"
+      }
+    ],
+    "talisman of ultimate evil": [
+      {
+        "key": "srd-2024_talisman-of-ultimate-evil",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_talisman-of-ultimate-evil",
+        "document": "srd-2014"
+      }
+    ],
+    "tome of clear thought": [
+      {
+        "key": "srd-2024_tome-of-clear-thought",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_tome-of-clear-thought",
+        "document": "srd-2014"
+      }
+    ],
+    "tome of leadership and influence": [
+      {
+        "key": "srd-2024_tome-of-leadership-and-influence",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_tome-of-leadership-and-influence",
+        "document": "srd-2014"
+      }
+    ],
+    "tome of understanding": [
+      {
+        "key": "srd-2024_tome-of-understanding",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_tome-of-understanding",
+        "document": "srd-2014"
+      }
+    ],
+    "trident (+1)": [
+      {
+        "key": "srd-2024_trident-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_trident-1",
+        "document": "srd-2014"
+      }
+    ],
+    "trident (+2)": [
+      {
+        "key": "srd-2024_trident-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_trident-2",
+        "document": "srd-2014"
+      }
+    ],
+    "trident (+3)": [
+      {
+        "key": "srd-2024_trident-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_trident-3",
+        "document": "srd-2014"
+      }
+    ],
+    "trident of fish command": [
+      {
+        "key": "srd-2024_trident-of-fish-command",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_trident-of-fish-command",
+        "document": "srd-2014"
+      }
+    ],
+    "universal solvent": [
+      {
+        "key": "srd-2024_universal-solvent",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_universal-solvent",
+        "document": "srd-2014"
+      }
+    ],
+    "wand of binding": [
+      {
+        "key": "srd-2024_wand-of-binding",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wand-of-binding",
+        "document": "srd-2014"
+      }
+    ],
+    "wand of enemy detection": [
+      {
+        "key": "srd-2024_wand-of-enemy-detection",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wand-of-enemy-detection",
+        "document": "srd-2014"
+      }
+    ],
+    "wand of fireballs": [
+      {
+        "key": "srd-2024_wand-of-fireballs",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wand-of-fireballs",
+        "document": "srd-2014"
+      }
+    ],
+    "wand of lightning bolts": [
+      {
+        "key": "srd-2024_wand-of-lightning-bolts",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wand-of-lightning-bolts",
+        "document": "srd-2014"
+      }
+    ],
+    "wand of magic detection": [
+      {
+        "key": "srd-2024_wand-of-magic-detection",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wand-of-magic-detection",
+        "document": "srd-2014"
+      }
+    ],
+    "wand of magic missiles": [
+      {
+        "key": "srd-2024_wand-of-magic-missiles",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wand-of-magic-missiles",
+        "document": "srd-2014"
+      }
+    ],
+    "wand of paralysis": [
+      {
+        "key": "srd-2024_wand-of-paralysis",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wand-of-paralysis",
+        "document": "srd-2014"
+      }
+    ],
+    "wand of polymorph": [
+      {
+        "key": "srd-2024_wand-of-polymorph",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wand-of-polymorph",
+        "document": "srd-2014"
+      }
+    ],
+    "wand of secrets": [
+      {
+        "key": "srd-2024_wand-of-secrets",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wand-of-secrets",
+        "document": "srd-2014"
+      }
+    ],
+    "wand of web": [
+      {
+        "key": "srd-2024_wand-of-web",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wand-of-web",
+        "document": "srd-2014"
+      }
+    ],
+    "wand of wonder": [
+      {
+        "key": "srd-2024_wand-of-wonder",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wand-of-wonder",
+        "document": "srd-2014"
+      }
+    ],
+    "warhammer (+1)": [
+      {
+        "key": "srd-2024_warhammer-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_warhammer-1",
+        "document": "srd-2014"
+      }
+    ],
+    "warhammer (+2)": [
+      {
+        "key": "srd-2024_warhammer-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_warhammer-2",
+        "document": "srd-2014"
+      }
+    ],
+    "warhammer (+3)": [
+      {
+        "key": "srd-2024_warhammer-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_warhammer-3",
+        "document": "srd-2014"
+      }
+    ],
+    "well of many worlds": [
+      {
+        "key": "srd-2024_well-of-many-worlds",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_well-of-many-worlds",
+        "document": "srd-2014"
+      }
+    ],
+    "whip (+1)": [
+      {
+        "key": "srd-2024_whip-plus-1",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_whip-1",
+        "document": "srd-2014"
+      }
+    ],
+    "whip (+2)": [
+      {
+        "key": "srd-2024_whip-plus-2",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_whip-2",
+        "document": "srd-2014"
+      }
+    ],
+    "whip (+3)": [
+      {
+        "key": "srd-2024_whip-plus-3",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_whip-3",
+        "document": "srd-2014"
+      }
+    ],
+    "wind fan": [
+      {
+        "key": "srd-2024_wind-fan",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wind-fan",
+        "document": "srd-2014"
+      }
+    ],
+    "winged boots": [
+      {
+        "key": "srd-2024_winged-boots",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_winged-boots",
+        "document": "srd-2014"
+      }
+    ],
+    "wings of flying": [
+      {
+        "key": "srd-2024_wings-of-flying",
+        "document": "srd-2024"
+      },
+      {
+        "key": "srd_wings-of-flying",
+        "document": "srd-2014"
+      }
+    ]
+  },
+  "warnings": [],
+  "warning_count": 0,
+  "local_tables": "Original D&D Copilot generation tables, stored in loot-tables.json."
+}
