@@ -1,0 +1,99 @@
+{
+  "source": ".tmp\\monster-text-ru.json",
+  "chunks": 14,
+  "translation_rows": 326,
+  "monster_rows": 345,
+  "missing_ids": [
+    "vampire",
+    "vampire-familiar",
+    "vampire-spawn",
+    "venomous-snake",
+    "veteran",
+    "violet-fungus",
+    "vrock",
+    "vulture",
+    "warhorse",
+    "warhorse-skeleton",
+    "warrior-infantry",
+    "warrior-veteran",
+    "water-elemental",
+    "weasel",
+    "werebear",
+    "wereboar",
+    "wererat",
+    "weretiger",
+    "werewolf"
+  ],
+  "extra_ids": [],
+  "duplicate_ids": [],
+  "structural_errors": [
+    {
+      "id": "imp",
+      "issue": "traits_ru length 2 != traits 1"
+    },
+    {
+      "id": "imp",
+      "issue": "actions_ru length 2 != actions 3"
+    },
+    {
+      "id": "imp",
+      "issue": "bonus_actions_ru length 1 != bonus_actions 0"
+    },
+    {
+      "id": "incubus",
+      "issue": "traits_ru length 0 != traits 1"
+    },
+    {
+      "id": "invisible-stalker",
+      "issue": "actions_ru length 2 != actions 3"
+    },
+    {
+      "id": "iron-golem",
+      "issue": "actions_ru length 3 != actions 4"
+    },
+    {
+      "id": "jackal",
+      "issue": "traits_ru length 1 != traits 0"
+    },
+    {
+      "id": "knight",
+      "issue": "actions_ru length 2 != actions 3"
+    },
+    {
+      "id": "knight",
+      "issue": "bonus_actions_ru length 1 != bonus_actions 0"
+    },
+    {
+      "id": "kobold",
+      "issue": "traits_ru length 1 != traits 2"
+    },
+    {
+      "id": "kobold-warrior",
+      "issue": "traits_ru length 1 != traits 2"
+    },
+    {
+      "id": "kraken",
+      "issue": "actions_ru length 4 != actions 5"
+    },
+    {
+      "id": "kraken",
+      "issue": "legendary_actions_ru length 4 != legendary_actions 3"
+    },
+    {
+      "id": "will-o-wisp",
+      "issue": "traits_ru length 3 != traits 4"
+    },
+    {
+      "id": "winter-wolf",
+      "issue": "actions_ru length 2 != actions 3"
+    },
+    {
+      "id": "wolf",
+      "issue": "actions_ru length 1 != actions 2"
+    },
+    {
+      "id": "wraith",
+      "issue": "traits_ru length 2 != traits 3"
+    }
+  ]
+}

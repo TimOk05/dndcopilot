@@ -1,0 +1,2072 @@
+[
+  {
+    "id": "aboleth",
+    "name_ru": "Аболет",
+    "type_ru": "аберрация",
+    "size_ru": "большой"
+  },
+  {
+    "id": "acolyte",
+    "name_ru": "Послушник",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "adult-black-dragon",
+    "name_ru": "Взрослый чёрный дракон",
+    "type_ru": "дракон",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "adult-blue-dragon",
+    "name_ru": "Взрослый синий дракон",
+    "type_ru": "дракон",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "adult-brass-dragon",
+    "name_ru": "Взрослый латунный дракон",
+    "type_ru": "дракон",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "adult-bronze-dragon",
+    "name_ru": "Взрослый бронзовый дракон",
+    "type_ru": "дракон",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "adult-copper-dragon",
+    "name_ru": "Взрослый медный дракон",
+    "type_ru": "дракон",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "adult-gold-dragon",
+    "name_ru": "Взрослый золотой дракон",
+    "type_ru": "дракон",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "adult-green-dragon",
+    "name_ru": "Взрослый зелёный дракон",
+    "type_ru": "дракон",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "adult-red-dragon",
+    "name_ru": "Взрослый красный дракон",
+    "type_ru": "дракон",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "adult-silver-dragon",
+    "name_ru": "Взрослый серебряный дракон",
+    "type_ru": "дракон",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "adult-white-dragon",
+    "name_ru": "Взрослый белый дракон",
+    "type_ru": "дракон",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "air-elemental",
+    "name_ru": "Воздушный элементаль",
+    "type_ru": "элементаль",
+    "size_ru": "большой"
+  },
+  {
+    "id": "allosaurus",
+    "name_ru": "Аллозавр",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "ancient-black-dragon",
+    "name_ru": "Древний чёрный дракон",
+    "type_ru": "дракон",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "ancient-blue-dragon",
+    "name_ru": "Древний синий дракон",
+    "type_ru": "дракон",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "ancient-brass-dragon",
+    "name_ru": "Древний латунный дракон",
+    "type_ru": "дракон",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "ancient-bronze-dragon",
+    "name_ru": "Древний бронзовый дракон",
+    "type_ru": "дракон",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "ancient-copper-dragon",
+    "name_ru": "Древний медный дракон",
+    "type_ru": "дракон",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "ancient-gold-dragon",
+    "name_ru": "Древний золотой дракон",
+    "type_ru": "дракон",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "ancient-green-dragon",
+    "name_ru": "Древний зелёный дракон",
+    "type_ru": "дракон",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "ancient-red-dragon",
+    "name_ru": "Древний красный дракон",
+    "type_ru": "дракон",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "ancient-silver-dragon",
+    "name_ru": "Древний серебряный дракон",
+    "type_ru": "дракон",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "ancient-white-dragon",
+    "name_ru": "Древний белый дракон",
+    "type_ru": "дракон",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "animated-armor",
+    "name_ru": "Оживлённая броня",
+    "type_ru": "конструкт",
+    "size_ru": "средний"
+  },
+  {
+    "id": "animated-flying-sword",
+    "name_ru": "Оживлённый летающий меч",
+    "type_ru": "конструкт",
+    "size_ru": "малый"
+  },
+  {
+    "id": "animated-rug-of-smothering",
+    "name_ru": "Оживлённый душащий ковёр",
+    "type_ru": "конструкт",
+    "size_ru": "большой"
+  },
+  {
+    "id": "ankheg",
+    "name_ru": "Анхег",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "ankylosaurus",
+    "name_ru": "Анкилозавр",
+    "type_ru": "зверь",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "ape",
+    "name_ru": "Обезьяна",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "archelon",
+    "name_ru": "Архелон",
+    "type_ru": "зверь",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "archmage",
+    "name_ru": "Архимаг",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "assassin",
+    "name_ru": "Убийца",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "awakened-shrub",
+    "name_ru": "Пробуждённый куст",
+    "type_ru": "растение",
+    "size_ru": "малый"
+  },
+  {
+    "id": "awakened-tree",
+    "name_ru": "Пробуждённое дерево",
+    "type_ru": "растение",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "axe-beak",
+    "name_ru": "Топороклюв",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "azer",
+    "name_ru": "Азер",
+    "type_ru": "элементаль",
+    "size_ru": "средний"
+  },
+  {
+    "id": "azer-sentinel",
+    "name_ru": "Азер-часовой",
+    "type_ru": "элементаль",
+    "size_ru": "средний"
+  },
+  {
+    "id": "baboon",
+    "name_ru": "Павиан",
+    "type_ru": "зверь",
+    "size_ru": "малый"
+  },
+  {
+    "id": "badger",
+    "name_ru": "Барсук",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "balor",
+    "name_ru": "Балор",
+    "type_ru": "исчадие",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "bandit",
+    "name_ru": "Бандит",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "bandit-captain",
+    "name_ru": "Капитан бандитов",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "barbed-devil",
+    "name_ru": "Шипастый дьявол",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "basilisk",
+    "name_ru": "Василиск",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "bat",
+    "name_ru": "Летучая мышь",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "bearded-devil",
+    "name_ru": "Бородатый дьявол",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "behir",
+    "name_ru": "Бехир",
+    "type_ru": "монстр",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "berserker",
+    "name_ru": "Берсерк",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "black-bear",
+    "name_ru": "Чёрный медведь",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "black-dragon-wyrmling",
+    "name_ru": "Детёныш чёрного дракона",
+    "type_ru": "дракон",
+    "size_ru": "средний"
+  },
+  {
+    "id": "black-pudding",
+    "name_ru": "Чёрная слизь",
+    "type_ru": "слизь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "blink-dog",
+    "name_ru": "Мерцающая собака",
+    "type_ru": "фея",
+    "size_ru": "средний"
+  },
+  {
+    "id": "blood-hawk",
+    "name_ru": "Кровавый ястреб",
+    "type_ru": "зверь",
+    "size_ru": "малый"
+  },
+  {
+    "id": "blue-dragon-wyrmling",
+    "name_ru": "Детёныш синего дракона",
+    "type_ru": "дракон",
+    "size_ru": "средний"
+  },
+  {
+    "id": "boar",
+    "name_ru": "Кабан",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "bone-devil",
+    "name_ru": "Костяной дьявол",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "brass-dragon-wyrmling",
+    "name_ru": "Детёныш латунного дракона",
+    "type_ru": "дракон",
+    "size_ru": "средний"
+  },
+  {
+    "id": "bronze-dragon-wyrmling",
+    "name_ru": "Детёныш бронзового дракона",
+    "type_ru": "дракон",
+    "size_ru": "средний"
+  },
+  {
+    "id": "brown-bear",
+    "name_ru": "Бурый медведь",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "bugbear",
+    "name_ru": "Багбир",
+    "type_ru": "фея",
+    "size_ru": "средний"
+  },
+  {
+    "id": "bugbear-stalker",
+    "name_ru": "Багбир-следопыт",
+    "type_ru": "фея",
+    "size_ru": "средний"
+  },
+  {
+    "id": "bugbear-warrior",
+    "name_ru": "Багбир-воин",
+    "type_ru": "фея",
+    "size_ru": "средний"
+  },
+  {
+    "id": "bulette",
+    "name_ru": "Булетт",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "camel",
+    "name_ru": "Верблюд",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "cat",
+    "name_ru": "Кошка",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "centaur",
+    "name_ru": "Кентавр",
+    "type_ru": "фея",
+    "size_ru": "большой"
+  },
+  {
+    "id": "centaur-trooper",
+    "name_ru": "Кентавр-воин",
+    "type_ru": "фея",
+    "size_ru": "большой"
+  },
+  {
+    "id": "chain-devil",
+    "name_ru": "Цепной дьявол",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "chimera",
+    "name_ru": "Химера",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "chuul",
+    "name_ru": "Чууль",
+    "type_ru": "аберрация",
+    "size_ru": "большой"
+  },
+  {
+    "id": "clay-golem",
+    "name_ru": "Глиняный голем",
+    "type_ru": "конструкт",
+    "size_ru": "большой"
+  },
+  {
+    "id": "cloaker",
+    "name_ru": "Плащевик",
+    "type_ru": "аберрация",
+    "size_ru": "большой"
+  },
+  {
+    "id": "cloud-giant",
+    "name_ru": "Облачный великан",
+    "type_ru": "великан",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "cockatrice",
+    "name_ru": "Кокатрис",
+    "type_ru": "монстр",
+    "size_ru": "малый"
+  },
+  {
+    "id": "commoner",
+    "name_ru": "Простолюдин",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "constrictor-snake",
+    "name_ru": "Удав",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "copper-dragon-wyrmling",
+    "name_ru": "Детёныш медного дракона",
+    "type_ru": "дракон",
+    "size_ru": "средний"
+  },
+  {
+    "id": "couatl",
+    "name_ru": "Коатль",
+    "type_ru": "небожитель",
+    "size_ru": "средний"
+  },
+  {
+    "id": "crab",
+    "name_ru": "Краб",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "crawling-claw",
+    "name_ru": "Ползущая клешня",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "crocodile",
+    "name_ru": "Крокодил",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "cultist",
+    "name_ru": "Культист",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "cultist-fanatic",
+    "name_ru": "Фанатик-культист",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "darkmantle",
+    "name_ru": "Тёмная мантия",
+    "type_ru": "аберрация",
+    "size_ru": "малый"
+  },
+  {
+    "id": "death-dog",
+    "name_ru": "Пёс смерти",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "deer",
+    "name_ru": "Олень",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "deva",
+    "name_ru": "Дэва",
+    "type_ru": "небожитель",
+    "size_ru": "средний"
+  },
+  {
+    "id": "dire-wolf",
+    "name_ru": "Лютый волк",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "djinni",
+    "name_ru": "Джинн",
+    "type_ru": "элементаль",
+    "size_ru": "большой"
+  },
+  {
+    "id": "doppelganger",
+    "name_ru": "Доппельгангер",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "draft-horse",
+    "name_ru": "Тягловая лошадь",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "dragon-turtle",
+    "name_ru": "Драконья черепаха",
+    "type_ru": "дракон",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "dretch",
+    "name_ru": "Дретч",
+    "type_ru": "исчадие",
+    "size_ru": "малый"
+  },
+  {
+    "id": "drider",
+    "name_ru": "Драйдер",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "druid",
+    "name_ru": "Друид",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "dryad",
+    "name_ru": "Дриада",
+    "type_ru": "фея",
+    "size_ru": "средний"
+  },
+  {
+    "id": "dust-mephit",
+    "name_ru": "Пылевой мефит",
+    "type_ru": "элементаль",
+    "size_ru": "малый"
+  },
+  {
+    "id": "eagle",
+    "name_ru": "Орёл",
+    "type_ru": "зверь",
+    "size_ru": "малый"
+  },
+  {
+    "id": "earth-elemental",
+    "name_ru": "Земляной элементаль",
+    "type_ru": "элементаль",
+    "size_ru": "большой"
+  },
+  {
+    "id": "efreeti",
+    "name_ru": "Ифрит",
+    "type_ru": "элементаль",
+    "size_ru": "большой"
+  },
+  {
+    "id": "elephant",
+    "name_ru": "Слон",
+    "type_ru": "зверь",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "elk",
+    "name_ru": "Лось",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "erinyes",
+    "name_ru": "Эриния",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "ettercap",
+    "name_ru": "Эттеркап",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "ettin",
+    "name_ru": "Эттин",
+    "type_ru": "великан",
+    "size_ru": "большой"
+  },
+  {
+    "id": "fire-elemental",
+    "name_ru": "Огненный элементаль",
+    "type_ru": "элементаль",
+    "size_ru": "большой"
+  },
+  {
+    "id": "fire-giant",
+    "name_ru": "Огненный великан",
+    "type_ru": "великан",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "flesh-golem",
+    "name_ru": "Плотяной голем",
+    "type_ru": "конструкт",
+    "size_ru": "средний"
+  },
+  {
+    "id": "flying-snake",
+    "name_ru": "Летающая змея",
+    "type_ru": "монстр",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "flying-sword",
+    "name_ru": "Летающий меч",
+    "type_ru": "конструкт",
+    "size_ru": "малый"
+  },
+  {
+    "id": "frog",
+    "name_ru": "Лягушка",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "frost-giant",
+    "name_ru": "Ледяной великан",
+    "type_ru": "великан",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "gargoyle",
+    "name_ru": "Горгулья",
+    "type_ru": "элементаль",
+    "size_ru": "средний"
+  },
+  {
+    "id": "gelatinous-cube",
+    "name_ru": "Желатиновый куб",
+    "type_ru": "слизь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "ghast",
+    "name_ru": "Гаст",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "ghost",
+    "name_ru": "Призрак",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "ghoul",
+    "name_ru": "Гуль",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "giant-ape",
+    "name_ru": "Гигантская обезьяна",
+    "type_ru": "зверь",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "giant-badger",
+    "name_ru": "Гигантский барсук",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "giant-bat",
+    "name_ru": "Гигантская летучая мышь",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-boar",
+    "name_ru": "Гигантский кабан",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-centipede",
+    "name_ru": "Гигантская многоножка",
+    "type_ru": "зверь",
+    "size_ru": "малый"
+  },
+  {
+    "id": "giant-constrictor-snake",
+    "name_ru": "Гигантский удав",
+    "type_ru": "зверь",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "giant-crab",
+    "name_ru": "Гигантский краб",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "giant-crocodile",
+    "name_ru": "Гигантский крокодил",
+    "type_ru": "зверь",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "giant-eagle",
+    "name_ru": "Гигантский орёл",
+    "type_ru": "небожитель",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-elk",
+    "name_ru": "Гигантский лось",
+    "type_ru": "небожитель",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "giant-fire-beetle",
+    "name_ru": "Гигантский огненный жук",
+    "type_ru": "зверь",
+    "size_ru": "малый"
+  },
+  {
+    "id": "giant-frog",
+    "name_ru": "Гигантская лягушка",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "giant-goat",
+    "name_ru": "Гигантская коза",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-hyena",
+    "name_ru": "Гигантская гиена",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-lizard",
+    "name_ru": "Гигантская ящерица",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-octopus",
+    "name_ru": "Гигантский осьминог",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-owl",
+    "name_ru": "Гигантская сова",
+    "type_ru": "небожитель",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-rat",
+    "name_ru": "Гигантская крыса",
+    "type_ru": "зверь",
+    "size_ru": "малый"
+  },
+  {
+    "id": "giant-scorpion",
+    "name_ru": "Гигантский скорпион",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-seahorse",
+    "name_ru": "Гигантский морской конёк",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-shark",
+    "name_ru": "Гигантская акула",
+    "type_ru": "зверь",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "giant-spider",
+    "name_ru": "Гигантский паук",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-toad",
+    "name_ru": "Гигантская жаба",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-venomous-snake",
+    "name_ru": "Гигантская ядовитая змея",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "giant-vulture",
+    "name_ru": "Гигантский стервятник",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "giant-wasp",
+    "name_ru": "Гигантская оса",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "giant-weasel",
+    "name_ru": "Гигантская ласка",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "giant-wolf-spider",
+    "name_ru": "Гигантский паук-волк",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "gibbering-mouther",
+    "name_ru": "Бормочущая пасть",
+    "type_ru": "аберрация",
+    "size_ru": "средний"
+  },
+  {
+    "id": "glabrezu",
+    "name_ru": "Глабрезу",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "gladiator",
+    "name_ru": "Гладиатор",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "gnoll-warrior",
+    "name_ru": "Гнолл-воин",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "goat",
+    "name_ru": "Коза",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "goblin",
+    "name_ru": "Гоблин",
+    "type_ru": "фея",
+    "size_ru": "малый"
+  },
+  {
+    "id": "goblin-boss",
+    "name_ru": "Босс гоблинов",
+    "type_ru": "фея",
+    "size_ru": "малый"
+  },
+  {
+    "id": "goblin-minion",
+    "name_ru": "Гоблин-приспешник",
+    "type_ru": "фея",
+    "size_ru": "малый"
+  },
+  {
+    "id": "goblin-warrior",
+    "name_ru": "Гоблин-воин",
+    "type_ru": "фея",
+    "size_ru": "малый"
+  },
+  {
+    "id": "gold-dragon-wyrmling",
+    "name_ru": "Детёныш золотого дракона",
+    "type_ru": "дракон",
+    "size_ru": "средний"
+  },
+  {
+    "id": "gorgon",
+    "name_ru": "Горгон",
+    "type_ru": "конструкт",
+    "size_ru": "большой"
+  },
+  {
+    "id": "gray-ooze",
+    "name_ru": "Серая слизь",
+    "type_ru": "слизь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "green-dragon-wyrmling",
+    "name_ru": "Детёныш зелёного дракона",
+    "type_ru": "дракон",
+    "size_ru": "средний"
+  },
+  {
+    "id": "green-hag",
+    "name_ru": "Зелёная ведьма",
+    "type_ru": "фея",
+    "size_ru": "средний"
+  },
+  {
+    "id": "grick",
+    "name_ru": "Грик",
+    "type_ru": "аберрация",
+    "size_ru": "средний"
+  },
+  {
+    "id": "griffon",
+    "name_ru": "Грифон",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "grimlock",
+    "name_ru": "Гримлок",
+    "type_ru": "аберрация",
+    "size_ru": "средний"
+  },
+  {
+    "id": "guard",
+    "name_ru": "Стражник",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "guard-captain",
+    "name_ru": "Капитан стражи",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "guardian-naga",
+    "name_ru": "Наг-страж",
+    "type_ru": "небожитель",
+    "size_ru": "большой"
+  },
+  {
+    "id": "half-dragon",
+    "name_ru": "Полудракон",
+    "type_ru": "дракон",
+    "size_ru": "средний"
+  },
+  {
+    "id": "harpy",
+    "name_ru": "Гарпия",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "hawk",
+    "name_ru": "Ястреб",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "hell-hound",
+    "name_ru": "Адская гончая",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "hezrou",
+    "name_ru": "Хезроу",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "hill-giant",
+    "name_ru": "Холмовой великан",
+    "type_ru": "великан",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "hippogriff",
+    "name_ru": "Гиппогриф",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "hippopotamus",
+    "name_ru": "Бегемот",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "hobgoblin",
+    "name_ru": "Хобгоблин",
+    "type_ru": "фея",
+    "size_ru": "средний"
+  },
+  {
+    "id": "hobgoblin-captain",
+    "name_ru": "Капитан хобгоблинов",
+    "type_ru": "фея",
+    "size_ru": "средний"
+  },
+  {
+    "id": "hobgoblin-warrior",
+    "name_ru": "Хобгоблин-воин",
+    "type_ru": "фея",
+    "size_ru": "средний"
+  },
+  {
+    "id": "homunculus",
+    "name_ru": "Гомункул",
+    "type_ru": "конструкт",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "horned-devil",
+    "name_ru": "Рогатый дьявол",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "hunter-shark",
+    "name_ru": "Акула-охотник",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "hydra",
+    "name_ru": "Гидра",
+    "type_ru": "монстр",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "hyena",
+    "name_ru": "Гиена",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "ice-devil",
+    "name_ru": "Ледяной дьявол",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "ice-mephit",
+    "name_ru": "Ледяной мефит",
+    "type_ru": "элементаль",
+    "size_ru": "малый"
+  },
+  {
+    "id": "imp",
+    "name_ru": "Бес",
+    "type_ru": "исчадие",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "incubus",
+    "name_ru": "Инкуб",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "invisible-stalker",
+    "name_ru": "Невидимый преследователь",
+    "type_ru": "элементаль",
+    "size_ru": "большой"
+  },
+  {
+    "id": "iron-golem",
+    "name_ru": "Железный голем",
+    "type_ru": "конструкт",
+    "size_ru": "большой"
+  },
+  {
+    "id": "jackal",
+    "name_ru": "Шакал",
+    "type_ru": "зверь",
+    "size_ru": "малый"
+  },
+  {
+    "id": "killer-whale",
+    "name_ru": "Косатка",
+    "type_ru": "зверь",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "knight",
+    "name_ru": "Рыцарь",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "kobold",
+    "name_ru": "Кобольд",
+    "type_ru": "дракон",
+    "size_ru": "малый"
+  },
+  {
+    "id": "kobold-warrior",
+    "name_ru": "Кобольд-воин",
+    "type_ru": "дракон",
+    "size_ru": "малый"
+  },
+  {
+    "id": "kraken",
+    "name_ru": "Кракен",
+    "type_ru": "монстр",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "lamia",
+    "name_ru": "Ламия",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "lemure",
+    "name_ru": "Лемур",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "lich",
+    "name_ru": "Лич",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "lion",
+    "name_ru": "Лев",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "lizard",
+    "name_ru": "Ящерица",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "mage",
+    "name_ru": "Маг",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "magma-mephit",
+    "name_ru": "Магмовый мефит",
+    "type_ru": "элементаль",
+    "size_ru": "малый"
+  },
+  {
+    "id": "magmin",
+    "name_ru": "Магмин",
+    "type_ru": "элементаль",
+    "size_ru": "малый"
+  },
+  {
+    "id": "mammoth",
+    "name_ru": "Мамонт",
+    "type_ru": "зверь",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "manticore",
+    "name_ru": "Мантикора",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "marilith",
+    "name_ru": "Марилит",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "mastiff",
+    "name_ru": "Мастиф",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "medusa",
+    "name_ru": "Медуза",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "merfolk",
+    "name_ru": "Мерфолк",
+    "type_ru": "элементаль",
+    "size_ru": "средний"
+  },
+  {
+    "id": "merfolk-skirmisher",
+    "name_ru": "Мерфолк-застрельщик",
+    "type_ru": "элементаль",
+    "size_ru": "средний"
+  },
+  {
+    "id": "merrow",
+    "name_ru": "Мерроу",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "mimic",
+    "name_ru": "Мимик",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "minotaur",
+    "name_ru": "Минотавр",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "minotaur-skeleton",
+    "name_ru": "Скелет минотавра",
+    "type_ru": "нежить",
+    "size_ru": "большой"
+  },
+  {
+    "id": "minotaur-of-baphomet",
+    "name_ru": "Минотавр Бафомета",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "mule",
+    "name_ru": "Мул",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "mummy",
+    "name_ru": "Мумия",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "mummy-lord",
+    "name_ru": "Лорд мумий",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "nalfeshnee",
+    "name_ru": "Налфешни",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "night-hag",
+    "name_ru": "Ночная ведьма",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "nightmare",
+    "name_ru": "Кошмар",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "noble",
+    "name_ru": "Дворянин",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "ochre-jelly",
+    "name_ru": "Охристая слизь",
+    "type_ru": "слизь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "octopus",
+    "name_ru": "Осьминог",
+    "type_ru": "зверь",
+    "size_ru": "малый"
+  },
+  {
+    "id": "ogre",
+    "name_ru": "Огр",
+    "type_ru": "великан",
+    "size_ru": "большой"
+  },
+  {
+    "id": "ogre-zombie",
+    "name_ru": "Зомби-огр",
+    "type_ru": "нежить",
+    "size_ru": "большой"
+  },
+  {
+    "id": "oni",
+    "name_ru": "Они",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "otyugh",
+    "name_ru": "Отиуг",
+    "type_ru": "аберрация",
+    "size_ru": "большой"
+  },
+  {
+    "id": "owl",
+    "name_ru": "Сова",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "owlbear",
+    "name_ru": "Сова-медведь",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "panther",
+    "name_ru": "Пантера",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "pegasus",
+    "name_ru": "Пегас",
+    "type_ru": "небожитель",
+    "size_ru": "большой"
+  },
+  {
+    "id": "phase-spider",
+    "name_ru": "Фазовый паук",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "piranha",
+    "name_ru": "Пиранья",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "pirate",
+    "name_ru": "Пират",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "pirate-captain",
+    "name_ru": "Капитан пиратов",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "pit-fiend",
+    "name_ru": "Исчадие преисподней",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "planetar",
+    "name_ru": "Планетар",
+    "type_ru": "небожитель",
+    "size_ru": "большой"
+  },
+  {
+    "id": "plesiosaurus",
+    "name_ru": "Плезиозавр",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "polar-bear",
+    "name_ru": "Белый медведь",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "pony",
+    "name_ru": "Пони",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "priest",
+    "name_ru": "Жрец",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "priest-acolyte",
+    "name_ru": "Послушник жреца",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "pseudodragon",
+    "name_ru": "Псевдодракон",
+    "type_ru": "дракон",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "pteranodon",
+    "name_ru": "Птеранодон",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "purple-worm",
+    "name_ru": "Пурпурный червь",
+    "type_ru": "монстр",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "quasit",
+    "name_ru": "Квазит",
+    "type_ru": "исчадие",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "rakshasa",
+    "name_ru": "Ракшас",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "rat",
+    "name_ru": "Крыса",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "raven",
+    "name_ru": "Ворон",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "red-dragon-wyrmling",
+    "name_ru": "Детёныш красного дракона",
+    "type_ru": "дракон",
+    "size_ru": "средний"
+  },
+  {
+    "id": "reef-shark",
+    "name_ru": "Рифовая акула",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "remorhaz",
+    "name_ru": "Реморхаз",
+    "type_ru": "монстр",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "rhinoceros",
+    "name_ru": "Носорог",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "riding-horse",
+    "name_ru": "Верховая лошадь",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "roc",
+    "name_ru": "Рух",
+    "type_ru": "монстр",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "roper",
+    "name_ru": "Ропер",
+    "type_ru": "аберрация",
+    "size_ru": "большой"
+  },
+  {
+    "id": "rug-of-smothering",
+    "name_ru": "Душащий ковёр",
+    "type_ru": "конструкт",
+    "size_ru": "большой"
+  },
+  {
+    "id": "rust-monster",
+    "name_ru": "Ржавник",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "saber-toothed-tiger",
+    "name_ru": "Саблезубый тигр",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "sahuagin",
+    "name_ru": "Сахуагин",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "sahuagin-warrior",
+    "name_ru": "Сахуагин-воин",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "salamander",
+    "name_ru": "Саламандра",
+    "type_ru": "элементаль",
+    "size_ru": "большой"
+  },
+  {
+    "id": "satyr",
+    "name_ru": "Сатир",
+    "type_ru": "фея",
+    "size_ru": "средний"
+  },
+  {
+    "id": "scorpion",
+    "name_ru": "Скорпион",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "scout",
+    "name_ru": "Разведчик",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "sea-hag",
+    "name_ru": "Морская ведьма",
+    "type_ru": "фея",
+    "size_ru": "средний"
+  },
+  {
+    "id": "seahorse",
+    "name_ru": "Морской конёк",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "shadow",
+    "name_ru": "Тень",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "shambling-mound",
+    "name_ru": "Шаркающий курган",
+    "type_ru": "растение",
+    "size_ru": "большой"
+  },
+  {
+    "id": "shield-guardian",
+    "name_ru": "Щитовой страж",
+    "type_ru": "конструкт",
+    "size_ru": "большой"
+  },
+  {
+    "id": "shrieker",
+    "name_ru": "Визгун",
+    "type_ru": "растение",
+    "size_ru": "средний"
+  },
+  {
+    "id": "shrieker-fungus",
+    "name_ru": "Визжащий гриб",
+    "type_ru": "растение",
+    "size_ru": "средний"
+  },
+  {
+    "id": "silver-dragon-wyrmling",
+    "name_ru": "Детёныш серебряного дракона",
+    "type_ru": "дракон",
+    "size_ru": "средний"
+  },
+  {
+    "id": "skeleton",
+    "name_ru": "Скелет",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "solar",
+    "name_ru": "Солар",
+    "type_ru": "небожитель",
+    "size_ru": "большой"
+  },
+  {
+    "id": "specter",
+    "name_ru": "Спектр",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "sphinx-of-lore",
+    "name_ru": "Сфинкс знания",
+    "type_ru": "небожитель",
+    "size_ru": "большой"
+  },
+  {
+    "id": "sphinx-of-valor",
+    "name_ru": "Сфинкс доблести",
+    "type_ru": "небожитель",
+    "size_ru": "большой"
+  },
+  {
+    "id": "sphinx-of-wonder",
+    "name_ru": "Сфинкс чуда",
+    "type_ru": "небожитель",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "spider",
+    "name_ru": "Паук",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "spirit-naga",
+    "name_ru": "Духовный наг",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "sprite",
+    "name_ru": "Спрайт",
+    "type_ru": "фея",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "spy",
+    "name_ru": "Шпион",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "steam-mephit",
+    "name_ru": "Паровой мефит",
+    "type_ru": "элементаль",
+    "size_ru": "малый"
+  },
+  {
+    "id": "stirge",
+    "name_ru": "Стирдж",
+    "type_ru": "монстр",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "stone-giant",
+    "name_ru": "Каменный великан",
+    "type_ru": "великан",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "stone-golem",
+    "name_ru": "Каменный голем",
+    "type_ru": "конструкт",
+    "size_ru": "большой"
+  },
+  {
+    "id": "storm-giant",
+    "name_ru": "Штормовой великан",
+    "type_ru": "великан",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "succubus",
+    "name_ru": "Суккуб",
+    "type_ru": "исчадие",
+    "size_ru": "средний"
+  },
+  {
+    "id": "swarm-of-piranhas",
+    "name_ru": "Рой пираний",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "swarm-of-venomous-snakes",
+    "name_ru": "Рой ядовитых змей",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "swarm-of-bats",
+    "name_ru": "Рой летучих мышей",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "swarm-of-crawling-claws",
+    "name_ru": "Рой ползущих клешней",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "swarm-of-insects",
+    "name_ru": "Рой насекомых",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "swarm-of-rats",
+    "name_ru": "Рой крыс",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "swarm-of-ravens",
+    "name_ru": "Рой воронов",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "tarrasque",
+    "name_ru": "Тараск",
+    "type_ru": "монстр",
+    "size_ru": "исполинский"
+  },
+  {
+    "id": "tiger",
+    "name_ru": "Тигр",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "tough",
+    "name_ru": "Громила",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "tough-boss",
+    "name_ru": "Главарь громил",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "treant",
+    "name_ru": "Трент",
+    "type_ru": "растение",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "triceratops",
+    "name_ru": "Трицератопс",
+    "type_ru": "зверь",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "troll",
+    "name_ru": "Тролль",
+    "type_ru": "великан",
+    "size_ru": "большой"
+  },
+  {
+    "id": "troll-limb",
+    "name_ru": "Конечность тролля",
+    "type_ru": "великан",
+    "size_ru": "малый"
+  },
+  {
+    "id": "tyrannosaurus-rex",
+    "name_ru": "Тираннозавр рекс",
+    "type_ru": "зверь",
+    "size_ru": "огромный"
+  },
+  {
+    "id": "unicorn",
+    "name_ru": "Единорог",
+    "type_ru": "небожитель",
+    "size_ru": "большой"
+  },
+  {
+    "id": "vampire",
+    "name_ru": "Вампир",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "vampire-familiar",
+    "name_ru": "Фамильяр вампира",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "vampire-spawn",
+    "name_ru": "Отродье вампира",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "venomous-snake",
+    "name_ru": "Ядовитая змея",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "veteran",
+    "name_ru": "Ветеран",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "violet-fungus",
+    "name_ru": "Фиолетовый гриб",
+    "type_ru": "растение",
+    "size_ru": "средний"
+  },
+  {
+    "id": "vrock",
+    "name_ru": "Врок",
+    "type_ru": "исчадие",
+    "size_ru": "большой"
+  },
+  {
+    "id": "vulture",
+    "name_ru": "Стервятник",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "warhorse",
+    "name_ru": "Боевой конь",
+    "type_ru": "зверь",
+    "size_ru": "большой"
+  },
+  {
+    "id": "warhorse-skeleton",
+    "name_ru": "Скелет боевого коня",
+    "type_ru": "нежить",
+    "size_ru": "большой"
+  },
+  {
+    "id": "warrior-infantry",
+    "name_ru": "Пехотинец",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "warrior-veteran",
+    "name_ru": "Ветеран-воин",
+    "type_ru": "гуманоид",
+    "size_ru": "средний"
+  },
+  {
+    "id": "water-elemental",
+    "name_ru": "Водный элементаль",
+    "type_ru": "элементаль",
+    "size_ru": "большой"
+  },
+  {
+    "id": "weasel",
+    "name_ru": "Ласка",
+    "type_ru": "зверь",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "werebear",
+    "name_ru": "Медведь-оборотень",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "wereboar",
+    "name_ru": "Кабан-оборотень",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "wererat",
+    "name_ru": "Крыса-оборотень",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "weretiger",
+    "name_ru": "Тигр-оборотень",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "werewolf",
+    "name_ru": "Волк-оборотень",
+    "type_ru": "монстр",
+    "size_ru": "средний"
+  },
+  {
+    "id": "white-dragon-wyrmling",
+    "name_ru": "Детёныш белого дракона",
+    "type_ru": "дракон",
+    "size_ru": "средний"
+  },
+  {
+    "id": "wight",
+    "name_ru": "Умертвие",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "will-o-wisp",
+    "name_ru": "Блуждающий огонёк",
+    "type_ru": "нежить",
+    "size_ru": "крошечный"
+  },
+  {
+    "id": "winter-wolf",
+    "name_ru": "Зимний волк",
+    "type_ru": "монстр",
+    "size_ru": "большой"
+  },
+  {
+    "id": "wolf",
+    "name_ru": "Волк",
+    "type_ru": "зверь",
+    "size_ru": "средний"
+  },
+  {
+    "id": "worg",
+    "name_ru": "Ворг",
+    "type_ru": "фея",
+    "size_ru": "большой"
+  },
+  {
+    "id": "wraith",
+    "name_ru": "Привидение",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  },
+  {
+    "id": "wyvern",
+    "name_ru": "Виверна",
+    "type_ru": "дракон",
+    "size_ru": "большой"
+  },
+  {
+    "id": "xorn",
+    "name_ru": "Зорн",
+    "type_ru": "элементаль",
+    "size_ru": "средний"
+  },
+  {
+    "id": "young-black-dragon",
+    "name_ru": "Молодой чёрный дракон",
+    "type_ru": "дракон",
+    "size_ru": "большой"
+  },
+  {
+    "id": "young-blue-dragon",
+    "name_ru": "Молодой синий дракон",
+    "type_ru": "дракон",
+    "size_ru": "большой"
+  },
+  {
+    "id": "young-brass-dragon",
+    "name_ru": "Молодой латунный дракон",
+    "type_ru": "дракон",
+    "size_ru": "большой"
+  },
+  {
+    "id": "young-bronze-dragon",
+    "name_ru": "Молодой бронзовый дракон",
+    "type_ru": "дракон",
+    "size_ru": "большой"
+  },
+  {
+    "id": "young-copper-dragon",
+    "name_ru": "Молодой медный дракон",
+    "type_ru": "дракон",
+    "size_ru": "большой"
+  },
+  {
+    "id": "young-gold-dragon",
+    "name_ru": "Молодой золотой дракон",
+    "type_ru": "дракон",
+    "size_ru": "большой"
+  },
+  {
+    "id": "young-green-dragon",
+    "name_ru": "Молодой зелёный дракон",
+    "type_ru": "дракон",
+    "size_ru": "большой"
+  },
+  {
+    "id": "young-red-dragon",
+    "name_ru": "Молодой красный дракон",
+    "type_ru": "дракон",
+    "size_ru": "большой"
+  },
+  {
+    "id": "young-silver-dragon",
+    "name_ru": "Молодой серебряный дракон",
+    "type_ru": "дракон",
+    "size_ru": "большой"
+  },
+  {
+    "id": "young-white-dragon",
+    "name_ru": "Молодой белый дракон",
+    "type_ru": "дракон",
+    "size_ru": "большой"
+  },
+  {
+    "id": "zombie",
+    "name_ru": "Зомби",
+    "type_ru": "нежить",
+    "size_ru": "средний"
+  }
+]

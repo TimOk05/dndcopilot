@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="ru" data-theme="orange">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2a1710">
+  <title>D&D Copilot</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Главная навигация">
+      <div class="brand">
+        <div class="brand-mark">D20</div>
+        <div>
+          <h1>D&D Copilot</h1>
+          <p>Рабочий стол мастера</p>
+        </div>
+      </div>
+
+      <nav class="tool-nav" aria-label="Инструменты">
+        <button class="nav-button active" type="button" data-panel="dashboard">Главная</button>
+        <button class="nav-button" type="button" data-panel="generators">Генераторы</button>
+        <button class="nav-button" type="button" data-panel="bestiary">Бестиарий</button>
+        <button class="nav-button" type="button" data-panel="session">Сессия</button>
+        <button class="nav-button" type="button" data-panel="library">Библиотека</button>
+        <button class="nav-button" type="button" data-panel="notes">Заметки</button>
+        <button class="nav-button" type="button" data-panel="assistant">AI помощник</button>
+      </nav>
+
+      <div class="sidebar-settings">
+        <div class="theme-card">
+          <div class="section-label">Тема</div>
+          <div class="theme-grid" aria-label="Выбор темы">
+            <button class="theme-button active" type="button" data-theme-choice="orange">Теплая</button>
+            <button class="theme-button" type="button" data-theme-choice="mystic">Мистика</button>
+            <button class="theme-button" type="button" data-theme-choice="cold">Лед</button>
+            <button class="theme-button" type="button" data-theme-choice="dark">Тьма</button>
+          </div>
+        </div>
+
+        <div class="sound-card">
+          <div class="section-label">Звук</div>
+          <button class="sound-toggle" type="button" data-sound-toggle>Включить музыку</button>
+          <label class="volume-row">
+            <span>Громкость</span>
+            <input type="range" min="0" max="100" value="45" data-volume>
+          </label>
+        </div>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Fantasy tabletop assistant</p>
+          <h2 data-panel-title>Главная</h2>
+        </div>
+        <div class="top-actions">
+          <button class="icon-action" type="button" title="Настройки" aria-label="Настройки">⚙</button>
+          <button class="icon-action" type="button" title="Помощь" aria-label="Помощь">?</button>
+        </div>
+      </header>
+
+      <section class="panel active" data-panel-view="dashboard">
+        <div class="hero-strip">
+          <div>
+            <h3>Панель подготовки и ведения сессии</h3>
+            <p>Чистая основа приложения: все основные разделы уже на месте, а логику будем подключать по одному инструменту.</p>
+          </div>
+          <button class="primary-action" type="button">Начать сессию</button>
+        </div>
+
+        <div class="quick-grid">
+          <button class="feature-button" type="button">Создать NPC</button>
+          <button class="feature-button" type="button">Бросить кость</button>
+          <button class="feature-button" type="button">Добавить заметку</button>
+          <button class="feature-button" type="button">Открыть инициативу</button>
+        </div>
+
+        <div class="status-grid">
+          <article class="status-block">
+            <span>Активная кампания</span>
+            <strong>Не выбрана</strong>
+          </article>
+          <article class="status-block">
+            <span>Библиотека</span>
+            <strong>0 сохранено</strong>
+          </article>
+          <article class="status-block">
+            <span>Инициатива</span>
+            <strong>Пусто</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" data-panel-view="generators">
+        <div class="section-heading">
+          <h3>Генераторы</h3>
+          <p>Кнопки будущих инструментов. Пока без логики, чтобы дальше подключать их аккуратно.</p>
+        </div>
+        <div class="button-board">
+          <button type="button">Персонаж</button>
+          <button type="button">NPC</button>
+          <button type="button" data-panel="bestiary">Бестиарий</button>
+          <button type="button">Противники</button>
+          <button type="button" data-open-potion-generator>Зелья</button>
+          <button type="button">Заклинания</button>
+          <button type="button">Лут</button>
+          <button type="button">Локация</button>
+          <button type="button">Квест</button>
+          <button type="button">Таверна</button>
+          <button type="button">Случайное событие</button>
+        </div>
+      </section>
+
+      <section class="panel" data-panel-view="bestiary">
+        <div class="section-heading">
+          <h3>Бестиарий</h3>
+          <p>Существа из локальной базы SRD 5.2. Сейчас доступен список, поиск, фильтры и подробная карточка существа.</p>
+        </div>
+
+        <div class="bestiary-actions">
+          <div class="segmented-control" aria-label="Раздел бестиария">
+            <button class="active" type="button" data-bestiary-scope="all">Все существа</button>
+            <button type="button" data-bestiary-scope="custom">Мои существа</button>
+          </div>
+          <div class="bestiary-action-buttons">
+            <button class="primary-action" type="button" data-open-random-monster>Случайное существо</button>
+            <button type="button" data-open-create-monster>Создать существо</button>
+          </div>
+        </div>
+
+        <div class="bestiary-toolbar">
+          <label class="field">
+            <span>Поиск</span>
+            <input type="search" placeholder="Название существа" data-bestiary-search>
+          </label>
+          <label class="field">
+            <span>Тип</span>
+            <select data-bestiary-type>
+              <option value="">Все типы</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Опасность</span>
+            <select data-bestiary-cr>
+              <option value="">Любой CR</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="bestiary-summary" data-bestiary-summary>Загрузка бестиария...</div>
+        <div class="bestiary-list" data-bestiary-list></div>
+      </section>
+
+      <section class="panel" data-panel-view="session">
+        <div class="section-heading">
+          <h3>Ведение сессии</h3>
+          <p>Быстрые инструменты для игры за столом.</p>
+        </div>
+        <div class="button-board">
+          <button type="button">Кости</button>
+          <button type="button">Инициатива</button>
+          <button type="button">Сцена</button>
+          <button type="button">Событие</button>
+          <button type="button">Быстрая заметка</button>
+          <button type="button">История бросков</button>
+        </div>
+      </section>
+
+      <section class="panel" data-panel-view="library">
+        <div class="section-heading">
+          <h3>Библиотека</h3>
+          <p>Будущее место для сохраненных результатов генерации.</p>
+        </div>
+        <div class="button-board">
+          <button type="button">Мои NPC</button>
+          <button type="button">Мои монстры</button>
+          <button type="button">Мои предметы</button>
+          <button type="button">Мои зелья</button>
+          <button type="button">Мои заклинания</button>
+          <button type="button">Мои локации</button>
+          <button type="button">Кампании</button>
+          <button type="button">Сессии</button>
+        </div>
+      </section>
+
+      <section class="panel" data-panel-view="notes">
+        <div class="section-heading">
+          <h3>Заметки</h3>
+          <p>Здесь позже появятся сохраненные результаты и заметки мастера.</p>
+        </div>
+        <div class="empty-state">
+          <strong>Пока пусто</strong>
+          <button type="button">Новая заметка</button>
+        </div>
+      </section>
+
+      <section class="panel" data-panel-view="assistant">
+        <div class="section-heading">
+          <h3>AI помощник</h3>
+          <p>Раздел оставлен как будущий слой поверх кампаний, заметок и генераторов.</p>
+        </div>
+        <div class="empty-state">
+          <strong>Помощник еще не подключен</strong>
+          <button type="button">Открыть чат</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-dice-modal>
+    <section class="tool-modal dice-modal" aria-labelledby="dice-modal-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-dice aria-label="Закрыть">×</button>
+
+      <div class="modal-header">
+        <p class="eyebrow">Session tool</p>
+        <h2 id="dice-modal-title">Бросок костей</h2>
+      </div>
+
+      <div class="dice-setup" data-dice-setup>
+        <label class="field">
+          <span>Кость</span>
+          <select data-dice-sides>
+            <option value="4">d4</option>
+            <option value="6">d6</option>
+            <option value="8">d8</option>
+            <option value="10">d10</option>
+            <option value="12">d12</option>
+            <option value="20" selected>d20</option>
+            <option value="100">d100</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Количество</span>
+          <input type="number" min="1" max="20" value="1" data-dice-count>
+        </label>
+
+        <button class="primary-action roll-action" type="button" data-roll-dice>Бросить</button>
+      </div>
+
+      <label class="field dice-label-field">
+        <span>Подпись броска</span>
+        <input type="text" maxlength="48" placeholder="Например: проверка ловкости" data-dice-label>
+      </label>
+
+      <div class="dice-stage" data-dice-stage>
+        <div class="dice-orbit" data-dice-orbit>
+          <div class="dice-poly" data-dice-face>20</div>
+        </div>
+        <div class="dice-result is-hidden" data-dice-result>
+          <span data-dice-formula>1d20</span>
+          <strong data-dice-total>0</strong>
+          <p data-dice-breakdown></p>
+        </div>
+      </div>
+
+      <div class="modal-actions is-hidden" data-dice-actions>
+        <button type="button" data-save-dice>Сохранить в библиотеку</button>
+        <button type="button" data-reset-dice>Новый бросок</button>
+        <button type="button" data-close-dice>Закрыть</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-monster-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="monster-modal-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-monster aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">SRD 5.2 creature</p>
+        <h2 id="monster-modal-title" data-monster-name>Существо</h2>
+      </div>
+      <div class="monster-detail" data-monster-detail></div>
+      <div class="modal-actions monster-actions">
+        <button type="button" data-save-current-monster>Сохранить в библиотеку</button>
+        <button type="button" class="danger-action is-hidden" data-delete-custom-monster>Удалить своё существо</button>
+        <button type="button" data-close-monster>Закрыть</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-random-monster-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="random-monster-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-random-monster aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Encounter tool</p>
+        <h2 id="random-monster-title">Случайное существо</h2>
+      </div>
+
+      <div class="bestiary-toolbar random-monster-form">
+        <label class="field">
+          <span>Опасность</span>
+          <select data-random-cr>
+            <option value="">Любой CR</option>
+            <option value="0-0.125">CR 0-1/8</option>
+            <option value="0.25-0.5">CR 1/4-1/2</option>
+            <option value="1-2">CR 1-2</option>
+            <option value="3-4">CR 3-4</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Разновидность</span>
+          <select data-random-kind>
+            <option value="">Любая</option>
+            <option value="zombie">Зомби</option>
+            <option value="undead">Нежить</option>
+            <option value="humanoid">Гуманоиды</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Количество</span>
+          <input type="number" min="1" max="12" value="1" data-random-count>
+        </label>
+        <label class="checkbox-row">
+          <input type="checkbox" data-random-same-kind>
+          <span>Монстры одного вида</span>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="primary-action" type="button" data-generate-random-monster>Получить результат</button>
+        <button type="button" data-save-random-monsters disabled>Сохранить в библиотеку</button>
+        <button type="button" data-close-random-monster>Закрыть</button>
+      </div>
+
+      <div class="random-monster-results" data-random-monster-results></div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-create-monster-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="create-monster-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-create-monster aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Homebrew creature</p>
+        <h2 id="create-monster-title">Создать существо</h2>
+      </div>
+
+      <form class="custom-monster-form" data-create-monster-form>
+        <label class="field field-wide">
+          <span>Название</span>
+          <input type="text" maxlength="80" required data-custom-name>
+        </label>
+        <label class="field">
+          <span>Тип</span>
+          <select data-custom-type></select>
+        </label>
+        <label class="field">
+          <span>Размер</span>
+          <select data-custom-size>
+            <option value="tiny">Крошечный</option>
+            <option value="small">Маленький</option>
+            <option value="medium" selected>Средний</option>
+            <option value="large">Большой</option>
+            <option value="huge">Огромный</option>
+            <option value="gargantuan">Гигантский</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>CR</span>
+          <input type="text" maxlength="8" value="0" data-custom-cr>
+        </label>
+        <label class="field">
+          <span>КД</span>
+          <input type="number" min="0" max="40" value="10" data-custom-ac>
+        </label>
+        <label class="field">
+          <span>Хиты</span>
+          <input type="number" min="1" max="999" value="10" data-custom-hp>
+        </label>
+        <label class="field">
+          <span>Скорость, фт.</span>
+          <input type="number" min="0" max="240" value="30" data-custom-speed>
+        </label>
+
+        <div class="ability-editor">
+          <label><span>STR</span><input type="number" min="1" max="30" value="10" data-custom-ability="str"></label>
+          <label><span>DEX</span><input type="number" min="1" max="30" value="10" data-custom-ability="dex"></label>
+          <label><span>CON</span><input type="number" min="1" max="30" value="10" data-custom-ability="con"></label>
+          <label><span>INT</span><input type="number" min="1" max="30" value="10" data-custom-ability="int"></label>
+          <label><span>WIS</span><input type="number" min="1" max="30" value="10" data-custom-ability="wis"></label>
+          <label><span>CHA</span><input type="number" min="1" max="30" value="10" data-custom-ability="cha"></label>
+        </div>
+
+        <label class="field field-wide">
+          <span>Особенности</span>
+          <textarea rows="4" placeholder="Каждая особенность с новой строки" data-custom-traits></textarea>
+        </label>
+        <label class="field field-wide">
+          <span>Действия</span>
+          <textarea rows="4" placeholder="Каждое действие с новой строки" data-custom-actions></textarea>
+        </label>
+
+        <div class="modal-actions">
+          <button class="primary-action" type="submit">Сохранить в Бестиарий</button>
+          <button type="button" data-close-create-monster>Закрыть</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-potion-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="potion-modal-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-potion-generator aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Treasure tool</p>
+        <h2 id="potion-modal-title">Генератор зелий</h2>
+      </div>
+
+      <div class="bestiary-toolbar random-monster-form">
+        <label class="field">
+          <span>Редкость</span>
+          <select data-potion-rarity>
+            <option value="">Любая</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Тип</span>
+          <select data-potion-kind>
+            <option value="">Зелья и масла</option>
+            <option value="potion">Только зелья</option>
+            <option value="oil">Только масла</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Количество</span>
+          <input type="number" min="1" max="12" value="1" data-potion-count>
+        </label>
+        <label class="checkbox-row">
+          <input type="checkbox" data-potion-same-kind>
+          <span>Одинаковые зелья</span>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="primary-action" type="button" data-generate-potions>Получить результат</button>
+        <button type="button" data-save-potions disabled>Сохранить в библиотеку</button>
+        <button type="button" data-close-potion-generator>Закрыть</button>
+      </div>
+
+      <div class="random-monster-results" data-potion-results></div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-potion-detail-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="potion-detail-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-potion-detail aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Magic item</p>
+        <h2 id="potion-detail-title" data-potion-detail-name>Зелье</h2>
+      </div>
+      <div class="monster-detail" data-potion-detail></div>
+      <div class="modal-actions monster-actions">
+        <button type="button" data-close-potion-detail>Закрыть</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="audio-gate" data-audio-gate>
+    <div class="audio-gate-panel">
+      <h2>Включить атмосферу?</h2>
+      <p>Браузер может блокировать автозапуск музыки. Один клик включит музыку темы и звук кнопок.</p>
+      <div class="gate-actions">
+        <button class="primary-action" type="button" data-enable-audio>Включить звук</button>
+        <button class="ghost-action" type="button" data-skip-audio>Без звука</button>
+      </div>
+    </div>
+  </div>
+
+  <audio data-music loop preload="auto"></audio>
+  <audio data-click-sound src="sound/click.mp3" preload="auto"></audio>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

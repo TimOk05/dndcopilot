@@ -1,0 +1,162 @@
+{
+  "source_api": "https://apisearch.thedmstoolkit.com/api/2024/monsters",
+  "expected_count": 345,
+  "imported_count": 345,
+  "warnings": [
+    {
+      "id": "azer",
+      "name": "Azer",
+      "warnings": [
+        "properties.name differs: 'Azer Sentinel'"
+      ]
+    },
+    {
+      "id": "berserker",
+      "name": "Berserker",
+      "warnings": [
+        "possible copied text from another stat block: dragon"
+      ]
+    },
+    {
+      "id": "blink-dog",
+      "name": "Blink Dog",
+      "warnings": [
+        "possible copied text from another stat block: dragon"
+      ]
+    },
+    {
+      "id": "bone-devil",
+      "name": "Bone Devil",
+      "warnings": [
+        "possible copied text from another stat block: dragon"
+      ]
+    },
+    {
+      "id": "bugbear",
+      "name": "Bugbear",
+      "warnings": [
+        "properties.name differs: 'Bugbear Stalker'"
+      ]
+    },
+    {
+      "id": "commoner",
+      "name": "Commoner",
+      "warnings": [
+        "possible copied text from another stat block: dragon"
+      ]
+    },
+    {
+      "id": "crawling-claw",
+      "name": "Crawling Claw",
+      "warnings": [
+        "properties.name differs: 'Swarm of Crawling Claws'"
+      ]
+    },
+    {
+      "id": "flying-sword",
+      "name": "Flying Sword",
+      "warnings": [
+        "properties.name differs: 'Animated Flying Sword'"
+      ]
+    },
+    {
+      "id": "goblin",
+      "name": "Goblin",
+      "warnings": [
+        "properties.name differs: 'Goblin Minion'"
+      ]
+    },
+    {
+      "id": "gray-ooze",
+      "name": "Gray Ooze",
+      "warnings": [
+        "possible copied text from another stat block: dragon"
+      ]
+    },
+    {
+      "id": "guard",
+      "name": "Guard",
+      "warnings": [
+        "possible copied text from another stat block: half-dragon"
+      ]
+    },
+    {
+      "id": "guardian-naga",
+      "name": "Guardian Naga",
+      "warnings": [
+        "possible copied text from another stat block: guard"
+      ]
+    },
+    {
+      "id": "priest",
+      "name": "Priest",
+      "warnings": [
+        "possible copied text from another stat block: guard"
+      ]
+    },
+    {
+      "id": "pseudodragon",
+      "name": "Pseudodragon",
+      "warnings": [
+        "possible copied text from another stat block: dragon"
+      ]
+    },
+    {
+      "id": "rakshasa",
+      "name": "Rakshasa",
+      "warnings": [
+        "possible copied text from another stat block: dragon"
+      ]
+    },
+    {
+      "id": "rug-of-smothering",
+      "name": "Rug of Smothering",
+      "warnings": [
+        "properties.name differs: 'Animated Rug of Smothering'"
+      ]
+    },
+    {
+      "id": "shield-guardian",
+      "name": "Shield Guardian",
+      "warnings": [
+        "possible copied text from another stat block: guard"
+      ]
+    },
+    {
+      "id": "shrieker",
+      "name": "Shrieker",
+      "warnings": [
+        "properties.name differs: 'Shrieker Fungus'"
+      ]
+    },
+    {
+      "id": "swarm-of-piranhas",
+      "name": "Swarm Of Piranhas",
+      "warnings": [
+        "properties.name differs: 'Swarm of Piranhas'"
+      ]
+    },
+    {
+      "id": "swarm-of-venomous-snakes",
+      "name": "Swarm Of Venomous Snakes",
+      "warnings": [
+        "properties.name differs: 'Swarm of Venomous Snakes'"
+      ]
+    },
+    {
+      "id": "veteran",
+      "name": "Veteran",
+      "warnings": [
+        "properties.name differs: 'Warrior Veteran'"
+      ]
+    },
+    {
+      "id": "werewolf",
+      "name": "Werewolf",
+      "warnings": [
+        "possible copied text from another stat block: dragon"
+      ]
+    }
+  ],
+  "warning_count": 22
+}
