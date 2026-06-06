@@ -1116,7 +1116,6 @@ function setupRandomKindOptions() {
 
   randomKindInput.innerHTML = `
     <option value="">Любая</option>
-    <option value="zombie">Зомби</option>
     ${types.map((type) => `<option value="type:${escapeHtml(type)}">${escapeHtml(getTypeLabel(type))}</option>`).join("")}
   `;
 }
@@ -1818,10 +1817,6 @@ function matchesRandomKind(monster, kind) {
   }
 
   const type = normalizeCreatureType(monster.type);
-  const name = `${monster.name || ""} ${monster.name_ru || ""}`.toLowerCase();
-  if (kind === "zombie") {
-    return name.includes("zombie") || name.includes("зомби");
-  }
   if (kind.startsWith("type:")) {
     return type === normalizeCreatureType(kind.slice(5));
   }
@@ -1862,7 +1857,7 @@ function generateRandomMonsters() {
   randomCountInput.value = String(count);
 
   if (!pool.length) {
-    randomMonsterResults.innerHTML = `<div class="library-empty"><strong>Подходящих существ нет</strong><span>Измени уровень опасности или разновидность.</span></div>`;
+    randomMonsterResults.innerHTML = `<div class="library-empty"><strong>Подходящих существ нет</strong><span>Измени уровень опасности или тип.</span></div>`;
     saveRandomMonstersButton.disabled = !currentRandomMonsters.length;
     return;
   }

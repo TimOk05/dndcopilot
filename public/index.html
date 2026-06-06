@@ -108,12 +108,11 @@
         <div class="button-board generator-board">
           <button class="generator-button" type="button">Персонаж</button>
           <button class="generator-button" type="button">НПС</button>
-          <button class="generator-button" type="button" data-panel="bestiary">
+          <button class="generator-button" type="button" data-open-random-monster>
             <span class="generator-button-icon icon-enemy" aria-hidden="true"></span>
-            <span>Монстры</span>
+            <span>Случайное существо</span>
           </button>
-          <button class="generator-button" type="button" data-open-loot-generator>Лут</button>
-          <button class="generator-button" type="button" data-panel="loot">Предметы</button>
+          <button class="generator-button" type="button" data-open-loot-generator>Награда</button>
           <button class="generator-button" type="button">Таверна</button>
           <button class="generator-button" type="button">Случайное событие</button>
           <button class="generator-button" type="button" data-open-potion-generator>
@@ -409,12 +408,11 @@
           </select>
         </label>
         <label class="field">
-          <span>Разновидность</span>
+          <span>Тип</span>
           <select data-random-kind>
             <option value="">Любая</option>
-            <option value="zombie">Зомби</option>
-            <option value="undead">Нежить</option>
-            <option value="humanoid">Гуманоиды</option>
+            <option value="type:undead">Нежить</option>
+            <option value="type:humanoid">Гуманоиды</option>
           </select>
         </label>
         <label class="field">
