@@ -22,6 +22,7 @@ const panelTitles = {
   generators: "Генераторы",
   bestiary: "Бестиарий",
   spells: "Заклинания",
+  loot: "Предметы",
   session: "Сессия",
   library: "Библиотека",
   notes: "Заметки",
@@ -94,6 +95,11 @@ const spellsList = document.querySelector("[data-spells-list]");
 const spellModal = document.querySelector("[data-spell-modal]");
 const spellName = document.querySelector("[data-spell-name]");
 const spellDetail = document.querySelector("[data-spell-detail]");
+const lootSearch = document.querySelector("[data-loot-search]");
+const lootRarityInput = document.querySelector("[data-loot-rarity]");
+const lootListCategoryInput = document.querySelector("[data-loot-list-category]");
+const lootSummary = document.querySelector("[data-loot-summary]");
+const lootList = document.querySelector("[data-loot-list]");
 const randomMonsterModal = document.querySelector("[data-random-monster-modal]");
 const randomCrInput = document.querySelector("[data-random-cr]");
 const randomKindInput = document.querySelector("[data-random-kind]");
@@ -104,6 +110,10 @@ const saveRandomMonstersButton = document.querySelector("[data-save-random-monst
 const createMonsterModal = document.querySelector("[data-create-monster-modal]");
 const createMonsterForm = document.querySelector("[data-create-monster-form]");
 const customTypeInput = document.querySelector("[data-custom-type]");
+const createLootItemModal = document.querySelector("[data-create-loot-item-modal]");
+const createLootItemForm = document.querySelector("[data-create-loot-item-form]");
+const customLootCategoryInput = document.querySelector("[data-custom-loot-category]");
+const customLootRarityInput = document.querySelector("[data-custom-loot-rarity]");
 const potionModal = document.querySelector("[data-potion-modal]");
 const potionRarityInput = document.querySelector("[data-potion-rarity]");
 const potionKindInput = document.querySelector("[data-potion-kind]");
@@ -124,6 +134,8 @@ const saveLootButton = document.querySelector("[data-save-loot]");
 const lootDetailModal = document.querySelector("[data-loot-detail-modal]");
 const lootDetailName = document.querySelector("[data-loot-detail-name]");
 const lootDetail = document.querySelector("[data-loot-detail]");
+const saveCurrentLootItemButton = document.querySelector("[data-save-current-loot-item]");
+const deleteCustomLootItemButton = document.querySelector("[data-delete-custom-loot-item]");
 
 let lastDiceRoll = null;
 let bestiaryIndex = [];
@@ -146,7 +158,10 @@ let lootTables = null;
 let lootItemsIndex = [];
 let lootItems = [];
 let lootItemsById = new Map();
+let lootLocaleById = new Map();
 let currentLootResults = [];
+let currentLootItem = null;
+let lootScope = "all";
 const DICE_LABEL_LIMIT = 48;
 const CR_GROUPS = [
   { value: "0-0.125", label: "CR 0-1/8", min: 0, max: 0.125 },
@@ -215,6 +230,7 @@ const MAGIC_CATEGORY_LABELS_RU = {
   armor: "доспех",
   potion: "зелье",
   ring: "кольцо",
+  "rod-staff": "посохи и жезлы",
   rod: "жезл",
   scroll: "свиток",
   shield: "щит",
@@ -323,6 +339,9 @@ function openPanel(panel) {
   }
   if (panel === "spells") {
     loadSpells();
+  }
+  if (panel === "loot") {
+    loadLoot();
   }
 }
 
@@ -566,6 +585,18 @@ function getCustomMonsters() {
 
 function setCustomMonsters(monsters) {
   storage.set("dnd-custom-monsters", JSON.stringify(monsters));
+}
+
+function getCustomLootItems() {
+  try {
+    return JSON.parse(storage.get("dnd-custom-loot-items", "[]"));
+  } catch {
+    return [];
+  }
+}
+
+function setCustomLootItems(items) {
+  storage.set("dnd-custom-loot-items", JSON.stringify(items));
 }
 
 function toMonsterIndexRow(monster) {
@@ -911,10 +942,11 @@ async function loadLoot() {
     return;
   }
 
-  const [tablesResponse, indexResponse, itemsResponse] = await Promise.all([
+  const [tablesResponse, indexResponse, itemsResponse, localeResponse] = await Promise.all([
     fetch("data/srd/loot-tables.json"),
     fetch("data/srd/loot-items.index.json"),
     fetch("data/srd/loot-items.json"),
+    fetch("data/i18n/ru/loot-items.json").catch(() => null),
   ]);
 
   if (!tablesResponse.ok || !indexResponse.ok || !itemsResponse.ok) {
@@ -924,10 +956,19 @@ async function loadLoot() {
   lootTables = await tablesResponse.json();
   lootItemsIndex = await indexResponse.json();
   lootItems = await itemsResponse.json();
+  if (localeResponse?.ok) {
+    const localeRows = await localeResponse.json();
+    lootLocaleById = new Map(localeRows.map((row) => [row.id, row]));
+  }
+  const customLootItems = getCustomLootItems();
+  lootItems = [...lootItems, ...customLootItems];
+  lootItemsIndex = [...lootItemsIndex, ...customLootItems.map(toLootIndexRow)];
   lootItemsById = new Map(lootItems.map((item) => [item.id, item]));
 
   setupLootTierOptions();
   setupLootCategoryOptions();
+  setupLootListFilters();
+  renderLootList();
 }
 
 function setupLootTierOptions() {
@@ -945,13 +986,62 @@ function setupLootCategoryOptions() {
     return;
   }
 
-  const categories = [...new Set(lootItemsIndex.map((item) => item.category_key).filter(Boolean))]
+  const categories = [...new Set(lootItemsIndex.map((item) => getLootDisplayCategoryKey(item.category_key)).filter(Boolean))]
     .sort((left, right) => getMagicCategoryLabel(left).localeCompare(getMagicCategoryLabel(right), "ru"));
 
   lootCategoryInput.innerHTML = `
     <option value="">Любая</option>
     ${categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(getMagicCategoryLabel(category))}</option>`).join("")}
   `;
+}
+
+function toLootIndexRow(item) {
+  return {
+    id: item.id,
+    name: item.name,
+    category: item.category,
+    category_key: item.category_key,
+    rarity: item.rarity,
+    rarity_value: item.rarity_value,
+    rarity_rank: item.rarity_rank,
+    attunement: Boolean(item.attunement),
+    source: item.source,
+    source_key: item.source_key,
+    publisher: item.publisher,
+    is_custom: Boolean(item.is_custom),
+  };
+}
+
+function setupLootListFilters() {
+  if (!lootListCategoryInput || !lootRarityInput) {
+    return;
+  }
+
+  const categories = [...new Set(lootItemsIndex.map((item) => getLootDisplayCategoryKey(item.category_key)).filter(Boolean))]
+    .sort((left, right) => getMagicCategoryLabel(left).localeCompare(getMagicCategoryLabel(right), "ru"));
+  const rarities = [...new Set(lootItemsIndex.map((item) => getLootDisplayRarityValue(item.rarity_value)).filter(Boolean))]
+    .sort((left, right) => getMagicRaritySortValue(left) - getMagicRaritySortValue(right));
+
+  lootListCategoryInput.innerHTML = `
+    <option value="">Любая категория</option>
+    ${categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(getMagicCategoryLabel(category))}</option>`).join("")}
+  `;
+  lootRarityInput.innerHTML = `
+    <option value="">Любая редкость</option>
+    ${rarities.map((rarity) => `<option value="${escapeHtml(rarity)}">${escapeHtml(getMagicRarityLabel(rarity))}</option>`).join("")}
+  `;
+
+  if (customLootCategoryInput) {
+    customLootCategoryInput.innerHTML = categories
+      .map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(getMagicCategoryLabel(category))}</option>`)
+      .join("");
+  }
+  if (customLootRarityInput) {
+    customLootRarityInput.innerHTML = rarities
+      .filter((rarity) => rarity !== "artifact")
+      .map((rarity) => `<option value="${escapeHtml(rarity)}">${escapeHtml(getMagicRarityLabel(rarity))}</option>`)
+      .join("");
+  }
 }
 
 function setupPotionRarityOptions() {
@@ -2056,8 +2146,191 @@ function getMagicCategoryLabel(category) {
   return MAGIC_CATEGORY_LABELS_RU[category] || capitalize(String(category || "предмет").replace(/-/g, " "));
 }
 
+function getLootDisplayCategoryKey(category) {
+  return category === "rod" || category === "staff" ? "rod-staff" : category;
+}
+
+function matchesLootCategory(category, selectedCategory) {
+  if (!selectedCategory) {
+    return true;
+  }
+  return getLootDisplayCategoryKey(category) === selectedCategory;
+}
+
 function getMagicRarityLabel(rarityValue, rarity = "") {
   return RARITY_LABELS_RU[rarityValue] || rarity || "неизвестно";
+}
+
+function getMagicRaritySortValue(rarityValue) {
+  const index = MAGIC_RARITY_ORDER.indexOf(rarityValue);
+  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+}
+
+function getLootDisplayRarityValue(rarityValue) {
+  return rarityValue === "artifact" ? "legendary" : rarityValue;
+}
+
+function getLootItemLocale(item) {
+  return lootLocaleById.get(item.id) || {};
+}
+
+function getLootItemName(item) {
+  return getLootItemLocale(item).name_ru || item.name;
+}
+
+function getLootItemCategory(item) {
+  return getLootItemLocale(item).category_ru || getMagicCategoryLabel(item.category_key);
+}
+
+function getLootItemRarity(item) {
+  const displayRarityValue = getLootDisplayRarityValue(item.rarity_value);
+  if (displayRarityValue !== item.rarity_value) {
+    return getMagicRarityLabel(displayRarityValue);
+  }
+  return getLootItemLocale(item).rarity_ru || getMagicRarityLabel(item.rarity_value, item.rarity);
+}
+
+function getLootItemDescription(item) {
+  return normalizeRichText(getLootItemLocale(item).description_ru || item.description);
+}
+
+function getLootItemSource(item) {
+  return item.source_display || item.source || "Open5e";
+}
+
+function getLootItemWeight(item) {
+  const weight = Number(item.weight);
+  if (!Number.isFinite(weight) || weight <= 0) {
+    return "-";
+  }
+  return `${weight.toLocaleString("ru-RU")} ${item.weight_unit || "lb"}`;
+}
+
+function getLootItemAttunement(item) {
+  if (item.attunement_requirement) {
+    return `требуется: ${item.attunement_requirement}`;
+  }
+  return item.attunement ? "требуется" : "не требуется";
+}
+
+function getLootItemArmorText(item) {
+  const armor = item.armor;
+  if (!armor) {
+    return "";
+  }
+  const localeArmor = getLootItemLocale(item).armor || {};
+  const parts = [
+    localeArmor.name_ru || armor.name,
+    localeArmor.category_ru || armor.category,
+    armor.ac_display || (armor.ac_base ? `КД ${armor.ac_base}` : ""),
+    armor.grants_stealth_disadvantage ? "помеха скрытности" : "",
+    armor.strength_score_required ? `Сила ${armor.strength_score_required}` : "",
+  ].filter(Boolean);
+  return parts.join(" · ");
+}
+
+function getLootItemWeaponText(item) {
+  const weapon = item.weapon;
+  if (!weapon) {
+    return "";
+  }
+  const localeWeapon = getLootItemLocale(item).weapon || {};
+  const parts = [
+    localeWeapon.name_ru || weapon.name,
+    localeWeapon.category_ru || weapon.category,
+    weapon.damage_dice ? `${weapon.damage_dice}${weapon.damage_type?.name ? ` ${weapon.damage_type.name}` : ""}` : "",
+    Array.isArray(weapon.properties)
+      ? weapon.properties.map((entry) => [entry.property?.name, entry.detail].filter(Boolean).join(" ")).filter(Boolean).join(", ")
+      : "",
+  ].filter(Boolean);
+  return parts.join(" · ");
+}
+
+function getFilteredLootItems() {
+  if (!lootList) {
+    return [];
+  }
+
+  const query = lootSearch.value.trim().toLowerCase();
+  const rarity = lootRarityInput.value;
+  const category = lootListCategoryInput.value;
+
+  return lootItemsIndex.filter((item) => {
+    const source = lootItemsById.get(item.id) || item;
+    const name = `${source.name || ""} ${getLootItemName(source) || ""}`.toLowerCase();
+    const matchesScope = lootScope === "custom" ? source.is_custom : true;
+    const matchesQuery = !query || name.includes(query);
+    const matchesRarity = !rarity || getLootDisplayRarityValue(source.rarity_value) === rarity;
+    const matchesCategory = matchesLootCategory(source.category_key, category);
+    return matchesScope && matchesQuery && matchesRarity && matchesCategory;
+  });
+}
+
+function renderLootList() {
+  if (!lootList || !lootSummary) {
+    return;
+  }
+
+  const filtered = getFilteredLootItems();
+  const total = lootScope === "custom" ? lootItemsIndex.filter((item) => lootItemsById.get(item.id)?.is_custom).length : lootItemsIndex.length;
+  lootSummary.textContent = `Показано ${filtered.length} из ${total} предметов`;
+
+  if (!filtered.length) {
+    const emptyText = lootScope === "custom"
+      ? "Создай свой первый предмет, и он появится в этом разделе."
+      : "Попробуй изменить поиск или фильтры.";
+    lootList.innerHTML = `<div class="library-empty"><strong>Ничего не найдено</strong><span>${emptyText}</span></div>`;
+    return;
+  }
+
+  lootList.innerHTML = filtered
+    .map((item) => {
+      const source = lootItemsById.get(item.id) || item;
+      const content = `
+        <span>${escapeHtml(getLootItemCategory(source))} · ${escapeHtml(getLootItemRarity(source))}</span>
+        <strong>${escapeHtml(getLootItemName(source))}</strong>
+        <em>${escapeHtml(source.name || getLootItemName(source))}</em>
+        <small>${escapeHtml(getLootItemSource(source))}${source.attunement ? " · настройка" : ""}</small>
+      `;
+      if (source.is_custom) {
+        return `
+          <article class="monster-card custom-monster-card is-custom">
+            <button class="monster-card-main" type="button" data-loot-item-id="${escapeHtml(source.id)}">${content}</button>
+            <button class="danger-action" type="button" data-delete-custom-loot-id="${escapeHtml(source.id)}">Удалить</button>
+          </article>
+        `;
+      }
+      return `<button class="monster-card loot-item-card" type="button" data-loot-item-id="${escapeHtml(source.id)}">${content}</button>`;
+    })
+    .join("");
+}
+
+function renderLootItemDetail(item) {
+  const armorText = getLootItemArmorText(item);
+  const weaponText = getLootItemWeaponText(item);
+  return `
+    <div class="monster-meta-grid">
+      <div><span>Английское название</span><strong>${escapeHtml(item.name || "-")}</strong></div>
+      <div><span>Категория</span><strong>${escapeHtml(getLootItemCategory(item))}</strong></div>
+      <div><span>Редкость</span><strong>${escapeHtml(getLootItemRarity(item))}</strong></div>
+      <div><span>Настройка</span><strong>${escapeHtml(getLootItemAttunement(item))}</strong></div>
+      <div><span>Вес</span><strong>${escapeHtml(getLootItemWeight(item))}</strong></div>
+      <div><span>Источник</span><strong>${escapeHtml(getLootItemSource(item))}</strong></div>
+      ${armorText ? `<div><span>Доспех</span><strong>${escapeHtml(armorText)}</strong></div>` : ""}
+      ${weaponText ? `<div><span>Оружие</span><strong>${escapeHtml(weaponText)}</strong></div>` : ""}
+    </div>
+
+    <section class="monster-section">
+      <h4>Описание</h4>
+      <div class="monster-text-list">
+        ${renderRichDescription(getLootItemDescription(item) || "Описание отсутствует.")}
+      </div>
+    </section>
+
+    <div class="license-note">
+      ${item.is_custom ? "Пользовательский предмет. Данные сохранены локально в этом браузере." : `Данные: ${escapeHtml(getLootItemSource(item))}. ${escapeHtml(item.license || "Open5e source data")}.`}
+    </div>
+  `;
 }
 
 function addCoins(target, coinRows) {
@@ -2122,7 +2395,7 @@ function getMagicItemPool(rarityValue = "") {
   const category = lootCategoryInput.value;
   return lootItemsIndex
     .filter((item) => !rarityValue || item.rarity_value === rarityValue)
-    .filter((item) => !category || item.category_key === category)
+    .filter((item) => matchesLootCategory(item.category_key, category))
     .map((item) => lootItemsById.get(item.id))
     .filter(Boolean);
 }
@@ -2131,7 +2404,7 @@ function getFallbackMagicItemPool(rarityValue = "") {
   const category = lootCategoryInput.value;
   if (category) {
     const categoryPool = lootItemsIndex
-      .filter((item) => item.category_key === category)
+      .filter((item) => matchesLootCategory(item.category_key, category))
       .map((item) => lootItemsById.get(item.id))
       .filter(Boolean);
     if (categoryPool.length) {
@@ -2156,14 +2429,14 @@ function pickMagicItem(magicTable) {
 
   return {
     id: item.id,
-    name: item.name,
-    category: getMagicCategoryLabel(item.category_key),
+    name: getLootItemName(item),
+    category: getLootItemCategory(item),
     category_key: item.category_key,
-    rarity: getMagicRarityLabel(item.rarity_value, item.rarity),
+    rarity: getLootItemRarity(item),
     rarity_value: item.rarity_value,
     attunement: Boolean(item.attunement),
-    source: item.source_display || item.source || "Open5e",
-    description: normalizeRichText(item.description),
+    source: getLootItemSource(item),
+    description: getLootItemDescription(item),
   };
 }
 
@@ -2377,13 +2650,31 @@ function openLootDetailCard(loot) {
     return;
   }
 
+  currentLootItem = null;
+  saveCurrentLootItemButton?.classList.add("is-hidden");
+  deleteCustomLootItemButton?.classList.add("is-hidden");
   lootDetailName.textContent = loot.title;
   lootDetail.innerHTML = renderLootDetail(loot);
   lootDetailModal.classList.remove("is-hidden");
 }
 
+function openLootItemModal(id) {
+  const item = lootItemsById.get(id);
+  if (!item) {
+    return;
+  }
+
+  currentLootItem = item;
+  saveCurrentLootItemButton?.classList.remove("is-hidden");
+  deleteCustomLootItemButton?.classList.toggle("is-hidden", !item.is_custom);
+  lootDetailName.textContent = getLootItemName(item);
+  lootDetail.innerHTML = renderLootItemDetail(item);
+  lootDetailModal.classList.remove("is-hidden");
+}
+
 function closeLootDetail() {
   lootDetailModal.classList.add("is-hidden");
+  currentLootItem = null;
 }
 
 function openLootResult(id) {
@@ -2392,6 +2683,43 @@ function openLootResult(id) {
 
 function openSavedLoot(id) {
   openLootDetailCard(getSavedLoot().find((loot) => loot.id === id));
+}
+
+function toSavedLootItem(item) {
+  return {
+    id: crypto.randomUUID(),
+    source_id: item.id,
+    title: getLootItemName(item),
+    typeLabel: "магический предмет",
+    findType: "magic",
+    tierLabel: "выбрано мастером",
+    total_gp: 0,
+    magic_item: {
+      id: item.id,
+      name: getLootItemName(item),
+      category: getLootItemCategory(item),
+      category_key: item.category_key,
+      rarity: getLootItemRarity(item),
+      rarity_value: item.rarity_value,
+      attunement: Boolean(item.attunement),
+      source: getLootItemSource(item),
+      description: getLootItemDescription(item),
+    },
+    source_note: item.is_custom ? "Пользовательский предмет." : `Данные: ${getLootItemSource(item)}.`,
+    savedAt: new Date().toISOString(),
+  };
+}
+
+function saveCurrentLootItem() {
+  if (!currentLootItem) {
+    return;
+  }
+
+  const savedLoot = getSavedLoot();
+  savedLoot.unshift(toSavedLootItem(currentLootItem));
+  setSavedLoot(savedLoot.slice(0, 200));
+  closeLootDetail();
+  openPanel("library");
 }
 
 function renderLootResults() {
@@ -2462,6 +2790,96 @@ async function openLootGenerator() {
 function closeLootGenerator() {
   lootModal.classList.add("is-hidden");
   currentLootResults = [];
+}
+
+async function openCreateLootItemModal() {
+  await loadLoot();
+  setupLootListFilters();
+  createLootItemForm?.reset();
+  if (customLootCategoryInput && !customLootCategoryInput.value) {
+    customLootCategoryInput.value = "wondrous-item";
+  }
+  if (customLootRarityInput && !customLootRarityInput.value) {
+    customLootRarityInput.value = "common";
+  }
+  createLootItemModal.classList.remove("is-hidden");
+  createLootItemForm?.querySelector("[data-custom-loot-name]")?.focus();
+}
+
+function closeCreateLootItemModal() {
+  createLootItemModal.classList.add("is-hidden");
+}
+
+function buildCustomLootItem() {
+  const name = createLootItemForm.querySelector("[data-custom-loot-name]").value.trim();
+  const categoryKey = createLootItemForm.querySelector("[data-custom-loot-category]").value || "wondrous-item";
+  const rarityValue = createLootItemForm.querySelector("[data-custom-loot-rarity]").value || "common";
+  const source = createLootItemForm.querySelector("[data-custom-loot-source]").value.trim() || "Домашний предмет";
+  const description = createLootItemForm.querySelector("[data-custom-loot-description]").value.trim();
+
+  return {
+    id: `custom-loot-${crypto.randomUUID()}`,
+    is_custom: true,
+    name,
+    category: capitalize(getMagicCategoryLabel(categoryKey)),
+    category_key: categoryKey,
+    rarity: capitalize(getMagicRarityLabel(rarityValue)),
+    rarity_value: rarityValue,
+    rarity_rank: getMagicRaritySortValue(rarityValue) + 1,
+    description,
+    attunement: Boolean(createLootItemForm.querySelector("[data-custom-loot-attunement]").checked),
+    attunement_requirement: "",
+    weapon: null,
+    armor: null,
+    weight: "0.000",
+    weight_unit: "lb",
+    source,
+    source_display: source,
+    source_key: "custom",
+    publisher: "Домашняя база",
+    license: "Локально сохранённая запись",
+  };
+}
+
+function saveCustomLootItem(event) {
+  event.preventDefault();
+  const item = buildCustomLootItem();
+  if (!item.name) {
+    return;
+  }
+
+  const items = getCustomLootItems();
+  items.unshift(item);
+  setCustomLootItems(items.slice(0, 200));
+  lootItems.unshift(item);
+  lootItemsIndex.unshift(toLootIndexRow(item));
+  lootItemsById.set(item.id, item);
+  lootScope = "custom";
+  document.querySelectorAll("[data-loot-scope]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.lootScope === lootScope);
+  });
+  setupLootCategoryOptions();
+  setupLootListFilters();
+  renderLootList();
+  closeCreateLootItemModal();
+}
+
+function deleteCustomLootItemById(id) {
+  setCustomLootItems(getCustomLootItems().filter((item) => item.id !== id));
+  lootItems = lootItems.filter((item) => item.id !== id);
+  lootItemsIndex = lootItemsIndex.filter((item) => item.id !== id);
+  lootItemsById.delete(id);
+  setupLootCategoryOptions();
+  setupLootListFilters();
+  renderLootList();
+}
+
+function deleteCurrentCustomLootItem() {
+  if (!currentLootItem?.is_custom) {
+    return;
+  }
+  deleteCustomLootItemById(currentLootItem.id);
+  closeLootDetail();
 }
 
 function saveRandomMonsters() {
@@ -2634,6 +3052,11 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  if (button?.dataset.deleteCustomLootId) {
+    deleteCustomLootItemById(button.dataset.deleteCustomLootId);
+    return;
+  }
+
   if (!button && savedMonsterCard) {
     openSavedMonster(savedMonsterCard.dataset.openSavedMonster);
     return;
@@ -2729,6 +3152,10 @@ document.addEventListener("click", (event) => {
     openSpellModal(button.dataset.spellId);
   }
 
+  if (button.dataset.lootItemId) {
+    openLootItemModal(button.dataset.lootItemId);
+  }
+
   if (button.matches("[data-close-monster]")) {
     closeMonsterModal();
   }
@@ -2747,6 +3174,30 @@ document.addEventListener("click", (event) => {
 
   if (button.matches("[data-save-current-spell]")) {
     saveCurrentSpell();
+  }
+
+  if (button.dataset.lootScope) {
+    lootScope = button.dataset.lootScope;
+    document.querySelectorAll("[data-loot-scope]").forEach((scopeButton) => {
+      scopeButton.classList.toggle("active", scopeButton.dataset.lootScope === lootScope);
+    });
+    renderLootList();
+  }
+
+  if (button.matches("[data-open-create-loot-item]")) {
+    openCreateLootItemModal();
+  }
+
+  if (button.matches("[data-close-create-loot-item]")) {
+    closeCreateLootItemModal();
+  }
+
+  if (button.matches("[data-save-current-loot-item]")) {
+    saveCurrentLootItem();
+  }
+
+  if (button.matches("[data-delete-custom-loot-item]")) {
+    deleteCurrentCustomLootItem();
   }
 
   if (button.matches("[data-open-random-monster]")) {
@@ -2842,6 +3293,9 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !createMonsterModal.classList.contains("is-hidden")) {
     closeCreateMonsterModal();
   }
+  if (event.key === "Escape" && !createLootItemModal.classList.contains("is-hidden")) {
+    closeCreateLootItemModal();
+  }
   if (event.key === "Escape" && !potionModal.classList.contains("is-hidden")) {
     closePotionGenerator();
   }
@@ -2870,7 +3324,13 @@ volumeControl.addEventListener("input", (event) => {
   control?.addEventListener("change", renderSpells);
 });
 
+[lootSearch, lootRarityInput, lootListCategoryInput].forEach((control) => {
+  control?.addEventListener("input", renderLootList);
+  control?.addEventListener("change", renderLootList);
+});
+
 createMonsterForm?.addEventListener("submit", saveCustomMonster);
+createLootItemForm?.addEventListener("submit", saveCustomLootItem);
 
 setVolume(state.volume);
 volumeControl.value = String(state.volume);

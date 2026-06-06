@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#2a1710">
   <title>D&D Copilot</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260605-spells">
+  <link rel="stylesheet" href="assets/css/app.css?v=20260606-loot-list">
 </head>
 <body>
   <div class="app-shell">
@@ -24,6 +24,7 @@
         <button class="nav-button" type="button" data-panel="generators">Генераторы</button>
         <button class="nav-button" type="button" data-panel="bestiary">Бестиарий</button>
         <button class="nav-button" type="button" data-panel="spells">Заклинания</button>
+        <button class="nav-button" type="button" data-panel="loot">Предметы</button>
         <button class="nav-button" type="button" data-panel="session">Сессия</button>
         <button class="nav-button" type="button" data-panel="library">Библиотека</button>
         <button class="nav-button" type="button" data-panel="notes">Заметки</button>
@@ -112,6 +113,7 @@
             <span>Монстры</span>
           </button>
           <button class="generator-button" type="button" data-open-loot-generator>Лут</button>
+          <button class="generator-button" type="button" data-panel="loot">Предметы</button>
           <button class="generator-button" type="button">Таверна</button>
           <button class="generator-button" type="button">Случайное событие</button>
           <button class="generator-button" type="button" data-open-potion-generator>
@@ -202,6 +204,46 @@
 
         <div class="bestiary-summary" data-spells-summary>Загрузка заклинаний...</div>
         <div class="bestiary-list spells-list" data-spells-list></div>
+      </section>
+
+      <section class="panel" data-panel-view="loot">
+        <div class="section-heading">
+          <h3>Предметы</h3>
+          <p>Справочник магических предметов из локальной базы. Генератор остаётся для случайной добычи, а здесь можно выбрать предмет вручную, открыть карточку, сохранить её в библиотеку или добавить свой предмет.</p>
+        </div>
+
+        <div class="bestiary-actions">
+          <div class="segmented-control" aria-label="Раздел лута">
+            <button class="active" type="button" data-loot-scope="all">Все предметы</button>
+            <button type="button" data-loot-scope="custom">Мои предметы</button>
+          </div>
+          <div class="bestiary-action-buttons">
+            <button class="primary-action" type="button" data-open-loot-generator>Случайная находка</button>
+            <button type="button" data-open-create-loot-item>Создать предмет</button>
+          </div>
+        </div>
+
+        <div class="bestiary-toolbar loot-list-toolbar">
+          <label class="field">
+            <span>Поиск</span>
+            <input type="search" placeholder="Название предмета" data-loot-search>
+          </label>
+          <label class="field">
+            <span>Редкость</span>
+            <select data-loot-rarity>
+              <option value="">Любая редкость</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Категория</span>
+            <select data-loot-list-category>
+              <option value="">Любая категория</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="bestiary-summary" data-loot-summary>Загрузка лута...</div>
+        <div class="bestiary-list loot-list" data-loot-list></div>
       </section>
 
       <section class="panel" data-panel-view="session">
@@ -466,6 +508,52 @@
     </section>
   </div>
 
+  <div class="modal-backdrop is-hidden" data-create-loot-item-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="create-loot-item-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-create-loot-item aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Homebrew item</p>
+        <h2 id="create-loot-item-title">Создать предмет</h2>
+      </div>
+
+      <form class="custom-monster-form custom-loot-form" data-create-loot-item-form>
+        <label class="field field-wide">
+          <span>Название</span>
+          <input type="text" maxlength="100" required data-custom-loot-name>
+        </label>
+        <label class="field">
+          <span>Категория</span>
+          <select data-custom-loot-category>
+            <option value="wondrous-item">чудесный предмет</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Редкость</span>
+          <select data-custom-loot-rarity>
+            <option value="common">обычная</option>
+          </select>
+        </label>
+        <label class="checkbox-row">
+          <input type="checkbox" data-custom-loot-attunement>
+          <span>Требуется настройка</span>
+        </label>
+        <label class="field field-wide">
+          <span>Источник</span>
+          <input type="text" maxlength="80" placeholder="Например: Домашняя кампания" data-custom-loot-source>
+        </label>
+        <label class="field field-wide">
+          <span>Описание</span>
+          <textarea rows="7" placeholder="Свойства предмета, внешний вид, ограничения и эффекты" data-custom-loot-description></textarea>
+        </label>
+
+        <div class="modal-actions">
+          <button class="primary-action" type="submit">Сохранить предмет</button>
+          <button type="button" data-close-create-loot-item>Закрыть</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
   <div class="modal-backdrop is-hidden" data-potion-modal>
     <section class="tool-modal monster-modal" aria-labelledby="potion-modal-title" role="dialog" aria-modal="true">
       <button class="modal-close" type="button" data-close-potion-generator aria-label="Закрыть">×</button>
@@ -577,6 +665,8 @@
       </div>
       <div class="monster-detail" data-loot-detail></div>
       <div class="modal-actions monster-actions">
+        <button type="button" class="is-hidden" data-save-current-loot-item>Сохранить в библиотеку</button>
+        <button type="button" class="danger-action is-hidden" data-delete-custom-loot-item>Удалить свой предмет</button>
         <button type="button" data-close-loot-detail>Закрыть</button>
       </div>
     </section>
@@ -595,6 +685,6 @@
 
   <audio data-music loop preload="auto"></audio>
   <audio data-click-sound src="sound/click.mp3" preload="auto"></audio>
-  <script src="assets/js/app.js?v=20260605-spells"></script>
+  <script src="assets/js/app.js?v=20260606-loot-list"></script>
 </body>
 </html>

@@ -742,6 +742,10 @@ input[type="range"] {
   grid-template-columns: minmax(220px, 1.5fr) minmax(110px, 0.7fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr);
 }
 
+.loot-list-toolbar {
+  grid-template-columns: minmax(240px, 1.4fr) minmax(150px, 0.7fr) minmax(180px, 0.9fr);
+}
+
 .bestiary-summary {
   margin: 10px 0 14px;
   color: var(--muted);
@@ -802,7 +806,8 @@ input[type="range"] {
 }
 
 .spell-card small,
-.spell-library-card small {
+.spell-library-card small,
+.loot-item-card small {
   display: -webkit-box;
   overflow: hidden;
   -webkit-line-clamp: 3;
