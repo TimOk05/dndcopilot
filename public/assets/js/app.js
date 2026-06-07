@@ -23,10 +23,7 @@ const panelTitles = {
   bestiary: "Бестиарий",
   spells: "Заклинания",
   loot: "Предметы",
-  session: "Сессия",
   library: "Библиотека",
-  notes: "Заметки",
-  assistant: "AI помощник",
 };
 
 const memoryStorage = new Map();
@@ -76,6 +73,7 @@ const diceTotal = document.querySelector("[data-dice-total]");
 const diceBreakdown = document.querySelector("[data-dice-breakdown]");
 const notesTotal = document.querySelector(".status-block:nth-child(2) strong");
 const libraryPanel = document.querySelector('[data-panel-view="library"]');
+const libraryFilters = document.querySelectorAll("[data-library-filter]");
 const bestiarySearch = document.querySelector("[data-bestiary-search]");
 const bestiaryType = document.querySelector("[data-bestiary-type]");
 const bestiaryCr = document.querySelector("[data-bestiary-cr]");
@@ -126,16 +124,28 @@ const potionDetailName = document.querySelector("[data-potion-detail-name]");
 const potionDetail = document.querySelector("[data-potion-detail]");
 const lootModal = document.querySelector("[data-loot-modal]");
 const lootTierInput = document.querySelector("[data-loot-tier]");
-const lootFindTypeInput = document.querySelector("[data-loot-find-type]");
 const lootCategoryInput = document.querySelector("[data-loot-category]");
 const lootCountInput = document.querySelector("[data-loot-count]");
 const lootResults = document.querySelector("[data-loot-results]");
 const saveLootButton = document.querySelector("[data-save-loot]");
+const randomLootItemModal = document.querySelector("[data-random-loot-item-modal]");
+const randomLootRarityInput = document.querySelector("[data-random-loot-rarity]");
+const randomLootCategoryInput = document.querySelector("[data-random-loot-category]");
+const randomLootCountInput = document.querySelector("[data-random-loot-count]");
+const randomLootResults = document.querySelector("[data-random-loot-results]");
+const saveRandomLootButton = document.querySelector("[data-save-random-loot-item]");
 const lootDetailModal = document.querySelector("[data-loot-detail-modal]");
 const lootDetailName = document.querySelector("[data-loot-detail-name]");
 const lootDetail = document.querySelector("[data-loot-detail]");
 const saveCurrentLootItemButton = document.querySelector("[data-save-current-loot-item]");
 const deleteCustomLootItemButton = document.querySelector("[data-delete-custom-loot-item]");
+const noteModal = document.querySelector("[data-note-modal]");
+const noteForm = document.querySelector("[data-note-form]");
+const noteModalTitle = document.querySelector("[data-note-modal-title]");
+const noteIdInput = document.querySelector("[data-note-id]");
+const noteTitleInput = document.querySelector("[data-note-title]");
+const noteBodyInput = document.querySelector("[data-note-body]");
+const deleteNoteButton = document.querySelector("[data-delete-note]");
 
 let lastDiceRoll = null;
 let bestiaryIndex = [];
@@ -161,7 +171,21 @@ let lootItemsById = new Map();
 let lootLocaleById = new Map();
 let currentLootResults = [];
 let currentLootItem = null;
+let lootGeneratorMode = "reward";
 let lootScope = "all";
+let libraryFilter = "all";
+const LIBRARY_SECTION_TITLES = {
+  characters: "Мои персонажи",
+  rolls: "Мои броски",
+  creatures: "Мои существа",
+  rewards: "Мои награды",
+  taverns: "Мои таверны",
+  events: "Мои события",
+  potions: "Мои зелья",
+  spells: "Мои заклинания",
+  items: "Мои предметы",
+  notes: "Мои заметки",
+};
 const DICE_LABEL_LIMIT = 48;
 const CR_GROUPS = [
   { value: "0-0.125", label: "CR 0-1/8", min: 0, max: 0.125 },
@@ -342,6 +366,9 @@ function openPanel(panel) {
   }
   if (panel === "loot") {
     loadLoot();
+  }
+  if (panel === "library") {
+    applyLibraryFilter();
   }
 }
 
@@ -912,6 +939,7 @@ async function openSavedSpell(id) {
 
 async function loadPotions() {
   if (potions.length) {
+    setupPotionRarityOptions();
     return;
   }
 
@@ -982,17 +1010,23 @@ function setupLootTierOptions() {
 }
 
 function setupLootCategoryOptions() {
-  if (!lootCategoryInput) {
+  if (!lootCategoryInput && !randomLootCategoryInput) {
     return;
   }
 
   const categories = [...new Set(lootItemsIndex.map((item) => getLootDisplayCategoryKey(item.category_key)).filter(Boolean))]
     .sort((left, right) => getMagicCategoryLabel(left).localeCompare(getMagicCategoryLabel(right), "ru"));
 
-  lootCategoryInput.innerHTML = `
+  const options = `
     <option value="">Любая</option>
     ${categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(getMagicCategoryLabel(category))}</option>`).join("")}
   `;
+  if (lootCategoryInput) {
+    lootCategoryInput.innerHTML = options;
+  }
+  if (randomLootCategoryInput) {
+    randomLootCategoryInput.innerHTML = options;
+  }
 }
 
 function toLootIndexRow(item) {
@@ -1041,6 +1075,12 @@ function setupLootListFilters() {
       .filter((rarity) => rarity !== "artifact")
       .map((rarity) => `<option value="${escapeHtml(rarity)}">${escapeHtml(getMagicRarityLabel(rarity))}</option>`)
       .join("");
+  }
+  if (randomLootRarityInput) {
+    randomLootRarityInput.innerHTML = `
+      <option value="">Любая редкость</option>
+      ${rarities.map((rarity) => `<option value="${escapeHtml(rarity)}">${escapeHtml(getMagicRarityLabel(rarity))}</option>`).join("")}
+    `;
   }
 }
 
@@ -1351,12 +1391,99 @@ function setSavedLoot(savedLoot) {
   renderLibraryLoot();
 }
 
+function getSavedNotes() {
+  try {
+    return JSON.parse(storage.get("dnd-library-notes", "[]"));
+  } catch {
+    return [];
+  }
+}
+
+function setSavedNotes(savedNotes) {
+  storage.set("dnd-library-notes", JSON.stringify(savedNotes));
+  updateSavedRollsCount();
+  renderLibraryNotes();
+}
+
 function updateSavedRollsCount() {
   if (!notesTotal) {
     return;
   }
-  const count = getSavedRolls().length + getSavedMonsters().length + getSavedPotions().length + getSavedSpells().length + getSavedLoot().length;
+  const count = getSavedRolls().length + getSavedMonsters().length + getSavedPotions().length + getSavedSpells().length + getSavedLoot().length + getSavedNotes().length;
   notesTotal.textContent = `${count} сохранено`;
+}
+
+function getLibrarySection(selector, category) {
+  if (!libraryPanel) {
+    return null;
+  }
+
+  let section = libraryPanel.querySelector(selector);
+  if (!section) {
+    section = document.createElement("div");
+    section.className = "saved-rolls";
+    libraryPanel.appendChild(section);
+  }
+  section.dataset.librarySection = "";
+  section.dataset.libraryCategory = category;
+  return section;
+}
+
+function applyLibraryFilter() {
+  if (!libraryPanel) {
+    return;
+  }
+
+  libraryFilters.forEach((button) => {
+    button.classList.toggle("active", button.dataset.libraryFilter === libraryFilter);
+  });
+  libraryPanel.querySelectorAll("[data-library-section]").forEach((section) => {
+    const isVisible = libraryFilter === "all" || section.dataset.libraryCategory === libraryFilter;
+    section.classList.toggle("is-hidden", !isVisible);
+  });
+}
+
+function renderLibrarySectionHeader(category, { withNoteAction = false } = {}) {
+  const title = LIBRARY_SECTION_TITLES[category] || "Мои записи";
+  const action = withNoteAction
+    ? `<button class="library-add-button" type="button" data-open-note-editor title="Новая заметка" aria-label="Новая заметка">+</button>`
+    : "";
+  return `
+    <div class="library-action-row">
+      <h4>${escapeHtml(title)}</h4>
+      ${action}
+    </div>
+  `;
+}
+
+function renderLibraryEmptySection(selector, category, title, text) {
+  const section = getLibrarySection(selector, category);
+  if (!section) {
+    return;
+  }
+  section.dataset[selector.replace(/^\[data-|\]$/g, "").replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())] = "";
+  section.innerHTML = `
+    ${renderLibrarySectionHeader(category)}
+    <div class="library-empty">
+      <strong>${escapeHtml(title)}</strong>
+      <span>${escapeHtml(text)}</span>
+    </div>
+  `;
+  applyLibraryFilter();
+}
+
+function renderLibraryPlaceholders() {
+  renderLibraryEmptySection("[data-saved-characters]", "characters", "Сохранённых персонажей пока нет", "Когда появится генератор персонажей, его результаты будут здесь.");
+  renderLibraryEmptySection("[data-saved-taverns]", "taverns", "Сохранённых таверн пока нет", "Сохрани таверну после генерации, и она появится здесь.");
+  renderLibraryEmptySection("[data-saved-events]", "events", "Сохранённых событий пока нет", "Сохрани случайное событие, и оно появится здесь.");
+}
+
+function isSavedLibraryItem(entry) {
+  return entry.libraryType === "item" || entry.tierId === "random-item" || entry.tierLabel === "выбрано мастером" || Boolean(entry.source_id);
+}
+
+function isSavedLibraryReward(entry) {
+  return !isSavedLibraryItem(entry);
 }
 
 function renderLibraryRolls() {
@@ -1364,27 +1491,24 @@ function renderLibraryRolls() {
     return;
   }
 
-  let list = libraryPanel.querySelector("[data-saved-rolls]");
-  if (!list) {
-    list = document.createElement("div");
-    list.className = "saved-rolls";
-    list.dataset.savedRolls = "";
-    libraryPanel.appendChild(list);
-  }
+  const list = getLibrarySection("[data-saved-rolls]", "rolls");
+  list.dataset.savedRolls = "";
 
   const rolls = getSavedRolls();
   if (!rolls.length) {
     list.innerHTML = `
+      ${renderLibrarySectionHeader("rolls")}
       <div class="library-empty">
         <strong>Сохранённых бросков пока нет</strong>
         <span>Сохрани понравившийся результат после броска, и он появится здесь.</span>
       </div>
     `;
+    applyLibraryFilter();
     return;
   }
 
   list.innerHTML = `
-    <h4>Сохранённые броски</h4>
+    ${renderLibrarySectionHeader("rolls")}
     <div class="saved-roll-grid">
       ${rolls
         .map((roll) => {
@@ -1408,6 +1532,7 @@ function renderLibraryRolls() {
         .join("")}
     </div>
   `;
+  applyLibraryFilter();
 }
 
 function renderLibraryMonsters() {
@@ -1415,27 +1540,24 @@ function renderLibraryMonsters() {
     return;
   }
 
-  let list = libraryPanel.querySelector("[data-saved-monsters]");
-  if (!list) {
-    list = document.createElement("div");
-    list.className = "saved-rolls";
-    list.dataset.savedMonsters = "";
-    libraryPanel.appendChild(list);
-  }
+  const list = getLibrarySection("[data-saved-monsters]", "creatures");
+  list.dataset.savedMonsters = "";
 
   const monsters = getSavedMonsters();
   if (!monsters.length) {
     list.innerHTML = `
+      ${renderLibrarySectionHeader("creatures")}
       <div class="library-empty">
         <strong>Сохранённых существ пока нет</strong>
         <span>Сохрани существо из Бестиария или из случайной генерации, и оно появится здесь.</span>
       </div>
     `;
+    applyLibraryFilter();
     return;
   }
 
   list.innerHTML = `
-    <h4>Сохранённые существа</h4>
+    ${renderLibrarySectionHeader("creatures")}
     <div class="saved-monster-grid">
       ${monsters
         .map((entry) => `
@@ -1449,6 +1571,7 @@ function renderLibraryMonsters() {
         .join("")}
     </div>
   `;
+  applyLibraryFilter();
 }
 
 function renderLibraryPotions() {
@@ -1456,27 +1579,24 @@ function renderLibraryPotions() {
     return;
   }
 
-  let list = libraryPanel.querySelector("[data-saved-potions]");
-  if (!list) {
-    list = document.createElement("div");
-    list.className = "saved-rolls";
-    list.dataset.savedPotions = "";
-    libraryPanel.appendChild(list);
-  }
+  const list = getLibrarySection("[data-saved-potions]", "potions");
+  list.dataset.savedPotions = "";
 
   const savedPotions = getSavedPotions();
   if (!savedPotions.length) {
     list.innerHTML = `
+      ${renderLibrarySectionHeader("potions")}
       <div class="library-empty">
         <strong>Сохранённых зелий пока нет</strong>
         <span>Сгенерируй зелья и сохрани результат, чтобы они появились здесь.</span>
       </div>
     `;
+    applyLibraryFilter();
     return;
   }
 
   list.innerHTML = `
-    <h4>Сохранённые зелья</h4>
+    ${renderLibrarySectionHeader("potions")}
     <div class="saved-monster-grid">
       ${savedPotions
         .map((entry) => `
@@ -1491,6 +1611,7 @@ function renderLibraryPotions() {
         .join("")}
     </div>
   `;
+  applyLibraryFilter();
 }
 
 function renderLibrarySpells() {
@@ -1498,27 +1619,24 @@ function renderLibrarySpells() {
     return;
   }
 
-  let list = libraryPanel.querySelector("[data-saved-spells]");
-  if (!list) {
-    list = document.createElement("div");
-    list.className = "saved-rolls";
-    list.dataset.savedSpells = "";
-    libraryPanel.appendChild(list);
-  }
+  const list = getLibrarySection("[data-saved-spells]", "spells");
+  list.dataset.savedSpells = "";
 
   const savedSpells = getSavedSpells();
   if (!savedSpells.length) {
     list.innerHTML = `
+      ${renderLibrarySectionHeader("spells")}
       <div class="library-empty">
         <strong>Сохранённых заклинаний пока нет</strong>
         <span>Сохрани заклинание из списка, и оно появится здесь.</span>
       </div>
     `;
+    applyLibraryFilter();
     return;
   }
 
   list.innerHTML = `
-    <h4>Сохранённые заклинания</h4>
+    ${renderLibrarySectionHeader("spells")}
     <div class="saved-monster-grid">
       ${savedSpells
         .map((entry) => `
@@ -1533,34 +1651,35 @@ function renderLibrarySpells() {
         .join("")}
     </div>
   `;
+  applyLibraryFilter();
 }
 
-function renderLibraryLoot() {
+function renderSavedLootSection(selector, category, title, emptyTitle, emptyText, savedLoot) {
   if (!libraryPanel) {
     return;
   }
 
-  let list = libraryPanel.querySelector("[data-saved-loot]");
-  if (!list) {
-    list = document.createElement("div");
-    list.className = "saved-rolls";
-    list.dataset.savedLoot = "";
-    libraryPanel.appendChild(list);
+  const list = getLibrarySection(selector, category);
+  if (selector === "[data-saved-loot-rewards]") {
+    list.dataset.savedLootRewards = "";
   }
-
-  const savedLoot = getSavedLoot();
+  if (selector === "[data-saved-loot-items]") {
+    list.dataset.savedLootItems = "";
+  }
   if (!savedLoot.length) {
     list.innerHTML = `
+      ${renderLibrarySectionHeader(category)}
       <div class="library-empty">
-        <strong>Сохранённого лута пока нет</strong>
-        <span>Сгенерируй находку, чтобы карточка появилась здесь.</span>
+        <strong>${escapeHtml(emptyTitle)}</strong>
+        <span>${escapeHtml(emptyText)}</span>
       </div>
     `;
+    applyLibraryFilter();
     return;
   }
 
   list.innerHTML = `
-    <h4>Сохранённый лут</h4>
+    ${renderLibrarySectionHeader(category)}
     <div class="saved-monster-grid">
       ${savedLoot
         .map((entry) => `
@@ -1575,6 +1694,130 @@ function renderLibraryLoot() {
         .join("")}
     </div>
   `;
+  applyLibraryFilter();
+}
+
+function renderLibraryLoot() {
+  const savedLoot = getSavedLoot();
+  renderSavedLootSection(
+    "[data-saved-loot-rewards]",
+    "rewards",
+    "Мои награды",
+    "Сохранённых наград пока нет",
+    "Сгенерируй награду и сохрани результат, чтобы карточка появилась здесь.",
+    savedLoot.filter(isSavedLibraryReward)
+  );
+  renderSavedLootSection(
+    "[data-saved-loot-items]",
+    "items",
+    "Мои предметы",
+    "Сохранённых предметов пока нет",
+    "Сохрани предмет из списка или случайной находки, и он появится здесь.",
+    savedLoot.filter(isSavedLibraryItem)
+  );
+}
+
+function formatLibraryDate(value) {
+  if (!value) {
+    return "без даты";
+  }
+  return new Date(value).toLocaleString("ru-RU", {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function renderLibraryNotes() {
+  if (!libraryPanel) {
+    return;
+  }
+
+  const list = getLibrarySection("[data-saved-notes]", "notes");
+  list.dataset.savedNotes = "";
+  const notes = getSavedNotes();
+  const header = renderLibrarySectionHeader("notes", { withNoteAction: true });
+
+  if (!notes.length) {
+    list.innerHTML = `
+      ${header}
+      <div class="library-empty">
+        <strong>Заметок пока нет</strong>
+        <span>Сохрани идею, сцену, NPC или напоминание, и заметка появится здесь.</span>
+      </div>
+    `;
+    applyLibraryFilter();
+    return;
+  }
+
+  list.innerHTML = `
+    ${header}
+    <div class="saved-monster-grid">
+      ${notes
+        .map((note) => `
+          <article class="saved-monster-card note-library-card" data-open-saved-note="${escapeHtml(note.id)}" tabindex="0" role="button">
+            <button class="card-remove" type="button" data-delete-saved-note="${escapeHtml(note.id)}" aria-label="Удалить заметку">×</button>
+            <span>${escapeHtml(formatLibraryDate(note.updatedAt || note.createdAt))}</span>
+            <strong>${escapeHtml(note.title || "Без названия")}</strong>
+            <small class="note-description">${escapeHtml(getPlainTextExcerpt(note.body || ""))}</small>
+          </article>
+        `)
+        .join("")}
+    </div>
+  `;
+  applyLibraryFilter();
+}
+
+function openNoteEditor(noteId = "") {
+  const note = getSavedNotes().find((entry) => entry.id === noteId);
+  noteModalTitle.textContent = note ? "Редактировать заметку" : "Новая заметка";
+  noteIdInput.value = note?.id || "";
+  noteTitleInput.value = note?.title || "";
+  noteBodyInput.value = note?.body || "";
+  deleteNoteButton.classList.toggle("is-hidden", !note);
+  noteModal.classList.remove("is-hidden");
+  noteTitleInput.focus();
+}
+
+function closeNoteEditor() {
+  noteModal.classList.add("is-hidden");
+  noteForm.reset();
+  noteIdInput.value = "";
+  deleteNoteButton.classList.add("is-hidden");
+}
+
+function saveLibraryNote(event) {
+  event.preventDefault();
+  const now = new Date().toISOString();
+  const id = noteIdInput.value || `note-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const title = noteTitleInput.value.trim() || "Без названия";
+  const body = noteBodyInput.value.trim();
+  if (!body && title === "Без названия") {
+    return;
+  }
+
+  const notes = getSavedNotes();
+  const existing = notes.find((entry) => entry.id === id);
+  const savedNote = {
+    id,
+    title,
+    body,
+    createdAt: existing?.createdAt || now,
+    updatedAt: now,
+  };
+  const nextNotes = [savedNote, ...notes.filter((entry) => entry.id !== id)];
+  setSavedNotes(nextNotes.slice(0, 300));
+  libraryFilter = "notes";
+  applyLibraryFilter();
+  closeNoteEditor();
+}
+
+function deleteLibraryNote(noteId) {
+  if (!noteId) {
+    return;
+  }
+  setSavedNotes(getSavedNotes().filter((note) => note.id !== noteId));
 }
 
 function isDiceButton(button) {
@@ -2386,17 +2629,22 @@ function rollSingleValuable(tier) {
   };
 }
 
-function getMagicItemPool(rarityValue = "") {
-  const category = lootCategoryInput.value;
+function matchesLootRarity(item, rarityValue = "") {
+  if (!rarityValue) {
+    return true;
+  }
+  return item.rarity_value === rarityValue || getLootDisplayRarityValue(item.rarity_value) === rarityValue;
+}
+
+function getMagicItemPool(rarityValue = "", category = lootCategoryInput?.value || "") {
   return lootItemsIndex
-    .filter((item) => !rarityValue || item.rarity_value === rarityValue)
+    .filter((item) => matchesLootRarity(item, rarityValue))
     .filter((item) => matchesLootCategory(item.category_key, category))
     .map((item) => lootItemsById.get(item.id))
     .filter(Boolean);
 }
 
-function getFallbackMagicItemPool(rarityValue = "") {
-  const category = lootCategoryInput.value;
+function getFallbackMagicItemPool(rarityValue = "", category = lootCategoryInput?.value || "") {
   if (category) {
     const categoryPool = lootItemsIndex
       .filter((item) => matchesLootCategory(item.category_key, category))
@@ -2408,16 +2656,12 @@ function getFallbackMagicItemPool(rarityValue = "") {
   }
 
   return lootItemsIndex
-    .filter((item) => !rarityValue || item.rarity_value === rarityValue)
+    .filter((item) => matchesLootRarity(item, rarityValue))
     .map((item) => lootItemsById.get(item.id))
     .filter(Boolean);
 }
 
-function pickMagicItem(magicTable) {
-  const rarityValue = pickWeighted(magicTable?.rarities);
-  const strictPool = getMagicItemPool(rarityValue);
-  const fallbackPool = strictPool.length ? strictPool : getFallbackMagicItemPool(rarityValue);
-  const item = pickFrom(fallbackPool);
+function toMagicLootItem(item) {
   if (!item) {
     return null;
   }
@@ -2435,15 +2679,23 @@ function pickMagicItem(magicTable) {
   };
 }
 
-function getLootFindType() {
-  const selectedCategory = lootCategoryInput.value;
-  const selectedType = lootFindTypeInput?.value || "mixed";
+function pickMagicItem(magicTable) {
+  const rarityValue = pickWeighted(magicTable?.rarities);
+  const strictPool = getMagicItemPool(rarityValue);
+  const fallbackPool = strictPool.length ? strictPool : getFallbackMagicItemPool(rarityValue);
+  return toMagicLootItem(pickFrom(fallbackPool));
+}
 
-  if (selectedCategory || selectedType === "magic") {
+function pickRandomLootItem() {
+  const rarity = randomLootRarityInput?.value || "";
+  const category = randomLootCategoryInput?.value || "";
+  return toMagicLootItem(pickFrom(getMagicItemPool(rarity, category)));
+}
+
+function getLootFindType() {
+  const selectedCategory = lootCategoryInput?.value || "";
+  if (selectedCategory) {
     return "magic";
-  }
-  if (selectedType !== "mixed") {
-    return selectedType;
   }
 
   const weights = {
@@ -2458,6 +2710,7 @@ function getLootFindType() {
 function baseLootFind(tier, findType, title) {
   return {
     id: crypto.randomUUID(),
+    libraryType: "reward",
     title,
     findType,
     tierId: tier.id,
@@ -2517,7 +2770,33 @@ function buildMagicFind(tier) {
   };
 }
 
+function buildRandomLootItemFind() {
+  const item = pickRandomLootItem();
+  if (!item) {
+    return null;
+  }
+
+  return {
+    id: crypto.randomUUID(),
+    libraryType: "item",
+    title: item.name,
+    findType: "magic",
+    tierId: "random-item",
+    tierLabel: "По редкости",
+    tone: "",
+    total_gp: 0,
+    typeLabel: item.category,
+    magic_item: item,
+    source_note: `Данные: ${item.source}.`,
+    savedAt: new Date().toISOString(),
+  };
+}
+
 function buildLootCard() {
+  if (lootGeneratorMode === "item") {
+    return buildRandomLootItemFind();
+  }
+
   const tier = getLootTier();
   const findType = getLootFindType();
   const builders = {
@@ -2683,6 +2962,7 @@ function openSavedLoot(id) {
 function toSavedLootItem(item) {
   return {
     id: crypto.randomUUID(),
+    libraryType: "item",
     source_id: item.id,
     title: getLootItemName(item),
     typeLabel: "магический предмет",
@@ -2717,14 +2997,27 @@ function saveCurrentLootItem() {
   openPanel("library");
 }
 
+function getActiveLootUi() {
+  const isItemMode = lootGeneratorMode === "item";
+  return {
+    results: isItemMode ? randomLootResults : lootResults,
+    saveButton: isItemMode ? saveRandomLootButton : saveLootButton,
+  };
+}
+
 function renderLootResults() {
-  if (!currentLootResults.length) {
-    lootResults.innerHTML = "";
-    saveLootButton.disabled = true;
+  const { results, saveButton } = getActiveLootUi();
+  if (!results || !saveButton) {
     return;
   }
 
-  lootResults.innerHTML = currentLootResults
+  if (!currentLootResults.length) {
+    results.innerHTML = "";
+    saveButton.disabled = true;
+    return;
+  }
+
+  results.innerHTML = currentLootResults
     .map((loot, index) => `
       <article class="random-monster-card potion-result-card loot-result-card" data-open-loot-result="${escapeHtml(loot.id)}" tabindex="0" role="button">
         <button class="card-remove" type="button" data-delete-loot-result="${escapeHtml(loot.id)}" aria-label="Убрать лут">×</button>
@@ -2735,13 +3028,23 @@ function renderLootResults() {
       </article>
     `)
     .join("");
-  saveLootButton.disabled = false;
+  saveButton.disabled = false;
 }
 
 function generateLoot() {
-  const count = Math.min(Math.max(Number(lootCountInput.value) || 1, 1), 8);
-  lootCountInput.value = String(count);
-  currentLootResults.push(...Array.from({ length: count }, buildLootCard));
+  const countInput = lootGeneratorMode === "item" ? randomLootCountInput : lootCountInput;
+  const count = Math.min(Math.max(Number(countInput?.value) || 1, 1), 8);
+  if (countInput) {
+    countInput.value = String(count);
+  }
+  const results = Array.from({ length: count }, buildLootCard).filter(Boolean);
+  if (!results.length && lootGeneratorMode === "item") {
+    const ui = getActiveLootUi();
+    ui.results.innerHTML = `<div class="library-empty"><strong>Подходящих предметов нет</strong><span>Измени редкость или категорию.</span></div>`;
+    ui.saveButton.disabled = !currentLootResults.length;
+    return;
+  }
+  currentLootResults.push(...results);
   renderLootResults();
 }
 
@@ -2764,11 +3067,12 @@ function saveGeneratedLoot() {
     });
   });
   setSavedLoot(savedLoot.slice(0, 200));
-  closeLootGenerator();
+  closeActiveLootGenerator();
   openPanel("library");
 }
 
 async function openLootGenerator() {
+  lootGeneratorMode = "reward";
   try {
     await loadLoot();
     currentLootResults = [];
@@ -2782,9 +3086,37 @@ async function openLootGenerator() {
   }
 }
 
+async function openRandomLootItemGenerator() {
+  lootGeneratorMode = "item";
+  try {
+    await loadLoot();
+    currentLootResults = [];
+    randomLootResults.innerHTML = "";
+    saveRandomLootButton.disabled = true;
+    randomLootItemModal.classList.remove("is-hidden");
+  } catch (error) {
+    randomLootItemModal.classList.remove("is-hidden");
+    randomLootResults.innerHTML = `<div class="library-empty"><strong>Ошибка загрузки</strong><span>${escapeHtml(error.message)}</span></div>`;
+    saveRandomLootButton.disabled = true;
+  }
+}
+
 function closeLootGenerator() {
   lootModal.classList.add("is-hidden");
   currentLootResults = [];
+}
+
+function closeRandomLootItemGenerator() {
+  randomLootItemModal.classList.add("is-hidden");
+  currentLootResults = [];
+}
+
+function closeActiveLootGenerator() {
+  if (lootGeneratorMode === "item") {
+    closeRandomLootItemGenerator();
+    return;
+  }
+  closeLootGenerator();
 }
 
 async function openCreateLootItemModal() {
@@ -3014,13 +3346,20 @@ document.addEventListener("click", (event) => {
   const savedPotionCard = event.target.closest("[data-open-saved-potion]");
   const savedSpellCard = event.target.closest("[data-open-saved-spell]");
   const savedLootCard = event.target.closest("[data-open-saved-loot]");
+  const savedNoteCard = event.target.closest("[data-open-saved-note]");
   const potionResultCard = event.target.closest("[data-open-potion-result]");
   const lootResultCard = event.target.closest("[data-open-loot-result]");
-  if (!button && !savedMonsterCard && !savedPotionCard && !savedSpellCard && !savedLootCard && !potionResultCard && !lootResultCard) {
+  if (!button && !savedMonsterCard && !savedPotionCard && !savedSpellCard && !savedLootCard && !savedNoteCard && !potionResultCard && !lootResultCard) {
     return;
   }
 
   playClick();
+
+  if (button?.dataset.libraryFilter) {
+    libraryFilter = button.dataset.libraryFilter;
+    applyLibraryFilter();
+    return;
+  }
 
   if (button?.dataset.deleteSavedMonster) {
     deleteSavedMonster(button.dataset.deleteSavedMonster);
@@ -3039,6 +3378,11 @@ document.addEventListener("click", (event) => {
 
   if (button?.dataset.deleteSavedLoot) {
     setSavedLoot(getSavedLoot().filter((loot) => loot.id !== button.dataset.deleteSavedLoot));
+    return;
+  }
+
+  if (button?.dataset.deleteSavedNote) {
+    deleteLibraryNote(button.dataset.deleteSavedNote);
     return;
   }
 
@@ -3069,6 +3413,11 @@ document.addEventListener("click", (event) => {
 
   if (!button && savedLootCard) {
     openSavedLoot(savedLootCard.dataset.openSavedLoot);
+    return;
+  }
+
+  if (!button && savedNoteCard) {
+    openNoteEditor(savedNoteCard.dataset.openSavedNote);
     return;
   }
 
@@ -3125,6 +3474,21 @@ document.addEventListener("click", (event) => {
 
   if (button.matches("[data-save-dice]")) {
     saveDiceRoll();
+  }
+
+  if (button.matches("[data-open-note-editor]")) {
+    libraryFilter = "notes";
+    openPanel("library");
+    openNoteEditor();
+  }
+
+  if (button.matches("[data-close-note]")) {
+    closeNoteEditor();
+  }
+
+  if (button.matches("[data-delete-note]")) {
+    deleteLibraryNote(noteIdInput.value);
+    closeNoteEditor();
   }
 
   if (button.dataset.deleteRoll) {
@@ -3251,8 +3615,16 @@ document.addEventListener("click", (event) => {
     openLootGenerator();
   }
 
+  if (button.matches("[data-open-random-loot-item]")) {
+    openRandomLootItemGenerator();
+  }
+
   if (button.matches("[data-close-loot-generator]")) {
     closeLootGenerator();
+  }
+
+  if (button.matches("[data-close-random-loot-item]")) {
+    closeRandomLootItemGenerator();
   }
 
   if (button.matches("[data-close-loot-detail]")) {
@@ -3260,6 +3632,12 @@ document.addEventListener("click", (event) => {
   }
 
   if (button.matches("[data-generate-loot]")) {
+    lootGeneratorMode = "reward";
+    generateLoot();
+  }
+
+  if (button.matches("[data-generate-random-loot-item]")) {
+    lootGeneratorMode = "item";
     generateLoot();
   }
 
@@ -3268,6 +3646,12 @@ document.addEventListener("click", (event) => {
   }
 
   if (button.matches("[data-save-loot]")) {
+    lootGeneratorMode = "reward";
+    saveGeneratedLoot();
+  }
+
+  if (button.matches("[data-save-random-loot-item]")) {
+    lootGeneratorMode = "item";
     saveGeneratedLoot();
   }
 });
@@ -3300,8 +3684,14 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !lootModal.classList.contains("is-hidden")) {
     closeLootGenerator();
   }
+  if (event.key === "Escape" && !randomLootItemModal.classList.contains("is-hidden")) {
+    closeRandomLootItemGenerator();
+  }
   if (event.key === "Escape" && !lootDetailModal.classList.contains("is-hidden")) {
     closeLootDetail();
+  }
+  if (event.key === "Escape" && !noteModal.classList.contains("is-hidden")) {
+    closeNoteEditor();
   }
 });
 
@@ -3326,17 +3716,20 @@ volumeControl.addEventListener("input", (event) => {
 
 createMonsterForm?.addEventListener("submit", saveCustomMonster);
 createLootItemForm?.addEventListener("submit", saveCustomLootItem);
+noteForm?.addEventListener("submit", saveLibraryNote);
 
 setVolume(state.volume);
 volumeControl.value = String(state.volume);
 setTheme(state.theme);
 updateSoundButton();
 updateSavedRollsCount();
+renderLibraryPlaceholders();
 renderLibraryRolls();
 renderLibraryMonsters();
 renderLibraryPotions();
 renderLibrarySpells();
 renderLibraryLoot();
+renderLibraryNotes();
 
 if (state.soundEnabled) {
   music.play().then(hideAudioGate).catch(showAudioGate);

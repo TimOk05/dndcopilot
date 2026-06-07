@@ -332,6 +332,16 @@ input[type="range"] {
   margin-top: 18px;
 }
 
+.assistant-home {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.assistant-home button {
+  justify-self: start;
+}
+
 .feature-button,
 .button-board button {
   min-height: 86px;
@@ -950,9 +960,77 @@ input[type="range"] {
   line-height: 1.45;
 }
 
+.library-menu {
+  display: flex;
+  gap: 8px;
+  margin: 18px 0 24px;
+  padding-bottom: 4px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.library-filter {
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 8px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--ink);
+  background: var(--panel);
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.library-filter:hover,
+.library-filter.active {
+  color: #241306;
+  border-color: color-mix(in srgb, var(--accent), white 18%);
+  background: linear-gradient(180deg, #ffe0a8, var(--accent));
+}
+
+.library-home-filter {
+  width: 42px;
+  padding: 8px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
 .saved-rolls h4 {
   margin: 0 0 12px;
   font-size: 20px;
+}
+
+.library-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin: 0 0 12px;
+}
+
+.library-action-row h4 {
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.library-add-button {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  min-height: 0;
+  padding: 0;
+  color: #130b06;
+  border-color: transparent;
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, #fff0bd, var(--accent));
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
 }
 
 .saved-roll-grid,
@@ -1025,6 +1103,14 @@ input[type="range"] {
   display: -webkit-box;
   overflow: hidden;
   -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.note-description {
+  display: -webkit-box;
+  overflow: hidden;
+  white-space: pre-line;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
 }
 

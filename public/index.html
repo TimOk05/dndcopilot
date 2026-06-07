@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#2a1710">
   <title>D&D Copilot</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260606-loot-list">
+  <link rel="stylesheet" href="assets/css/app.css?v=20260607-note-plus-inline">
 </head>
 <body>
   <div class="app-shell">
@@ -25,10 +25,7 @@
         <button class="nav-button" type="button" data-panel="bestiary">Бестиарий</button>
         <button class="nav-button" type="button" data-panel="spells">Заклинания</button>
         <button class="nav-button" type="button" data-panel="loot">Предметы</button>
-        <button class="nav-button" type="button" data-panel="session">Сессия</button>
         <button class="nav-button" type="button" data-panel="library">Библиотека</button>
-        <button class="nav-button" type="button" data-panel="notes">Заметки</button>
-        <button class="nav-button" type="button" data-panel="assistant">AI помощник</button>
       </nav>
 
       <div class="sidebar-settings">
@@ -75,13 +72,16 @@
         </div>
 
         <div class="quick-grid">
-          <button class="feature-button" type="button">Создать NPC</button>
           <button class="feature-button generator-button" type="button">
             <span class="generator-button-icon icon-dice" aria-hidden="true"></span>
             <span>Бросить кость</span>
           </button>
-          <button class="feature-button" type="button">Добавить заметку</button>
-          <button class="feature-button" type="button">Открыть инициативу</button>
+        </div>
+
+        <div class="empty-state assistant-home">
+          <strong>AI помощник</strong>
+          <span>Помощник еще не подключен</span>
+          <button type="button">Открыть чат</button>
         </div>
 
         <div class="status-grid">
@@ -108,17 +108,9 @@
         <div class="button-board generator-board">
           <button class="generator-button" type="button">Персонаж</button>
           <button class="generator-button" type="button">НПС</button>
-          <button class="generator-button" type="button" data-open-random-monster>
-            <span class="generator-button-icon icon-enemy" aria-hidden="true"></span>
-            <span>Случайное существо</span>
-          </button>
           <button class="generator-button" type="button" data-open-loot-generator>Награда</button>
           <button class="generator-button" type="button">Таверна</button>
           <button class="generator-button" type="button">Случайное событие</button>
-          <button class="generator-button" type="button" data-open-potion-generator>
-            <span class="generator-button-icon icon-potion" aria-hidden="true"></span>
-            <span>Зелья</span>
-          </button>
         </div>
       </section>
 
@@ -217,7 +209,7 @@
             <button type="button" data-loot-scope="custom">Мои предметы</button>
           </div>
           <div class="bestiary-action-buttons">
-            <button class="primary-action" type="button" data-open-loot-generator>Случайная находка</button>
+            <button class="primary-action" type="button" data-open-random-loot-item>Случайная находка</button>
             <button type="button" data-open-create-loot-item>Создать предмет</button>
           </div>
         </div>
@@ -245,60 +237,25 @@
         <div class="bestiary-list loot-list" data-loot-list></div>
       </section>
 
-      <section class="panel" data-panel-view="session">
-        <div class="section-heading">
-          <h3>Ведение сессии</h3>
-          <p>Быстрые инструменты для игры за столом.</p>
-        </div>
-        <div class="button-board">
-          <button type="button">Кости</button>
-          <button type="button">Инициатива</button>
-          <button type="button">Сцена</button>
-          <button type="button">Событие</button>
-          <button type="button">Быстрая заметка</button>
-          <button type="button">История бросков</button>
-        </div>
-      </section>
-
       <section class="panel" data-panel-view="library">
         <div class="section-heading">
           <h3>Библиотека</h3>
-          <p>Будущее место для сохраненных результатов генерации.</p>
+          <p>Будущее место для сохранённых результатов</p>
         </div>
-        <div class="button-board">
-          <button type="button">Мои NPC</button>
-          <button type="button">Мои монстры</button>
-          <button type="button">Мои предметы</button>
-          <button type="button">Мои зелья</button>
-          <button type="button">Мой лут</button>
-          <button type="button">Мои заклинания</button>
-          <button type="button">Мои локации</button>
-          <button type="button">Кампании</button>
-          <button type="button">Сессии</button>
-        </div>
-      </section>
-
-      <section class="panel" data-panel-view="notes">
-        <div class="section-heading">
-          <h3>Заметки</h3>
-          <p>Здесь позже появятся сохраненные результаты и заметки мастера.</p>
-        </div>
-        <div class="empty-state">
-          <strong>Пока пусто</strong>
-          <button type="button">Новая заметка</button>
+        <div class="library-menu" aria-label="Фильтр библиотеки">
+          <button class="library-filter active library-home-filter" type="button" data-library-filter="all" title="Главная библиотеки" aria-label="Главная библиотеки">⌂</button>
+          <button class="library-filter" type="button" data-library-filter="characters">Мои персонажи</button>
+          <button class="library-filter" type="button" data-library-filter="rolls">Мои броски</button>
+          <button class="library-filter" type="button" data-library-filter="creatures">Мои существа</button>
+          <button class="library-filter" type="button" data-library-filter="rewards">Мои награды</button>
+          <button class="library-filter" type="button" data-library-filter="taverns">Мои таверны</button>
+          <button class="library-filter" type="button" data-library-filter="events">Мои события</button>
+          <button class="library-filter" type="button" data-library-filter="potions">Мои зелья</button>
+          <button class="library-filter" type="button" data-library-filter="items">Мои предметы</button>
+          <button class="library-filter" type="button" data-library-filter="notes">Мои заметки</button>
         </div>
       </section>
 
-      <section class="panel" data-panel-view="assistant">
-        <div class="section-heading">
-          <h3>AI помощник</h3>
-          <p>Раздел оставлен как будущий слой поверх кампаний, заметок и генераторов.</p>
-        </div>
-        <div class="empty-state">
-          <strong>Помощник еще не подключен</strong>
-          <button type="button">Открыть чат</button>
-        </div>
-      </section>
     </main>
   </div>
 
@@ -613,24 +570,14 @@
     <section class="tool-modal monster-modal" aria-labelledby="loot-modal-title" role="dialog" aria-modal="true">
       <button class="modal-close" type="button" data-close-loot-generator aria-label="Закрыть">×</button>
       <div class="modal-header">
-        <p class="eyebrow">Loot find tool</p>
-        <h2 id="loot-modal-title">Генератор лута</h2>
+        <p class="eyebrow">Loot reward tool</p>
+        <h2 id="loot-modal-title">Награда</h2>
       </div>
 
       <div class="bestiary-toolbar random-monster-form loot-form">
         <label class="field">
           <span>Опасность</span>
           <select data-loot-tier></select>
-        </label>
-        <label class="field">
-          <span>Состав</span>
-          <select data-loot-find-type>
-            <option value="mixed" selected>По таблице</option>
-            <option value="coins">Монеты</option>
-            <option value="valuable">Ценность</option>
-            <option value="mundane">Странная вещь</option>
-            <option value="magic">Магический предмет</option>
-          </select>
         </label>
         <label class="field">
           <span>Категория</span>
@@ -654,6 +601,43 @@
     </section>
   </div>
 
+  <div class="modal-backdrop is-hidden" data-random-loot-item-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="random-loot-item-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-random-loot-item aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Magic item</p>
+        <h2 id="random-loot-item-title">Случайная находка</h2>
+      </div>
+
+      <div class="bestiary-toolbar random-monster-form loot-form">
+        <label class="field">
+          <span>Редкость</span>
+          <select data-random-loot-rarity>
+            <option value="">Любая редкость</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Категория</span>
+          <select data-random-loot-category>
+            <option value="">Любая</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Количество</span>
+          <input type="number" min="1" max="8" value="1" data-random-loot-count>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="primary-action" type="button" data-generate-random-loot-item>Получить результат</button>
+        <button type="button" data-save-random-loot-item disabled>Сохранить в библиотеку</button>
+        <button type="button" data-close-random-loot-item>Закрыть</button>
+      </div>
+
+      <div class="random-monster-results loot-results" data-random-loot-results></div>
+    </section>
+  </div>
+
   <div class="modal-backdrop is-hidden" data-loot-detail-modal>
     <section class="tool-modal monster-modal" aria-labelledby="loot-detail-title" role="dialog" aria-modal="true">
       <button class="modal-close" type="button" data-close-loot-detail aria-label="Закрыть">×</button>
@@ -670,6 +654,34 @@
     </section>
   </div>
 
+  <div class="modal-backdrop is-hidden" data-note-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="note-modal-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-note aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Library note</p>
+        <h2 id="note-modal-title" data-note-modal-title>Новая заметка</h2>
+      </div>
+
+      <form class="custom-monster-form note-form" data-note-form>
+        <input type="hidden" data-note-id>
+        <label class="field field-wide">
+          <span>Название</span>
+          <input type="text" maxlength="100" placeholder="Например: тайна старой башни" data-note-title>
+        </label>
+        <label class="field field-wide">
+          <span>Текст</span>
+          <textarea rows="9" placeholder="Запиши идею, сцену, имя, улику или всё, что пригодится за столом." data-note-body></textarea>
+        </label>
+
+        <div class="modal-actions">
+          <button class="primary-action" type="submit">Сохранить заметку</button>
+          <button type="button" class="danger-action is-hidden" data-delete-note>Удалить</button>
+          <button type="button" data-close-note>Закрыть</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
   <div class="audio-gate" data-audio-gate>
     <div class="audio-gate-panel">
       <h2>Включить атмосферу?</h2>
@@ -683,6 +695,6 @@
 
   <audio data-music loop preload="auto"></audio>
   <audio data-click-sound src="sound/click.mp3" preload="auto"></audio>
-  <script src="assets/js/app.js?v=20260606-loot-list"></script>
+  <script src="assets/js/app.js?v=20260607-note-plus-inline"></script>
 </body>
 </html>
