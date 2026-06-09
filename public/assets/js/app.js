@@ -128,6 +128,16 @@ const lootCategoryInput = document.querySelector("[data-loot-category]");
 const lootCountInput = document.querySelector("[data-loot-count]");
 const lootResults = document.querySelector("[data-loot-results]");
 const saveLootButton = document.querySelector("[data-save-loot]");
+const tavernModal = document.querySelector("[data-tavern-modal]");
+const tavernClassInput = document.querySelector("[data-tavern-class]");
+const tavernTerrainInput = document.querySelector("[data-tavern-terrain]");
+const tavernTopicCountInput = document.querySelector("[data-tavern-topic-count]");
+const tavernEventCountInput = document.querySelector("[data-tavern-event-count]");
+const tavernResults = document.querySelector("[data-tavern-results]");
+const saveTavernsButton = document.querySelector("[data-save-taverns]");
+const tavernDetailModal = document.querySelector("[data-tavern-detail-modal]");
+const tavernDetailName = document.querySelector("[data-tavern-detail-name]");
+const tavernDetail = document.querySelector("[data-tavern-detail]");
 const randomLootItemModal = document.querySelector("[data-random-loot-item-modal]");
 const randomLootRarityInput = document.querySelector("[data-random-loot-rarity]");
 const randomLootCategoryInput = document.querySelector("[data-random-loot-category]");
@@ -173,6 +183,8 @@ let currentLootResults = [];
 let currentLootItem = null;
 let lootGeneratorMode = "reward";
 let lootScope = "all";
+let tavernData = null;
+let currentTavernResults = [];
 let libraryFilter = "all";
 const LIBRARY_SECTION_TITLES = {
   characters: "Мои персонажи",
@@ -269,6 +281,44 @@ const COIN_LABELS_RU = {
   ep: "эм",
   gp: "зм",
   pp: "пм",
+};
+const TAVERN_CLASS_LABELS = {
+  cheap: "Дешёвое заведение",
+  common: "Обычное заведение",
+  expensive: "Дорогое заведение",
+};
+const TAVERN_MENU_CATEGORY_ORDER = [
+  "breakfast",
+  "bread",
+  "main",
+  "salad",
+  "soup",
+  "stew",
+  "dessert",
+  "drink",
+  "alcohol",
+];
+const TAVERN_MENU_CATEGORY_LABELS = {
+  breakfast: "Завтрак",
+  bread: "Хлеб",
+  main: "Основное блюдо",
+  salad: "Салат",
+  soup: "Суп",
+  stew: "Рагу",
+  dessert: "Десерт",
+  drink: "Напиток",
+  alcohol: "Алкоголь",
+};
+const TAVERN_RACE_KEYS = {
+  "Дварф": "dwarf",
+  "Драконорождённый": "dragonborn",
+  "Полурослик": "halfling",
+  "Тифлинг": "tiefling",
+  "Человек": "human",
+  "Полуэльф": "human",
+  "Эладрин": "eladrin",
+  "Эльф": "elf",
+  "Стандартный": "human",
 };
 
 function cleanDiceLabel(value) {
@@ -1391,6 +1441,20 @@ function setSavedLoot(savedLoot) {
   renderLibraryLoot();
 }
 
+function getSavedTaverns() {
+  try {
+    return JSON.parse(storage.get("dnd-saved-taverns", "[]"));
+  } catch {
+    return [];
+  }
+}
+
+function setSavedTaverns(savedTaverns) {
+  storage.set("dnd-saved-taverns", JSON.stringify(savedTaverns));
+  updateSavedRollsCount();
+  renderLibraryTaverns();
+}
+
 function getSavedNotes() {
   try {
     return JSON.parse(storage.get("dnd-library-notes", "[]"));
@@ -1409,7 +1473,7 @@ function updateSavedRollsCount() {
   if (!notesTotal) {
     return;
   }
-  const count = getSavedRolls().length + getSavedMonsters().length + getSavedPotions().length + getSavedSpells().length + getSavedLoot().length + getSavedNotes().length;
+  const count = getSavedRolls().length + getSavedMonsters().length + getSavedPotions().length + getSavedSpells().length + getSavedLoot().length + getSavedTaverns().length + getSavedNotes().length;
   notesTotal.textContent = `${count} сохранено`;
 }
 
@@ -1474,7 +1538,6 @@ function renderLibraryEmptySection(selector, category, title, text) {
 
 function renderLibraryPlaceholders() {
   renderLibraryEmptySection("[data-saved-characters]", "characters", "Сохранённых персонажей пока нет", "Когда появится генератор персонажей, его результаты будут здесь.");
-  renderLibraryEmptySection("[data-saved-taverns]", "taverns", "Сохранённых таверн пока нет", "Сохрани таверну после генерации, и она появится здесь.");
   renderLibraryEmptySection("[data-saved-events]", "events", "Сохранённых событий пока нет", "Сохрани случайное событие, и оно появится здесь.");
 }
 
@@ -1715,6 +1778,189 @@ function renderLibraryLoot() {
     "Сохрани предмет из списка или случайной находки, и он появится здесь.",
     savedLoot.filter(isSavedLibraryItem)
   );
+}
+
+function getTavernSummaryText(tavern) {
+  const parts = [
+    tavern.atmosphere?.mood,
+    tavern.menu?.dish,
+    tavern.menu?.drink,
+  ].filter(Boolean);
+  return parts.join(" · ") || "таверна";
+}
+
+function getTavernPriceCategory(tavern, kind) {
+  const byClass = {
+    cheap: kind === "special" ? "Дешёвое" : "Дешёвый",
+    common: kind === "special" ? "Обычное" : "Обычный",
+    expensive: kind === "special" ? "Роскошное" : "Роскошный",
+  };
+  return byClass[tavern.classKey] || byClass.common;
+}
+
+function renderTavernCard(tavern, { saved = false, index = 0 } = {}) {
+  const removeAttr = saved
+    ? `data-delete-saved-tavern="${escapeHtml(tavern.id)}"`
+    : `data-delete-tavern-result="${escapeHtml(tavern.id)}"`;
+  const removeLabel = saved ? "Удалить таверну" : "Убрать таверну";
+  const openAttr = saved
+    ? `data-open-saved-tavern="${escapeHtml(tavern.id)}"`
+    : `data-open-tavern-result="${escapeHtml(tavern.id)}"`;
+
+  return `
+    <article class="saved-monster-card tavern-card" ${openAttr} tabindex="0" role="button">
+      <button class="card-remove" type="button" ${removeAttr} aria-label="${removeLabel}">×</button>
+      <strong>${escapeHtml(tavern.name)}</strong>
+    </article>
+  `;
+}
+
+function getTavernMenuCategoryLabel(category) {
+  return tavernData?.tables?.expanded_menu?.categories?.[category]
+    || TAVERN_MENU_CATEGORY_LABELS[category]
+    || category;
+}
+
+function getTavernExpandedMenuRows(tavern) {
+  const menu = tavern.expandedMenu || {};
+  return TAVERN_MENU_CATEGORY_ORDER
+    .map((category) => [category, menu[category]])
+    .filter(([, item]) => item?.name || item?.description);
+}
+
+function renderTavernExpandedMenu(tavern) {
+  const rows = getTavernExpandedMenuRows(tavern);
+  if (!rows.length) {
+    return "";
+  }
+
+  return `
+    <section class="monster-section">
+      <h4>Меню таверны</h4>
+      <div class="tavern-menu-list">
+        ${rows.map(([category, item]) => `
+          <div class="tavern-menu-item">
+            <span>${escapeHtml(getTavernMenuCategoryLabel(category))}</span>
+            <strong>${escapeHtml(item.name || "-")}</strong>
+            ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
+          </div>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderTavernDetail(tavern) {
+  const topics = tavern.topics || [];
+  const events = tavern.events || [];
+  const patrons = tavern.patrons?.types || [];
+  const roomPrices = (tavern.prices?.rooms || [])
+    .find((entry) => entry.category === getTavernPriceCategory(tavern, "room"))?.rooms
+    || [];
+  const specialPrices = (tavern.prices?.specials || [])
+    .find((entry) => entry.category === getTavernPriceCategory(tavern, "special"))?.items
+    || [];
+
+  return `
+    <div class="monster-meta-grid">
+      <div><span>Класс</span><strong>${escapeHtml(tavern.classLabel || "-")}</strong></div>
+      <div><span>Местность</span><strong>${escapeHtml(tavern.terrainLabel || "-")}</strong></div>
+      <div><span>Имя хозяина</span><strong>${escapeHtml(tavern.owner?.fullName || "-")}</strong></div>
+      <div><span>Хозяин</span><strong>${escapeHtml(`${tavern.owner?.race || "-"}, ${tavern.owner?.gender || "-"}, ${tavern.owner?.age || "?"} лет`)}</strong></div>
+      <div><span>Комнаты</span><strong>${escapeHtml(tavern.innSize?.rooms || "0")}</strong></div>
+      <div><span>Персонал</span><strong>${escapeHtml(tavern.innSize?.staff || "-")}</strong></div>
+      <div><span>Заполненность</span><strong>${escapeHtml(tavern.patrons?.occupancy || "-")}</strong></div>
+      <div><span>Посетителей</span><strong>${escapeHtml(tavern.patrons?.count ?? 0)}</strong></div>
+    </div>
+
+    <section class="monster-section">
+      <h4>Атмосфера</h4>
+      <div class="monster-text-list">
+        <p><strong>${escapeHtml(tavern.atmosphere?.mood || "-")}.</strong> ${escapeHtml(tavern.atmosphere?.cause || "")}</p>
+      </div>
+    </section>
+
+    <section class="monster-section">
+      <h4>Особое меню</h4>
+      <div class="tavern-detail-grid">
+        <div><span>Блюдо</span><strong>${escapeHtml(tavern.menu?.dish || "-")}</strong></div>
+        <div><span>Напиток</span><strong>${escapeHtml(tavern.menu?.drink || "-")}</strong></div>
+      </div>
+    </section>
+
+    ${renderTavernExpandedMenu(tavern)}
+
+    ${patrons.length ? `
+      <section class="monster-section">
+        <h4>Присутствующие МП</h4>
+        <div class="monster-text-list">
+          <p>${escapeHtml(patrons.join(", "))}</p>
+        </div>
+      </section>
+    ` : ""}
+
+    ${topics.length ? `
+      <section class="monster-section">
+        <h4>Обсуждаемые темы</h4>
+        <div class="monster-text-list">
+          ${topics.map((topic) => `<p>${escapeHtml(topic.text)}</p>`).join("")}
+        </div>
+      </section>
+    ` : ""}
+
+    ${events.length ? `
+      <section class="monster-section">
+        <h4>Случайные события</h4>
+        <div class="monster-text-list">
+          ${events.map((event) => `<p>${escapeHtml(event.text)}</p>`).join("")}
+        </div>
+      </section>
+    ` : ""}
+
+    ${roomPrices.length || specialPrices.length ? `
+      <section class="monster-section">
+        <h4>Цены</h4>
+        <div class="tavern-detail-grid">
+          ${roomPrices.map((item) => `<div><span>${escapeHtml(item.type)}</span><strong>${escapeHtml(item.price)}</strong></div>`).join("")}
+          ${specialPrices.map((item) => `<div><span>${escapeHtml(item.type)}</span><strong>${escapeHtml(item.price)}</strong></div>`).join("")}
+        </div>
+      </section>
+    ` : ""}
+
+    <div class="license-note">
+      Источник: ${escapeHtml(tavern.source || "Таверна на скорую руку")}. Сохранено локально в браузере.
+    </div>
+  `;
+}
+
+function renderLibraryTaverns() {
+  if (!libraryPanel) {
+    return;
+  }
+
+  const list = getLibrarySection("[data-saved-taverns]", "taverns");
+  list.dataset.savedTaverns = "";
+
+  const savedTaverns = getSavedTaverns();
+  if (!savedTaverns.length) {
+    list.innerHTML = `
+      ${renderLibrarySectionHeader("taverns")}
+      <div class="library-empty">
+        <strong>Сохранённых таверн пока нет</strong>
+        <span>Сгенерируй таверну и сохрани результат, чтобы она появилась здесь.</span>
+      </div>
+    `;
+    applyLibraryFilter();
+    return;
+  }
+
+  list.innerHTML = `
+    ${renderLibrarySectionHeader("taverns")}
+    <div class="saved-monster-grid tavern-library-grid">
+      ${savedTaverns.map((tavern) => renderTavernCard(tavern, { saved: true })).join("")}
+    </div>
+  `;
+  applyLibraryFilter();
 }
 
 function formatLibraryDate(value) {
@@ -3119,6 +3365,351 @@ function closeActiveLootGenerator() {
   closeLootGenerator();
 }
 
+async function loadTaverns() {
+  if (tavernData) {
+    setupTavernTerrainOptions();
+    return;
+  }
+
+  const response = await fetch("data/generators/taverns.json?v=20260608-tavern-supplements-3");
+  if (!response.ok) {
+    throw new Error("Не удалось загрузить таблицы таверн.");
+  }
+
+  tavernData = await response.json();
+  setupTavernTerrainOptions();
+}
+
+function setupTavernTerrainOptions() {
+  if (!tavernTerrainInput || !tavernData) {
+    return;
+  }
+
+  const current = tavernTerrainInput.value;
+  const terrainTables = tavernData.tables?.special_menu_by_terrain || {};
+  tavernTerrainInput.innerHTML = `
+    <option value="">Любая местность</option>
+    ${Object.entries(terrainTables)
+      .map(([key, table]) => `<option value="${escapeHtml(key)}">${escapeHtml(table.label)}</option>`)
+      .join("")}
+  `;
+  if (current && terrainTables[current]) {
+    tavernTerrainInput.value = current;
+  }
+}
+
+function normalizeDiceFormula(formula) {
+  return String(formula || "0")
+    .toLowerCase()
+    .replace(/к/g, "d")
+    .replace(/×/g, "*")
+    .replace(/[()]/g, "")
+    .replace(/\s+/g, "");
+}
+
+function rollTavernDice(term) {
+  const text = normalizeDiceFormula(term);
+  const match = text.match(/^(\d*)d(\d+)$/);
+  if (!match) {
+    return Number(text) || 0;
+  }
+
+  const count = Number(match[1] || 1);
+  const sides = Number(match[2] || 0);
+  if (!count || !sides) {
+    return 0;
+  }
+  return Array.from({ length: count }, () => randomInt(1, sides)).reduce((sum, value) => sum + value, 0);
+}
+
+function rollTavernFormula(formula, roomCount = 0) {
+  const text = normalizeDiceFormula(formula).replace(/количествокомнат/g, String(roomCount));
+  if (/^\d+$/.test(text)) {
+    return Number(text);
+  }
+
+  return text
+    .split("+")
+    .filter(Boolean)
+    .reduce((sum, part) => {
+      const factors = part.split("*").filter(Boolean);
+      const value = factors.reduce((product, factor) => product * rollTavernDice(factor), 1);
+      return sum + value;
+    }, 0);
+}
+
+function pickRollEntry(table) {
+  const entries = table?.entries || [];
+  if (!entries.length) {
+    return null;
+  }
+
+  const die = table.die ? normalizeDiceFormula(table.die) : "";
+  const roll = die ? rollTavernDice(die) : randomInt(1, entries.length);
+  return entries.find((entry) => entry.roll === roll || (roll >= entry.roll_min && roll <= entry.roll_max)) || pickFrom(entries);
+}
+
+function pickTavernTerrainKey() {
+  const tables = tavernData.tables?.special_menu_by_terrain || {};
+  const selected = tavernTerrainInput?.value;
+  if (selected && tables[selected]) {
+    return selected;
+  }
+  return pickFrom(Object.keys(tables).filter((key) => key !== "awful")) || pickFrom(Object.keys(tables));
+}
+
+function buildTavernName(owner) {
+  const partsTable = tavernData.tables?.tavern_name_parts;
+  const variationTable = tavernData.tables?.name_variations;
+  const parts = pickRollEntry(partsTable) || {};
+  const variation = pickRollEntry(variationTable) || { roll: 1 };
+  const baseName = `${parts.first || "Сонный"} ${parts.second || "Огр"}`.trim();
+  const secondName = pickRollEntry(partsTable)?.second || "нимфа";
+  const ownerShortName = owner?.family || owner?.firstName || owner?.fullName || "хозяина";
+
+  const templates = {
+    1: `Таверна «${baseName}»`,
+    2: `Постоялый двор «${baseName}»`,
+    3: `Постоялый двор «${baseName}»`,
+    4: `«${baseName}»`,
+    5: `«${baseName} и ${secondName}»`,
+    6: `Пивная «${baseName}»`,
+    7: `Трактир «${baseName}»`,
+    8: `Пивная ${ownerShortName}`,
+  };
+
+  return {
+    title: templates[variation.roll] || `Таверна «${baseName}»`,
+    parts,
+    variation,
+  };
+}
+
+function getOwnerNameTableKey(race) {
+  if (race === "Полуэльф") {
+    return pickFrom(["human", "elf"]);
+  }
+  return TAVERN_RACE_KEYS[race] || "human";
+}
+
+function getOwnerAgeRace(race) {
+  if (race === "Стандартный" || race === "Полуэльф") {
+    return "Человек/полуэльф";
+  }
+  return race;
+}
+
+function buildTavernOwner() {
+  const ownerTables = tavernData.tables?.owner || {};
+  const raceGender = pickRollEntry(ownerTables.race_gender) || { race: "Человек", gender: "мужчина" };
+  const nameTableKey = getOwnerNameTableKey(raceGender.race);
+  const namesTable = ownerTables.names_by_race?.[nameTableKey];
+  const nameRow = pickRollEntry(namesTable) || { male: "Делин", female: "Фарила", family: "Рунтроп" };
+  const isFemale = raceGender.gender === "женщина";
+  const firstName = isFemale ? nameRow.female : nameRow.male;
+  const fullName = [firstName, nameRow.family].filter(Boolean).join(" ");
+  const ageRace = getOwnerAgeRace(raceGender.race);
+  const ageFormula = ownerTables.age_by_race?.find((entry) => entry.race === ageRace)?.formula || "(5к10) + 16";
+
+  return {
+    race: raceGender.race,
+    gender: raceGender.gender,
+    firstName,
+    family: nameRow.family,
+    fullName,
+    age: rollTavernFormula(ageFormula),
+    ageFormula,
+    nameTable: namesTable?.label || "Люди",
+  };
+}
+
+function buildTavernPatrons(classKey, roomCount) {
+  const patrons = tavernData.tables?.patrons || {};
+  const occupancy = pickRollEntry(patrons.occupancy) || { label: "Несколько человек", count_formula: "1к8" };
+  const count = rollTavernFormula(occupancy.count_formula, roomCount);
+  const table = patrons.by_inn_class?.[classKey] || patrons.by_inn_class?.common;
+  const types = Array.from({ length: count }, () => {
+    const entry = pickRollEntry(table);
+    if (entry?.value === "Важный МП" && table?.important_npc) {
+      return pickRollEntry(table.important_npc)?.value || entry.value;
+    }
+    return entry?.value || "Обыватель";
+  });
+
+  return {
+    occupancy: occupancy.label,
+    count,
+    countFormula: occupancy.count_formula,
+    types,
+  };
+}
+
+function pickExpandedTavernMenuEntry(category) {
+  const entries = tavernData.tables?.expanded_menu?.entries || [];
+  return pickFrom(entries.filter((entry) => entry.category === category));
+}
+
+function buildExpandedTavernMenu() {
+  const menu = {};
+  TAVERN_MENU_CATEGORY_ORDER.forEach((category) => {
+    if (category === "alcohol") {
+      const alcohol = pickRollEntry(tavernData.tables?.expanded_alcohol);
+      if (alcohol) {
+        menu.alcohol = alcohol;
+      }
+      return;
+    }
+
+    const entry = pickExpandedTavernMenuEntry(category);
+    if (entry) {
+      menu[category] = entry;
+    }
+  });
+  return menu;
+}
+
+function pickTavernEvent() {
+  return pickRollEntry(tavernData.tables?.random_events_100 || tavernData.tables?.random_events);
+}
+
+function buildTavern() {
+  const classKey = tavernClassInput?.value || "common";
+  const terrainKey = pickTavernTerrainKey();
+  const terrainTable = tavernData.tables.special_menu_by_terrain[terrainKey];
+  const owner = buildTavernOwner();
+  const name = buildTavernName(owner);
+  const size = pickRollEntry(tavernData.tables.inn_size) || { rooms: "4", staff: "2 прислуги" };
+  const roomCount = Number.parseInt(size.rooms, 10) || 0;
+  const topicCount = Math.min(Math.max(Number(tavernTopicCountInput?.value) || 1, 1), 4);
+  const eventCount = Math.min(Math.max(Number(tavernEventCountInput?.value) || 1, 1), 4);
+
+  if (tavernTopicCountInput) {
+    tavernTopicCountInput.value = String(topicCount);
+  }
+  if (tavernEventCountInput) {
+    tavernEventCountInput.value = String(eventCount);
+  }
+
+  return {
+    id: crypto.randomUUID(),
+    name: name.title,
+    nameParts: name.parts,
+    nameVariation: name.variation,
+    classKey,
+    classLabel: TAVERN_CLASS_LABELS[classKey] || TAVERN_CLASS_LABELS.common,
+    terrainKey,
+    terrainLabel: terrainTable?.label || "Любая местность",
+    owner,
+    atmosphere: pickRollEntry(tavernData.tables.atmosphere),
+    innSize: {
+      rooms: size.rooms,
+      staff: size.staff,
+    },
+    menu: pickRollEntry(terrainTable),
+    expandedMenu: buildExpandedTavernMenu(),
+    patrons: buildTavernPatrons(classKey, roomCount),
+    topics: Array.from({ length: topicCount }, () => pickRollEntry(tavernData.tables.conversation_topics)).filter(Boolean),
+    events: Array.from({ length: eventCount }, () => pickTavernEvent()).filter(Boolean),
+    prices: {
+      rooms: tavernData.tables.inn_prices_daily,
+      specials: tavernData.tables.special_prices,
+    },
+    source: tavernData.source?.title || "Таверна на скорую руку",
+    savedAt: new Date().toISOString(),
+  };
+}
+
+function renderTavernResults() {
+  if (!tavernResults || !saveTavernsButton) {
+    return;
+  }
+
+  if (!currentTavernResults.length) {
+    tavernResults.innerHTML = "";
+    saveTavernsButton.disabled = true;
+    return;
+  }
+
+  tavernResults.innerHTML = currentTavernResults.map((tavern, index) => renderTavernCard(tavern, { index })).join("");
+  saveTavernsButton.disabled = false;
+}
+
+function generateTavern() {
+  if (!tavernData) {
+    return;
+  }
+  currentTavernResults.unshift(buildTavern());
+  renderTavernResults();
+}
+
+function deleteTavernResult(id) {
+  currentTavernResults = currentTavernResults.filter((tavern) => tavern.id !== id);
+  renderTavernResults();
+}
+
+function openTavernDetail(tavern) {
+  if (!tavern || !tavernDetailModal) {
+    return;
+  }
+
+  tavernDetailName.textContent = tavern.name || "Таверна";
+  tavernDetail.innerHTML = renderTavernDetail(tavern);
+  tavernDetailModal.classList.remove("is-hidden");
+}
+
+function openTavernResult(id) {
+  openTavernDetail(currentTavernResults.find((tavern) => tavern.id === id));
+}
+
+function openSavedTavern(id) {
+  openTavernDetail(getSavedTaverns().find((tavern) => tavern.id === id));
+}
+
+function closeTavernDetail() {
+  tavernDetailModal.classList.add("is-hidden");
+}
+
+function saveGeneratedTaverns() {
+  if (!currentTavernResults.length) {
+    return;
+  }
+
+  const savedTaverns = getSavedTaverns();
+  currentTavernResults.forEach((tavern) => {
+    savedTaverns.unshift({
+      ...JSON.parse(JSON.stringify(tavern)),
+      id: crypto.randomUUID(),
+      savedAt: new Date().toISOString(),
+    });
+  });
+  setSavedTaverns(savedTaverns.slice(0, 200));
+  closeTavernGenerator();
+  openPanel("library");
+}
+
+async function openTavernGenerator() {
+  try {
+    await loadTaverns();
+    currentTavernResults = [];
+    tavernResults.innerHTML = "";
+    saveTavernsButton.disabled = true;
+    tavernModal.classList.remove("is-hidden");
+  } catch (error) {
+    tavernModal.classList.remove("is-hidden");
+    tavernResults.innerHTML = `<div class="library-empty"><strong>Ошибка загрузки</strong><span>${escapeHtml(error.message)}</span></div>`;
+    saveTavernsButton.disabled = true;
+  }
+}
+
+function closeTavernGenerator() {
+  tavernModal.classList.add("is-hidden");
+  currentTavernResults = [];
+}
+
+function deleteSavedTavern(id) {
+  setSavedTaverns(getSavedTaverns().filter((tavern) => tavern.id !== id));
+}
+
 async function openCreateLootItemModal() {
   await loadLoot();
   setupLootListFilters();
@@ -3346,10 +3937,12 @@ document.addEventListener("click", (event) => {
   const savedPotionCard = event.target.closest("[data-open-saved-potion]");
   const savedSpellCard = event.target.closest("[data-open-saved-spell]");
   const savedLootCard = event.target.closest("[data-open-saved-loot]");
+  const savedTavernCard = event.target.closest("[data-open-saved-tavern]");
   const savedNoteCard = event.target.closest("[data-open-saved-note]");
   const potionResultCard = event.target.closest("[data-open-potion-result]");
   const lootResultCard = event.target.closest("[data-open-loot-result]");
-  if (!button && !savedMonsterCard && !savedPotionCard && !savedSpellCard && !savedLootCard && !savedNoteCard && !potionResultCard && !lootResultCard) {
+  const tavernResultCard = event.target.closest("[data-open-tavern-result]");
+  if (!button && !savedMonsterCard && !savedPotionCard && !savedSpellCard && !savedLootCard && !savedTavernCard && !savedNoteCard && !potionResultCard && !lootResultCard && !tavernResultCard) {
     return;
   }
 
@@ -3378,6 +3971,11 @@ document.addEventListener("click", (event) => {
 
   if (button?.dataset.deleteSavedLoot) {
     setSavedLoot(getSavedLoot().filter((loot) => loot.id !== button.dataset.deleteSavedLoot));
+    return;
+  }
+
+  if (button?.dataset.deleteSavedTavern) {
+    deleteSavedTavern(button.dataset.deleteSavedTavern);
     return;
   }
 
@@ -3416,6 +4014,11 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  if (!button && savedTavernCard) {
+    openSavedTavern(savedTavernCard.dataset.openSavedTavern);
+    return;
+  }
+
   if (!button && savedNoteCard) {
     openNoteEditor(savedNoteCard.dataset.openSavedNote);
     return;
@@ -3428,6 +4031,11 @@ document.addEventListener("click", (event) => {
 
   if (!button && lootResultCard) {
     openLootResult(lootResultCard.dataset.openLootResult);
+    return;
+  }
+
+  if (!button && tavernResultCard) {
+    openTavernResult(tavernResultCard.dataset.openTavernResult);
     return;
   }
 
@@ -3615,6 +4223,30 @@ document.addEventListener("click", (event) => {
     openLootGenerator();
   }
 
+  if (button.matches("[data-open-tavern-generator]")) {
+    openTavernGenerator();
+  }
+
+  if (button.matches("[data-close-tavern-generator]")) {
+    closeTavernGenerator();
+  }
+
+  if (button.matches("[data-close-tavern-detail]")) {
+    closeTavernDetail();
+  }
+
+  if (button.matches("[data-generate-tavern]")) {
+    generateTavern();
+  }
+
+  if (button.dataset.deleteTavernResult) {
+    deleteTavernResult(button.dataset.deleteTavernResult);
+  }
+
+  if (button.matches("[data-save-taverns]")) {
+    saveGeneratedTaverns();
+  }
+
   if (button.matches("[data-open-random-loot-item]")) {
     openRandomLootItemGenerator();
   }
@@ -3684,6 +4316,12 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !lootModal.classList.contains("is-hidden")) {
     closeLootGenerator();
   }
+  if (event.key === "Escape" && !tavernModal.classList.contains("is-hidden")) {
+    closeTavernGenerator();
+  }
+  if (event.key === "Escape" && !tavernDetailModal.classList.contains("is-hidden")) {
+    closeTavernDetail();
+  }
   if (event.key === "Escape" && !randomLootItemModal.classList.contains("is-hidden")) {
     closeRandomLootItemGenerator();
   }
@@ -3729,6 +4367,7 @@ renderLibraryMonsters();
 renderLibraryPotions();
 renderLibrarySpells();
 renderLibraryLoot();
+renderLibraryTaverns();
 renderLibraryNotes();
 
 if (state.soundEnabled) {

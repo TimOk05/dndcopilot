@@ -1132,8 +1132,105 @@ input[type="range"] {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.tavern-form {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .random-monster-results {
   margin-top: 16px;
+}
+
+.tavern-results,
+.tavern-library-grid {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+.tavern-card {
+  min-height: 86px;
+  align-content: center;
+  padding-right: 44px;
+}
+
+.tavern-card strong {
+  font-size: 20px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.tavern-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tavern-detail-grid div,
+.tavern-card-section {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.tavern-detail-grid span,
+.tavern-detail-grid small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.tavern-detail-grid strong {
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.tavern-menu-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tavern-menu-item {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.tavern-menu-item span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.tavern-menu-item strong {
+  line-height: 1.25;
+}
+
+.tavern-menu-item p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.tavern-card-section h5,
+.tavern-card-section p {
+  margin: 0;
+}
+
+.tavern-card-section h5 {
+  font-size: 14px;
+}
+
+.tavern-card-section p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .loot-magic-list {
@@ -1350,6 +1447,8 @@ textarea {
   .random-monster-form,
   .custom-monster-form,
   .ability-editor,
+  .tavern-detail-grid,
+  .tavern-menu-list,
   .monster-meta-grid,
   .abilities-grid {
     grid-template-columns: 1fr;

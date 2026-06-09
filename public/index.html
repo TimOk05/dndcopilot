@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#2a1710">
   <title>D&D Copilot</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260607-note-plus-inline">
+  <link rel="stylesheet" href="assets/css/app.css?v=20260608-tavern-supplements-4">
 </head>
 <body>
   <div class="app-shell">
@@ -109,7 +109,7 @@
           <button class="generator-button" type="button">Персонаж</button>
           <button class="generator-button" type="button">НПС</button>
           <button class="generator-button" type="button" data-open-loot-generator>Награда</button>
-          <button class="generator-button" type="button">Таверна</button>
+          <button class="generator-button" type="button" data-open-tavern-generator>Таверна</button>
           <button class="generator-button" type="button">Случайное событие</button>
         </div>
       </section>
@@ -601,6 +601,63 @@
     </section>
   </div>
 
+  <div class="modal-backdrop is-hidden" data-tavern-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="tavern-modal-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-tavern-generator aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Settlement tool</p>
+        <h2 id="tavern-modal-title">Генератор таверны</h2>
+      </div>
+
+      <div class="bestiary-toolbar random-monster-form tavern-form">
+        <label class="field">
+          <span>Класс</span>
+          <select data-tavern-class>
+            <option value="common">Обычное заведение</option>
+            <option value="cheap">Дешёвое заведение</option>
+            <option value="expensive">Дорогое заведение</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Местность</span>
+          <select data-tavern-terrain>
+            <option value="">Любая местность</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Темы</span>
+          <input type="number" min="1" max="4" value="1" data-tavern-topic-count>
+        </label>
+        <label class="field">
+          <span>События</span>
+          <input type="number" min="1" max="4" value="1" data-tavern-event-count>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="primary-action" type="button" data-generate-tavern>Получить результат</button>
+        <button type="button" data-save-taverns disabled>Сохранить в библиотеку</button>
+        <button type="button" data-close-tavern-generator>Закрыть</button>
+      </div>
+
+      <div class="random-monster-results tavern-results" data-tavern-results></div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-tavern-detail-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="tavern-detail-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-tavern-detail aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Tavern card</p>
+        <h2 id="tavern-detail-title" data-tavern-detail-name>Таверна</h2>
+      </div>
+      <div class="monster-detail" data-tavern-detail></div>
+      <div class="modal-actions monster-actions">
+        <button type="button" data-close-tavern-detail>Закрыть</button>
+      </div>
+    </section>
+  </div>
+
   <div class="modal-backdrop is-hidden" data-random-loot-item-modal>
     <section class="tool-modal monster-modal" aria-labelledby="random-loot-item-title" role="dialog" aria-modal="true">
       <button class="modal-close" type="button" data-close-random-loot-item aria-label="Закрыть">×</button>
@@ -695,6 +752,6 @@
 
   <audio data-music loop preload="auto"></audio>
   <audio data-click-sound src="sound/click.mp3" preload="auto"></audio>
-  <script src="assets/js/app.js?v=20260607-note-plus-inline"></script>
+  <script src="assets/js/app.js?v=20260608-tavern-supplements-4"></script>
 </body>
 </html>
