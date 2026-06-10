@@ -140,6 +140,7 @@ const tavernDetailName = document.querySelector("[data-tavern-detail-name]");
 const tavernDetail = document.querySelector("[data-tavern-detail]");
 const characterModal = document.querySelector("[data-character-modal]");
 const characterRaceInput = document.querySelector("[data-character-race]");
+const characterSubtypeInput = document.querySelector("[data-character-subtype]");
 const characterClassInput = document.querySelector("[data-character-class]");
 const characterLevelInput = document.querySelector("[data-character-level]");
 const characterCountInput = document.querySelector("[data-character-count]");
@@ -403,6 +404,24 @@ const CHARACTER_CLASS_PRIORITIES = {
   sledopyt: ["dexterity", "wisdom", "constitution", "strength", "intelligence", "charisma"],
   charodey: ["charisma", "constitution", "dexterity", "wisdom", "intelligence", "strength"],
 };
+const RACE_SUBTYPE_TITLES = {
+  aasimar: ["Аасимар-защитник", "Аасимар-каратель", "Павший аасимар"],
+  gity: ["Гитцераи", "Гитъянки"],
+  gnom: ["Лесной гном", "Скальный гном", "Свирфнеблин", "Метка Письма"],
+  goblinoidy: ["Багбир", "Гоблин", "Хобгоблин"],
+  dvarf: ["Горный дварф", "Холмовой дварф", "Дуэргары (MTF)", "Метка Опеки"],
+  dzhenazi: ["Дженази воздуха", "Дженази земли", "Дженази огня", "Дженази воды"],
+  drakonorozhdennyy: ["Драконокровный", "Равенит"],
+  poluork: ["Метка Поиска"],
+  poluroslik: ["Коренастый", "Легконогий", "Лотосденский Полурослик", "Метка Исцеления", "Метка Гостеприимства"],
+  poluelf: ["Метка Обнаружения", "Метка Бури"],
+  tifling: ["Асмодей (MTF)", "Вельзевул (MTF)", "Гласия (MTF)", "Диспатер (MTF)", "Зариэль (MTF)", "Левистус (MTF)", "Маммон (MTF)", "Мефистофель (MTF)", "Фьёрна (MTF)"],
+  chelovek: ["стандартный человек", "альтернативный человек", "Метка Поиска", "Метка Ухода", "Метка Создания", "Метка Прохода", "Метка Стража"],
+  shifter: ["Зверошкуры", "Длиннозубы", "Быстроноги", "Дикие охотники"],
+  elf: ["Высший эльф", "Лесной эльф", "Тёмный эльф (дроу)", "Морские эльфы (MTF)", "Шадар-кай (MTF)", "Эладрин (MTF)", "Бледный эльф"],
+};
+const RACE_SUBTYPE_INTRO_TITLES = ["Разновидности", "Подрасы", "Подраса", "Подрасы тифлингов", "Драконорожденный", "Полуэльфы Фаэруна", "Полуэльфы Эберрона", "Полуорки Эберрона", "Полурослики Фаэруна", "Полурослики Эберрона", "Дварфы Эберрона", "Тифлинги Фаэруна (SCAG)"];
+const RACE_GENERIC_TRAIT_NAMES = ["возраст", "мировоззрение", "размер", "скорость"];
 const CHARACTER_NAME_STARTS = ["Ар", "Бел", "Вар", "Гал", "Дар", "Ир", "Ка", "Лор", "Мир", "Ним", "Ор", "Ри", "Са", "Тар", "Эл", "Яр"];
 const CHARACTER_NAME_ENDS = ["ан", "вен", "дан", "ион", "ис", "кан", "лир", "мар", "нар", "рин", "сор", "тар", "эль", "ян"];
 const CHARACTER_SURNAMES = ["Тихий Клинок", "Северный Пепел", "Лунная Тропа", "Медный Порог", "Пятое Пламя", "Верный Знак", "Старая Клятва", "Серый Ветер"];
@@ -754,11 +773,43 @@ function renderTextList(title, values) {
   `;
 }
 
+function repairPdfHyphenation(text) {
+  return String(text || "").replace(/(^|[^А-Яа-яЁё])([А-Яа-яЁё]+)-\s+([а-яё]+)/g, (match, boundary, left, right) => {
+    const wordPrefix = left.toLowerCase();
+    if (["по", "кое"].includes(wordPrefix)) {
+      return `${boundary}${left}-${right}`;
+    }
+    return `${boundary}${left}${right}`;
+  });
+}
+
+function dedupeRepeatedPhrases(text) {
+  let normalized = String(text || "");
+  for (let index = 0; index < 3; index += 1) {
+    const next = normalized
+      .replace(/([А-ЯЁA-Z][А-Яа-яЁёA-Za-z0-9()«»" .,-]{2,70}?)\s*\1/g, "$1")
+      .replace(/(^|[^А-Яа-яЁё])([А-Яа-яЁё]{4,})\2(?=$|[^А-Яа-яЁё])/g, "$1$2");
+    if (next === normalized) {
+      break;
+    }
+    normalized = next;
+  }
+  return normalized;
+}
+
+function normalizePdfArtifacts(value) {
+  return dedupeRepeatedPhrases(repairPdfHyphenation(value))
+    .replace(/для сдля/gi, "для")
+    .replace(/\s+([,.;:!?])/g, "$1")
+    .replace(/([а-яё])([А-ЯЁ][а-яё]+(?:\s+[а-яё]+){0,2})(?=\s|$)/g, "$1\n$2")
+    .replace(/[ \t]{2,}/g, " ");
+}
+
 function normalizeRichText(value) {
-  return String(value || "")
+  const text = String(value || "")
     .replace(/\\r\\n|\\n|\\r/g, "\n")
-    .replace(/\r\n?/g, "\n")
-    .trim();
+    .replace(/\r\n?/g, "\n");
+  return normalizePdfArtifacts(text).trim();
 }
 
 function renderInlineMarkdown(value) {
@@ -895,6 +946,26 @@ function cleanRulesText(value, heading = "") {
   }
 
   return lines.join("\n").trim();
+}
+
+function cleanCharacterFeatureText(value, heading = "") {
+  let text = cleanRulesText(value, heading);
+  text = text
+    .replace(/\s+(Бард|Варвар|Воин|Волшебник|Друид|Жрец|Изобретатель|Колдун|Монах|Паладин|Плут|Следопыт|Чародей)\s+Уровень[\s\S]*$/i, "")
+    .replace(/\n?\s*\d+\s+\+\d[\s\S]*$/i, "")
+    .replace(/\n?\s*\d+\s+\d+\s+[-—\d][\s\S]*$/i, "")
+    .replace(/\n?\s*СнаряжениеСнаряжение[\s\S]*$/i, "")
+    .trim();
+  return text;
+}
+
+function isProgressionOnlyFeature(feature) {
+  const text = cleanCharacterFeatureText(feature?.description || "", feature?.name || "");
+  return !text || !/[А-Яа-яЁёA-Za-z]{4,}/.test(text);
+}
+
+function isInvalidFeatureName(feature) {
+  return !String(feature?.name || "").trim() || /^\d+$/.test(String(feature?.name || "").trim());
 }
 
 function getCustomMonsters() {
@@ -4079,7 +4150,7 @@ async function loadCharacters() {
   }
 
   const [charactersResponse, equipmentResponse] = await Promise.all([
-    fetch("data/generators/characters.json?v=20260609-characters-2"),
+    fetch("data/generators/characters.json?v=20260610-characters-3"),
     fetch("data/generators/equipment.json?v=20260610-equipment-1"),
   ]);
   if (!charactersResponse.ok) {
@@ -4092,6 +4163,39 @@ async function loadCharacters() {
   characterData = await charactersResponse.json();
   equipmentData = await equipmentResponse.json();
   setupCharacterOptions();
+}
+
+function getRaceSubtypeOptions(race) {
+  if (!race) {
+    return [];
+  }
+  if (race.id === "chelovek") {
+    return (RACE_SUBTYPE_TITLES.chelovek || []).map((name) => ({ id: name, name }));
+  }
+
+  const titles = RACE_SUBTYPE_TITLES[race.id] || [];
+  const traits = race.traits || [];
+  return titles
+    .filter((title) => traits.some((trait) => trait.name === title))
+    .map((name) => ({ id: name, name }));
+}
+
+function setupCharacterSubtypeOptions() {
+  if (!characterSubtypeInput) {
+    return;
+  }
+
+  const race = (characterData?.races || []).find((entry) => entry.id === characterRaceInput?.value);
+  const current = characterSubtypeInput.value;
+  const subtypes = getRaceSubtypeOptions(race);
+  characterSubtypeInput.innerHTML = `
+    <option value="">Случайный</option>
+    ${subtypes.map((subtype) => `<option value="${escapeHtml(subtype.id)}">${escapeHtml(subtype.name)}</option>`).join("")}
+  `;
+  characterSubtypeInput.disabled = !race || !subtypes.length;
+  if (current && subtypes.some((subtype) => subtype.id === current)) {
+    characterSubtypeInput.value = current;
+  }
 }
 
 function setupCharacterOptions() {
@@ -4110,6 +4214,7 @@ function setupCharacterOptions() {
     if (current && (characterData.races || []).some((race) => race.id === current)) {
       characterRaceInput.value = current;
     }
+    setupCharacterSubtypeOptions();
   }
 
   if (characterClassInput) {
@@ -4172,7 +4277,8 @@ function getAvailableFeatures(source, level) {
       ...feature,
       availableLevels: (feature.levels || []).filter((featureLevel) => featureLevel <= level),
     }))
-    .filter((feature) => feature.availableLevels.length);
+    .filter((feature) => feature.availableLevels.length)
+    .filter((feature) => !isAbilityIncreaseTrait(feature) && !isInvalidFeatureName(feature));
 }
 
 function getArchetypeEntryLevel(archetype) {
@@ -4201,25 +4307,114 @@ function isHumanRace(race) {
   return race?.id === "chelovek";
 }
 
+function getSelectedRaceSubtype(race) {
+  const subtypes = getRaceSubtypeOptions(race);
+  if (!subtypes.length) {
+    return null;
+  }
+  const selected = characterSubtypeInput?.value || "";
+  return subtypes.find((subtype) => subtype.id === selected) || pickFrom(subtypes);
+}
+
+function getSubtypeStartIndexes(race) {
+  const titles = new Set(RACE_SUBTYPE_TITLES[race?.id] || []);
+  return (race?.traits || [])
+    .map((trait, index) => (titles.has(trait.name) ? index : -1))
+    .filter((index) => index >= 0);
+}
+
+function getBaseRaceTraits(race, subtypeIndexes) {
+  const traits = race?.traits || [];
+  if (!subtypeIndexes.length) {
+    return traits;
+  }
+  return traits.slice(0, Math.min(...subtypeIndexes));
+}
+
+function getSubtypeTraitGroup(race, subtype) {
+  if (!race || !subtype) {
+    return [];
+  }
+  const traits = race.traits || [];
+  const indexes = getSubtypeStartIndexes(race);
+  const start = traits.findIndex((trait) => trait.name === subtype.id);
+  if (start < 0) {
+    return [];
+  }
+  const end = indexes.find((index) => index > start) ?? traits.length;
+  return traits.slice(start, end);
+}
+
+function parseAbilityIncreasesFromTraits(traits, priority = []) {
+  const rows = [];
+  const abilityForms = [
+    { ability: "strength", pattern: /сил[аы]?/i },
+    { ability: "dexterity", pattern: /ловкост[ьи]?/i },
+    { ability: "constitution", pattern: /телосложени[ея]?/i },
+    { ability: "intelligence", pattern: /интеллект[а]?/i },
+    { ability: "wisdom", pattern: /мудрост[ьи]?/i },
+    { ability: "charisma", pattern: /харизм[аы]?/i },
+  ];
+
+  (traits || [])
+    .filter(isAbilityIncreaseTrait)
+    .forEach((trait) => {
+      const text = String(trait.description || "").replace(/\bl\b/gi, "1");
+      const lower = text.toLowerCase();
+      if (lower.includes("всех") && lower.includes("характеристик")) {
+        getCharacterAbilityItems().forEach((ability) => rows.push({ ability: ability.id, amount: 1 }));
+        return;
+      }
+
+      abilityForms.forEach(({ ability, pattern }) => {
+        const match = text.match(new RegExp(`${pattern.source}[\\s\\S]{0,90}?увелич\\S*\\s+на\\s+(\\d+)`, "i"));
+        if (match) {
+          rows.push({ ability, amount: Number(match[1]) || 1 });
+        }
+      });
+    });
+
+  if (!rows.length && priority.length) {
+    rows.push({ ability: priority[0], amount: 1 });
+  }
+
+  return rows;
+}
+
 function getHumanRaceVariant(priority) {
-  const isVariant = randomInt(1, 2) === 1;
-  if (!isVariant) {
+  const selected = getSelectedRaceSubtype({ id: "chelovek" });
+  const variantId = selected?.id || (randomInt(1, 2) === 1 ? "альтернативный человек" : "стандартный человек");
+  if (variantId === "стандартный человек") {
     return {
       id: "standard-human",
       label: "стандартный человек",
       abilityIncreases: getCharacterAbilityItems().map((ability) => ({ ability: ability.id, amount: 1 })),
       extraSkill: null,
+      traits: [],
     };
   }
 
+  if (variantId === "альтернативный человек") {
+    return {
+      id: "variant-human",
+      label: "альтернативный человек",
+      abilityIncreases: [
+        { ability: priority[0], amount: 1 },
+        { ability: priority.find((ability) => ability !== priority[0]) || priority[1], amount: 1 },
+      ],
+      extraSkill: pickFrom(characterData?.skills || []),
+      traits: [],
+    };
+  }
+
+  const race = (characterData?.races || []).find((entry) => entry.id === "chelovek");
+  const subtypeTraits = getSubtypeTraitGroup(race, { id: variantId });
   return {
-    id: "variant-human",
-    label: "альтернативный человек",
-    abilityIncreases: [
-      { ability: priority[0], amount: 2 },
-      { ability: priority.find((ability) => ability !== priority[0]) || priority[1], amount: 1 },
-    ],
-    extraSkill: pickFrom(characterData?.skills || []),
+    id: variantId,
+    label: variantId,
+    abilityIncreases: parseAbilityIncreasesFromTraits(subtypeTraits, priority),
+    extraSkill: null,
+    traits: subtypeTraits,
   };
 }
 
@@ -4228,11 +4423,19 @@ function getRaceAbilityProfile(race, priority) {
     return getHumanRaceVariant(priority);
   }
 
+  const subtypeIndexes = getSubtypeStartIndexes(race);
+  const selectedSubtype = getSelectedRaceSubtype(race);
+  const baseTraits = getBaseRaceTraits(race, subtypeIndexes);
+  const subtypeTraits = getSubtypeTraitGroup(race, selectedSubtype);
+  const traits = [...baseTraits, ...subtypeTraits];
+  const abilityIncreases = parseAbilityIncreasesFromTraits(traits, priority);
+
   return {
-    id: race.id,
-    label: "",
-    abilityIncreases: race.ability_score_increases || [],
+    id: selectedSubtype?.id || race.id,
+    label: selectedSubtype?.name || "",
+    abilityIncreases: abilityIncreases.length ? abilityIncreases : race.ability_score_increases || [],
     extraSkill: null,
+    traits,
   };
 }
 
@@ -4590,15 +4793,23 @@ function buildSavingThrows(characterClass, abilityScores, proficiencyBonus) {
 }
 
 function isAbilityIncreaseTrait(trait) {
-  return String(trait?.name || "").toLowerCase().includes("увеличение") && String(trait?.name || "").toLowerCase().includes("характерист");
+  const name = String(trait?.name || "").toLowerCase().trim();
+  return name.includes("увеличение") && (name.includes("характерист") || name === "увеличение");
 }
 
 function isGenericRaceTrait(trait) {
   const name = String(trait?.name || "").toLowerCase();
-  return isAbilityIncreaseTrait(trait) || ["возраст", "мировоззрение", "размер", "скорость"].includes(name);
+  return isAbilityIncreaseTrait(trait)
+    || RACE_GENERIC_TRAIT_NAMES.includes(name)
+    || RACE_SUBTYPE_INTRO_TITLES.some((title) => title.toLowerCase() === name)
+    || ["уровень", "заклинания", "время накладывания", "дистанция", "компоненты", "длительность", "школа"].includes(name);
 }
 
 function getHumanRaceTraits(race, raceProfile) {
+  if (raceProfile?.traits?.length) {
+    return raceProfile.traits.filter((trait) => !isGenericRaceTrait(trait)).slice(0, 8);
+  }
+
   const traits = race.traits || [];
   const alternativeIndex = traits.findIndex((trait) => trait.name === "Альтернативная особенность людей");
   const markIndex = traits.findIndex((trait) => String(trait.name || "").startsWith("Метка "));
@@ -4617,7 +4828,8 @@ function getRaceTraitHighlights(race, raceProfile = null) {
   if (isHumanRace(race)) {
     return getHumanRaceTraits(race, raceProfile);
   }
-  const traits = (race.traits || []).filter((trait) => !isGenericRaceTrait(trait));
+  const sourceTraits = raceProfile?.traits?.length ? raceProfile.traits : race.traits || [];
+  const traits = sourceTraits.filter((trait) => !isGenericRaceTrait(trait));
   return traits.length ? traits.slice(0, 10) : (race.traits || []).slice(0, 8);
 }
 
@@ -4632,7 +4844,7 @@ function compactFeature(feature) {
     name: feature.name,
     levels: feature.levels || [],
     availableLevels: feature.availableLevels || [],
-    description: cleanRulesText(feature.description || "", feature.name).slice(0, 12000),
+    description: cleanCharacterFeatureText(feature.description || "", feature.name).slice(0, 12000),
   };
 }
 
@@ -4708,9 +4920,6 @@ function buildCharacterChoices(character, abilityResult) {
   const classFeatures = character.classFeatures || [];
   const selectedSkillNames = character.skills.map((skill) => skill.name);
 
-  if (abilityResult.classImprovements.length) {
-    choices.push({ label: "Увеличение характеристик", values: abilityResult.classImprovements });
-  }
   if (hasAvailableFeature(classFeatures, "Боевой стиль")) {
     choices.push({ label: "Боевой стиль", values: [pickFrom(FIGHTING_STYLES)] });
   }
@@ -4988,7 +5197,7 @@ function renderCharacterSkillsAndChoices(character) {
     : buildCharacterSkillChecks(character.abilities || {}, character.proficiencyBonus || 2, character.skills || [], character.expertiseSkills || []);
   return `
     <section class="monster-section">
-      <h4>Навыки и выборы</h4>
+      <h4>Навыки</h4>
       <div class="character-skill-grid">
         ${skillChecks.map((skill) => `
           <div>
@@ -4997,16 +5206,6 @@ function renderCharacterSkillsAndChoices(character) {
           </div>
         `).join("")}
       </div>
-      ${character.choices?.length ? `
-        <div class="character-choice-list">
-          ${character.choices.map((choice) => `
-            <div>
-              <strong>${escapeHtml(choice.label)}</strong>
-              <span>${escapeHtml(choice.values.join(", "))}</span>
-            </div>
-          `).join("")}
-        </div>
-      ` : ""}
     </section>
   `;
 }
@@ -5020,10 +5219,8 @@ function renderCharacterEquipment(character) {
 
   return `
     <section class="monster-section">
-      <h4>Снаряжение и атаки</h4>
+      <h4>Снаряжение</h4>
       <div class="monster-meta-grid">
-        <div><span>Класс доспеха</span><strong>${escapeHtml(armorClass.value || "-")}</strong></div>
-        <div><span>Расчёт КД</span><strong>${escapeHtml(armorClass.label || "-")}</strong></div>
         <div><span>Доспех</span><strong>${escapeHtml(armorClass.armor || "нет")}</strong></div>
         <div><span>Щит</span><strong>${escapeHtml(armorClass.shield || "нет")}</strong></div>
       </div>
@@ -5152,9 +5349,9 @@ function renderCharacterRollTable(table) {
 }
 
 function renderCharacterFeatureBody(feature) {
-  const text = cleanRulesText(feature.description || "", feature.name);
+  const text = cleanCharacterFeatureText(feature.description || "", feature.name);
   if (!text) {
-    return "<p>Описание не извлечено.</p>";
+    return "";
   }
   const { body, tables } = splitCharacterRollTables(text);
   return `
@@ -5189,8 +5386,46 @@ function renderCharacterRaceTraits(character) {
   })));
 }
 
-function renderSpellNames(spellsToRender) {
-  return (spellsToRender || []).map((spell) => `${getSpellLevelLabel(spell.level)}: ${getSpellCardName(spell)}`);
+function renderCharacterSpellCard(spell, prefix = "") {
+  const fullSpell = spellsById.get(spell.id) || spell;
+  const classes = (fullSpell.classes || []).map((item) => getClassLabel(item.key, item.name)).join(", ") || "классы не указаны";
+  const tags = [fullSpell.concentration ? "концентрация" : "", fullSpell.ritual ? "ритуал" : ""].filter(Boolean).join(" · ");
+  return `
+    <button class="monster-card spell-card character-spell-card" type="button" data-spell-id="${escapeHtml(fullSpell.id)}">
+      <span>${escapeHtml(prefix || getSpellLevelLabel(fullSpell.level))} · ${escapeHtml(getSchoolLabel(fullSpell.school_key, fullSpell.school))}</span>
+      <strong>${escapeHtml(getSpellCardName(fullSpell))}</strong>
+      <em>${escapeHtml(fullSpell.name || "")}</em>
+      <small>${escapeHtml(classes)}${tags ? ` · ${escapeHtml(tags)}` : ""}</small>
+    </button>
+  `;
+}
+
+function renderCharacterSpellSlotsTable(plan) {
+  const rows = Object.entries(plan?.slots || {}).filter(([, count]) => Number(count) > 0);
+  if (!rows.length) {
+    return "";
+  }
+
+  return `
+    <div class="potion-table-wrap character-spell-slots">
+      <table class="potion-table">
+        <thead>
+          <tr>
+            <th>Уровень ячейки</th>
+            <th>Количество</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(([level, count]) => `
+            <tr>
+              <td>${escapeHtml(plan.pactSlotLevel ? `${level} уровень договора` : `${level} уровень`)}</td>
+              <td>${escapeHtml(count)}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
 }
 
 function renderCharacterSpells(character) {
@@ -5204,24 +5439,27 @@ function renderCharacterSpells(character) {
     `;
   }
 
-  const spellRows = [
-    ...renderSpellNames(character.spellbook?.cantrips || []),
-    ...renderSpellNames(character.spellbook?.spells || []),
-    ...(character.spellbook?.arcanum?.length ? renderSpellNames(character.spellbook.arcanum).map((spell) => `Таинственный арканум: ${spell}`) : []),
-  ];
+  const cantrips = character.spellbook?.cantrips || [];
+  const leveledSpells = character.spellbook?.spells || [];
+  const arcanum = character.spellbook?.arcanum || [];
+  const spellCount = cantrips.length + leveledSpells.length + arcanum.length;
 
   return `
     <details class="monster-section character-collapsible">
-      <summary><span>Заклинания</span><small>${escapeHtml(spellRows.length)} записей</small></summary>
+      <summary><span>Заклинания</span><small>${escapeHtml(spellCount)} записей</small></summary>
       <div class="monster-meta-grid">
         <div><span>Базовая характеристика</span><strong>${escapeHtml(getAbilityLabel(plan.ability))}</strong></div>
         <div><span>Сл спасброска</span><strong>${escapeHtml(plan.saveDc)}</strong></div>
         <div><span>Атака заклинанием</span><strong>${escapeHtml(signed(plan.attackBonus))}</strong></div>
-        <div><span>Ячейки</span><strong>${escapeHtml(getSpellSlotsText(plan))}</strong></div>
       </div>
-      <div class="monster-text-list character-spell-list">
-        ${spellRows.length ? spellRows.map((spell) => `<p>${escapeHtml(spell)}</p>`).join("") : "<p>Подходящих заклинаний в локальной базе не найдено.</p>"}
-      </div>
+      ${renderCharacterSpellSlotsTable(plan)}
+      ${spellCount ? `
+        <div class="character-spell-grid">
+          ${cantrips.map((spell) => renderCharacterSpellCard(spell)).join("")}
+          ${leveledSpells.map((spell) => renderCharacterSpellCard(spell)).join("")}
+          ${arcanum.map((spell) => renderCharacterSpellCard(spell, `Таинственный арканум · ${getSpellLevelLabel(spell.level)}`)).join("")}
+        </div>
+      ` : "<div class=\"monster-text-list\"><p>Подходящих заклинаний в локальной базе не найдено.</p></div>"}
       ${plan.sourceNote ? `<p class="license-note">${escapeHtml(plan.sourceNote)}</p>` : ""}
     </details>
   `;
@@ -5237,7 +5475,6 @@ function renderCharacterDetail(character) {
       <div><span>Архетип</span><strong>${escapeHtml(character.archetype?.name || "ещё не выбран")}</strong></div>
       <div><span>Бонус мастерства</span><strong>+${escapeHtml(character.proficiencyBonus)}</strong></div>
       <div><span>Хиты</span><strong>${escapeHtml(character.hitPoints?.value || "-")} (${escapeHtml(character.hitPoints?.hitDice || "-")})</strong></div>
-      <div><span>Формула хитов</span><strong>${escapeHtml(character.hitPoints?.formula || "-")}</strong></div>
       <div><span>Класс доспеха</span><strong>${escapeHtml(character.equipment?.armorClass?.value || "-")}</strong></div>
     </div>
 
@@ -6254,6 +6491,7 @@ document.addEventListener("click", (event) => {
 
   if (button.dataset.spellId) {
     openSpellModal(button.dataset.spellId);
+    return;
   }
 
   if (button.dataset.lootItemId) {
@@ -6573,6 +6811,8 @@ volumeControl.addEventListener("input", (event) => {
   control?.addEventListener("input", renderSpells);
   control?.addEventListener("change", renderSpells);
 });
+
+characterRaceInput?.addEventListener("change", setupCharacterSubtypeOptions);
 
 [lootSearch, lootRarityInput, lootListCategoryInput].forEach((control) => {
   control?.addEventListener("input", renderLootList);

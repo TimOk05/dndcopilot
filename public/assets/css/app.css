@@ -549,6 +549,10 @@ input[type="range"] {
   z-index: 18;
 }
 
+[data-spell-modal] {
+  z-index: 28;
+}
+
 .modal-backdrop.is-hidden,
 .is-hidden {
   display: none;
@@ -1297,8 +1301,20 @@ input[type="range"] {
   margin-top: 10px;
 }
 
-.character-spell-list {
-  columns: 2 220px;
+.character-spell-slots {
+  margin-top: 10px;
+}
+
+.character-spell-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.character-spell-card {
+  min-height: 112px;
+  text-align: left;
 }
 
 .character-collapsible {

@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#2a1710">
   <title>D&D Copilot</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260610-character-fixes-1">
+  <link rel="stylesheet" href="assets/css/app.css?v=20260610-character-fixes-3">
 </head>
 <body>
   <div class="app-shell">
@@ -675,6 +675,12 @@
           </select>
         </label>
         <label class="field">
+          <span>Подвид</span>
+          <select data-character-subtype disabled>
+            <option value="">Случайный</option>
+          </select>
+        </label>
+        <label class="field">
           <span>Класс</span>
           <select data-character-class>
             <option value="">Случайный</option>
@@ -932,6 +938,6 @@
 
   <audio data-music loop preload="auto"></audio>
   <audio data-click-sound src="sound/click.mp3" preload="auto"></audio>
-  <script src="assets/js/app.js?v=20260610-character-fixes-1"></script>
+  <script src="assets/js/app.js?v=20260610-character-fixes-3"></script>
 </body>
 </html>

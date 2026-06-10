@@ -1,5 +1,6 @@
 import json
 import re
+import sys
 from json import JSONDecoder
 from pathlib import Path
 
@@ -8,8 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TRANSLATION_PATH = Path("C:/Users/Tim/Dropbox/\u041f\u041a/Desktop/\u043f\u0435\u0440\u0435\u0432\u043e\u0434 \u0431\u0434 \u0441\u043f\u0435\u043b.txt")
 SPELLS_PATH = ROOT / "public/data/srd/spells.json"
 INDEX_PATH = ROOT / "public/data/srd/spells.index.json"
-MISSING_JSON_PATH = ROOT / "public/data/srd/spells-untranslated.json"
-MISSING_TXT_PATH = ROOT / "public/data/srd/spells-untranslated.txt"
+MISSING_JSON_PATH = ROOT / "public/data/i18n/ru/spells-untranslated.json"
 
 TRANSLATED_DISPLAY_FIELDS = [
     "school",
@@ -41,7 +41,7 @@ def read_loose_json_records(path):
 
 
 def has_cyrillic(value):
-    return bool(re.search(r"[А-Яа-яЁё]", str(value or "")))
+    return bool(re.search(r"[\u0400-\u04FF]", str(value or "")))
 
 
 def is_translated_name(spell):
@@ -51,6 +51,43 @@ def is_translated_name(spell):
 
 def is_translated_description(spell):
     return has_cyrillic(spell.get("description_ru") or spell.get("description"))
+
+
+def is_translated_higher_level(spell):
+    if not spell.get("higher_level"):
+        return True
+    return has_cyrillic(spell.get("higher_level_ru") or "")
+
+
+def to_translation_todo(spell):
+    missing_name = not is_translated_name(spell)
+    missing_description = not is_translated_description(spell)
+    missing_higher_level = not is_translated_higher_level(spell)
+
+    record = {
+        "id": spell.get("id"),
+        "level": spell.get("level"),
+        "school": spell.get("school"),
+        "source": spell.get("source_display") or spell.get("source"),
+        "translation_needed": [
+            field
+            for field, missing in [
+                ("name", missing_name),
+                ("description", missing_description),
+                ("higher_level", missing_higher_level),
+            ]
+            if missing
+        ],
+    }
+    if missing_name:
+        record["name"] = spell.get("name") or ""
+    else:
+        record["name_ru"] = spell.get("name_ru") or spell.get("name") or ""
+    if missing_description:
+        record["description"] = spell.get("description") or ""
+    if missing_higher_level:
+        record["higher_level"] = spell.get("higher_level") or ""
+    return record
 
 
 def merge_translation(spell, translation):
@@ -108,7 +145,8 @@ def to_index_row(spell):
 
 
 def main():
-    translations = read_loose_json_records(TRANSLATION_PATH)
+    translation_path = Path(sys.argv[1]) if len(sys.argv) > 1 else TRANSLATION_PATH
+    translations = read_loose_json_records(translation_path)
     translations_by_id = {item["id"]: item for item in translations if item.get("id")}
 
     spells = json.loads(SPELLS_PATH.read_text(encoding="utf-8"))
@@ -121,46 +159,27 @@ def main():
     updated_index = [to_index_row(spell) for spell in updated_spells]
 
     missing = [
-        {
-            "id": spell.get("id"),
-            "name": spell.get("name"),
-            "level": spell.get("level"),
-            "school": spell.get("school"),
-            "source": spell.get("source_display") or spell.get("source"),
-            "missing_name_ru": not is_translated_name(spell),
-            "missing_description_ru": not is_translated_description(spell),
-        }
+        to_translation_todo(spell)
         for spell in updated_spells
-        if not is_translated_name(spell) or not is_translated_description(spell)
+        if (
+            not is_translated_name(spell)
+            or not is_translated_description(spell)
+            or not is_translated_higher_level(spell)
+        )
     ]
 
     SPELLS_PATH.write_text(json.dumps(updated_spells, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     INDEX_PATH.write_text(json.dumps(updated_index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    MISSING_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
     MISSING_JSON_PATH.write_text(json.dumps(missing, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    MISSING_TXT_PATH.write_text(
-        "\n".join(
-            [
-                "Заклинания без полного перевода",
-                "Формат: id | name | level | source | что отсутствует",
-                "",
-                *[
-                    f"{item['id']} | {item['name']} | {item['level']} | {item['source']} | "
-                    f"{', '.join(part for part, missing_part in [('name_ru', item['missing_name_ru']), ('description_ru', item['missing_description_ru'])] if missing_part)}"
-                    for item in missing
-                ],
-            ]
-        )
-        + "\n",
-        encoding="utf-8",
-    )
 
+    print(f"Translation file: {translation_path}")
     print(f"Translations read: {len(translations_by_id)}")
     print(f"Spells updated: {sum(1 for spell in spells if spell.get('id') in translations_by_id)}")
     print(f"Missing full translation: {len(missing)}")
     print(f"Wrote {SPELLS_PATH}")
     print(f"Wrote {INDEX_PATH}")
     print(f"Wrote {MISSING_JSON_PATH}")
-    print(f"Wrote {MISSING_TXT_PATH}")
 
 
 if __name__ == "__main__":

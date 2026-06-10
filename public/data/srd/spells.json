@@ -6978,9 +6978,9 @@
   {
     "id": "deepm_circle-of-wind",
     "name": "Circle of Wind",
-    "name_ru": "",
+    "name_ru": "Круг ветра",
     "level": 1,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [],
     "casting_time": "action",
@@ -7015,14 +7015,15 @@
     "source_display": "Deep Magic for 5th Edition",
     "source_url": "https://koboldpress.com/kpstore/product/deep-magic-for-5th-edition-hardcover/",
     "publisher": "Kobold Press",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "description_ru": "Лёгкий ветер окружает вас, оставляя вас в центре мягкого вихря. На время действия вы получаете бонус +2 к КД против дальнобойных атак. Вы также совершаете с преимуществом спасброски против экстремальной жары окружающей среды, вредоносных газов, испарений и вдыхаемых ядов."
   },
   {
     "id": "deepm_cloak-of-shadow",
     "name": "Cloak of Shadow",
-    "name_ru": "",
+    "name_ru": "Плащ тени",
     "level": 1,
-    "school": "Illusion",
+    "school": "Иллюзия",
     "school_key": "illusion",
     "classes": [],
     "casting_time": "bonus-action",
@@ -7057,14 +7058,15 @@
     "source_display": "Deep Magic for 5th Edition",
     "source_url": "https://koboldpress.com/kpstore/product/deep-magic-for-5th-edition-hardcover/",
     "publisher": "Kobold Press",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "description_ru": "Вы окутываете себя тенью, получая преимущество на проверки Ловкости (Скрытность) против существ, полагающихся на зрение."
   },
   {
     "id": "deepmx_cloying-darkness",
     "name": "Cloying Darkness",
-    "name_ru": "",
+    "name_ru": "Удушающая тьма",
     "level": 1,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -7110,14 +7112,16 @@
     "source_display": "Deep Magic Extended",
     "source_url": "https://koboldpress.com/deepmagic",
     "publisher": "Kobold Press",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "description_ru": "Вы протягиваете руку из гниющих теней. Совершите дальнобойную атаку заклинанием. При попадании цель получает 2d8 некротического урона и должна совершить спасбросок Телосложения. При провале её органы зрения окутываются тенью до начала вашего следующего хода, из-за чего она воспринимает любое освещение на одну ступень ниже по интенсивности: яркий свет как тусклый, тусклый свет как тьму, а тьму как магическую тьму.",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 2-го уровня или выше, урон увеличивается на 1d8 за каждый уровень ячейки выше 1-го."
   },
   {
     "id": "deepm_cobra-fangs",
     "name": "Cobra Fangs",
-    "name_ru": "",
+    "name_ru": "Клыки кобры",
     "level": 1,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -7152,14 +7156,16 @@
     "source_display": "Deep Magic for 5th Edition",
     "source_url": "https://koboldpress.com/kpstore/product/deep-magic-for-5th-edition-hardcover/",
     "publisher": "Kobold Press",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "description_ru": "Заклинание заставляет цель отрастить большие змееподобные клыки. Несогласное существо должно совершить спасбросок Мудрости, чтобы избежать эффекта. Заклинание проваливается, если у цели уже есть атака укусом, наносящая урон ядом.\n\nЕсли у цели нет атаки укусом, она получает её. Цель владеет этим укусом и добавляет модификатор Силы к броскам атаки и урона. Урон является колющим, а кость урона — d4.\n\nКогда цель попадает по существу атакой укусом, это существо должно совершить спасбросок Телосложения, получая 3d6 урона ядом при провале или половину этого урона при успехе.\n",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 3-го уровня или выше, укус цели считается магическим для преодоления сопротивления и иммунитета к немагическим атакам и урону."
   },
   {
     "id": "srd-2024_color-spray",
     "name": "Color Spray",
-    "name_ru": "",
+    "name_ru": "Цветные брызги",
     "level": 1,
-    "school": "Illusion",
+    "school": "Иллюзия",
     "school_key": "illusion",
     "classes": [
       {
@@ -7207,14 +7213,16 @@
     "source_display": "5e 2024 Rules",
     "source_url": "https://dnd.wizards.com/resources/systems-reference-document",
     "publisher": "Wizards of the Coast",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "description_ru": "Вы выпускаете ослепительный поток вспыхивающего разноцветного света. Каждое существо в 15-футовом конусе, исходящем от вас, должно преуспеть в спасброске Телосложения, иначе получает состояние Ослеплённый до конца вашего следующего хода.",
+    "higher_level_ru": "Добавьте ещё 2d10 хитов за каждый уровень ячейки выше 1-го."
   },
   {
     "id": "srd-2024_command",
     "name": "Command",
-    "name_ru": "",
+    "name_ru": "Приказ",
     "level": 1,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -7262,14 +7270,16 @@
     "source_display": "5e 2024 Rules",
     "source_url": "https://dnd.wizards.com/resources/systems-reference-document",
     "publisher": "Wizards of the Coast",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "description_ru": "Вы произносите однословный приказ существу, которое видите в пределах дистанции. Цель должна преуспеть в спасброске Мудрости, иначе выполнит приказ в свой следующий ход. Выберите приказ из следующих вариантов:\n\n- **Брось.** Цель бросает всё, что держит, а затем заканчивает свой ход.\n- **Беги.** Цель тратит свой ход, удаляясь от вас самым быстрым доступным способом.\n- **Пади.** Цель получает состояние Ничком, а затем заканчивает свой ход.\n- **Стой.** В свой ход цель не перемещается и не совершает ни действие, ни бонусное действие.",
+    "higher_level_ru": "Вы можете воздействовать на одно дополнительное существо за каждый уровень ячейки заклинания выше 1-го."
   },
   {
     "id": "srd-2024_comprehend-languages",
     "name": "Comprehend Languages",
-    "name_ru": "",
+    "name_ru": "Понимание языков",
     "level": 1,
-    "school": "Divination",
+    "school": "Прорицание",
     "school_key": "divination",
     "classes": [
       {
@@ -7321,14 +7331,16 @@
     "source_display": "5e 2024 Rules",
     "source_url": "https://dnd.wizards.com/resources/systems-reference-document",
     "publisher": "Wizards of the Coast",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "description_ru": "На время действия вы понимаете буквальный смысл любого языка, который слышите или видите в жестовой форме. Вы также понимаете любой письменный язык, который видите, но должны касаться поверхности, на которой написаны слова. На чтение одной страницы текста требуется около 1 минуты. Это заклинание не расшифровывает символы или тайные сообщения.",
+    "higher_level_ru": "Бонус увеличивается на +5 за каждый уровень ячейки выше 1-го."
   },
   {
     "id": "spells-that-dont-suck_cone-of-flame",
     "name": "Cone of Flame",
-    "name_ru": "",
+    "name_ru": "Конус пламени",
     "level": 1,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -7374,14 +7386,16 @@
     "source_display": "Spells That Don't Suck",
     "source_url": "https://www.somanyrobots.com/s/Spells-That-Dont-Suck-compressed.pdf",
     "publisher": "Somanyrobots",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "description_ru": "Из ваших пальцев вырывается пламя. Каждое существо в 15-футовом конусе должно совершить спасбросок Ловкости. При провале существо получает 3d6 урона огнём, а при успехе — половину этого урона.\n\nПламя поджигает все горючие предметы в области, которые никто не носит и не несёт.",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 2-го уровня или выше, урон увеличивается на 1d6, а дистанция конуса увеличивается на 5 футов за каждый уровень ячейки выше 1-го."
   },
   {
     "id": "deepm_converse-with-dragon",
     "name": "Converse With Dragon",
-    "name_ru": "",
+    "name_ru": "Разговор с драконом",
     "level": 1,
-    "school": "Divination",
+    "school": "Прорицание",
     "school_key": "divination",
     "classes": [],
     "casting_time": "action",
@@ -7416,14 +7430,15 @@
     "source_display": "Deep Magic for 5th Edition",
     "source_url": "https://koboldpress.com/kpstore/product/deep-magic-for-5th-edition-hardcover/",
     "publisher": "Kobold Press",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "description_ru": "Вы получаете ограниченную телепатию, позволяющую общаться с любым существом в пределах 120 футов, имеющим тип дракон, независимо от языков существа. Дракон может совершить спасбросок Харизмы, чтобы воспрепятствовать телепатическому контакту с собой.\n\nЭто заклинание не меняет отношение дракона к вам или вашим союзникам, а лишь открывает канал общения. В некоторых случаях нежелательный телепатический контакт может ухудшить отношение дракона к вам."
   },
   {
     "id": "a5e-ag_corpse-explosion",
     "name": "Corpse Explosion",
-    "name_ru": "",
+    "name_ru": "Взрыв трупа",
     "level": 1,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -7460,7 +7475,9 @@
     "source_display": "Adventurer's Guide",
     "source_url": "https://a5esrd.com/a5esrd",
     "publisher": "EN Publishing",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "description_ru": "Труп взрывается ядовитым облаком. Каждое существо в радиусе 10 футов от трупа должно совершить спасбросок Телосложения. При провале существо получает 3d6 урона звуком и становится отравленным на 1 минуту; при успехе оно получает половину урона и не становится отравленным. Отравленное существо может повторять спасбросок в конце каждого своего хода, оканчивая эффект на себе при успехе.",
+    "higher_level_ru": "Вы выбираете целью один дополнительный труп за каждые 2 уровня ячейки выше 1-го."
   },
   {
     "id": "srd-2024_create-or-destroy-water",
@@ -17745,7 +17762,8 @@
     "source_url": "https://koboldpress.com/kpstore/product/tome-of-heroes-for-5th-edition/",
     "publisher": "Kobold Press",
     "license": "Open5e source data",
-    "description_ru": "Вы слегка меняете ход судьбы. Когда вы или существо, которое вы видите в пределах дистанции, совершает бросок d20, вы можете наложить это заклинание, чтобы заставить это существо перебросить d20. Существо должно использовать новый результат."
+    "description_ru": "Вы слегка меняете ход судьбы. Когда вы или существо, которое вы видите в пределах дистанции, совершает бросок d20, вы можете наложить это заклинание, чтобы заставить это существо перебросить d20. Существо должно использовать новый результат.",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 3-го уровня или выше, вы можете выбрать целью одно дополнительное существо за каждый уровень ячейки выше 2-го. Эти существа должны находиться в пределах 30 футов друг от друга, когда вы выбираете их целью."
   },
   {
     "id": "deepm_by-the-light-of-the-moon",
@@ -17883,7 +17901,8 @@
     "source_url": "https://dnd.wizards.com/resources/systems-reference-document",
     "publisher": "Wizards of the Coast",
     "license": "Open5e source data",
-    "description_ru": "Каждый гуманоид в сфере радиусом 20 футов с центром в точке, выбранной вами в пределах дистанции, должен преуспеть в спасброске Харизмы, иначе будет затронут одним из следующих эффектов (выберите для каждого существа): *Подавление.* Вы подавляете любой эффект, из-за которого цель очарована или испугана. Когда это заклинание заканчивается, подавленный эффект возобновляется, если его длительность за это время не истекла. *Безразличие.* Цель становится безразличной к выбранным вами существам, к которым она враждебна. Это безразличие заканчивается, если цель получает урон или если она становится свидетелем того, как её союзники получают урон. Когда заклинание заканчивается, цель снова становится враждебной, если Мастер не решит иначе."
+    "description_ru": "Каждый гуманоид в сфере радиусом 20 футов с центром в точке, выбранной вами в пределах дистанции, должен преуспеть в спасброске Харизмы, иначе будет затронут одним из следующих эффектов (выберите для каждого существа): *Подавление.* Вы подавляете любой эффект, из-за которого цель очарована или испугана. Когда это заклинание заканчивается, подавленный эффект возобновляется, если его длительность за это время не истекла. *Безразличие.* Цель становится безразличной к выбранным вами существам, к которым она враждебна. Это безразличие заканчивается, если цель получает урон или если она становится свидетелем того, как её союзники получают урон. Когда заклинание заканчивается, цель снова становится враждебной, если Мастер не решит иначе.",
+    "higher_level_ru": "Область заклинания увеличивается на 10 футов за каждый уровень ячейки выше 2-го."
   },
   {
     "id": "spells-that-dont-suck_captivate",
@@ -32786,7 +32805,8 @@
     "source_url": "https://koboldpress.com/kpstore/product/deep-magic-for-5th-edition-hardcover/",
     "publisher": "Kobold Press",
     "license": "Open5e source data",
-    "description_ru": "Ваше касание может вытягивать энергию из нежити, исцеляя ваши раны. Совершите рукопашную атаку заклинанием по существу-нежити в пределах вашей досягаемости. При попадании цель получает 2d6 урона излучением, а вы или союзник в пределах 30 футов от вас восстанавливаете хиты в количестве, равном половине нанесённого урона излучением. Если этот эффект используется на союзнике, он не может восстановить союзнику хиты выше половины максимума его хитов. Этот эффект не может исцелять нежить или конструктов. Пока заклинание не закончится, вы можете снова совершать эту атаку действием в каждый свой ход."
+    "description_ru": "Ваше касание может вытягивать энергию из нежити, исцеляя ваши раны. Совершите рукопашную атаку заклинанием по существу-нежити в пределах вашей досягаемости. При попадании цель получает 2d6 урона излучением, а вы или союзник в пределах 30 футов от вас восстанавливаете хиты в количестве, равном половине нанесённого урона излучением. Если этот эффект используется на союзнике, он не может восстановить союзнику хиты выше половины максимума его хитов. Этот эффект не может исцелять нежить или конструктов. Пока заклинание не закончится, вы можете снова совершать эту атаку действием в каждый свой ход.",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 4-го уровня или выше, урон увеличивается на 1d6 за каждый уровень ячейки выше 3-го."
   },
   {
     "id": "spells-that-dont-suck_lightning-beam",
@@ -38626,9 +38646,9 @@
   {
     "id": "deepm_boiling-blood",
     "name": "Boiling Blood",
-    "name_ru": "",
+    "name_ru": "Кипящая кровь",
     "level": 4,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -38678,7 +38698,9 @@
     "source_display": "Deep Magic for 5th Edition",
     "source_url": "https://koboldpress.com/kpstore/product/deep-magic-for-5th-edition-hardcover/",
     "publisher": "Kobold Press",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "description_ru": "Вы заставляете кровь в теле существа вскипать сверхъестественным жаром. Выберите одно существо, которое видите в пределах дистанции и которое не является конструктом или нежитью. Цель должна совершить спасбросок Телосложения. При успехе она получает 2d6 урона огнём, и заклинание оканчивается. При провале существо получает 4d6 урона огнём и ослепляется. В конце каждого своего хода цель может совершить новый спасбросок Телосложения. При успехе заклинание оканчивается. При провале существо получает ещё 2d6 урона огнём и остаётся ослеплённым.\n",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 5-го уровня или выше, вы можете выбрать целью одно дополнительное существо за каждый уровень ячейки выше 4-го. Эти существа должны находиться в пределах 30 футов друг от друга, когда вы выбираете их целью."
   },
   {
     "id": "deepm_brittling",
@@ -44551,7 +44573,8 @@
     "source_display": "Spells That Don't Suck",
     "source_url": "https://www.somanyrobots.com/s/Spells-That-Dont-Suck-compressed.pdf",
     "publisher": "Somanyrobots",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 5-го уровня или выше, урон увеличивается на 1d8 за каждый уровень ячейки выше 4-го."
   },
   {
     "id": "a5e-ag_tearful-sonnet",
@@ -44922,7 +44945,8 @@
     "source_display": "5e 2024 Rules",
     "source_url": "https://dnd.wizards.com/resources/systems-reference-document",
     "publisher": "Wizards of the Coast",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "higher_level_ru": "Урон увеличивается на 1d8 за каждый уровень ячейки заклинания выше 4."
   },
   {
     "id": "toh_war-horn",
@@ -45343,7 +45367,8 @@
     "source_display": "Deep Magic for 5th Edition",
     "source_url": "https://koboldpress.com/kpstore/product/deep-magic-for-5th-edition-hardcover/",
     "publisher": "Kobold Press",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 6-го уровня или выше, урон увеличивается на 1d6 за каждый уровень ячейки выше 5-го."
   },
   {
     "id": "deepmx_amplify-ley-field",
@@ -53303,9 +53328,9 @@
   {
     "id": "deepm_enchant-ring",
     "name": "Enchant Ring",
-    "name_ru": "",
+    "name_ru": "Зачаровать кольцо",
     "level": 6,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [],
     "casting_time": "action",
@@ -53345,9 +53370,9 @@
   {
     "id": "deepm_encroaching-shadows",
     "name": "Encroaching Shadows",
-    "name_ru": "",
+    "name_ru": "Наступающие тени",
     "level": 6,
-    "school": "Illusion",
+    "school": "Иллюзия",
     "school_key": "illusion",
     "classes": [],
     "casting_time": "1hour",
@@ -53387,9 +53412,9 @@
   {
     "id": "deepm_entomb",
     "name": "Entomb",
-    "name_ru": "",
+    "name_ru": "Погребение",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -53429,9 +53454,9 @@
   {
     "id": "deepm_extract-knowledge",
     "name": "Extract Knowledge",
-    "name_ru": "",
+    "name_ru": "Извлечение знания",
     "level": 6,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "action",
@@ -53471,9 +53496,9 @@
   {
     "id": "open5e_eye-bite",
     "name": "Eye bite",
-    "name_ru": "",
+    "name_ru": "Злобный взгляд",
     "level": 6,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "action",
@@ -53513,9 +53538,9 @@
   {
     "id": "srd-2024_eyebite",
     "name": "Eyebite",
-    "name_ru": "",
+    "name_ru": "Злобный взгляд",
     "level": 6,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -53572,9 +53597,9 @@
   {
     "id": "deepm_fault-line",
     "name": "Fault Line",
-    "name_ru": "",
+    "name_ru": "Линия разлома",
     "level": 6,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -53614,9 +53639,9 @@
   {
     "id": "srd-2024_find-the-path",
     "name": "Find the Path",
-    "name_ru": "",
+    "name_ru": "Найти путь",
     "level": 6,
-    "school": "Divination",
+    "school": "Прорицание",
     "school_key": "divination",
     "classes": [
       {
@@ -53669,9 +53694,9 @@
   {
     "id": "deepm_firewalk",
     "name": "Firewalk",
-    "name_ru": "",
+    "name_ru": "Хождение по огню",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -53711,9 +53736,9 @@
   {
     "id": "spells-that-dont-suck_fleeting-portals",
     "name": "Fleeting Portals",
-    "name_ru": "",
+    "name_ru": "Мимолётные порталы",
     "level": 6,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -53766,9 +53791,9 @@
   {
     "id": "srd-2024_flesh-to-stone",
     "name": "Flesh to Stone",
-    "name_ru": "",
+    "name_ru": "Плоть в камень",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -53821,9 +53846,9 @@
   {
     "id": "srd-2024_forbiddance",
     "name": "Forbiddance",
-    "name_ru": "",
+    "name_ru": "Запрет",
     "level": 6,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -53870,9 +53895,9 @@
   {
     "id": "spells-that-dont-suck_form-of-fire",
     "name": "Form of Fire",
-    "name_ru": "",
+    "name_ru": "Облик огня",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -53931,9 +53956,9 @@
   {
     "id": "spells-that-dont-suck_form-of-ice",
     "name": "Form of Ice",
-    "name_ru": "",
+    "name_ru": "Облик льда",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -53992,9 +54017,9 @@
   {
     "id": "spells-that-dont-suck_form-of-stone",
     "name": "Form of Stone",
-    "name_ru": "",
+    "name_ru": "Облик камня",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -54053,9 +54078,9 @@
   {
     "id": "spells-that-dont-suck_form-of-water",
     "name": "Form of Water",
-    "name_ru": "",
+    "name_ru": "Облик воды",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -54114,9 +54139,9 @@
   {
     "id": "spells-that-dont-suck_form-of-wind",
     "name": "Form of Wind",
-    "name_ru": "",
+    "name_ru": "Облик ветра",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -54175,9 +54200,9 @@
   {
     "id": "srd-2024_freezing-sphere",
     "name": "Freezing Sphere",
-    "name_ru": "",
+    "name_ru": "Ледяная сфера",
     "level": 6,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -54223,14 +54248,15 @@
     "source_display": "5e 2024 Rules",
     "source_url": "https://dnd.wizards.com/resources/systems-reference-document",
     "publisher": "Wizards of the Coast",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "higher_level_ru": "Урон увеличивается на 1d6 за каждый уровень ячейки заклинания выше 6."
   },
   {
     "id": "toh_gale",
     "name": "Gale",
-    "name_ru": "",
+    "name_ru": "Шквал",
     "level": 6,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "1minute",
@@ -54272,9 +54298,9 @@
   {
     "id": "spells-that-dont-suck_glacial-orbs",
     "name": "Glacial Orbs",
-    "name_ru": "",
+    "name_ru": "Ледниковые сферы",
     "level": 6,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -54321,9 +54347,9 @@
   {
     "id": "srd-2024_globe-of-invulnerability",
     "name": "Globe of Invulnerability",
-    "name_ru": "",
+    "name_ru": "Сфера неуязвимости",
     "level": 6,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -54372,9 +54398,9 @@
   {
     "id": "srd-2024_guards-and-wards",
     "name": "Guards and Wards",
-    "name_ru": "",
+    "name_ru": "Охрана и защита",
     "level": 6,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -54423,9 +54449,9 @@
   {
     "id": "srd-2024_harm",
     "name": "Harm",
-    "name_ru": "",
+    "name_ru": "Вред",
     "level": 6,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -54472,9 +54498,9 @@
   {
     "id": "srd-2024_heal",
     "name": "Heal",
-    "name_ru": "",
+    "name_ru": "Исцеление",
     "level": 6,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -54523,9 +54549,9 @@
   {
     "id": "deepm_heavenly-crown",
     "name": "Heavenly Crown",
-    "name_ru": "",
+    "name_ru": "Небесная корона",
     "level": 6,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [],
     "casting_time": "action",
@@ -54565,9 +54591,9 @@
   {
     "id": "srd-2024_heroes-feast",
     "name": "Heroes' Feast",
-    "name_ru": "",
+    "name_ru": "Пир героев",
     "level": 6,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -54622,9 +54648,9 @@
   {
     "id": "deepm_icy-manipulation",
     "name": "Icy Manipulation",
-    "name_ru": "",
+    "name_ru": "Ледяная манипуляция",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -54664,9 +54690,9 @@
   {
     "id": "spells-that-dont-suck_impaling-spires",
     "name": "Impaling Spires",
-    "name_ru": "",
+    "name_ru": "Пронзающие шпили",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -54713,9 +54739,9 @@
   {
     "id": "a5e-ag_infernal-weapon",
     "name": "Infernal Weapon",
-    "name_ru": "",
+    "name_ru": "Инфернальное оружие",
     "level": 6,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "bonus-action",
@@ -54755,9 +54781,9 @@
   {
     "id": "toh_instant-armored-vehicle",
     "name": "Instant Armored Vehicle",
-    "name_ru": "",
+    "name_ru": "Мгновенная бронированная машина",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -54799,9 +54825,9 @@
   {
     "id": "srd-2024_instant-summons",
     "name": "Instant Summons",
-    "name_ru": "",
+    "name_ru": "Мгновенный призыв",
     "level": 6,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -54846,9 +54872,9 @@
   {
     "id": "srd-2024_irresistible-dance",
     "name": "Irresistible Dance",
-    "name_ru": "",
+    "name_ru": "Неудержимый танец",
     "level": 6,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -54897,9 +54923,9 @@
   {
     "id": "deepmx_ley-whip",
     "name": "Ley Whip",
-    "name_ru": "",
+    "name_ru": "Лей-кнут",
     "level": 6,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -54952,9 +54978,9 @@
   {
     "id": "deepm_life-drain",
     "name": "Life Drain",
-    "name_ru": "",
+    "name_ru": "Вытягивание жизни",
     "level": 6,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -54994,9 +55020,9 @@
   {
     "id": "srd-2024_magic-jar",
     "name": "Magic Jar",
-    "name_ru": "",
+    "name_ru": "Магический сосуд",
     "level": 6,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -55041,9 +55067,9 @@
   {
     "id": "spells-that-dont-suck_martial-transformation",
     "name": "Martial Transformation",
-    "name_ru": "",
+    "name_ru": "Боевое преображение",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -55090,9 +55116,9 @@
   {
     "id": "srd-2024_mass-suggestion",
     "name": "Mass Suggestion",
-    "name_ru": "",
+    "name_ru": "Массовое внушение",
     "level": 6,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -55145,9 +55171,9 @@
   {
     "id": "wz_mind-maze",
     "name": "Mind Maze",
-    "name_ru": "",
+    "name_ru": "Лабиринт разума",
     "level": 6,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -55187,9 +55213,9 @@
   {
     "id": "srd-2024_move-earth",
     "name": "Move Earth",
-    "name_ru": "",
+    "name_ru": "Движение земли",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -55242,9 +55268,9 @@
   {
     "id": "spells-that-dont-suck_necrotic-sphere",
     "name": "Necrotic Sphere",
-    "name_ru": "",
+    "name_ru": "Некротическая сфера",
     "level": 6,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -55299,9 +55325,9 @@
   {
     "id": "spells-that-dont-suck_petrify",
     "name": "Petrify",
-    "name_ru": "",
+    "name_ru": "Окаменение",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -55358,9 +55384,9 @@
   {
     "id": "toh_pincer",
     "name": "Pincer",
-    "name_ru": "",
+    "name_ru": "Клещи",
     "level": 6,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -55397,14 +55423,15 @@
     "source_display": "Tome of Heroes",
     "source_url": "https://koboldpress.com/kpstore/product/tome-of-heroes-for-5th-edition/",
     "publisher": "Kobold Press",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 7-го уровня или выше, урон увеличивается на 1d10 за каждый уровень ячейки выше 6-го."
   },
   {
     "id": "srd-2024_planar-ally",
     "name": "Planar Ally",
-    "name_ru": "",
+    "name_ru": "Планарный союзник",
     "level": 6,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -55449,9 +55476,9 @@
   {
     "id": "srd-2024_programmed-illusion",
     "name": "Programmed Illusion",
-    "name_ru": "",
+    "name_ru": "Запрограммированная иллюзия",
     "level": 6,
-    "school": "Illusion",
+    "school": "Иллюзия",
     "school_key": "illusion",
     "classes": [
       {
@@ -55500,9 +55527,9 @@
   {
     "id": "deepmx_robe-of-shards",
     "name": "Robe of Shards",
-    "name_ru": "",
+    "name_ru": "Одеяние осколков",
     "level": 6,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -55551,9 +55578,9 @@
   {
     "id": "kp_seal-red-portal",
     "name": "Seal Red Portal",
-    "name_ru": "",
+    "name_ru": "Запечатать Красный портал",
     "level": 6,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [],
     "casting_time": "action",
@@ -55593,9 +55620,9 @@
   {
     "id": "kp_shadow-spawn",
     "name": "Shadow Spawn",
-    "name_ru": "",
+    "name_ru": "Теневое порождение",
     "level": 6,
-    "school": "Illusion",
+    "school": "Иллюзия",
     "school_key": "illusion",
     "classes": [],
     "casting_time": "4hours",
@@ -55635,9 +55662,9 @@
   {
     "id": "spells-that-dont-suck_sky-omen",
     "name": "Sky Omen",
-    "name_ru": "",
+    "name_ru": "Небесное знамение",
     "level": 6,
-    "school": "Illusion",
+    "school": "Иллюзия",
     "school_key": "illusion",
     "classes": [
       {
@@ -55690,9 +55717,9 @@
   {
     "id": "deepmx_sphere-of-order",
     "name": "Sphere of Order",
-    "name_ru": "",
+    "name_ru": "Сфера порядка",
     "level": 6,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -55737,9 +55764,9 @@
   {
     "id": "srd-2024_sunbeam",
     "name": "Sunbeam",
-    "name_ru": "",
+    "name_ru": "Солнечный луч",
     "level": 6,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -55798,9 +55825,9 @@
   {
     "id": "deepm_time-loop",
     "name": "Time Loop",
-    "name_ru": "",
+    "name_ru": "Временная петля",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -55840,9 +55867,9 @@
   {
     "id": "toh_toadstool-ring",
     "name": "Toadstool Ring",
-    "name_ru": "",
+    "name_ru": "Кольцо поганок",
     "level": 6,
-    "school": "Divination",
+    "school": "Прорицание",
     "school_key": "divination",
     "classes": [],
     "casting_time": "action",
@@ -55882,9 +55909,9 @@
   {
     "id": "srd-2024_transport-via-plants",
     "name": "Transport via Plants",
-    "name_ru": "",
+    "name_ru": "Перемещение через растения",
     "level": 6,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -55929,9 +55956,9 @@
   {
     "id": "srd-2024_true-seeing",
     "name": "True Seeing",
-    "name_ru": "",
+    "name_ru": "Истинное зрение",
     "level": 6,
-    "school": "Divination",
+    "school": "Прорицание",
     "school_key": "divination",
     "classes": [
       {
@@ -55992,9 +56019,9 @@
   {
     "id": "wz_vengeful-panopy-of-the-ley-line-ignited",
     "name": "Vengeful Panopy of the Ley Line Ignited",
-    "name_ru": "",
+    "name_ru": "Мстительное облачение воспламенённой лей-линии",
     "level": 6,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -56036,9 +56063,9 @@
   {
     "id": "deepm_walk-the-twisted-path",
     "name": "Walk the Twisted Path",
-    "name_ru": "",
+    "name_ru": "Путь извилистой тропой",
     "level": 6,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -56078,9 +56105,9 @@
   {
     "id": "a5e-ag_wall-of-flesh",
     "name": "Wall of Flesh",
-    "name_ru": "",
+    "name_ru": "Стена плоти",
     "level": 6,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -56122,9 +56149,9 @@
   {
     "id": "srd-2024_wall-of-ice",
     "name": "Wall of Ice",
-    "name_ru": "",
+    "name_ru": "Стена льда",
     "level": 6,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -56173,9 +56200,9 @@
   {
     "id": "srd-2024_wall-of-thorns",
     "name": "Wall of Thorns",
-    "name_ru": "",
+    "name_ru": "Стена шипов",
     "level": 6,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -56223,9 +56250,9 @@
   {
     "id": "deepm_warp-mind-and-matter",
     "name": "Warp Mind and Matter",
-    "name_ru": "",
+    "name_ru": "Искажение разума и материи",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -56265,9 +56292,9 @@
   {
     "id": "srd-2024_wind-walk",
     "name": "Wind Walk",
-    "name_ru": "",
+    "name_ru": "Хождение по ветру",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -56314,9 +56341,9 @@
   {
     "id": "deepm_winters-radiance",
     "name": "Winter's Radiance",
-    "name_ru": "",
+    "name_ru": "Зимнее сияние",
     "level": 6,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -56356,9 +56383,9 @@
   {
     "id": "deepm_winterdark",
     "name": "Winterdark",
-    "name_ru": "",
+    "name_ru": "Зимняя тьма",
     "level": 6,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -56398,9 +56425,9 @@
   {
     "id": "srd-2024_word-of-recall",
     "name": "Word of Recall",
-    "name_ru": "",
+    "name_ru": "Слово возвращения",
     "level": 6,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -56445,9 +56472,9 @@
   {
     "id": "a5e-ag_wormway",
     "name": "Wormway",
-    "name_ru": "",
+    "name_ru": "Червоточина",
     "level": 6,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [],
     "casting_time": "1minute",
@@ -56487,9 +56514,9 @@
   {
     "id": "spells-that-dont-suck_wound",
     "name": "Wound",
-    "name_ru": "",
+    "name_ru": "Рана",
     "level": 6,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -56536,9 +56563,9 @@
   {
     "id": "deepm_acid-gate",
     "name": "Acid Gate",
-    "name_ru": "",
+    "name_ru": "Кислотные врата",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -56580,9 +56607,9 @@
   {
     "id": "deepm_amplify-gravity",
     "name": "Amplify Gravity",
-    "name_ru": "",
+    "name_ru": "Усиление гравитации",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -56635,9 +56662,9 @@
   {
     "id": "a5e-ag_angel-paradox",
     "name": "Angel Paradox",
-    "name_ru": "",
+    "name_ru": "Ангельский парадокс",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -56679,9 +56706,9 @@
   {
     "id": "deepmx_anomalous-object",
     "name": "Anomalous Object",
-    "name_ru": "",
+    "name_ru": "Аномальный предмет",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -56726,9 +56753,9 @@
   {
     "id": "srd-2024_arcane-sword",
     "name": "Arcane Sword",
-    "name_ru": "",
+    "name_ru": "Мистический меч",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -56779,9 +56806,9 @@
   {
     "id": "spells-that-dont-suck_arcanists-sword",
     "name": "Arcanist's Sword",
-    "name_ru": "",
+    "name_ru": "Меч арканиста",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -56832,9 +56859,9 @@
   {
     "id": "deepm_aspect-of-the-dragon",
     "name": "Aspect of the Dragon",
-    "name_ru": "",
+    "name_ru": "Аспект дракона",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -56874,9 +56901,9 @@
   {
     "id": "deepm_blizzard",
     "name": "Blizzard",
-    "name_ru": "",
+    "name_ru": "Метель",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -56931,9 +56958,9 @@
   {
     "id": "deepm_celebration",
     "name": "Celebration",
-    "name_ru": "",
+    "name_ru": "Празднование",
     "level": 7,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [],
     "casting_time": "action",
@@ -56973,9 +57000,9 @@
   {
     "id": "toh_clear-the-board",
     "name": "Clear the Board",
-    "name_ru": "",
+    "name_ru": "Очистить поле",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -57015,9 +57042,9 @@
   {
     "id": "spells-that-dont-suck_confinement",
     "name": "Confinement",
-    "name_ru": "",
+    "name_ru": "Заточение",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -57070,9 +57097,9 @@
   {
     "id": "srd-2024_conjure-celestial",
     "name": "Conjure Celestial",
-    "name_ru": "",
+    "name_ru": "Призыв небожителя",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -57117,9 +57144,9 @@
   {
     "id": "deepm_conjure-greater-spectral-dead",
     "name": "Conjure Greater Spectral Dead",
-    "name_ru": "",
+    "name_ru": "Призыв великой призрачной нежити",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "1minute",
@@ -57159,9 +57186,9 @@
   {
     "id": "deepm_conjure-shadow-titan",
     "name": "Conjure Shadow Titan",
-    "name_ru": "",
+    "name_ru": "Призыв теневого титана",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "1minute",
@@ -57201,9 +57228,9 @@
   {
     "id": "toh_conjure-spectral-allies",
     "name": "Conjure Spectral Allies",
-    "name_ru": "",
+    "name_ru": "Призыв призрачных союзников",
     "level": 7,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "action",
@@ -57240,14 +57267,15 @@
     "source_display": "Tome of Heroes",
     "source_url": "https://koboldpress.com/kpstore/product/tome-of-heroes-for-5th-edition/",
     "publisher": "Kobold Press",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 8-го уровня или выше, урон увеличивается на 1d10 за каждый уровень ячейки выше 7-го."
   },
   {
     "id": "deepm_conjure-voidborn",
     "name": "Conjure Voidborn",
-    "name_ru": "",
+    "name_ru": "Призыв порождений Пустоты",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -57287,9 +57315,9 @@
   {
     "id": "deepm_create-thunderstaff",
     "name": "Create Thunderstaff",
-    "name_ru": "",
+    "name_ru": "Создание громового посоха",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "10minutes",
@@ -57331,9 +57359,9 @@
   {
     "id": "deepm_curse-of-dust",
     "name": "Curse of Dust",
-    "name_ru": "",
+    "name_ru": "Проклятие праха",
     "level": 7,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "10minutes",
@@ -57373,9 +57401,9 @@
   {
     "id": "deepm_curse-of-the-grave",
     "name": "Curse of the Grave",
-    "name_ru": "",
+    "name_ru": "Проклятие могилы",
     "level": 7,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "action",
@@ -57415,9 +57443,9 @@
   {
     "id": "deepm_death-gods-touch",
     "name": "Death God’s Touch",
-    "name_ru": "",
+    "name_ru": "Прикосновение бога смерти",
     "level": 7,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "action",
@@ -57454,14 +57482,15 @@
     "source_display": "Deep Magic for 5th Edition",
     "source_url": "https://koboldpress.com/kpstore/product/deep-magic-for-5th-edition-hardcover/",
     "publisher": "Kobold Press",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 8-го уровня или выше, урон увеличивается на 2d10 за каждый уровень ячейки выше 7-го."
   },
   {
     "id": "spells-that-dont-suck_death-ray",
     "name": "Death Ray",
-    "name_ru": "",
+    "name_ru": "Луч смерти",
     "level": 7,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -57511,14 +57540,15 @@
     "source_display": "Spells That Don't Suck",
     "source_url": "https://www.somanyrobots.com/s/Spells-That-Dont-Suck-compressed.pdf",
     "publisher": "Somanyrobots",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 8-го уровня или выше, урон увеличивается на 2d10 за каждый уровень ячейки выше 7-го."
   },
   {
     "id": "deepm_defile-healing",
     "name": "Defile Healing",
-    "name_ru": "",
+    "name_ru": "Осквернить исцеление",
     "level": 7,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "reaction",
@@ -57558,9 +57588,9 @@
   {
     "id": "srd-2024_delayed-blast-fireball",
     "name": "Delayed Blast Fireball",
-    "name_ru": "",
+    "name_ru": "Огненный шар замедленного действия",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -57611,9 +57641,9 @@
   {
     "id": "srd-2024_divine-word",
     "name": "Divine Word",
-    "name_ru": "",
+    "name_ru": "Божественное слово",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -57658,9 +57688,9 @@
   {
     "id": "a5e-ag_enrage-architecture",
     "name": "Enrage Architecture",
-    "name_ru": "",
+    "name_ru": "Разъярить архитектуру",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -57700,9 +57730,9 @@
   {
     "id": "srd-2024_etherealness",
     "name": "Etherealness",
-    "name_ru": "",
+    "name_ru": "Эфирность",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -57765,9 +57795,9 @@
   {
     "id": "srd-2024_finger-of-death",
     "name": "Finger of Death",
-    "name_ru": "",
+    "name_ru": "Перст смерти",
     "level": 7,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -57822,9 +57852,9 @@
   {
     "id": "srd-2024_fire-storm",
     "name": "Fire Storm",
-    "name_ru": "",
+    "name_ru": "Огненная буря",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -57879,9 +57909,9 @@
   {
     "id": "srd-2024_forcecage",
     "name": "Forcecage",
-    "name_ru": "",
+    "name_ru": "Силовая клетка",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -57934,9 +57964,9 @@
   {
     "id": "deepm_glacial-fog",
     "name": "Glacial Fog",
-    "name_ru": "",
+    "name_ru": "Ледниковый туман",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -57973,14 +58003,15 @@
     "source_display": "Deep Magic for 5th Edition",
     "source_url": "https://koboldpress.com/kpstore/product/deep-magic-for-5th-edition-hardcover/",
     "publisher": "Kobold Press",
-    "license": "Open5e source data"
+    "license": "Open5e source data",
+    "higher_level_ru": "Когда вы накладываете это заклинание, используя ячейку 8-го уровня или выше, урон увеличивается на 1d6 за каждый уровень ячейки выше 7-го."
   },
   {
     "id": "spells-that-dont-suck_glyph-of-power",
     "name": "Glyph of Power",
-    "name_ru": "",
+    "name_ru": "Глиф силы",
     "level": 7,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -58035,9 +58066,9 @@
   {
     "id": "kp_greater-ley-protection",
     "name": "Greater Ley Protection",
-    "name_ru": "",
+    "name_ru": "Великая лей-защита",
     "level": 7,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [],
     "casting_time": "action",
@@ -58077,9 +58108,9 @@
   {
     "id": "deepmx_greater-ley-pulse",
     "name": "Greater Ley Pulse",
-    "name_ru": "",
+    "name_ru": "Великий лей-импульс",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -58132,9 +58163,9 @@
   {
     "id": "deepmx_hellforging",
     "name": "Hellforging",
-    "name_ru": "",
+    "name_ru": "Адская ковка",
     "level": 7,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -58183,9 +58214,9 @@
   {
     "id": "deepm_ice-soldiers",
     "name": "Ice Soldiers",
-    "name_ru": "",
+    "name_ru": "Ледяные солдаты",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -58225,9 +58256,9 @@
   {
     "id": "deepm_icy-grasp-of-the-void",
     "name": "Icy Grasp of the Void",
-    "name_ru": "",
+    "name_ru": "Ледяная хватка Пустоты",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -58269,9 +58300,9 @@
   {
     "id": "toh_immolating-gibbet",
     "name": "Immolating Gibbet",
-    "name_ru": "",
+    "name_ru": "Пылающая виселица",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -58313,9 +58344,9 @@
   {
     "id": "a5e-ag_inescapable-malady",
     "name": "Inescapable Malady",
-    "name_ru": "",
+    "name_ru": "Неизбежная хворь",
     "level": 7,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "action",
@@ -58355,9 +58386,9 @@
   {
     "id": "deepm_last-rays-of-the-dying-sun",
     "name": "Last Rays of the Dying Sun",
-    "name_ru": "",
+    "name_ru": "Последние лучи умирающего солнца",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -58397,9 +58428,9 @@
   {
     "id": "deepm_legend-killer",
     "name": "Legend Killer",
-    "name_ru": "",
+    "name_ru": "Убийца легенд",
     "level": 7,
-    "school": "Divination",
+    "school": "Прорицание",
     "school_key": "divination",
     "classes": [],
     "casting_time": "action",
@@ -58439,9 +58470,9 @@
   {
     "id": "toh_long-game",
     "name": "Long Game",
-    "name_ru": "",
+    "name_ru": "Долгая игра",
     "level": 7,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [],
     "casting_time": "1minute",
@@ -58483,9 +58514,9 @@
   {
     "id": "srd-2024_magnificent-mansion",
     "name": "Magnificent Mansion",
-    "name_ru": "",
+    "name_ru": "Великолепный особняк",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -58534,9 +58565,9 @@
   {
     "id": "srd-2024_mirage-arcane",
     "name": "Mirage Arcane",
-    "name_ru": "",
+    "name_ru": "Мираж",
     "level": 7,
-    "school": "Illusion",
+    "school": "Иллюзия",
     "school_key": "illusion",
     "classes": [
       {
@@ -58589,9 +58620,9 @@
   {
     "id": "wz_mirror-realm",
     "name": "Mirror Realm",
-    "name_ru": "",
+    "name_ru": "Зеркальное царство",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -58631,9 +58662,9 @@
   {
     "id": "deepmx_molechs-blessing",
     "name": "Molech's Blessing",
-    "name_ru": "",
+    "name_ru": "Благословение Молеха",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -58680,9 +58711,9 @@
   {
     "id": "kp_morphic-flux",
     "name": "Morphic Flux",
-    "name_ru": "",
+    "name_ru": "Морфический поток",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -58722,9 +58753,9 @@
   {
     "id": "srd-2024_plane-shift",
     "name": "Plane Shift",
-    "name_ru": "",
+    "name_ru": "Планарный переход",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -58785,9 +58816,9 @@
   {
     "id": "srd-2024_prismatic-spray",
     "name": "Prismatic Spray",
-    "name_ru": "",
+    "name_ru": "Призматические брызги",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -58846,9 +58877,9 @@
   {
     "id": "srd-2024_project-image",
     "name": "Project Image",
-    "name_ru": "",
+    "name_ru": "Проекция образа",
     "level": 7,
-    "school": "Illusion",
+    "school": "Иллюзия",
     "school_key": "illusion",
     "classes": [
       {
@@ -58897,9 +58928,9 @@
   {
     "id": "spells-that-dont-suck_rain-of-fire",
     "name": "Rain of Fire",
-    "name_ru": "",
+    "name_ru": "Огненный дождь",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -58954,9 +58985,9 @@
   {
     "id": "srd-2024_regenerate",
     "name": "Regenerate",
-    "name_ru": "",
+    "name_ru": "Регенерация",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -59009,9 +59040,9 @@
   {
     "id": "spells-that-dont-suck_rejuvenation",
     "name": "Rejuvenation",
-    "name_ru": "",
+    "name_ru": "Омоложение",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -59064,9 +59095,9 @@
   {
     "id": "srd-2024_resurrection",
     "name": "Resurrection",
-    "name_ru": "",
+    "name_ru": "Воскрешение",
     "level": 7,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -59115,9 +59146,9 @@
   {
     "id": "srd-2024_reverse-gravity",
     "name": "Reverse Gravity",
-    "name_ru": "",
+    "name_ru": "Обратная гравитация",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -59170,9 +59201,9 @@
   {
     "id": "deepm_right-the-stars",
     "name": "Right the Stars",
-    "name_ru": "",
+    "name_ru": "Исправить звёзды",
     "level": 7,
-    "school": "Divination",
+    "school": "Прорицание",
     "school_key": "divination",
     "classes": [],
     "casting_time": "10minutes",
@@ -59212,9 +59243,9 @@
   {
     "id": "deepm_ring-ward",
     "name": "Ring Ward",
-    "name_ru": "",
+    "name_ru": "Кольцевая защита",
     "level": 7,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [],
     "casting_time": "action",
@@ -59254,9 +59285,9 @@
   {
     "id": "spells-that-dont-suck_safekeeping",
     "name": "Safekeeping",
-    "name_ru": "",
+    "name_ru": "Сохранение",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -59301,9 +59332,9 @@
   {
     "id": "spells-that-dont-suck_scintillant-blast",
     "name": "Scintillant Blast",
-    "name_ru": "",
+    "name_ru": "Мерцающий взрыв",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -59354,9 +59385,9 @@
   {
     "id": "deepm_seal-of-sanctuary",
     "name": "Seal of Sanctuary",
-    "name_ru": "",
+    "name_ru": "Печать святилища",
     "level": 7,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [],
     "casting_time": "1minute",
@@ -59398,9 +59429,9 @@
   {
     "id": "srd-2024_sequester",
     "name": "Sequester",
-    "name_ru": "",
+    "name_ru": "Сокрытие",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -59445,9 +59476,9 @@
   {
     "id": "deepm_sign-of-koth",
     "name": "Sign of Koth",
-    "name_ru": "",
+    "name_ru": "Знак Кота",
     "level": 7,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [],
     "casting_time": "turn",
@@ -59487,9 +59518,9 @@
   {
     "id": "srd-2024_simulacrum",
     "name": "Simulacrum",
-    "name_ru": "",
+    "name_ru": "Симулякр",
     "level": 7,
-    "school": "Illusion",
+    "school": "Иллюзия",
     "school_key": "illusion",
     "classes": [
       {
@@ -59534,9 +59565,9 @@
   {
     "id": "spells-that-dont-suck_soul-transfer",
     "name": "Soul Transfer",
-    "name_ru": "",
+    "name_ru": "Перенос души",
     "level": 7,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -59581,9 +59612,9 @@
   {
     "id": "a5e-ag_sporesight",
     "name": "Sporesight",
-    "name_ru": "",
+    "name_ru": "Споровое зрение",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -59623,9 +59654,9 @@
   {
     "id": "deepm_starry-vision",
     "name": "Starry Vision",
-    "name_ru": "",
+    "name_ru": "Звёздное видение",
     "level": 7,
-    "school": "Divination",
+    "school": "Прорицание",
     "school_key": "divination",
     "classes": [],
     "casting_time": "reaction",
@@ -59665,9 +59696,9 @@
   {
     "id": "srd-2024_symbol",
     "name": "Symbol",
-    "name_ru": "",
+    "name_ru": "Символ",
     "level": 7,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -59724,9 +59755,9 @@
   {
     "id": "deepm_symbol-of-sorcery",
     "name": "Symbol of Sorcery",
-    "name_ru": "",
+    "name_ru": "Символ чародейства",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "10minutes",
@@ -59766,9 +59797,9 @@
   {
     "id": "deepm_talons-of-a-hungry-land",
     "name": "Talons of a Hungry Land",
-    "name_ru": "",
+    "name_ru": "Когти голодной земли",
     "level": 7,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -59810,9 +59841,9 @@
   {
     "id": "srd-2024_teleport",
     "name": "Teleport",
-    "name_ru": "",
+    "name_ru": "Телепортация",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -59865,9 +59896,9 @@
   {
     "id": "deepmx_timeless-engine",
     "name": "Timeless Engine",
-    "name_ru": "",
+    "name_ru": "Вечный механизм",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -59920,9 +59951,9 @@
   {
     "id": "deepm_triumph-of-ice",
     "name": "Triumph of Ice",
-    "name_ru": "",
+    "name_ru": "Триумф льда",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -59964,9 +59995,9 @@
   {
     "id": "spells-that-dont-suck_twister",
     "name": "Twister",
-    "name_ru": "",
+    "name_ru": "Смерч",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -60021,9 +60052,9 @@
   {
     "id": "deepm_uncontrollable-transformation",
     "name": "Uncontrollable Transformation",
-    "name_ru": "",
+    "name_ru": "Неуправляемое превращение",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -60063,9 +60094,9 @@
   {
     "id": "a5e-ag_unholy-star",
     "name": "Unholy Star",
-    "name_ru": "",
+    "name_ru": "Нечестивая звезда",
     "level": 7,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -60105,9 +60136,9 @@
   {
     "id": "deepm_volley-shield",
     "name": "Volley Shield",
-    "name_ru": "",
+    "name_ru": "Щит залпа",
     "level": 7,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [],
     "casting_time": "action",
@@ -60147,9 +60178,9 @@
   {
     "id": "deepm_walking-wall",
     "name": "Walking Wall",
-    "name_ru": "",
+    "name_ru": "Ходячая стена",
     "level": 7,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -60189,9 +60220,9 @@
   {
     "id": "toh_wild-hunt",
     "name": "Wild Hunt",
-    "name_ru": "",
+    "name_ru": "Дикая охота",
     "level": 7,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [],
     "casting_time": "1hour",
@@ -60231,9 +60262,9 @@
   {
     "id": "wz_zymurgic-aura",
     "name": "Zymurgic Aura",
-    "name_ru": "",
+    "name_ru": "Зимургическая аура",
     "level": 7,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "action",
@@ -60275,9 +60306,9 @@
   {
     "id": "srd-2024_animal-shapes",
     "name": "Animal Shapes",
-    "name_ru": "",
+    "name_ru": "Формы животных",
     "level": 8,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -60322,9 +60353,9 @@
   {
     "id": "srd-2024_antimagic-field",
     "name": "Antimagic Field",
-    "name_ru": "",
+    "name_ru": "Поле антимагии",
     "level": 8,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -60373,9 +60404,9 @@
   {
     "id": "srd-2024_antipathysympathy",
     "name": "Antipathy/Sympathy",
-    "name_ru": "",
+    "name_ru": "Антипатия/симпатия",
     "level": 8,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -60428,9 +60459,9 @@
   {
     "id": "deepm_arcane-sight",
     "name": "Arcane Sight",
-    "name_ru": "",
+    "name_ru": "Магическое зрение",
     "level": 8,
-    "school": "Divination",
+    "school": "Прорицание",
     "school_key": "divination",
     "classes": [
       {
@@ -60483,9 +60514,9 @@
   {
     "id": "deepm_awaken-object",
     "name": "Awaken Object",
-    "name_ru": "",
+    "name_ru": "Пробуждение предмета",
     "level": 8,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "8hours",
@@ -60525,9 +60556,9 @@
   {
     "id": "srd-2024_befuddlement",
     "name": "Befuddlement",
-    "name_ru": "",
+    "name_ru": "Помрачение",
     "level": 8,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -60586,9 +60617,9 @@
   {
     "id": "deepm_black-sunshine",
     "name": "Black Sunshine",
-    "name_ru": "",
+    "name_ru": "Чёрное сияние",
     "level": 8,
-    "school": "Illusion",
+    "school": "Иллюзия",
     "school_key": "illusion",
     "classes": [
       {
@@ -60637,9 +60668,9 @@
   {
     "id": "deepm_bloom",
     "name": "Bloom",
-    "name_ru": "",
+    "name_ru": "Цветение",
     "level": 8,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -60692,9 +60723,9 @@
   {
     "id": "deepmx_call-the-hunter",
     "name": "Call the Hunter",
-    "name_ru": "",
+    "name_ru": "Призыв охотника",
     "level": 8,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -60739,9 +60770,9 @@
   {
     "id": "deepm_caustic-torrent",
     "name": "Caustic Torrent",
-    "name_ru": "",
+    "name_ru": "Едкий поток",
     "level": 8,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -60783,9 +60814,9 @@
   {
     "id": "wz_child-of-light-and-darkness",
     "name": "Child of Light and Darkness",
-    "name_ru": "",
+    "name_ru": "Дитя света и тьмы",
     "level": 8,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -60825,9 +60856,9 @@
   {
     "id": "srd-2024_clone",
     "name": "Clone",
-    "name_ru": "",
+    "name_ru": "Клон",
     "level": 8,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -60872,9 +60903,9 @@
   {
     "id": "srd-2024_control-weather",
     "name": "Control Weather",
-    "name_ru": "",
+    "name_ru": "Управление погодой",
     "level": 8,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -60927,9 +60958,9 @@
   {
     "id": "deepm_costly-victory",
     "name": "Costly Victory",
-    "name_ru": "",
+    "name_ru": "Дорогая победа",
     "level": 8,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -60971,9 +61002,9 @@
   {
     "id": "deepm_create-ring-servant",
     "name": "Create Ring Servant",
-    "name_ru": "",
+    "name_ru": "Создание кольцевого слуги",
     "level": 8,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "1minute",
@@ -61013,9 +61044,9 @@
   {
     "id": "deepm_deadly-sting",
     "name": "Deadly Sting",
-    "name_ru": "",
+    "name_ru": "Смертоносное жало",
     "level": 8,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -61057,9 +61088,9 @@
   {
     "id": "srd-2024_demiplane",
     "name": "Demiplane",
-    "name_ru": "",
+    "name_ru": "Демиплан",
     "level": 8,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -61112,9 +61143,9 @@
   {
     "id": "deepm_desolation",
     "name": "Desolation",
-    "name_ru": "",
+    "name_ru": "Опустошение",
     "level": 8,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "1hour",
@@ -61154,9 +61185,9 @@
   {
     "id": "deepm_disruptive-aura",
     "name": "Disruptive Aura",
-    "name_ru": "",
+    "name_ru": "Разрушительная аура",
     "level": 8,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -61196,9 +61227,9 @@
   {
     "id": "srd-2024_dominate-monster",
     "name": "Dominate Monster",
-    "name_ru": "",
+    "name_ru": "Подчинение чудовища",
     "level": 8,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -61255,9 +61286,9 @@
   {
     "id": "wz_door-of-the-far-traveler",
     "name": "Door of the Far Traveler",
-    "name_ru": "",
+    "name_ru": "Дверь дальнего странника",
     "level": 8,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "10minutes",
@@ -61297,9 +61328,9 @@
   {
     "id": "srd-2024_earthquake",
     "name": "Earthquake",
-    "name_ru": "",
+    "name_ru": "Землетрясение",
     "level": 8,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -61354,9 +61385,9 @@
   {
     "id": "srd_feeblemind",
     "name": "Feeblemind",
-    "name_ru": "",
+    "name_ru": "Слабоумие",
     "level": 8,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -61415,9 +61446,9 @@
   {
     "id": "deepm_ghoul-kings-cloak",
     "name": "Ghoul King’s Cloak",
-    "name_ru": "",
+    "name_ru": "Плащ короля гулей",
     "level": 8,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -61457,9 +61488,9 @@
   {
     "id": "deepm_glacial-cascade",
     "name": "Glacial Cascade",
-    "name_ru": "",
+    "name_ru": "Ледниковый каскад",
     "level": 8,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -61499,9 +61530,9 @@
   {
     "id": "srd-2024_glibness",
     "name": "Glibness",
-    "name_ru": "",
+    "name_ru": "Бойкость",
     "level": 8,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -61550,9 +61581,9 @@
   {
     "id": "deepm_glimpse-of-the-void",
     "name": "Glimpse of the Void",
-    "name_ru": "",
+    "name_ru": "Проблеск Пустоты",
     "level": 8,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [],
     "casting_time": "action",
@@ -61592,9 +61623,9 @@
   {
     "id": "spells-that-dont-suck_great-wave",
     "name": "Great Wave",
-    "name_ru": "",
+    "name_ru": "Великая волна",
     "level": 8,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -61641,9 +61672,9 @@
   {
     "id": "deepm_harsh-light-of-summers-glare",
     "name": "Harsh Light of Summer’s Glare",
-    "name_ru": "",
+    "name_ru": "Жёсткий свет летнего сияния",
     "level": 8,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [],
     "casting_time": "action",
@@ -61683,9 +61714,9 @@
   {
     "id": "a5e-ag_heart-of-dis",
     "name": "Heart of Dis",
-    "name_ru": "",
+    "name_ru": "Сердце Диса",
     "level": 8,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "10minutes",
@@ -61725,9 +61756,9 @@
   {
     "id": "srd-2024_holy-aura",
     "name": "Holy Aura",
-    "name_ru": "",
+    "name_ru": "Священная аура",
     "level": 8,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -61772,9 +61803,9 @@
   {
     "id": "srd-2024_incendiary-cloud",
     "name": "Incendiary Cloud",
-    "name_ru": "",
+    "name_ru": "Зажигательное облако",
     "level": 8,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -61829,9 +61860,9 @@
   {
     "id": "deepm_life-hack",
     "name": "Life Hack",
-    "name_ru": "",
+    "name_ru": "Взлом жизни",
     "level": 8,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "action",
@@ -61871,9 +61902,9 @@
   {
     "id": "deepmx_machine-sacrifice",
     "name": "Machine Sacrifice",
-    "name_ru": "",
+    "name_ru": "Жертва машины",
     "level": 8,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -61918,9 +61949,9 @@
   {
     "id": "deepm_malevolent-waves",
     "name": "Malevolent Waves",
-    "name_ru": "",
+    "name_ru": "Зловещие волны",
     "level": 8,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [],
     "casting_time": "action",
@@ -61960,9 +61991,9 @@
   {
     "id": "srd-2024_maze",
     "name": "Maze",
-    "name_ru": "",
+    "name_ru": "Лабиринт",
     "level": 8,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -62007,9 +62038,9 @@
   {
     "id": "srd-2024_mind-blank",
     "name": "Mind Blank",
-    "name_ru": "",
+    "name_ru": "Пустой разум",
     "level": 8,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -62060,9 +62091,9 @@
   {
     "id": "spells-that-dont-suck_mind-link",
     "name": "Mind Link",
-    "name_ru": "",
+    "name_ru": "Связь разумов",
     "level": 8,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -62107,9 +62138,9 @@
   {
     "id": "deepmx_move-the-cosmic-wheel",
     "name": "Move the Cosmic Wheel",
-    "name_ru": "",
+    "name_ru": "Повернуть космическое колесо",
     "level": 8,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -62158,9 +62189,9 @@
   {
     "id": "deepm_paragon-of-chaos",
     "name": "Paragon of Chaos",
-    "name_ru": "",
+    "name_ru": "Идеал хаоса",
     "level": 8,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -62200,9 +62231,9 @@
   {
     "id": "deepmx_power-word-restore",
     "name": "Power Word Restore",
-    "name_ru": "",
+    "name_ru": "Слово силы: восстановление",
     "level": 8,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -62251,9 +62282,9 @@
   {
     "id": "srd-2024_power-word-stun",
     "name": "Power Word Stun",
-    "name_ru": "",
+    "name_ru": "Слово силы: ошеломление",
     "level": 8,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -62310,9 +62341,9 @@
   {
     "id": "deepm_quintessence",
     "name": "Quintessence",
-    "name_ru": "",
+    "name_ru": "Квинтэссенция",
     "level": 8,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -62352,9 +62383,9 @@
   {
     "id": "wz_rise-of-the-green",
     "name": "Rise of the Green",
-    "name_ru": "",
+    "name_ru": "Восстание зелени",
     "level": 8,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -62396,9 +62427,9 @@
   {
     "id": "spells-that-dont-suck_seal-away",
     "name": "Seal Away",
-    "name_ru": "",
+    "name_ru": "Запечатать",
     "level": 8,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -62447,9 +62478,9 @@
   {
     "id": "deepm_seed-of-destruction",
     "name": "Seed of Destruction",
-    "name_ru": "",
+    "name_ru": "Семя разрушения",
     "level": 8,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [],
     "casting_time": "action",
@@ -62491,9 +62522,9 @@
   {
     "id": "spells-that-dont-suck_shatter-mind",
     "name": "Shatter Mind",
-    "name_ru": "",
+    "name_ru": "Раскол разума",
     "level": 8,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -62552,9 +62583,9 @@
   {
     "id": "deepm_steam-whistle",
     "name": "Steam Whistle",
-    "name_ru": "",
+    "name_ru": "Паровой свисток",
     "level": 8,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -62594,9 +62625,9 @@
   {
     "id": "deepm_summon-star",
     "name": "Summon Star",
-    "name_ru": "",
+    "name_ru": "Призыв звезды",
     "level": 8,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -62636,9 +62667,9 @@
   {
     "id": "srd-2024_sunburst",
     "name": "Sunburst",
-    "name_ru": "",
+    "name_ru": "Солнечный взрыв",
     "level": 8,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -62697,9 +62728,9 @@
   {
     "id": "deepm_time-jump",
     "name": "Time Jump",
-    "name_ru": "",
+    "name_ru": "Прыжок во времени",
     "level": 8,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -62739,9 +62770,9 @@
   {
     "id": "deepm_time-slippage",
     "name": "Time Slippage",
-    "name_ru": "",
+    "name_ru": "Соскальзывание времени",
     "level": 8,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [],
     "casting_time": "action",
@@ -62781,9 +62812,9 @@
   {
     "id": "srd-2024_tsunami",
     "name": "Tsunami",
-    "name_ru": "",
+    "name_ru": "Цунами",
     "level": 8,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -62830,9 +62861,9 @@
   {
     "id": "deepm_wind-of-the-hereafter",
     "name": "Wind of the Hereafter",
-    "name_ru": "",
+    "name_ru": "Ветер загробья",
     "level": 8,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -62874,9 +62905,9 @@
   {
     "id": "spells-that-dont-suck_withering-field",
     "name": "Withering Field",
-    "name_ru": "",
+    "name_ru": "Иссушающее поле",
     "level": 8,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -62923,9 +62954,9 @@
   {
     "id": "deepm_afflict-line",
     "name": "Afflict Line",
-    "name_ru": "",
+    "name_ru": "Линия недуга",
     "level": 9,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -62978,9 +63009,9 @@
   {
     "id": "srd-2024_astral-projection",
     "name": "Astral Projection",
-    "name_ru": "",
+    "name_ru": "Астральная проекция",
     "level": 9,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -63033,9 +63064,9 @@
   {
     "id": "deepm_blood-to-acid",
     "name": "Blood to Acid",
-    "name_ru": "",
+    "name_ru": "Кровь в кислоту",
     "level": 9,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -63077,9 +63108,9 @@
   {
     "id": "deepmx_circle-of-devestation",
     "name": "Circle of Devestation",
-    "name_ru": "",
+    "name_ru": "Круг опустошения",
     "level": 9,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -63128,9 +63159,9 @@
   {
     "id": "deepmx_cosmic-alignment",
     "name": "Cosmic Alignment",
-    "name_ru": "",
+    "name_ru": "Космическое выравнивание",
     "level": 9,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -63175,9 +63206,9 @@
   {
     "id": "wz_devouring-darkness",
     "name": "Devouring Darkness",
-    "name_ru": "",
+    "name_ru": "Пожирающая тьма",
     "level": 9,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -63219,9 +63250,9 @@
   {
     "id": "toh_eruption",
     "name": "Eruption",
-    "name_ru": "",
+    "name_ru": "Извержение",
     "level": 9,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -63263,9 +63294,9 @@
   {
     "id": "srd-2024_foresight",
     "name": "Foresight",
-    "name_ru": "",
+    "name_ru": "Предвидение",
     "level": 9,
-    "school": "Divination",
+    "school": "Прорицание",
     "school_key": "divination",
     "classes": [
       {
@@ -63322,9 +63353,9 @@
   {
     "id": "a5e-ag_forest-army",
     "name": "Forest Army",
-    "name_ru": "",
+    "name_ru": "Лесная армия",
     "level": 9,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "1hour",
@@ -63364,9 +63395,9 @@
   {
     "id": "deepm_forest-sanctuary",
     "name": "Forest Sanctuary",
-    "name_ru": "",
+    "name_ru": "Лесное святилище",
     "level": 9,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [],
     "casting_time": "1minute",
@@ -63406,9 +63437,9 @@
   {
     "id": "deepm_form-of-the-gods",
     "name": "Form of the Gods",
-    "name_ru": "",
+    "name_ru": "Облик богов",
     "level": 9,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -63448,9 +63479,9 @@
   {
     "id": "toh_furious-wail",
     "name": "Furious Wail",
-    "name_ru": "",
+    "name_ru": "Яростный вопль",
     "level": 9,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -63492,9 +63523,9 @@
   {
     "id": "srd-2024_gate",
     "name": "Gate",
-    "name_ru": "",
+    "name_ru": "Врата",
     "level": 9,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -63551,9 +63582,9 @@
   {
     "id": "deepm_greater-maze",
     "name": "Greater Maze",
-    "name_ru": "",
+    "name_ru": "Великий лабиринт",
     "level": 9,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -63595,9 +63626,9 @@
   {
     "id": "deepm_greater-seal-of-sanctuary",
     "name": "Greater Seal of Sanctuary",
-    "name_ru": "",
+    "name_ru": "Великая печать святилища",
     "level": 9,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [],
     "casting_time": "1minute",
@@ -63639,9 +63670,9 @@
   {
     "id": "srd-2024_imprisonment",
     "name": "Imprisonment",
-    "name_ru": "",
+    "name_ru": "Заточение",
     "level": 9,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -63690,9 +63721,9 @@
   {
     "id": "kp_incantation-of-lies-made-truth",
     "name": "Incantation of Lies Made Truth",
-    "name_ru": "",
+    "name_ru": "Заклинание лжи, ставшей истиной",
     "level": 9,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [],
     "casting_time": "9hours",
@@ -63732,9 +63763,9 @@
   {
     "id": "deepmx_ley-storm",
     "name": "Ley Storm",
-    "name_ru": "",
+    "name_ru": "Лей-буря",
     "level": 9,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -63789,9 +63820,9 @@
   {
     "id": "deepmx_ley-surge",
     "name": "Ley Surge",
-    "name_ru": "",
+    "name_ru": "Лей-всплеск",
     "level": 9,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -63846,9 +63877,9 @@
   {
     "id": "deepm_mammons-due",
     "name": "Mammon’s Due",
-    "name_ru": "",
+    "name_ru": "Долг Маммона",
     "level": 9,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "1hour",
@@ -63890,9 +63921,9 @@
   {
     "id": "srd-2024_mass-heal",
     "name": "Mass Heal",
-    "name_ru": "",
+    "name_ru": "Массовое исцеление",
     "level": 9,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -63937,9 +63968,9 @@
   {
     "id": "srd-2024_meteor-swarm",
     "name": "Meteor Swarm",
-    "name_ru": "",
+    "name_ru": "Метеоритный дождь",
     "level": 9,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [
       {
@@ -63991,9 +64022,9 @@
   {
     "id": "kp_open-red-portal",
     "name": "Open Red Portal",
-    "name_ru": "",
+    "name_ru": "Открыть Красный портал",
     "level": 9,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -64033,9 +64064,9 @@
   {
     "id": "spells-that-dont-suck_phantasmal-nightmares",
     "name": "Phantasmal Nightmares",
-    "name_ru": "",
+    "name_ru": "Фантазматические кошмары",
     "level": 9,
-    "school": "Illusion",
+    "school": "Иллюзия",
     "school_key": "illusion",
     "classes": [
       {
@@ -64086,9 +64117,9 @@
   {
     "id": "srd-2024_power-word-heal",
     "name": "Power Word Heal",
-    "name_ru": "",
+    "name_ru": "Слово силы: исцеление",
     "level": 9,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -64137,9 +64168,9 @@
   {
     "id": "srd-2024_power-word-kill",
     "name": "Power Word Kill",
-    "name_ru": "",
+    "name_ru": "Слово силы: смерть",
     "level": 9,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -64198,9 +64229,9 @@
   {
     "id": "srd-2024_prismatic-wall",
     "name": "Prismatic Wall",
-    "name_ru": "",
+    "name_ru": "Призматическая стена",
     "level": 9,
-    "school": "Abjuration",
+    "school": "Ограждение",
     "school_key": "abjuration",
     "classes": [
       {
@@ -64256,9 +64287,9 @@
   {
     "id": "deepm_pyroclasm",
     "name": "Pyroclasm",
-    "name_ru": "",
+    "name_ru": "Пироклазм",
     "level": 9,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -64300,9 +64331,9 @@
   {
     "id": "a5e-ag_raise-hell",
     "name": "Raise Hell",
-    "name_ru": "",
+    "name_ru": "Поднять ад",
     "level": 9,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -64344,9 +64375,9 @@
   {
     "id": "kp_selfish-wish",
     "name": "Selfish Wish",
-    "name_ru": "",
+    "name_ru": "Эгоистичное желание",
     "level": 9,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [],
     "casting_time": "action",
@@ -64386,9 +64417,9 @@
   {
     "id": "srd-2024_shapechange",
     "name": "Shapechange",
-    "name_ru": "",
+    "name_ru": "Смена формы",
     "level": 9,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -64437,9 +64468,9 @@
   {
     "id": "deepm_stars-heart",
     "name": "Star's Heart",
-    "name_ru": "",
+    "name_ru": "Сердце звезды",
     "level": 9,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -64481,9 +64512,9 @@
   {
     "id": "srd-2024_storm-of-vengeance",
     "name": "Storm of Vengeance",
-    "name_ru": "",
+    "name_ru": "Буря возмездия",
     "level": 9,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -64530,9 +64561,9 @@
   {
     "id": "deepmx_summon-old-ones-avatar",
     "name": "Summon Old One's Avatar",
-    "name_ru": "",
+    "name_ru": "Призыв аватара Древнего",
     "level": 9,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -64593,9 +64624,9 @@
   {
     "id": "spells-that-dont-suck_synaptic-shockwave",
     "name": "Synaptic Shockwave",
-    "name_ru": "",
+    "name_ru": "Синаптическая ударная волна",
     "level": 9,
-    "school": "Enchantment",
+    "school": "Очарование",
     "school_key": "enchantment",
     "classes": [
       {
@@ -64654,9 +64685,9 @@
   {
     "id": "spells-that-dont-suck_tempest",
     "name": "Tempest",
-    "name_ru": "",
+    "name_ru": "Буря",
     "level": 9,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -64703,9 +64734,9 @@
   {
     "id": "kp_the-black-gods-blessing",
     "name": "The Black God's Blessing",
-    "name_ru": "",
+    "name_ru": "Благословение Чёрного Бога",
     "level": 9,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "7hours",
@@ -64745,9 +64776,9 @@
   {
     "id": "srd-2024_time-stop",
     "name": "Time Stop",
-    "name_ru": "",
+    "name_ru": "Остановка времени",
     "level": 9,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -64796,9 +64827,9 @@
   {
     "id": "deepm_time-in-a-bottle",
     "name": "Time in a Bottle",
-    "name_ru": "",
+    "name_ru": "Время в бутылке",
     "level": 9,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -64838,9 +64869,9 @@
   {
     "id": "srd-2024_true-polymorph",
     "name": "True Polymorph",
-    "name_ru": "",
+    "name_ru": "Истинное превращение",
     "level": 9,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [
       {
@@ -64893,9 +64924,9 @@
   {
     "id": "srd-2024_true-resurrection",
     "name": "True Resurrection",
-    "name_ru": "",
+    "name_ru": "Истинное воскрешение",
     "level": 9,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [
       {
@@ -64944,9 +64975,9 @@
   {
     "id": "deepm_umbral-storm",
     "name": "Umbral Storm",
-    "name_ru": "",
+    "name_ru": "Теневая буря",
     "level": 9,
-    "school": "Necromancy",
+    "school": "Некромантия",
     "school_key": "necromancy",
     "classes": [],
     "casting_time": "action",
@@ -64988,9 +65019,9 @@
   {
     "id": "deepm_unleash-effigy",
     "name": "Unleash Effigy",
-    "name_ru": "",
+    "name_ru": "Освободить чучело",
     "level": 9,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "action",
@@ -65030,9 +65061,9 @@
   {
     "id": "deepm_void-rift",
     "name": "Void Rift",
-    "name_ru": "",
+    "name_ru": "Разлом Пустоты",
     "level": 9,
-    "school": "Evocation",
+    "school": "Воплощение",
     "school_key": "evocation",
     "classes": [],
     "casting_time": "action",
@@ -65074,9 +65105,9 @@
   {
     "id": "srd-2024_weird",
     "name": "Weird",
-    "name_ru": "",
+    "name_ru": "Жуть",
     "level": 9,
-    "school": "Illusion",
+    "school": "Иллюзия",
     "school_key": "illusion",
     "classes": [
       {
@@ -65127,9 +65158,9 @@
   {
     "id": "srd-2024_wish",
     "name": "Wish",
-    "name_ru": "",
+    "name_ru": "Желание",
     "level": 9,
-    "school": "Conjuration",
+    "school": "Вызов",
     "school_key": "conjuration",
     "classes": [
       {
@@ -65180,9 +65211,9 @@
   {
     "id": "a5e-ag_writhing-transformation",
     "name": "Writhing Transformation",
-    "name_ru": "",
+    "name_ru": "Извивающееся превращение",
     "level": 9,
-    "school": "Transmutation",
+    "school": "Преобразование",
     "school_key": "transmutation",
     "classes": [],
     "casting_time": "1week",
