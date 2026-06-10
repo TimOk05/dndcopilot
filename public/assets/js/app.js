@@ -1013,10 +1013,10 @@ async function loadSpells() {
   spellsSummary.textContent = "Загрузка заклинаний...";
 
   try {
-    const [indexResponse, spellsResponse] = await Promise.all([
-      fetch("data/srd/spells.index.json"),
-      fetch("data/srd/spells.json"),
-    ]);
+  const [indexResponse, spellsResponse] = await Promise.all([
+    fetch("data/srd/spells.index.json?v=20260610-spells-ru-1"),
+    fetch("data/srd/spells.json?v=20260610-spells-ru-1"),
+  ]);
 
     if (!indexResponse.ok || !spellsResponse.ok) {
       throw new Error("Не удалось загрузить базу заклинаний");

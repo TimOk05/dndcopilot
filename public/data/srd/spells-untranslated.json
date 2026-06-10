@@ -1,0 +1,2504 @@
+[
+  {
+    "id": "deepm_memento-mori",
+    "name": "Memento Mori",
+    "level": 0,
+    "school": "Некромантия",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": false
+  },
+  {
+    "id": "deepm_circle-of-wind",
+    "name": "Circle of Wind",
+    "level": 1,
+    "school": "Abjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_cloak-of-shadow",
+    "name": "Cloak of Shadow",
+    "level": 1,
+    "school": "Illusion",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_cloying-darkness",
+    "name": "Cloying Darkness",
+    "level": 1,
+    "school": "Necromancy",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_cobra-fangs",
+    "name": "Cobra Fangs",
+    "level": 1,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_color-spray",
+    "name": "Color Spray",
+    "level": 1,
+    "school": "Illusion",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_command",
+    "name": "Command",
+    "level": 1,
+    "school": "Enchantment",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_comprehend-languages",
+    "name": "Comprehend Languages",
+    "level": 1,
+    "school": "Divination",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_cone-of-flame",
+    "name": "Cone of Flame",
+    "level": 1,
+    "school": "Evocation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_converse-with-dragon",
+    "name": "Converse With Dragon",
+    "level": 1,
+    "school": "Divination",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_corpse-explosion",
+    "name": "Corpse Explosion",
+    "level": 1,
+    "school": "Evocation",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_boiling-blood",
+    "name": "Boiling Blood",
+    "level": 4,
+    "school": "Necromancy",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_synaptic-spear",
+    "name": "Synaptic Spear",
+    "level": 4,
+    "school": "Очарование",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_tearful-sonnet",
+    "name": "Tearful Sonnet",
+    "level": 4,
+    "school": "Очарование",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_time-vortex",
+    "name": "Time Vortex",
+    "level": 4,
+    "school": "Воплощение",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_torrent-of-fire",
+    "name": "Torrent of Fire",
+    "level": 4,
+    "school": "Вызов",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_trollish-charge",
+    "name": "Trollish Charge",
+    "level": 4,
+    "school": "Иллюзия",
+    "source": "Tome of Heroes",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_unerring-sentry",
+    "name": "Unerring Sentry",
+    "level": 4,
+    "school": "Вызов",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_visage-of-madness",
+    "name": "Visage of Madness",
+    "level": 4,
+    "school": "Очарование",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_vitriolic-sphere",
+    "name": "Vitriolic Sphere",
+    "level": 4,
+    "school": "Воплощение",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_wall-of-fire",
+    "name": "Wall of Fire",
+    "level": 4,
+    "school": "Воплощение",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_war-horn",
+    "name": "War Horn",
+    "level": 4,
+    "school": "Очарование",
+    "source": "Tome of Heroes",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_whirling-water",
+    "name": "Whirling Water",
+    "level": 4,
+    "school": "Вызов",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "kp_wield-soul",
+    "name": "Wield Soul",
+    "level": 4,
+    "school": "Некромантия",
+    "source": "Kobold Press Compilation",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_wild-shield",
+    "name": "Wild Shield",
+    "level": 4,
+    "school": "Ограждение",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "kp_winged-spies",
+    "name": "Winged Spies",
+    "level": 4,
+    "school": "Прорицание",
+    "source": "Kobold Press Compilation",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_wintry-glide",
+    "name": "Wintry Glide",
+    "level": 4,
+    "school": "Вызов",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_write-memory",
+    "name": "Write Memory",
+    "level": 4,
+    "school": "Преобразование",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_yellow-sign",
+    "name": "Yellow Sign",
+    "level": 4,
+    "school": "Очарование",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_acid-rain",
+    "name": "Acid Rain",
+    "level": 5,
+    "school": "Вызов",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_amplify-ley-field",
+    "name": "Amplify Ley Field",
+    "level": 5,
+    "school": "Воплощение",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_ancient-shade",
+    "name": "Ancient Shade",
+    "level": 5,
+    "school": "Некромантия",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": false,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_enchant-ring",
+    "name": "Enchant Ring",
+    "level": 6,
+    "school": "Enchantment",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_encroaching-shadows",
+    "name": "Encroaching Shadows",
+    "level": 6,
+    "school": "Illusion",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_entomb",
+    "name": "Entomb",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_extract-knowledge",
+    "name": "Extract Knowledge",
+    "level": 6,
+    "school": "Necromancy",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "open5e_eye-bite",
+    "name": "Eye bite",
+    "level": 6,
+    "school": "Necromancy",
+    "source": "Open5e Originals",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_eyebite",
+    "name": "Eyebite",
+    "level": 6,
+    "school": "Necromancy",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_fault-line",
+    "name": "Fault Line",
+    "level": 6,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_find-the-path",
+    "name": "Find the Path",
+    "level": 6,
+    "school": "Divination",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_firewalk",
+    "name": "Firewalk",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_fleeting-portals",
+    "name": "Fleeting Portals",
+    "level": 6,
+    "school": "Conjuration",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_flesh-to-stone",
+    "name": "Flesh to Stone",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_forbiddance",
+    "name": "Forbiddance",
+    "level": 6,
+    "school": "Abjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_form-of-fire",
+    "name": "Form of Fire",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_form-of-ice",
+    "name": "Form of Ice",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_form-of-stone",
+    "name": "Form of Stone",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_form-of-water",
+    "name": "Form of Water",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_form-of-wind",
+    "name": "Form of Wind",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_freezing-sphere",
+    "name": "Freezing Sphere",
+    "level": 6,
+    "school": "Evocation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_gale",
+    "name": "Gale",
+    "level": 6,
+    "school": "Conjuration",
+    "source": "Tome of Heroes",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_glacial-orbs",
+    "name": "Glacial Orbs",
+    "level": 6,
+    "school": "Conjuration",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_globe-of-invulnerability",
+    "name": "Globe of Invulnerability",
+    "level": 6,
+    "school": "Abjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_guards-and-wards",
+    "name": "Guards and Wards",
+    "level": 6,
+    "school": "Abjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_harm",
+    "name": "Harm",
+    "level": 6,
+    "school": "Necromancy",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_heal",
+    "name": "Heal",
+    "level": 6,
+    "school": "Abjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_heavenly-crown",
+    "name": "Heavenly Crown",
+    "level": 6,
+    "school": "Enchantment",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_heroes-feast",
+    "name": "Heroes' Feast",
+    "level": 6,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_icy-manipulation",
+    "name": "Icy Manipulation",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_impaling-spires",
+    "name": "Impaling Spires",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_infernal-weapon",
+    "name": "Infernal Weapon",
+    "level": 6,
+    "school": "Conjuration",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_instant-armored-vehicle",
+    "name": "Instant Armored Vehicle",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Tome of Heroes",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_instant-summons",
+    "name": "Instant Summons",
+    "level": 6,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_irresistible-dance",
+    "name": "Irresistible Dance",
+    "level": 6,
+    "school": "Enchantment",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_ley-whip",
+    "name": "Ley Whip",
+    "level": 6,
+    "school": "Evocation",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_life-drain",
+    "name": "Life Drain",
+    "level": 6,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_magic-jar",
+    "name": "Magic Jar",
+    "level": 6,
+    "school": "Necromancy",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_martial-transformation",
+    "name": "Martial Transformation",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_mass-suggestion",
+    "name": "Mass Suggestion",
+    "level": 6,
+    "school": "Enchantment",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "wz_mind-maze",
+    "name": "Mind Maze",
+    "level": 6,
+    "school": "Evocation",
+    "source": "Warlock Zine",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_move-earth",
+    "name": "Move Earth",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_necrotic-sphere",
+    "name": "Necrotic Sphere",
+    "level": 6,
+    "school": "Necromancy",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_petrify",
+    "name": "Petrify",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_pincer",
+    "name": "Pincer",
+    "level": 6,
+    "school": "Evocation",
+    "source": "Tome of Heroes",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_planar-ally",
+    "name": "Planar Ally",
+    "level": 6,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_programmed-illusion",
+    "name": "Programmed Illusion",
+    "level": 6,
+    "school": "Illusion",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_robe-of-shards",
+    "name": "Robe of Shards",
+    "level": 6,
+    "school": "Abjuration",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "kp_seal-red-portal",
+    "name": "Seal Red Portal",
+    "level": 6,
+    "school": "Abjuration",
+    "source": "Kobold Press Compilation",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "kp_shadow-spawn",
+    "name": "Shadow Spawn",
+    "level": 6,
+    "school": "Illusion",
+    "source": "Kobold Press Compilation",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_sky-omen",
+    "name": "Sky Omen",
+    "level": 6,
+    "school": "Illusion",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_sphere-of-order",
+    "name": "Sphere of Order",
+    "level": 6,
+    "school": "Evocation",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_sunbeam",
+    "name": "Sunbeam",
+    "level": 6,
+    "school": "Evocation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_time-loop",
+    "name": "Time Loop",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_toadstool-ring",
+    "name": "Toadstool Ring",
+    "level": 6,
+    "school": "Divination",
+    "source": "Tome of Heroes",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_transport-via-plants",
+    "name": "Transport via Plants",
+    "level": 6,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_true-seeing",
+    "name": "True Seeing",
+    "level": 6,
+    "school": "Divination",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "wz_vengeful-panopy-of-the-ley-line-ignited",
+    "name": "Vengeful Panopy of the Ley Line Ignited",
+    "level": 6,
+    "school": "Evocation",
+    "source": "Warlock Zine",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_walk-the-twisted-path",
+    "name": "Walk the Twisted Path",
+    "level": 6,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_wall-of-flesh",
+    "name": "Wall of Flesh",
+    "level": 6,
+    "school": "Evocation",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_wall-of-ice",
+    "name": "Wall of Ice",
+    "level": 6,
+    "school": "Evocation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_wall-of-thorns",
+    "name": "Wall of Thorns",
+    "level": 6,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_warp-mind-and-matter",
+    "name": "Warp Mind and Matter",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_wind-walk",
+    "name": "Wind Walk",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_winters-radiance",
+    "name": "Winter's Radiance",
+    "level": 6,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_winterdark",
+    "name": "Winterdark",
+    "level": 6,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_word-of-recall",
+    "name": "Word of Recall",
+    "level": 6,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_wormway",
+    "name": "Wormway",
+    "level": 6,
+    "school": "Enchantment",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_wound",
+    "name": "Wound",
+    "level": 6,
+    "school": "Necromancy",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_acid-gate",
+    "name": "Acid Gate",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_amplify-gravity",
+    "name": "Amplify Gravity",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_angel-paradox",
+    "name": "Angel Paradox",
+    "level": 7,
+    "school": "Evocation",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_anomalous-object",
+    "name": "Anomalous Object",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_arcane-sword",
+    "name": "Arcane Sword",
+    "level": 7,
+    "school": "Evocation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_arcanists-sword",
+    "name": "Arcanist's Sword",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_aspect-of-the-dragon",
+    "name": "Aspect of the Dragon",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_blizzard",
+    "name": "Blizzard",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_celebration",
+    "name": "Celebration",
+    "level": 7,
+    "school": "Enchantment",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_clear-the-board",
+    "name": "Clear the Board",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "Tome of Heroes",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_confinement",
+    "name": "Confinement",
+    "level": 7,
+    "school": "Evocation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_conjure-celestial",
+    "name": "Conjure Celestial",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_conjure-greater-spectral-dead",
+    "name": "Conjure Greater Spectral Dead",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_conjure-shadow-titan",
+    "name": "Conjure Shadow Titan",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_conjure-spectral-allies",
+    "name": "Conjure Spectral Allies",
+    "level": 7,
+    "school": "Necromancy",
+    "source": "Tome of Heroes",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_conjure-voidborn",
+    "name": "Conjure Voidborn",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_create-thunderstaff",
+    "name": "Create Thunderstaff",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_curse-of-dust",
+    "name": "Curse of Dust",
+    "level": 7,
+    "school": "Necromancy",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_curse-of-the-grave",
+    "name": "Curse of the Grave",
+    "level": 7,
+    "school": "Necromancy",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_death-gods-touch",
+    "name": "Death God’s Touch",
+    "level": 7,
+    "school": "Necromancy",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_death-ray",
+    "name": "Death Ray",
+    "level": 7,
+    "school": "Necromancy",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_defile-healing",
+    "name": "Defile Healing",
+    "level": 7,
+    "school": "Necromancy",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_delayed-blast-fireball",
+    "name": "Delayed Blast Fireball",
+    "level": 7,
+    "school": "Evocation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_divine-word",
+    "name": "Divine Word",
+    "level": 7,
+    "school": "Evocation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_enrage-architecture",
+    "name": "Enrage Architecture",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_etherealness",
+    "name": "Etherealness",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_finger-of-death",
+    "name": "Finger of Death",
+    "level": 7,
+    "school": "Necromancy",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_fire-storm",
+    "name": "Fire Storm",
+    "level": 7,
+    "school": "Evocation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_forcecage",
+    "name": "Forcecage",
+    "level": 7,
+    "school": "Evocation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_glacial-fog",
+    "name": "Glacial Fog",
+    "level": 7,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_glyph-of-power",
+    "name": "Glyph of Power",
+    "level": 7,
+    "school": "Abjuration",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "kp_greater-ley-protection",
+    "name": "Greater Ley Protection",
+    "level": 7,
+    "school": "Abjuration",
+    "source": "Kobold Press Compilation",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_greater-ley-pulse",
+    "name": "Greater Ley Pulse",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_hellforging",
+    "name": "Hellforging",
+    "level": 7,
+    "school": "Necromancy",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_ice-soldiers",
+    "name": "Ice Soldiers",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_icy-grasp-of-the-void",
+    "name": "Icy Grasp of the Void",
+    "level": 7,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_immolating-gibbet",
+    "name": "Immolating Gibbet",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Tome of Heroes",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_inescapable-malady",
+    "name": "Inescapable Malady",
+    "level": 7,
+    "school": "Necromancy",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_last-rays-of-the-dying-sun",
+    "name": "Last Rays of the Dying Sun",
+    "level": 7,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_legend-killer",
+    "name": "Legend Killer",
+    "level": 7,
+    "school": "Divination",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_long-game",
+    "name": "Long Game",
+    "level": 7,
+    "school": "Enchantment",
+    "source": "Tome of Heroes",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_magnificent-mansion",
+    "name": "Magnificent Mansion",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_mirage-arcane",
+    "name": "Mirage Arcane",
+    "level": 7,
+    "school": "Illusion",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "wz_mirror-realm",
+    "name": "Mirror Realm",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "Warlock Zine",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_molechs-blessing",
+    "name": "Molech's Blessing",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "kp_morphic-flux",
+    "name": "Morphic Flux",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Kobold Press Compilation",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_plane-shift",
+    "name": "Plane Shift",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_prismatic-spray",
+    "name": "Prismatic Spray",
+    "level": 7,
+    "school": "Evocation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_project-image",
+    "name": "Project Image",
+    "level": 7,
+    "school": "Illusion",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_rain-of-fire",
+    "name": "Rain of Fire",
+    "level": 7,
+    "school": "Evocation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_regenerate",
+    "name": "Regenerate",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_rejuvenation",
+    "name": "Rejuvenation",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_resurrection",
+    "name": "Resurrection",
+    "level": 7,
+    "school": "Necromancy",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_reverse-gravity",
+    "name": "Reverse Gravity",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_right-the-stars",
+    "name": "Right the Stars",
+    "level": 7,
+    "school": "Divination",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_ring-ward",
+    "name": "Ring Ward",
+    "level": 7,
+    "school": "Abjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_safekeeping",
+    "name": "Safekeeping",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_scintillant-blast",
+    "name": "Scintillant Blast",
+    "level": 7,
+    "school": "Evocation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_seal-of-sanctuary",
+    "name": "Seal of Sanctuary",
+    "level": 7,
+    "school": "Abjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_sequester",
+    "name": "Sequester",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_sign-of-koth",
+    "name": "Sign of Koth",
+    "level": 7,
+    "school": "Abjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_simulacrum",
+    "name": "Simulacrum",
+    "level": 7,
+    "school": "Illusion",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_soul-transfer",
+    "name": "Soul Transfer",
+    "level": 7,
+    "school": "Necromancy",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_sporesight",
+    "name": "Sporesight",
+    "level": 7,
+    "school": "Evocation",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_starry-vision",
+    "name": "Starry Vision",
+    "level": 7,
+    "school": "Divination",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_symbol",
+    "name": "Symbol",
+    "level": 7,
+    "school": "Abjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_symbol-of-sorcery",
+    "name": "Symbol of Sorcery",
+    "level": 7,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_talons-of-a-hungry-land",
+    "name": "Talons of a Hungry Land",
+    "level": 7,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_teleport",
+    "name": "Teleport",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_timeless-engine",
+    "name": "Timeless Engine",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_triumph-of-ice",
+    "name": "Triumph of Ice",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_twister",
+    "name": "Twister",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_uncontrollable-transformation",
+    "name": "Uncontrollable Transformation",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_unholy-star",
+    "name": "Unholy Star",
+    "level": 7,
+    "school": "Conjuration",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_volley-shield",
+    "name": "Volley Shield",
+    "level": 7,
+    "school": "Abjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_walking-wall",
+    "name": "Walking Wall",
+    "level": 7,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_wild-hunt",
+    "name": "Wild Hunt",
+    "level": 7,
+    "school": "Enchantment",
+    "source": "Tome of Heroes",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "wz_zymurgic-aura",
+    "name": "Zymurgic Aura",
+    "level": 7,
+    "school": "Necromancy",
+    "source": "Warlock Zine",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_animal-shapes",
+    "name": "Animal Shapes",
+    "level": 8,
+    "school": "Transmutation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_antimagic-field",
+    "name": "Antimagic Field",
+    "level": 8,
+    "school": "Abjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_antipathysympathy",
+    "name": "Antipathy/Sympathy",
+    "level": 8,
+    "school": "Enchantment",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_arcane-sight",
+    "name": "Arcane Sight",
+    "level": 8,
+    "school": "Divination",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_awaken-object",
+    "name": "Awaken Object",
+    "level": 8,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_befuddlement",
+    "name": "Befuddlement",
+    "level": 8,
+    "school": "Enchantment",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_black-sunshine",
+    "name": "Black Sunshine",
+    "level": 8,
+    "school": "Illusion",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_bloom",
+    "name": "Bloom",
+    "level": 8,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_call-the-hunter",
+    "name": "Call the Hunter",
+    "level": 8,
+    "school": "Conjuration",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_caustic-torrent",
+    "name": "Caustic Torrent",
+    "level": 8,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "wz_child-of-light-and-darkness",
+    "name": "Child of Light and Darkness",
+    "level": 8,
+    "school": "Transmutation",
+    "source": "Warlock Zine",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_clone",
+    "name": "Clone",
+    "level": 8,
+    "school": "Necromancy",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_control-weather",
+    "name": "Control Weather",
+    "level": 8,
+    "school": "Transmutation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_costly-victory",
+    "name": "Costly Victory",
+    "level": 8,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_create-ring-servant",
+    "name": "Create Ring Servant",
+    "level": 8,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_deadly-sting",
+    "name": "Deadly Sting",
+    "level": 8,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_demiplane",
+    "name": "Demiplane",
+    "level": 8,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_desolation",
+    "name": "Desolation",
+    "level": 8,
+    "school": "Necromancy",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_disruptive-aura",
+    "name": "Disruptive Aura",
+    "level": 8,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_dominate-monster",
+    "name": "Dominate Monster",
+    "level": 8,
+    "school": "Enchantment",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "wz_door-of-the-far-traveler",
+    "name": "Door of the Far Traveler",
+    "level": 8,
+    "school": "Conjuration",
+    "source": "Warlock Zine",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_earthquake",
+    "name": "Earthquake",
+    "level": 8,
+    "school": "Transmutation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd_feeblemind",
+    "name": "Feeblemind",
+    "level": 8,
+    "school": "Enchantment",
+    "source": "5e 2014 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_ghoul-kings-cloak",
+    "name": "Ghoul King’s Cloak",
+    "level": 8,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_glacial-cascade",
+    "name": "Glacial Cascade",
+    "level": 8,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_glibness",
+    "name": "Glibness",
+    "level": 8,
+    "school": "Enchantment",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_glimpse-of-the-void",
+    "name": "Glimpse of the Void",
+    "level": 8,
+    "school": "Enchantment",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_great-wave",
+    "name": "Great Wave",
+    "level": 8,
+    "school": "Conjuration",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_harsh-light-of-summers-glare",
+    "name": "Harsh Light of Summer’s Glare",
+    "level": 8,
+    "school": "Enchantment",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_heart-of-dis",
+    "name": "Heart of Dis",
+    "level": 8,
+    "school": "Necromancy",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_holy-aura",
+    "name": "Holy Aura",
+    "level": 8,
+    "school": "Abjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_incendiary-cloud",
+    "name": "Incendiary Cloud",
+    "level": 8,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_life-hack",
+    "name": "Life Hack",
+    "level": 8,
+    "school": "Necromancy",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_machine-sacrifice",
+    "name": "Machine Sacrifice",
+    "level": 8,
+    "school": "Necromancy",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_malevolent-waves",
+    "name": "Malevolent Waves",
+    "level": 8,
+    "school": "Abjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_maze",
+    "name": "Maze",
+    "level": 8,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_mind-blank",
+    "name": "Mind Blank",
+    "level": 8,
+    "school": "Abjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_mind-link",
+    "name": "Mind Link",
+    "level": 8,
+    "school": "Enchantment",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_move-the-cosmic-wheel",
+    "name": "Move the Cosmic Wheel",
+    "level": 8,
+    "school": "Conjuration",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_paragon-of-chaos",
+    "name": "Paragon of Chaos",
+    "level": 8,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_power-word-restore",
+    "name": "Power Word Restore",
+    "level": 8,
+    "school": "Evocation",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_power-word-stun",
+    "name": "Power Word Stun",
+    "level": 8,
+    "school": "Enchantment",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_quintessence",
+    "name": "Quintessence",
+    "level": 8,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "wz_rise-of-the-green",
+    "name": "Rise of the Green",
+    "level": 8,
+    "school": "Evocation",
+    "source": "Warlock Zine",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_seal-away",
+    "name": "Seal Away",
+    "level": 8,
+    "school": "Abjuration",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_seed-of-destruction",
+    "name": "Seed of Destruction",
+    "level": 8,
+    "school": "Enchantment",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_shatter-mind",
+    "name": "Shatter Mind",
+    "level": 8,
+    "school": "Transmutation",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_steam-whistle",
+    "name": "Steam Whistle",
+    "level": 8,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_summon-star",
+    "name": "Summon Star",
+    "level": 8,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_sunburst",
+    "name": "Sunburst",
+    "level": 8,
+    "school": "Evocation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_time-jump",
+    "name": "Time Jump",
+    "level": 8,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_time-slippage",
+    "name": "Time Slippage",
+    "level": 8,
+    "school": "Enchantment",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_tsunami",
+    "name": "Tsunami",
+    "level": 8,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_wind-of-the-hereafter",
+    "name": "Wind of the Hereafter",
+    "level": 8,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_withering-field",
+    "name": "Withering Field",
+    "level": 8,
+    "school": "Necromancy",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_afflict-line",
+    "name": "Afflict Line",
+    "level": 9,
+    "school": "Necromancy",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_astral-projection",
+    "name": "Astral Projection",
+    "level": 9,
+    "school": "Necromancy",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_blood-to-acid",
+    "name": "Blood to Acid",
+    "level": 9,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_circle-of-devestation",
+    "name": "Circle of Devestation",
+    "level": 9,
+    "school": "Evocation",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_cosmic-alignment",
+    "name": "Cosmic Alignment",
+    "level": 9,
+    "school": "Conjuration",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "wz_devouring-darkness",
+    "name": "Devouring Darkness",
+    "level": 9,
+    "school": "Evocation",
+    "source": "Warlock Zine",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_eruption",
+    "name": "Eruption",
+    "level": 9,
+    "school": "Conjuration",
+    "source": "Tome of Heroes",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_foresight",
+    "name": "Foresight",
+    "level": 9,
+    "school": "Divination",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_forest-army",
+    "name": "Forest Army",
+    "level": 9,
+    "school": "Conjuration",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_forest-sanctuary",
+    "name": "Forest Sanctuary",
+    "level": 9,
+    "school": "Abjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_form-of-the-gods",
+    "name": "Form of the Gods",
+    "level": 9,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "toh_furious-wail",
+    "name": "Furious Wail",
+    "level": 9,
+    "school": "Evocation",
+    "source": "Tome of Heroes",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_gate",
+    "name": "Gate",
+    "level": 9,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_greater-maze",
+    "name": "Greater Maze",
+    "level": 9,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_greater-seal-of-sanctuary",
+    "name": "Greater Seal of Sanctuary",
+    "level": 9,
+    "school": "Abjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_imprisonment",
+    "name": "Imprisonment",
+    "level": 9,
+    "school": "Abjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "kp_incantation-of-lies-made-truth",
+    "name": "Incantation of Lies Made Truth",
+    "level": 9,
+    "school": "Enchantment",
+    "source": "Kobold Press Compilation",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_ley-storm",
+    "name": "Ley Storm",
+    "level": 9,
+    "school": "Conjuration",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_ley-surge",
+    "name": "Ley Surge",
+    "level": 9,
+    "school": "Evocation",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_mammons-due",
+    "name": "Mammon’s Due",
+    "level": 9,
+    "school": "Conjuration",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_mass-heal",
+    "name": "Mass Heal",
+    "level": 9,
+    "school": "Abjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_meteor-swarm",
+    "name": "Meteor Swarm",
+    "level": 9,
+    "school": "Evocation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "kp_open-red-portal",
+    "name": "Open Red Portal",
+    "level": 9,
+    "school": "Transmutation",
+    "source": "Kobold Press Compilation",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_phantasmal-nightmares",
+    "name": "Phantasmal Nightmares",
+    "level": 9,
+    "school": "Illusion",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_power-word-heal",
+    "name": "Power Word Heal",
+    "level": 9,
+    "school": "Enchantment",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_power-word-kill",
+    "name": "Power Word Kill",
+    "level": 9,
+    "school": "Enchantment",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_prismatic-wall",
+    "name": "Prismatic Wall",
+    "level": 9,
+    "school": "Abjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_pyroclasm",
+    "name": "Pyroclasm",
+    "level": 9,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_raise-hell",
+    "name": "Raise Hell",
+    "level": 9,
+    "school": "Transmutation",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "kp_selfish-wish",
+    "name": "Selfish Wish",
+    "level": 9,
+    "school": "Conjuration",
+    "source": "Kobold Press Compilation",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_shapechange",
+    "name": "Shapechange",
+    "level": 9,
+    "school": "Transmutation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_stars-heart",
+    "name": "Star's Heart",
+    "level": 9,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_storm-of-vengeance",
+    "name": "Storm of Vengeance",
+    "level": 9,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepmx_summon-old-ones-avatar",
+    "name": "Summon Old One's Avatar",
+    "level": 9,
+    "school": "Conjuration",
+    "source": "Deep Magic Extended",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_synaptic-shockwave",
+    "name": "Synaptic Shockwave",
+    "level": 9,
+    "school": "Enchantment",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "spells-that-dont-suck_tempest",
+    "name": "Tempest",
+    "level": 9,
+    "school": "Conjuration",
+    "source": "Spells That Don't Suck",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "kp_the-black-gods-blessing",
+    "name": "The Black God's Blessing",
+    "level": 9,
+    "school": "Transmutation",
+    "source": "Kobold Press Compilation",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_time-stop",
+    "name": "Time Stop",
+    "level": 9,
+    "school": "Transmutation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_time-in-a-bottle",
+    "name": "Time in a Bottle",
+    "level": 9,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_true-polymorph",
+    "name": "True Polymorph",
+    "level": 9,
+    "school": "Transmutation",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_true-resurrection",
+    "name": "True Resurrection",
+    "level": 9,
+    "school": "Necromancy",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_umbral-storm",
+    "name": "Umbral Storm",
+    "level": 9,
+    "school": "Necromancy",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_unleash-effigy",
+    "name": "Unleash Effigy",
+    "level": 9,
+    "school": "Transmutation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "deepm_void-rift",
+    "name": "Void Rift",
+    "level": 9,
+    "school": "Evocation",
+    "source": "Deep Magic for 5th Edition",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_weird",
+    "name": "Weird",
+    "level": 9,
+    "school": "Illusion",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "srd-2024_wish",
+    "name": "Wish",
+    "level": 9,
+    "school": "Conjuration",
+    "source": "5e 2024 Rules",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  },
+  {
+    "id": "a5e-ag_writhing-transformation",
+    "name": "Writhing Transformation",
+    "level": 9,
+    "school": "Transmutation",
+    "source": "Adventurer's Guide",
+    "missing_name_ru": true,
+    "missing_description_ru": true
+  }
+]
