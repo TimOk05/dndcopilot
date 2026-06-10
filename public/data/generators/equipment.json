@@ -1,0 +1,141 @@
+{
+  "version": "2026-06-10-equipment-1",
+  "armor": [
+    { "id": "padded", "name": "Стёганый", "category": "light", "cost": "5 зм.", "base_ac": 11, "dex_max": null, "strength": null, "stealth_disadvantage": true, "weight_lb": 8 },
+    { "id": "leather", "name": "Кожаный", "category": "light", "cost": "10 зм.", "base_ac": 11, "dex_max": null, "strength": null, "stealth_disadvantage": false, "weight_lb": 10 },
+    { "id": "studded-leather", "name": "Проклёпанный кожаный", "category": "light", "cost": "45 зм.", "base_ac": 12, "dex_max": null, "strength": null, "stealth_disadvantage": false, "weight_lb": 13 },
+    { "id": "hide", "name": "Шкурный", "category": "medium", "cost": "10 зм.", "base_ac": 12, "dex_max": 2, "strength": null, "stealth_disadvantage": false, "weight_lb": 12 },
+    { "id": "chain-shirt", "name": "Кольчужная рубаха", "category": "medium", "cost": "50 зм.", "base_ac": 13, "dex_max": 2, "strength": null, "stealth_disadvantage": false, "weight_lb": 20 },
+    { "id": "scale-mail", "name": "Чешуйчатый", "category": "medium", "cost": "50 зм.", "base_ac": 14, "dex_max": 2, "strength": null, "stealth_disadvantage": true, "weight_lb": 45 },
+    { "id": "breastplate", "name": "Кираса", "category": "medium", "cost": "400 зм.", "base_ac": 14, "dex_max": 2, "strength": null, "stealth_disadvantage": false, "weight_lb": 20 },
+    { "id": "half-plate", "name": "Полулаты", "category": "medium", "cost": "750 зм.", "base_ac": 15, "dex_max": 2, "strength": null, "stealth_disadvantage": true, "weight_lb": 40 },
+    { "id": "ring-mail", "name": "Колечный", "category": "heavy", "cost": "30 зм.", "base_ac": 14, "dex_max": 0, "strength": null, "stealth_disadvantage": true, "weight_lb": 40 },
+    { "id": "chain-mail", "name": "Кольчуга", "category": "heavy", "cost": "75 зм.", "base_ac": 16, "dex_max": 0, "strength": 13, "stealth_disadvantage": true, "weight_lb": 55 },
+    { "id": "splint", "name": "Наборный", "category": "heavy", "cost": "200 зм.", "base_ac": 17, "dex_max": 0, "strength": 15, "stealth_disadvantage": true, "weight_lb": 60 },
+    { "id": "plate", "name": "Латы", "category": "heavy", "cost": "1500 зм.", "base_ac": 18, "dex_max": 0, "strength": 15, "stealth_disadvantage": true, "weight_lb": 65 }
+  ],
+  "shields": [
+    { "id": "shield", "name": "Щит", "cost": "10 зм.", "ac_bonus": 2, "weight_lb": 6 }
+  ],
+  "weapons": [
+    { "id": "club", "name": "Дубинка", "category": "simple_melee", "cost": "1 см", "damage": "1к4", "damage_type": "дробящий", "weight_lb": 2, "properties": ["Лёгкое"] },
+    { "id": "dagger", "name": "Кинжал", "category": "simple_melee", "cost": "2 зм", "damage": "1к4", "damage_type": "колющий", "weight_lb": 1, "properties": ["Лёгкое", "Метательное", "Фехтовальное"], "range": "20/60" },
+    { "id": "greatclub", "name": "Палица", "category": "simple_melee", "cost": "2 см", "damage": "1к8", "damage_type": "дробящий", "weight_lb": 10, "properties": ["Двуручное"] },
+    { "id": "handaxe", "name": "Ручной топор", "category": "simple_melee", "cost": "5 зм", "damage": "1к6", "damage_type": "рубящий", "weight_lb": 2, "properties": ["Лёгкое", "Метательное"], "range": "20/60" },
+    { "id": "javelin", "name": "Метательное копьё", "category": "simple_melee", "cost": "5 см", "damage": "1к6", "damage_type": "колющий", "weight_lb": 2, "properties": ["Метательное"], "range": "30/120" },
+    { "id": "light-hammer", "name": "Лёгкий молот", "category": "simple_melee", "cost": "2 зм", "damage": "1к4", "damage_type": "дробящий", "weight_lb": 2, "properties": ["Лёгкое", "Метательное"], "range": "20/60" },
+    { "id": "mace", "name": "Булава", "category": "simple_melee", "cost": "5 зм", "damage": "1к6", "damage_type": "дробящий", "weight_lb": 4, "properties": [] },
+    { "id": "quarterstaff", "name": "Боевой посох", "category": "simple_melee", "cost": "2 см", "damage": "1к6", "damage_type": "дробящий", "weight_lb": 4, "properties": ["Универсальное"], "versatile_damage": "1к8" },
+    { "id": "sickle", "name": "Серп", "category": "simple_melee", "cost": "1 зм", "damage": "1к4", "damage_type": "рубящий", "weight_lb": 2, "properties": ["Лёгкое"] },
+    { "id": "spear", "name": "Копьё", "category": "simple_melee", "cost": "1 зм", "damage": "1к6", "damage_type": "колющий", "weight_lb": 3, "properties": ["Метательное", "Универсальное"], "range": "20/60", "versatile_damage": "1к8" },
+    { "id": "light-crossbow", "name": "Арбалет, лёгкий", "category": "simple_ranged", "cost": "25 зм", "damage": "1к8", "damage_type": "колющий", "weight_lb": 5, "properties": ["Боеприпас", "Двуручное", "Перезарядка"], "range": "80/320" },
+    { "id": "dart", "name": "Дротик", "category": "simple_ranged", "cost": "5 мм", "damage": "1к4", "damage_type": "колющий", "weight_lb": 0.25, "properties": ["Метательное", "Фехтовальное"], "range": "20/60" },
+    { "id": "shortbow", "name": "Короткий лук", "category": "simple_ranged", "cost": "25 зм", "damage": "1к6", "damage_type": "колющий", "weight_lb": 2, "properties": ["Боеприпас", "Двуручное"], "range": "80/320" },
+    { "id": "sling", "name": "Праща", "category": "simple_ranged", "cost": "1 см", "damage": "1к4", "damage_type": "дробящий", "weight_lb": 0, "properties": ["Боеприпас"], "range": "30/120" },
+    { "id": "battleaxe", "name": "Боевой топор", "category": "martial_melee", "cost": "10 зм", "damage": "1к8", "damage_type": "рубящий", "weight_lb": 4, "properties": ["Универсальное"], "versatile_damage": "1к10" },
+    { "id": "flail", "name": "Цеп", "category": "martial_melee", "cost": "10 зм", "damage": "1к8", "damage_type": "дробящий", "weight_lb": 2, "properties": [] },
+    { "id": "glaive", "name": "Глефа", "category": "martial_melee", "cost": "20 зм", "damage": "1к10", "damage_type": "рубящий", "weight_lb": 6, "properties": ["Двуручное", "Досягаемость", "Тяжёлое"] },
+    { "id": "greataxe", "name": "Секира", "category": "martial_melee", "cost": "30 зм", "damage": "1к12", "damage_type": "рубящий", "weight_lb": 7, "properties": ["Двуручное", "Тяжёлое"] },
+    { "id": "greatsword", "name": "Двуручный меч", "category": "martial_melee", "cost": "50 зм", "damage": "2к6", "damage_type": "рубящий", "weight_lb": 6, "properties": ["Двуручное", "Тяжёлое"] },
+    { "id": "halberd", "name": "Алебарда", "category": "martial_melee", "cost": "20 зм", "damage": "1к10", "damage_type": "рубящий", "weight_lb": 6, "properties": ["Двуручное", "Досягаемость", "Тяжёлое"] },
+    { "id": "lance", "name": "Длинное копьё", "category": "martial_melee", "cost": "10 зм", "damage": "1к12", "damage_type": "колющий", "weight_lb": 6, "properties": ["Досягаемость", "Особое"] },
+    { "id": "longsword", "name": "Длинный меч", "category": "martial_melee", "cost": "15 зм", "damage": "1к8", "damage_type": "рубящий", "weight_lb": 3, "properties": ["Универсальное"], "versatile_damage": "1к10" },
+    { "id": "maul", "name": "Молот", "category": "martial_melee", "cost": "10 зм", "damage": "2к6", "damage_type": "дробящий", "weight_lb": 10, "properties": ["Двуручное", "Тяжёлое"] },
+    { "id": "morningstar", "name": "Моргенштерн", "category": "martial_melee", "cost": "15 зм", "damage": "1к8", "damage_type": "колющий", "weight_lb": 4, "properties": [] },
+    { "id": "pike", "name": "Пика", "category": "martial_melee", "cost": "5 зм", "damage": "1к10", "damage_type": "колющий", "weight_lb": 18, "properties": ["Двуручное", "Досягаемость", "Тяжёлое"] },
+    { "id": "rapier", "name": "Рапира", "category": "martial_melee", "cost": "25 зм", "damage": "1к8", "damage_type": "колющий", "weight_lb": 2, "properties": ["Фехтовальное"] },
+    { "id": "scimitar", "name": "Скимитар", "category": "martial_melee", "cost": "25 зм", "damage": "1к6", "damage_type": "рубящий", "weight_lb": 3, "properties": ["Лёгкое", "Фехтовальное"] },
+    { "id": "shortsword", "name": "Короткий меч", "category": "martial_melee", "cost": "10 зм", "damage": "1к6", "damage_type": "колющий", "weight_lb": 2, "properties": ["Лёгкое", "Фехтовальное"] },
+    { "id": "trident", "name": "Трезубец", "category": "martial_melee", "cost": "5 зм", "damage": "1к6", "damage_type": "колющий", "weight_lb": 4, "properties": ["Метательное", "Универсальное"], "range": "20/60", "versatile_damage": "1к8" },
+    { "id": "war-pick", "name": "Боевая кирка", "category": "martial_melee", "cost": "5 зм", "damage": "1к8", "damage_type": "колющий", "weight_lb": 2, "properties": [] },
+    { "id": "warhammer", "name": "Боевой молот", "category": "martial_melee", "cost": "15 зм", "damage": "1к8", "damage_type": "дробящий", "weight_lb": 2, "properties": ["Универсальное"], "versatile_damage": "1к10" },
+    { "id": "whip", "name": "Кнут", "category": "martial_melee", "cost": "2 зм", "damage": "1к4", "damage_type": "рубящий", "weight_lb": 3, "properties": ["Досягаемость", "Фехтовальное"] },
+    { "id": "blowgun", "name": "Духовая трубка", "category": "martial_ranged", "cost": "10 зм", "damage": "1", "damage_type": "колющий", "weight_lb": 1, "properties": ["Боеприпас", "Перезарядка"], "range": "25/100" },
+    { "id": "hand-crossbow", "name": "Арбалет, ручной", "category": "martial_ranged", "cost": "75 зм", "damage": "1к6", "damage_type": "колющий", "weight_lb": 3, "properties": ["Боеприпас", "Лёгкое", "Перезарядка"], "range": "30/120" },
+    { "id": "heavy-crossbow", "name": "Арбалет, тяжёлый", "category": "martial_ranged", "cost": "50 зм", "damage": "1к10", "damage_type": "колющий", "weight_lb": 18, "properties": ["Боеприпас", "Двуручное", "Перезарядка", "Тяжёлое"], "range": "100/400" },
+    { "id": "longbow", "name": "Длинный лук", "category": "martial_ranged", "cost": "50 зм", "damage": "1к8", "damage_type": "колющий", "weight_lb": 2, "properties": ["Боеприпас", "Двуручное", "Тяжёлое"], "range": "150/600" },
+    { "id": "net", "name": "Сеть", "category": "martial_ranged", "cost": "1 зм", "damage": "—", "damage_type": "", "weight_lb": 3, "properties": ["Метательное", "Особое"], "range": "5/15" }
+  ],
+  "packs": {
+    "explorer": "Набор путешественника",
+    "dungeoneer": "Набор исследователя подземелий",
+    "priest": "Набор священника",
+    "scholar": "Набор учёного",
+    "entertainer": "Набор артиста",
+    "diplomat": "Набор дипломата"
+  },
+  "class_starting_equipment": {
+    "varvar": [
+      [{ "type": "weapon", "id": "greataxe" }, { "type": "pick_weapon", "pool": "martial_melee" }],
+      [{ "type": "weapon", "id": "handaxe", "quantity": 2 }, { "type": "pick_weapon", "pool": "simple" }],
+      [{ "type": "pack", "id": "explorer" }, { "type": "weapon", "id": "javelin", "quantity": 4 }]
+    ],
+    "bard": [
+      [{ "type": "weapon", "id": "rapier" }, { "type": "weapon", "id": "longsword" }, { "type": "pick_weapon", "pool": "simple" }],
+      [{ "type": "pack", "id": "diplomat" }, { "type": "pack", "id": "entertainer" }],
+      [{ "type": "armor", "id": "leather" }, { "type": "misc", "name": "Кинжал" }, { "type": "misc", "name": "Музыкальный инструмент" }]
+    ],
+    "voin": [
+      [{ "type": "armor", "id": "chain-mail" }, { "type": "armor", "id": "leather" }],
+      [{ "type": "weapon", "id": "longbow" }, { "type": "shield", "id": "shield" }],
+      [{ "type": "pick_weapon", "pool": "martial" }, { "type": "pick_weapon", "pool": "martial" }],
+      [{ "type": "pack", "id": "dungeoneer" }, { "type": "pack", "id": "explorer" }]
+    ],
+    "volshebnik": [
+      [{ "type": "weapon", "id": "quarterstaff" }, { "type": "weapon", "id": "dagger" }],
+      [{ "type": "pack", "id": "scholar" }, { "type": "pack", "id": "explorer" }],
+      [{ "type": "misc", "name": "Книга заклинаний" }]
+    ],
+    "druid": [
+      [{ "type": "shield", "id": "shield" }, { "type": "pick_weapon", "pool": "simple" }],
+      [{ "type": "weapon", "id": "scimitar" }, { "type": "pick_weapon", "pool": "simple_melee" }],
+      [{ "type": "armor", "id": "leather" }, { "type": "pack", "id": "explorer" }, { "type": "misc", "name": "Фокусировка друидов" }]
+    ],
+    "zhrets": [
+      [{ "type": "weapon", "id": "mace" }, { "type": "weapon", "id": "warhammer" }],
+      [{ "type": "armor", "id": "scale-mail" }, { "type": "armor", "id": "leather" }, { "type": "armor", "id": "chain-mail" }],
+      [{ "type": "weapon", "id": "light-crossbow" }, { "type": "pick_weapon", "pool": "simple" }],
+      [{ "type": "pack", "id": "priest" }, { "type": "pack", "id": "explorer" }],
+      [{ "type": "shield", "id": "shield" }, { "type": "misc", "name": "Священный символ" }]
+    ],
+    "izobretatel": [
+      [{ "type": "pick_weapon", "pool": "simple" }, { "type": "weapon", "id": "light-crossbow" }],
+      [{ "type": "armor", "id": "scale-mail" }, { "type": "armor", "id": "leather" }],
+      [{ "type": "pack", "id": "dungeoneer" }, { "type": "pack", "id": "explorer" }],
+      [{ "type": "misc", "name": "Воровские инструменты" }, { "type": "misc", "name": "Инструменты ремесленника" }]
+    ],
+    "koldun": [
+      [{ "type": "weapon", "id": "light-crossbow" }, { "type": "pick_weapon", "pool": "simple" }],
+      [{ "type": "pack", "id": "scholar" }, { "type": "pack", "id": "dungeoneer" }],
+      [{ "type": "armor", "id": "leather" }, { "type": "weapon", "id": "dagger", "quantity": 2 }, { "type": "misc", "name": "Магическая фокусировка" }]
+    ],
+    "monah": [
+      [{ "type": "weapon", "id": "shortsword" }, { "type": "pick_weapon", "pool": "simple" }],
+      [{ "type": "pack", "id": "dungeoneer" }, { "type": "pack", "id": "explorer" }],
+      [{ "type": "weapon", "id": "dart", "quantity": 10 }]
+    ],
+    "paladin": [
+      [{ "type": "pick_weapon", "pool": "martial" }, { "type": "pick_weapon", "pool": "martial" }, { "type": "shield", "id": "shield" }],
+      [{ "type": "weapon", "id": "javelin", "quantity": 5 }, { "type": "pick_weapon", "pool": "simple_melee" }],
+      [{ "type": "pack", "id": "priest" }, { "type": "pack", "id": "explorer" }],
+      [{ "type": "armor", "id": "chain-mail" }, { "type": "misc", "name": "Священный символ" }]
+    ],
+    "plut": [
+      [{ "type": "weapon", "id": "rapier" }, { "type": "weapon", "id": "shortsword" }],
+      [{ "type": "weapon", "id": "shortbow" }, { "type": "weapon", "id": "shortsword" }],
+      [{ "type": "pack", "id": "dungeoneer" }, { "type": "pack", "id": "explorer" }],
+      [{ "type": "armor", "id": "leather" }, { "type": "weapon", "id": "dagger", "quantity": 2 }, { "type": "misc", "name": "Воровские инструменты" }]
+    ],
+    "sledopyt": [
+      [{ "type": "armor", "id": "scale-mail" }, { "type": "armor", "id": "leather" }],
+      [{ "type": "weapon", "id": "shortsword" }, { "type": "weapon", "id": "shortsword" }, { "type": "pick_weapon", "pool": "simple_melee" }, { "type": "pick_weapon", "pool": "simple_melee" }],
+      [{ "type": "pack", "id": "dungeoneer" }, { "type": "pack", "id": "explorer" }],
+      [{ "type": "weapon", "id": "longbow" }]
+    ],
+    "charodey": [
+      [{ "type": "weapon", "id": "light-crossbow" }, { "type": "pick_weapon", "pool": "simple" }],
+      [{ "type": "pack", "id": "dungeoneer" }, { "type": "pack", "id": "explorer" }],
+      [{ "type": "weapon", "id": "dagger", "quantity": 2 }, { "type": "misc", "name": "Магическая фокусировка" }]
+    ]
+  }
+}

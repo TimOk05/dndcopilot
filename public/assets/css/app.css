@@ -1136,6 +1136,18 @@ input[type="range"] {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.npc-form {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.character-form {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.event-form {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .random-monster-results {
   margin-top: 16px;
 }
@@ -1155,6 +1167,187 @@ input[type="range"] {
   font-size: 20px;
   line-height: 1.2;
   overflow-wrap: anywhere;
+}
+
+.character-results,
+.character-library-grid {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.character-card {
+  min-height: 112px;
+  align-content: start;
+  padding-right: 44px;
+}
+
+.character-card strong {
+  overflow-wrap: anywhere;
+}
+
+.character-ability-grid,
+.character-choice-list,
+.character-skill-grid,
+.character-feature-list {
+  display: grid;
+  gap: 8px;
+}
+
+.character-ability-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.character-skill-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.character-ability-grid div,
+.character-choice-list div,
+.character-skill-grid div,
+.character-feature-list div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.character-ability-grid span,
+.character-ability-grid small,
+.character-choice-list span,
+.character-skill-grid span,
+.character-feature-list span,
+.character-feature-list p {
+  color: var(--muted);
+}
+
+.character-skill-grid strong {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.character-skill-grid strong span {
+  padding: 2px 5px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.character-ability-grid strong {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.character-feature-list strong {
+  display: grid;
+  gap: 3px;
+  line-height: 1.25;
+}
+
+.character-feature-list p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.character-feature-list .character-feature-description {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.character-feature-list .character-feature-description p {
+  margin: 0 0 8px;
+}
+
+.character-feature-list .character-feature-description p:last-child {
+  margin-bottom: 0;
+}
+
+.character-feature-list .character-roll-table {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.character-feature-list .potion-table-wrap {
+  display: block;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.character-feature-list .potion-table th:first-child,
+.character-feature-list .potion-table td:first-child {
+  width: 72px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.character-equipment-table {
+  margin-top: 10px;
+}
+
+.character-spell-list {
+  columns: 2 220px;
+}
+
+.character-collapsible {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.character-collapsible summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.character-collapsible summary::-webkit-details-marker {
+  display: none;
+}
+
+.character-collapsible summary::after {
+  content: "+";
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.character-collapsible[open] summary {
+  margin-bottom: 10px;
+}
+
+.character-collapsible[open] summary::after {
+  content: "-";
+}
+
+.character-collapsible summary span {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.character-collapsible summary small {
+  margin-left: auto;
+  color: var(--muted);
 }
 
 .tavern-detail-grid {
@@ -1449,6 +1642,8 @@ textarea {
   .ability-editor,
   .tavern-detail-grid,
   .tavern-menu-list,
+  .character-ability-grid,
+  .character-skill-grid,
   .monster-meta-grid,
   .abilities-grid {
     grid-template-columns: 1fr;

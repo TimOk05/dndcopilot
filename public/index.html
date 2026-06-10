@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#2a1710">
   <title>D&D Copilot</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260608-tavern-supplements-4">
+  <link rel="stylesheet" href="assets/css/app.css?v=20260610-character-fixes-1">
 </head>
 <body>
   <div class="app-shell">
@@ -103,14 +103,14 @@
       <section class="panel" data-panel-view="generators">
         <div class="section-heading">
           <h3>Генераторы</h3>
-          <p>Кнопки будущих инструментов. Пока без логики, чтобы дальше подключать их аккуратно.</p>
+          <p>Быстрые инструменты для подготовки персонажей, НПС, наград, таверн и событий.</p>
         </div>
         <div class="button-board generator-board">
-          <button class="generator-button" type="button">Персонаж</button>
-          <button class="generator-button" type="button">НПС</button>
+          <button class="generator-button" type="button" data-open-character-generator>Персонаж</button>
+          <button class="generator-button" type="button" data-open-npc-generator>НПС</button>
           <button class="generator-button" type="button" data-open-loot-generator>Награда</button>
           <button class="generator-button" type="button" data-open-tavern-generator>Таверна</button>
-          <button class="generator-button" type="button">Случайное событие</button>
+          <button class="generator-button" type="button" data-open-random-event-generator>Случайное событие</button>
         </div>
       </section>
 
@@ -245,6 +245,7 @@
         <div class="library-menu" aria-label="Фильтр библиотеки">
           <button class="library-filter active library-home-filter" type="button" data-library-filter="all" title="Главная библиотеки" aria-label="Главная библиотеки">⌂</button>
           <button class="library-filter" type="button" data-library-filter="characters">Мои персонажи</button>
+          <button class="library-filter" type="button" data-library-filter="npcs">Мои НПС</button>
           <button class="library-filter" type="button" data-library-filter="rolls">Мои броски</button>
           <button class="library-filter" type="button" data-library-filter="creatures">Мои существа</button>
           <button class="library-filter" type="button" data-library-filter="rewards">Мои награды</button>
@@ -658,6 +659,185 @@
     </section>
   </div>
 
+  <div class="modal-backdrop is-hidden" data-character-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="character-modal-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-character-generator aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Player character</p>
+        <h2 id="character-modal-title">Генератор персонажа</h2>
+      </div>
+
+      <div class="bestiary-toolbar random-monster-form character-form">
+        <label class="field">
+          <span>Раса</span>
+          <select data-character-race>
+            <option value="">Случайная</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Класс</span>
+          <select data-character-class>
+            <option value="">Случайный</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Уровень</span>
+          <select data-character-level>
+            <option value="">Случайный</option>
+            <option value="1">1 уровень</option>
+            <option value="2">2 уровень</option>
+            <option value="3">3 уровень</option>
+            <option value="4">4 уровень</option>
+            <option value="5">5 уровень</option>
+            <option value="6">6 уровень</option>
+            <option value="7">7 уровень</option>
+            <option value="8">8 уровень</option>
+            <option value="9">9 уровень</option>
+            <option value="10">10 уровень</option>
+            <option value="11">11 уровень</option>
+            <option value="12">12 уровень</option>
+            <option value="13">13 уровень</option>
+            <option value="14">14 уровень</option>
+            <option value="15">15 уровень</option>
+            <option value="16">16 уровень</option>
+            <option value="17">17 уровень</option>
+            <option value="18">18 уровень</option>
+            <option value="19">19 уровень</option>
+            <option value="20">20 уровень</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Количество</span>
+          <input type="number" min="1" max="6" value="1" data-character-count>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="primary-action" type="button" data-generate-characters>Получить результат</button>
+        <button type="button" data-save-characters disabled>Сохранить в библиотеку</button>
+        <button type="button" data-close-character-generator>Закрыть</button>
+      </div>
+
+      <div class="random-monster-results character-results" data-character-results></div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-character-detail-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="character-detail-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-character-detail aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Character sheet</p>
+        <h2 id="character-detail-title" data-character-detail-name>Персонаж</h2>
+      </div>
+      <div class="monster-detail" data-character-detail></div>
+      <div class="modal-actions monster-actions">
+        <button type="button" data-close-character-detail>Закрыть</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-npc-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="npc-modal-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-npc-generator aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">NPC tool</p>
+        <h2 id="npc-modal-title">Генератор НПС</h2>
+      </div>
+
+      <div class="bestiary-toolbar random-monster-form npc-form">
+        <label class="field">
+          <span>Жанр</span>
+          <select data-npc-genre>
+            <option value="">Любой</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Роль</span>
+          <select data-npc-role>
+            <option value="">Любая</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Профессия</span>
+          <select data-npc-profession-category>
+            <option value="">Любая категория</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Количество</span>
+          <input type="number" min="1" max="8" value="1" data-npc-count>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="primary-action" type="button" data-generate-npcs>Получить результат</button>
+        <button type="button" data-save-npcs disabled>Сохранить в библиотеку</button>
+        <button type="button" data-close-npc-generator>Закрыть</button>
+      </div>
+
+      <div class="random-monster-results npc-results" data-npc-results></div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-npc-detail-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="npc-detail-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-npc-detail aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">NPC card</p>
+        <h2 id="npc-detail-title" data-npc-detail-name>НПС</h2>
+      </div>
+      <div class="monster-detail" data-npc-detail></div>
+      <div class="modal-actions monster-actions">
+        <button type="button" data-close-npc-detail>Закрыть</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-random-event-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="random-event-modal-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-random-event-generator aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Session twist</p>
+        <h2 id="random-event-modal-title">Случайное событие</h2>
+      </div>
+
+      <div class="bestiary-toolbar random-monster-form event-form">
+        <label class="field">
+          <span>Категория</span>
+          <select data-random-event-category>
+            <option value="">Любая категория</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Количество</span>
+          <input type="number" min="1" max="6" value="1" data-random-event-count>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="primary-action" type="button" data-generate-random-events>Получить результат</button>
+        <button type="button" data-save-random-events disabled>Сохранить в библиотеку</button>
+        <button type="button" data-close-random-event-generator>Закрыть</button>
+      </div>
+
+      <div class="random-monster-results event-results" data-random-event-results></div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop is-hidden" data-random-event-detail-modal>
+    <section class="tool-modal monster-modal" aria-labelledby="random-event-detail-title" role="dialog" aria-modal="true">
+      <button class="modal-close" type="button" data-close-random-event-detail aria-label="Закрыть">×</button>
+      <div class="modal-header">
+        <p class="eyebrow">Event card</p>
+        <h2 id="random-event-detail-title" data-random-event-detail-name>Событие</h2>
+      </div>
+      <div class="monster-detail" data-random-event-detail></div>
+      <div class="modal-actions monster-actions">
+        <button type="button" data-close-random-event-detail>Закрыть</button>
+      </div>
+    </section>
+  </div>
+
   <div class="modal-backdrop is-hidden" data-random-loot-item-modal>
     <section class="tool-modal monster-modal" aria-labelledby="random-loot-item-title" role="dialog" aria-modal="true">
       <button class="modal-close" type="button" data-close-random-loot-item aria-label="Закрыть">×</button>
@@ -752,6 +932,6 @@
 
   <audio data-music loop preload="auto"></audio>
   <audio data-click-sound src="sound/click.mp3" preload="auto"></audio>
-  <script src="assets/js/app.js?v=20260608-tavern-supplements-4"></script>
+  <script src="assets/js/app.js?v=20260610-character-fixes-1"></script>
 </body>
 </html>
