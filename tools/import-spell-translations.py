@@ -40,6 +40,33 @@ def read_loose_json_records(path):
     return records
 
 
+def read_json_objects_from_mixed_text(text):
+    decoder = JSONDecoder()
+    records = []
+    position = 0
+    while position < len(text):
+        start = text.find("{", position)
+        if start < 0:
+            break
+        try:
+            value, end = decoder.raw_decode(text, start)
+        except json.JSONDecodeError:
+            position = start + 1
+            continue
+        if isinstance(value, dict):
+            records.append(value)
+        position = end
+    return records
+
+
+def read_translation_records(path):
+    text = path.read_text(encoding="utf-8-sig")
+    try:
+        return read_loose_json_records(path)
+    except json.JSONDecodeError:
+        return read_json_objects_from_mixed_text(text)
+
+
 def has_cyrillic(value):
     return bool(re.search(r"[\u0400-\u04FF]", str(value or "")))
 
@@ -146,7 +173,7 @@ def to_index_row(spell):
 
 def main():
     translation_path = Path(sys.argv[1]) if len(sys.argv) > 1 else TRANSLATION_PATH
-    translations = read_loose_json_records(translation_path)
+    translations = read_translation_records(translation_path)
     translations_by_id = {item["id"]: item for item in translations if item.get("id")}
 
     spells = json.loads(SPELLS_PATH.read_text(encoding="utf-8"))
