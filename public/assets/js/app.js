@@ -26,6 +26,28 @@ const panelTitles = {
   library: "Библиотека",
 };
 
+const cloudStorageKeys = new Set([
+  "dnd-custom-monsters",
+  "dnd-custom-loot-items",
+  "dnd-saved-rolls",
+  "dnd-saved-monsters",
+  "dnd-saved-potions",
+  "dnd-saved-spells",
+  "dnd-saved-loot",
+  "dnd-saved-taverns",
+  "dnd-saved-characters",
+  "dnd-saved-events",
+  "dnd-library-notes",
+]);
+
+const cloudStorageState = {
+  enabled: false,
+  hydrating: false,
+  user: null,
+};
+
+const pendingServerWrites = new Map();
+const pendingServerTimers = new Map();
 const memoryStorage = new Map();
 const storage = {
   get(key, fallback = null) {
@@ -36,6 +58,15 @@ const storage = {
     }
   },
   set(key, value) {
+    memoryStorage.set(key, value);
+    try {
+      globalThis.localStorage?.setItem(key, value);
+    } catch {
+      // Some embedded browser contexts can hide persistent storage.
+    }
+    queueServerStorageWrite(key, value);
+  },
+  setLocal(key, value) {
     memoryStorage.set(key, value);
     try {
       globalThis.localStorage?.setItem(key, value);
@@ -58,6 +89,10 @@ const soundToggle = document.querySelector("[data-sound-toggle]");
 const volumeControl = document.querySelector("[data-volume]");
 const audioGate = document.querySelector("[data-audio-gate]");
 const panelTitle = document.querySelector("[data-panel-title]");
+const accountChip = document.querySelector("[data-account-chip]");
+const authAvatar = document.querySelector("[data-auth-avatar]");
+const authName = document.querySelector("[data-auth-name]");
+const cloudStatus = document.querySelector("[data-cloud-status]");
 const diceModal = document.querySelector("[data-dice-modal]");
 const diceSetup = document.querySelector("[data-dice-setup]");
 const diceStage = document.querySelector("[data-dice-stage]");
@@ -613,6 +648,264 @@ function playClick() {
   }
   clickSound.currentTime = 0;
   clickSound.play().catch(() => {});
+}
+
+function parseStoragePayload(value) {
+  if (typeof value !== "string") {
+    return value;
+  }
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+}
+
+function normalizeCloudStorageValue(key, value) {
+  if (cloudStorageKeys.has(key) && !Array.isArray(value)) {
+    return [];
+  }
+  return value;
+}
+
+function mergeStorageValue(remoteValue, localRawValue) {
+  if (localRawValue === null || localRawValue === undefined) {
+    return remoteValue;
+  }
+
+  const localValue = parseStoragePayload(localRawValue);
+  if (!Array.isArray(remoteValue) || !Array.isArray(localValue) || !localValue.length) {
+    return remoteValue;
+  }
+
+  const seen = new Set();
+  const merged = [];
+  [...localValue, ...remoteValue].forEach((entry) => {
+    const id = entry && typeof entry === "object" && entry.id ? entry.id : JSON.stringify(entry);
+    if (seen.has(id)) {
+      return;
+    }
+    seen.add(id);
+    merged.push(entry);
+  });
+  return merged;
+}
+
+function setCloudStatus(text) {
+  if (cloudStatus) {
+    cloudStatus.textContent = text;
+  }
+}
+
+function updateAccountUi(user) {
+  if (!accountChip) {
+    return;
+  }
+
+  accountChip.hidden = !user;
+  if (!user) {
+    return;
+  }
+
+  if (authName) {
+    authName.textContent = user.name || user.email || "Мастер";
+  }
+  if (authAvatar) {
+    if (user.avatarUrl) {
+      authAvatar.src = user.avatarUrl;
+    } else {
+      authAvatar.removeAttribute("src");
+    }
+  }
+}
+
+async function saveServerStorageValue(key, value) {
+  const response = await fetch(`/api/storage/${encodeURIComponent(key)}`, {
+    method: "PUT",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ value }),
+  });
+
+  if (response.status === 401) {
+    window.location.replace("/login");
+    return false;
+  }
+
+  if (!response.ok) {
+    throw new Error("Не удалось сохранить данные на сервере.");
+  }
+
+  return true;
+}
+
+function queueServerStorageWrite(key, value) {
+  if (!cloudStorageState.enabled || cloudStorageState.hydrating || !cloudStorageKeys.has(key)) {
+    return;
+  }
+
+  pendingServerWrites.set(key, normalizeCloudStorageValue(key, parseStoragePayload(value)));
+  if (pendingServerTimers.has(key)) {
+    clearTimeout(pendingServerTimers.get(key));
+  }
+
+  setCloudStatus("Сохраняю...");
+  pendingServerTimers.set(key, setTimeout(() => {
+    flushServerStorageWrite(key);
+  }, 350));
+}
+
+async function flushServerStorageWrite(key) {
+  pendingServerTimers.delete(key);
+  if (!pendingServerWrites.has(key)) {
+    return;
+  }
+
+  const value = pendingServerWrites.get(key);
+  pendingServerWrites.delete(key);
+
+  try {
+    await saveServerStorageValue(key, value);
+    setCloudStatus(pendingServerWrites.size ? "Сохраняю..." : "Синхронизировано");
+  } catch {
+    setCloudStatus("Ошибка синхронизации");
+  }
+}
+
+function refreshCustomBestiaryFromStorage() {
+  if (!bestiaryIndex.length || !bestiaryMonsters.length) {
+    return;
+  }
+
+  const customMonsters = getCustomMonsters();
+  bestiaryIndex = [
+    ...bestiaryIndex.filter((monster) => !monster.is_custom),
+    ...customMonsters.map(toMonsterIndexRow),
+  ];
+  bestiaryMonsters = [
+    ...bestiaryMonsters.filter((monster) => !monster.is_custom),
+    ...customMonsters,
+  ];
+  bestiaryById = new Map(bestiaryMonsters.map((monster) => [monster.id, monster]));
+  setupBestiaryFilters();
+  setupRandomKindOptions();
+  setupCustomTypeOptions();
+  renderBestiary();
+}
+
+function refreshCustomLootFromStorage() {
+  if (!lootItems.length || !lootItemsIndex.length) {
+    return;
+  }
+
+  const customLootItems = getCustomLootItems();
+  lootItems = [
+    ...lootItems.filter((item) => !item.is_custom),
+    ...customLootItems,
+  ];
+  lootItemsIndex = [
+    ...lootItemsIndex.filter((item) => !item.is_custom),
+    ...customLootItems.map(toLootIndexRow),
+  ];
+  lootItemsById = new Map(lootItems.map((item) => [item.id, item]));
+  setupLootCategoryOptions();
+  setupLootListFilters();
+  renderLootList();
+}
+
+function refreshStoredViews() {
+  refreshCustomBestiaryFromStorage();
+  refreshCustomLootFromStorage();
+  updateSavedRollsCount();
+  renderLibraryCharacters();
+  renderLibraryNpcs();
+  renderLibraryEvents();
+  renderLibraryRolls();
+  renderLibraryMonsters();
+  renderLibraryPotions();
+  renderLibrarySpells();
+  renderLibraryLoot();
+  renderLibraryTaverns();
+  renderLibraryNotes();
+  applyLibraryFilter();
+}
+
+async function hydrateCloudStorage() {
+  cloudStorageState.hydrating = true;
+  setCloudStatus("Синхронизация...");
+
+  try {
+    const response = await fetch("/api/storage", { credentials: "same-origin" });
+    if (response.status === 401) {
+      window.location.replace("/login");
+      return;
+    }
+    if (!response.ok) {
+      throw new Error("Не удалось загрузить серверное хранилище.");
+    }
+
+    const payload = await response.json();
+    const remoteByKey = new Map((payload.entries || []).map((entry) => [entry.key, entry.value]));
+    const uploads = [];
+
+    cloudStorageKeys.forEach((key) => {
+      const localRawValue = storage.get(key, null);
+      if (remoteByKey.has(key)) {
+        const remoteValue = normalizeCloudStorageValue(key, remoteByKey.get(key));
+        const mergedValue = mergeStorageValue(remoteValue, localRawValue);
+        storage.setLocal(key, JSON.stringify(mergedValue));
+        if (JSON.stringify(mergedValue) !== JSON.stringify(remoteValue)) {
+          uploads.push(saveServerStorageValue(key, mergedValue));
+        }
+        return;
+      }
+
+      if (localRawValue !== null) {
+        uploads.push(saveServerStorageValue(key, normalizeCloudStorageValue(key, parseStoragePayload(localRawValue))));
+      }
+    });
+
+    await Promise.all(uploads);
+    setCloudStatus("Синхронизировано");
+  } catch {
+    setCloudStatus("Только локально");
+  } finally {
+    cloudStorageState.hydrating = false;
+    refreshStoredViews();
+  }
+}
+
+async function initAuthSession() {
+  try {
+    const response = await fetch("/api/me", { credentials: "same-origin" });
+    if (response.status === 401) {
+      window.location.replace("/login");
+      return;
+    }
+    if (!response.ok) {
+      throw new Error("Не удалось получить профиль.");
+    }
+
+    cloudStorageState.user = await response.json();
+    cloudStorageState.enabled = true;
+    updateAccountUi(cloudStorageState.user);
+    await hydrateCloudStorage();
+  } catch {
+    setCloudStatus("Только локально");
+  }
+}
+
+async function logoutUser() {
+  try {
+    await fetch("/auth/logout", {
+      method: "POST",
+      credentials: "same-origin",
+    });
+  } finally {
+    window.location.replace("/login");
+  }
 }
 
 function openPanel(panel) {
@@ -6267,6 +6560,12 @@ function saveCustomMonster(event) {
 
 document.addEventListener("click", (event) => {
   const button = event.target.closest("button");
+  if (button?.matches("[data-logout]")) {
+    playClick();
+    logoutUser();
+    return;
+  }
+
   const savedMonsterCard = event.target.closest("[data-open-saved-monster]");
   const savedPotionCard = event.target.closest("[data-open-saved-potion]");
   const savedSpellCard = event.target.closest("[data-open-saved-spell]");
@@ -6839,6 +7138,7 @@ renderLibrarySpells();
 renderLibraryLoot();
 renderLibraryTaverns();
 renderLibraryNotes();
+initAuthSession();
 
 if (state.soundEnabled) {
   music.play().then(hideAudioGate).catch(showAudioGate);

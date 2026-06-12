@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#2a1710">
   <title>D&D Copilot</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260610-character-fixes-3">
+  <link rel="stylesheet" href="assets/css/app.css?v=20260611-auth-1">
 </head>
 <body>
   <div class="app-shell">
@@ -57,8 +57,16 @@
           <h2 data-panel-title>Главная</h2>
         </div>
         <div class="top-actions">
+          <div class="account-chip" data-account-chip hidden>
+            <img class="account-avatar" alt="" data-auth-avatar>
+            <div class="account-text">
+              <strong data-auth-name>Мастер</strong>
+              <span data-cloud-status>Синхронизация...</span>
+            </div>
+          </div>
           <button class="icon-action" type="button" title="Настройки" aria-label="Настройки">⚙</button>
           <button class="icon-action" type="button" title="Помощь" aria-label="Помощь">?</button>
+          <button class="icon-action" type="button" title="Выйти" aria-label="Выйти" data-logout>↪</button>
         </div>
       </header>
 
@@ -73,7 +81,6 @@
 
         <div class="quick-grid">
           <button class="feature-button generator-button" type="button">
-            <span class="generator-button-icon icon-dice" aria-hidden="true"></span>
             <span>Бросить кость</span>
           </button>
         </div>
@@ -938,6 +945,6 @@
 
   <audio data-music loop preload="auto"></audio>
   <audio data-click-sound src="sound/click.mp3" preload="auto"></audio>
-  <script src="assets/js/app.js?v=20260610-character-fixes-3"></script>
+  <script src="assets/js/app.js?v=20260611-auth-1"></script>
 </body>
 </html>

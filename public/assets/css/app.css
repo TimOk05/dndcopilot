@@ -284,6 +284,7 @@ input[type="range"] {
 
 .top-actions {
   display: flex;
+  align-items: center;
   gap: 10px;
 }
 
@@ -291,6 +292,54 @@ input[type="range"] {
   width: 46px;
   padding: 0;
   font-size: 20px;
+}
+
+.account-chip {
+  display: flex;
+  align-items: center;
+  min-height: 46px;
+  max-width: min(320px, 38vw);
+  gap: 10px;
+  padding: 6px 12px 6px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+}
+
+.account-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: linear-gradient(180deg, #fff0bd, var(--accent));
+}
+
+.account-avatar:not([src]) {
+  display: none;
+}
+
+.account-text {
+  display: grid;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.account-text strong,
+.account-text span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-text strong {
+  font-size: 14px;
+}
+
+.account-text span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .panel {
@@ -356,31 +405,6 @@ input[type="range"] {
   gap: 12px;
 }
 
-.generator-button-icon {
-  display: inline-block;
-  width: 28px;
-  height: 28px;
-  flex: 0 0 auto;
-  background: currentColor;
-  mask: center / contain no-repeat;
-  -webkit-mask: center / contain no-repeat;
-}
-
-.icon-potion {
-  mask-image: url("../../icons/potion.svg");
-  -webkit-mask-image: url("../../icons/potion.svg");
-}
-
-.icon-dice {
-  mask-image: url("../../icons/dice.svg");
-  -webkit-mask-image: url("../../icons/dice.svg");
-}
-
-.icon-enemy {
-  mask-image: url("../../icons/enemy.svg");
-  -webkit-mask-image: url("../../icons/enemy.svg");
-}
-
 .status-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -436,7 +460,8 @@ input[type="range"] {
   position: relative;
   isolation: isolate;
   min-height: 118px;
-  padding: 24px;
+  overflow: hidden;
+  padding: 24px 124px 24px 24px;
   font-size: 18px;
   border: 0;
   border-radius: 8px 0 0 8px;
@@ -1648,6 +1673,15 @@ textarea {
 
   .topbar h2 {
     font-size: 28px;
+  }
+
+  .top-actions {
+    flex-wrap: wrap;
+  }
+
+  .account-chip {
+    max-width: none;
+    width: 100%;
   }
 
   .dice-setup,
